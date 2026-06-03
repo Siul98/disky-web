@@ -2,18 +2,21 @@
 <html lang="de">
 <head>
 <script>
-/* === Disky Website-Demo: echte App, sichere Demo-Daten, per Scroll fernsteuerbar === */
+/* === Disky Website-Demo: echte App, sichere Demo-Daten (Platten + Datei-Baum), per Scroll fernsteuerbar === */
 (function(){
   try{
     localStorage.setItem('disky_onboarded','1');
     var L=new URLSearchParams(location.search).get('lang'); localStorage.setItem('disky_lang', L||'en');
     localStorage.setItem('disky_autoscan','0');
   }catch(e){}
+  var curView=null;
   window.addEventListener('message', function(e){
-    var d=e&&e.data; if(!d) return;
-    if(d.diskyView){ var el=document.querySelector('.nav[data-v="'+d.diskyView+'"]'); if(el) el.click(); }
+    var d=e&&e.data; if(!d||!d.diskyView) return;
+    var v=d.diskyView; if(v===curView) return; curView=v;
+    var tries=0;
+    (function go(){ var el=document.querySelector('.nav[data-v="'+v+'"]'); if(el){ el.click(); } else if(tries++<30){ setTimeout(go,120); } })();
   });
-  if(sessionStorage.getItem('diskyDemoSeeded')==='1') return;
+  if(sessionStorage.getItem('diskyDemoSeeded')==='3') return;
   var TB=1e12, GB=1e9;
   var drives=[
     {label:'T9', driveType:'t9', bytes:2.3*TB, capacityBytes:3.6*TB, fileCount:18000, volumeName:'T9'},
@@ -22,16 +25,59 @@
     {label:'Archive 2023', driveType:'ssd', bytes:7.0*TB, capacityBytes:7.3*TB, fileCount:22000, volumeName:'Archive 2023'},
     {label:'Sony A7S', driveType:'ssd', bytes:381*GB, capacityBytes:476*GB, fileCount:7594, volumeName:'Sony A7S'}
   ];
-  function done(){ try{sessionStorage.setItem('diskyDemoSeeded','1');}catch(e){} }
+  function MB(n){ return Math.round(n*1048576); }
+  function GBy(n){ return Math.round(n*1073741824); }
+  function genFiles(ids){
+    var F=[], h=1;
+    function add(d,proj,sub,name,ext,size,hash){
+      var rel=proj+'/'+(sub?sub+'/':'')+name+'.'+ext;
+      F.push({driveId:ids[d], project:proj, relPath:rel, name:name+'.'+ext, ext:ext, size:size, mtime:0, hash:hash||('h'+(h++))});
+    }
+    var i;
+    for(i=1;i<=16;i++) add(0,'Wedding Mai 2026','RAW','IMG_'+(1000+i),'cr3',MB(26+(i%6)*3));
+    for(i=1;i<=7;i++) add(0,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4), i<=5?('DUPW'+i):null);
+    add(0,'Wedding Mai 2026','Export','wedding_film','mp4',GBy(7.8));
+    add(0,'Wedding Mai 2026','Project','wedding','prproj',MB(72));
+    for(i=1;i<=10;i++) add(0,'Wedding Mai 2026','Cache','proxy_'+i,'mxf',GBy(0.55));
+    for(i=1;i<=12;i++) add(0,'Berlin Citytrip','Footage','B0'+(20+i),'mp4',GBy(0.85));
+    for(i=1;i<=6;i++) add(0,'Berlin Citytrip','Stills','DSC_'+(700+i),'jpg',MB(9));
+    for(i=1;i<=8;i++) add(1,'Client Nova Ad','Footage','N0'+(10+i),'mov',GBy(2.1));
+    add(1,'Client Nova Ad','Export','nova_30s_final','mp4',GBy(4.4));
+    add(1,'Client Nova Ad','Project','nova','aep',MB(180));
+    for(i=1;i<=5;i++) add(1,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4),'DUPW'+i);
+    for(i=1;i<=14;i++) add(2,'Doku Nordsee','Footage','C'+(100+i),'braw',GBy(3.2), i<=8?('DUPN'+i):null);
+    add(2,'Doku Nordsee','Export','nordsee_master','mov',GBy(22.0));
+    for(i=1;i<=9;i++) add(2,'Doku Nordsee','Cache','render_'+i,'mxf',GBy(1.1));
+    for(i=1;i<=20;i++) add(2,'Archive 2022','Photos','2022_'+(100+i),'dng',MB(45));
+    for(i=1;i<=8;i++) add(3,'Doku Nordsee','Footage','C'+(100+i),'braw',GBy(3.2),'DUPN'+i);
+    for(i=1;i<=10;i++) add(3,'Misc','Documents','scan_'+(20+i),'pdf',MB(4));
+    for(i=1;i<=18;i++) add(4,'B-Roll Library','Nature','underwater_'+(10+i),'mp4',GBy(0.7));
+    for(i=1;i<=8;i++) add(4,'B-Roll Library','City','street_'+(10+i),'mp4',GBy(0.5));
+    return F;
+  }
+  function done(){ try{sessionStorage.setItem('diskyDemoSeeded','3');}catch(e){} }
   try{
     var r=indexedDB.open('drivecat',1);
     r.onupgradeneeded=function(e){ var db=e.target.result;
       if(!db.objectStoreNames.contains('drives')) db.createObjectStore('drives',{keyPath:'id',autoIncrement:true});
       if(!db.objectStoreNames.contains('files')){ var f=db.createObjectStore('files',{keyPath:'id',autoIncrement:true}); f.createIndex('driveId','driveId'); f.createIndex('hash','hash'); } };
     r.onsuccess=function(){ var db=r.result;
-      try{ var t=db.transaction(['drives'],'readwrite'); var s=t.objectStore('drives'); s.clear(); drives.forEach(function(d){s.add(d);});
-        t.oncomplete=function(){ done(); location.reload(); }; t.onerror=function(){ done(); location.reload(); };
-      }catch(err){ done(); } };
+      try{
+        var t=db.transaction(['drives','files'],'readwrite'); var ds=t.objectStore('drives'); var fs=t.objectStore('files');
+        ds.clear(); fs.clear();
+        var ids=[];
+        drives.forEach(function(d,idx){ var req=ds.add(d); req.onsuccess=function(){ ids[idx]=req.result; }; });
+        t.oncomplete=function(){
+          try{
+            var t2=db.transaction(['files'],'readwrite'); var fs2=t2.objectStore('files');
+            genFiles(ids).forEach(function(f){ fs2.add(f); });
+            t2.oncomplete=function(){ done(); location.reload(); };
+            t2.onerror=function(){ done(); location.reload(); };
+          }catch(err2){ done(); location.reload(); }
+        };
+        t.onerror=function(){ done(); };
+      }catch(err){ done(); }
+    };
     r.onerror=function(){ done(); };
   }catch(e){ done(); }
 })();
