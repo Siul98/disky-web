@@ -373,15 +373,24 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 @keyframes mfBlink{0%,100%{opacity:.5}50%{opacity:1}}
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
-.mb-caps{margin-top:18px;height:70px;position:relative;width:min(720px,92vw);text-align:center}
-.mb-cap{position:absolute;inset:0;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
+/* Captions als „laufende" Talking-Points LINKS neben dem MacBook (klar sichtbar, sliden rein) */
+.mb-caps{position:absolute;left:4vw;top:50%;transform:translateY(-50%);width:min(280px,25vw);height:180px;text-align:left;z-index:6;pointer-events:none}
+.mb-cap{position:absolute;left:0;right:0;top:0;opacity:0;transform:translateX(-24px);transition:opacity .4s ease,transform .4s cubic-bezier(.22,1,.36,1);pointer-events:none}
 .mb-cap.on{opacity:1;transform:none}
-.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(19px,2.6vw,28px);letter-spacing:-.02em;margin:0 0 5px;
+.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(19px,2.1vw,26px);letter-spacing:-.02em;margin:0 0 8px;
   background:linear-gradient(105deg,#fff,#eef2f7 40%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
-.mb-cap p{margin:0;color:var(--mut);font-size:15px;max-width:52ch;margin:0 auto}
-.mb-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
-.mb-dots i{width:7px;height:7px;border-radius:50%;background:#2b333f;transition:width .3s,background .3s}
-.mb-dots i.on{background:var(--acc);width:22px;border-radius:6px}
+.mb-cap p{margin:0;color:#b8c3d2;font-size:15px;line-height:1.55;max-width:30ch;text-shadow:0 2px 14px rgba(0,0,0,.85)}
+.mb-cap h3{text-shadow:0 2px 18px rgba(0,0,0,.8)}
+/* Punkte als laufende Fortschrittsleiste — links unter den Captions */
+.mb-dots{position:absolute;left:4vw;top:50%;transform:translateY(70px);display:flex;gap:9px;z-index:6}
+.mb-dots i{width:8px;height:8px;border-radius:50%;background:#2b333f;transition:width .35s,background .35s}
+.mb-dots i.on{background:var(--acc);width:26px;border-radius:6px;box-shadow:0 0 12px rgba(74,158,255,.6)}
+/* schmale Screens: Captions/Punkte wieder mittig unter den Mac */
+@media(max-width:1080px){
+  .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(640px,92vw);height:64px;margin:14px auto 0;text-align:center}
+  .mb-cap{transform:translateY(8px)} .mb-cap.on{transform:none} .mb-cap p{max-width:52ch;margin:0 auto}
+  .mb-dots{position:static;transform:none;justify-content:center;margin:14px auto 0}
+}
 @media(max-width:820px){.mb-scroll{height:auto}.mb-sticky{position:static;height:auto;padding:24px 0 40px}.mb-stage{height:62vh}}
 </style>
 <script type="importmap">
@@ -937,13 +946,13 @@ const I18N={
  mb_h2:{de:`Sieh Disky in Aktion.`,en:`See Disky in action.`},
  mb_sub:{de:`Scroll dich durch — jede Funktion direkt auf dem Mac.`,en:`Scroll through — every feature right on your Mac.`},
  mb_f1_t:{de:`Alles auf einen Blick`,en:`Everything at a glance`},
- mb_f1_d:{de:`Dein ganzes Archiv als eine Karte — auch wenn keine Platte angeschlossen ist.`,en:`Your whole archive as one map — even when no drive is connected.`},
- mb_f2_t:{de:`Sieh, was Platz frisst`,en:`See what eats space`},
- mb_f2_d:{de:`Jeder Ordner als Ring — ein roter zeigt sofort den größten Speicherfresser.`,en:`Every folder a ring — a red one instantly marks the biggest space hog.`},
- mb_f3_t:{de:`Duplikate, plattenübergreifend`,en:`Duplicates, across drives`},
- mb_f3_d:{de:`Disky erkennt doppelte Dateien über alle Platten — auf den Gigabyte genau.`,en:`Disky spots duplicate files across all drives — to the gigabyte.`},
- mb_f4_t:{de:`Such nach Inhalt`,en:`Search by content`},
- mb_f4_d:{de:`Tippe „underwater" und finde jeden Clip — komplett lokal per KI.`,en:`Type “underwater” and find every clip — fully local, via AI.`},
+ mb_f1_d:{de:`Dein ganzes Archiv als eine lebendige Karte — jede Platte, ein Bild.`,en:`Your whole archive as one living map — every drive, one picture.`},
+ mb_f2_t:{de:`Meldet sich, wenn's zählt`,en:`Speaks up when it matters`},
+ mb_f2_d:{de:`Disky sagt dir, welche Platte volläuft und welches Projekt noch kein Backup hat.`,en:`Disky tells you which drive is filling up and which project still has no backup.`},
+ mb_f3_t:{de:`Auch ohne angesteckte Platte`,en:`Even with nothing plugged in`},
+ mb_f3_d:{de:`Der komplette Überblick — voll offline, kein Kabel nötig.`,en:`The full overview — completely offline, no cable needed.`},
+ mb_f4_t:{de:`Dein Festplatten-Assistent`,en:`Your drive assistant`},
+ mb_f4_d:{de:`Läuft still im Hintergrund und nimmt dir die Arbeit ab.`,en:`Runs quietly in the background and takes the work off your hands.`},
  m_ov:{de:`Übersicht`,en:`Overview`},
  m_drives:{de:`Festplatten`,en:`Drives`},
  m_proj:{de:`Projekte`,en:`Projects`},
@@ -1176,7 +1185,10 @@ const feats = screenEl ? [].slice.call(screenEl.querySelectorAll('.mb-feat')) : 
 // Mit ?still=1 lässt sich der statische Zustand erzwingen.
 const reduce = location.search.indexOf('still')!==-1;
 
+let _lastFeat=-1;
 function setFeat(i){
+  if(i===_lastFeat) return;   // nur bei echtem Wechsel umschalten → keine Transition-Neustarts
+  _lastFeat=i;
   feats.forEach((f,k)=>f.classList.toggle('on',k===i));
   caps.forEach((f,k)=>f.classList.toggle('on',k===i));
   dots.forEach((f,k)=>f.classList.toggle('on',k===i));
@@ -1331,11 +1343,11 @@ if (sec && canvas && stage && screenEl) {
 
   // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
-  let p = 0, raf = 0, running = false, animDir = -1, lastView = null;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
+  let p = 0, openP = 0, raf = 0, running = false, animDir = -1, lastView = null;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
   const OPEN_T = 3.9;   // Sekunde im Clip, an der der Deckel ~105° offen ist (Peak 120° @ 4.54s)
   const START_T = 1.5;   // Deckel startet leicht geöffnet (~40°)
   function apply(){
-    const op = reduce ? 1 : Math.min(1, p/0.5);   // Deckel offen bei ~50% Scroll
+    const op = reduce ? 1 : Math.min(1, openP/0.55);   // öffnet durchgehend ab Auftauchen (inkl. Eintritt)
     const e = easeOut(op);
     if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // leicht offen → ganz offen
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
@@ -1361,7 +1373,10 @@ if (sec && canvas && stage && screenEl) {
 
   function onScroll(){
     const r=sec.getBoundingClientRect(); const total=sec.offsetHeight-innerHeight;
-    p = total>0 ? Math.min(1,Math.max(0,(-r.top)/total)) : 0;
+    p = total>0 ? Math.min(1,Math.max(0,(-r.top)/total)) : 0;   // Pinned-Fortschritt (Captions + Dolly-Zoom)
+    // Öffnungs-Fortschritt inkl. Eintritt → Laptop öffnet DURCHGEHEND ab Auftauchen, keine statische Phase
+    const span = innerHeight + (total>0?total:0);
+    openP = Math.min(1, Math.max(0, (innerHeight - r.top) / span));
     apply();
   }
   addEventListener('scroll', onScroll, {passive:true});
