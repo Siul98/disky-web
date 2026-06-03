@@ -2444,7 +2444,7 @@ async function renderOverview(){
     renderConstellation(drives);
     const _ar=document.getElementById("asstRobot");
     mountRobot(_ar);                 // Standbild sofort (offline, kein WebGL nötig) …
-    upgradeRobotToSpline(_ar);       // … dann LIVE-3D drüber (lokale Spline-Dateien), Intro wird kaschiert
+    /* web-demo: PNG-Robot statt Spline (perf) */       // … dann LIVE-3D drüber (lokale Spline-Dateien), Intro wird kaschiert
     startAsstAttention();            // zeigt hin und wieder auf einen Hinweis
     startOvClock();                  // Live-Uhr/Status-Konsole oben rechts
   }
