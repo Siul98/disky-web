@@ -1161,7 +1161,7 @@ if (sec && canvas && stage && screenEl) {
 
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(30, W0()/H0(), 10, 12000);
-  cam.position.set(0, 430, 2280); cam.lookAt(0, 205, 0);   // näher dran
+  cam.position.set(0, 500, 2200); cam.lookAt(0, 345, 0);   // näher dran + Display zentriert
 
   // Umgebungs-Reflexionen (macht das Alu echt)
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -1173,7 +1173,7 @@ if (sec && canvas && stage && screenEl) {
   scene.environmentIntensity = 0.45;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
-  let screenMat = null, cssScreen = null;
+  let screenMat = null, cssScreen = null, screenTex = null, drawScreen = null;
   const CSS_FIX = new THREE.Quaternion();   // Ausrichtungs-Korrektur (per window.__fix tunebar)
 
   // Boden-Schatten (weiche Kontaktfläche)
@@ -1186,6 +1186,103 @@ if (sec && canvas && stage && screenEl) {
   const easeOut = t => 1 - Math.pow(1-t, 3);
   const clock = new THREE.Clock();
 
+  // ===== Disky-Overview KOMPLETT GECODET auf Canvas → gestochen scharf, animiert, kein Video =====
+  function buildScreen(){
+    const cv=document.createElement('canvas'); cv.width=1600; cv.height=1000;
+    const x=cv.getContext('2d');
+    const tex=new THREE.CanvasTexture(cv); tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=8;
+    const C={bg:'#0b0e13',side:'#0e1219',panel:'#10151d',line:'#1c2530',acc:'#4a9eff',txt:'#e8edf4',mut:'#8893a4',mut2:'#5b6675'};
+    const nav=[['Overview',1],['Drives',0],['Projects',0],['Duplicates',0],['AI SuperSearch',0]];
+    const drives=[
+      {n:'T9',u:2.3,c:3.6,col:'#6cb2ff',dot:'#4ade80',a:-90},
+      {n:'LaCie Rugged',u:4.2,c:4.5,col:'#ff8a4c',dot:'#4ade80',a:-18,fill:true},
+      {n:'Studio RAID',u:10.9,c:29.1,col:'#8aa6c8',dot:null,a:54},
+      {n:'Archive 2023',u:7.0,c:7.3,col:'#ff6b6b',dot:'#ff6b6b',a:126},
+      {n:'Sony A7S',u:0.381,c:0.476,col:'#f5b942',dot:'#f5b942',a:198},
+    ];
+    const fmt=v=> v>=1? v.toFixed(1)+' TB' : Math.round(v*1000)+' GB';
+    function rr(px,py,w,h,r){ x.beginPath(); x.moveTo(px+r,py); x.arcTo(px+w,py,px+w,py+h,r); x.arcTo(px+w,py+h,px,py+h,r); x.arcTo(px,py+h,px,py,r); x.arcTo(px,py,px+w,py,r); x.closePath(); }
+    function atom(ax,ay,r,col){ x.save(); x.translate(ax,ay); x.strokeStyle=col; x.lineWidth=Math.max(1.6,r*0.11);
+      for(let i=0;i<3;i++){ x.save(); x.rotate(i*Math.PI/3); x.beginPath(); x.ellipse(0,0,r,r*0.42,0,0,7); x.stroke(); x.restore(); }
+      x.fillStyle=col; x.beginPath(); x.arc(0,0,r*0.22,0,7); x.fill(); x.restore(); }
+    function driveIcon(ax,ay,s,col){ x.save(); x.strokeStyle=col; x.lineWidth=2.2; rr(ax-s,ay-s*0.7,s*2,s*1.4,4); x.stroke();
+      x.beginPath(); x.moveTo(ax-s*0.45,ay+s*0.32); x.lineTo(ax+s*0.45,ay+s*0.32); x.stroke(); x.restore(); }
+    function draw(t){
+      x.fillStyle=C.bg; x.fillRect(0,0,1600,1000);
+      // ---- Sidebar ----
+      const SW=330; x.fillStyle=C.side; x.fillRect(0,0,SW,1000);
+      x.strokeStyle=C.line; x.lineWidth=1; x.beginPath(); x.moveTo(SW+.5,0); x.lineTo(SW+.5,1000); x.stroke();
+      atom(42,48,15,C.acc);
+      x.fillStyle=C.txt; x.textAlign='left'; x.textBaseline='middle'; x.font='700 26px -apple-system,system-ui,Roboto,sans-serif'; x.fillText('Disky',68,50);
+      let ny=104;
+      for(const [label,act] of nav){
+        if(act){ x.fillStyle='rgba(74,158,255,0.14)'; rr(16,ny,SW-32,44,9); x.fill(); }
+        x.strokeStyle=act?C.acc:C.mut; x.lineWidth=2; rr(30,ny+14,16,16,4); x.stroke();
+        x.fillStyle=act?C.txt:C.mut; x.font=(act?'600':'500')+' 19px -apple-system,system-ui,sans-serif'; x.fillText(label,64,ny+23);
+        ny+=52;
+      }
+      ny+=10; x.fillStyle=C.acc; rr(16,ny,SW-32,46,10); x.fill();
+      x.fillStyle='#fff'; x.font='600 19px -apple-system,system-ui,sans-serif'; x.textAlign='center'; x.fillText('+  Scan drive',SW/2,ny+24); x.textAlign='left';
+      ny+=82;
+      x.fillStyle=C.mut2; x.font='600 13px -apple-system,system-ui,sans-serif'; x.fillText('MY DRIVES',24,ny); ny+=32;
+      for(const d of drives){
+        const frac=Math.min(1,d.u/d.c);
+        x.fillStyle=C.txt; x.font='500 17px -apple-system,system-ui,sans-serif'; x.fillText(d.n,24,ny+11);
+        x.fillStyle=C.mut; x.font='500 14px -apple-system,system-ui,sans-serif'; x.textAlign='right'; x.fillText(fmt(d.u),SW-24,ny+11); x.textAlign='left';
+        const bx=24,bw=SW-48,by=ny+24;
+        x.fillStyle='rgba(255,255,255,0.07)'; rr(bx,by,bw,6,3); x.fill();
+        x.fillStyle=d.col; rr(bx,by,bw*frac,6,3); x.fill();
+        ny+=50;
+      }
+      // ---- Main ----
+      const MX=362;
+      x.fillStyle=C.mut; x.font='500 16px -apple-system,system-ui,sans-serif'; x.fillText('Overview',MX,42);
+      x.fillStyle=C.txt; x.font='800 44px -apple-system,system-ui,sans-serif'; x.fillText('Welcome back.',MX,102);
+      const stats=[['5','drives'],['112,594','files'],['24.8 TB','cataloged'],['0','duplicates']];
+      let sx=MX, sy=152;
+      for(let i=0;i<stats.length;i++){
+        x.fillStyle=C.txt; x.font='700 18px -apple-system,system-ui,sans-serif'; x.fillText(stats[i][0],sx,sy);
+        const w1=x.measureText(stats[i][0]).width;
+        x.fillStyle=C.mut; x.font='500 18px -apple-system,system-ui,sans-serif'; x.fillText(' '+stats[i][1],sx+w1+2,sy);
+        const w2=x.measureText(' '+stats[i][1]).width; sx+=w1+w2+36;
+        if(i<stats.length-1){ x.fillStyle=C.mut2; x.fillText('·',sx-24,sy); }
+      }
+      const px0=MX,py0=186,px1=1562,py1=958;
+      x.fillStyle=C.panel; rr(px0,py0,px1-px0,py1-py0,18); x.fill();
+      x.strokeStyle=C.line; x.lineWidth=1; rr(px0,py0,px1-px0,py1-py0,18); x.stroke();
+      const cx=(px0+px1)/2, cy=(py0+py1)/2, RX=362, RY=232;
+      const rg=x.createRadialGradient(cx,cy,0,cx,cy,RX); rg.addColorStop(0,'rgba(74,158,255,0.10)'); rg.addColorStop(1,'rgba(74,158,255,0)');
+      x.fillStyle=rg; x.beginPath(); x.ellipse(cx,cy,RX,RY+50,0,0,7); x.fill();
+      // connection lines (flowing)
+      for(const d of drives){ const a=d.a*Math.PI/180, nx=cx+RX*Math.cos(a), nyp=cy+RY*Math.sin(a);
+        x.strokeStyle='rgba(120,160,220,0.18)'; x.lineWidth=1.5; x.setLineDash([4,8]); x.lineDashOffset=-(t*22);
+        x.beginPath(); x.moveTo(cx,cy); x.lineTo(nx,nyp); x.stroke(); }
+      x.setLineDash([]);
+      // center pulse rings
+      for(let i=0;i<3;i++){ const ph=((t*0.5+i/3)%1); x.strokeStyle='rgba(74,158,255,'+(0.32*(1-ph))+')'; x.lineWidth=2; x.beginPath(); x.arc(cx,cy,42+ph*72,0,7); x.stroke(); }
+      // drive nodes
+      for(const d of drives){
+        const a=d.a*Math.PI/180, nx=cx+RX*Math.cos(a), nyp=cy+RY*Math.sin(a);
+        const frac=Math.min(1,d.u/d.c), br=0.96+0.04*Math.sin(t*1.5+d.a), R=46;
+        x.strokeStyle='rgba(255,255,255,0.10)'; x.lineWidth=5; x.beginPath(); x.arc(nx,nyp,R,0,7); x.stroke();
+        x.save(); x.strokeStyle=d.col; x.lineWidth=5; x.lineCap='round'; x.shadowColor=d.col; x.shadowBlur=9+5*Math.sin(t*2+d.a);
+        x.beginPath(); x.arc(nx,nyp,R,-Math.PI/2,-Math.PI/2+frac*br*Math.PI*2); x.stroke(); x.restore();
+        x.fillStyle='#0c1119'; x.beginPath(); x.arc(nx,nyp,R-9,0,7); x.fill();
+        if(d.fill){ x.fillStyle=d.col; rr(nx-15,nyp-11,30,22,5); x.fill(); } else driveIcon(nx,nyp,14,'#cdd6e2');
+        if(d.dot){ const dp=0.6+0.4*Math.sin(t*3+d.a); x.save(); x.globalAlpha=dp; x.fillStyle=d.dot; x.beginPath(); x.arc(nx+R*0.7,nyp-R*0.7,6,0,7); x.fill(); x.restore(); }
+        x.fillStyle=C.txt; x.textAlign='center'; x.font='600 18px -apple-system,system-ui,sans-serif'; x.fillText(d.n,nx,nyp+R+22);
+        x.fillStyle=C.mut; x.font='500 14px -apple-system,system-ui,sans-serif'; x.fillText(fmt(d.u)+' / '+fmt(d.c),nx,nyp+R+44); x.textAlign='left';
+      }
+      // center hub
+      x.fillStyle='#0e1622'; x.strokeStyle='rgba(74,158,255,0.5)'; x.lineWidth=2; x.beginPath(); x.arc(cx,cy,38,0,7); x.fill(); x.stroke();
+      atom(cx,cy-1,18,C.acc);
+      x.fillStyle=C.txt; x.textAlign='center'; x.font='700 18px -apple-system,system-ui,sans-serif'; x.fillText('Disky',cx,cy+58);
+      x.fillStyle=C.mut; x.font='500 13px -apple-system,system-ui,sans-serif'; x.fillText('5 drives · one catalog',cx,cy+78); x.textAlign='left';
+      tex.needsUpdate=true;
+    }
+    return {tex, draw};
+  }
+
   // Echtes MacBook-Modell laden (Sketchfab, CC-BY · timblewee) — inkl. Aufklapp-Animation
   new GLTFLoader().load('assets/macbook.glb', (gltf)=>{
     model = gltf.scene;
@@ -1197,20 +1294,12 @@ if (sec && canvas && stage && screenEl) {
     const TARGET = 1500;
     model.scale.setScalar(TARGET / Math.max(size.x, size.y, size.z));
     macRoot.add(model);
-    // Display: echte, animierte Übersicht als Video-Textur (selbstleuchtend → glüht im Disky-Look)
+    // Display: kompletter Disky-Overview LIVE GECODET (Canvas) — selbstleuchtend, glüht im Disky-Look
     model.traverse(o=>{ if(o.isMesh && o.material && o.material.name==='Material.002'){ screenMat=o.material; }});
     if(screenMat){
-      const vid=document.createElement('video');
-      vid.muted=true; vid.defaultMuted=true; vid.loop=true; vid.autoplay=true; vid.playsInline=true;
-      vid.setAttribute('muted',''); vid.setAttribute('playsinline',''); vid.setAttribute('autoplay','');
-      vid.src='assets/screen.mp4';
-      vid.style.cssText='position:fixed;left:-20px;top:-20px;width:2px;height:2px;opacity:0;pointer-events:none';
-      document.body.appendChild(vid);   // muss im DOM sein, damit es zuverlässig dekodiert/abspielt
-      const playIt=()=>{ const p=vid.play(); if(p&&p.catch)p.catch(()=>{}); };
-      playIt(); vid.addEventListener('loadeddata',playIt); vid.addEventListener('canplay',playIt);
-      const vt=new THREE.VideoTexture(vid); vt.colorSpace=THREE.SRGBColorSpace; vt.flipY=true; vt.anisotropy=8;
-      screenMat.map=vt; screenMat.emissive=new THREE.Color(0xffffff); screenMat.emissiveMap=vt; screenMat.emissiveIntensity=1.45;
-      screenMat.metalness=0; screenMat.roughness=0.42; screenMat.envMapIntensity=0.16; screenMat.needsUpdate=true;
+      const S=buildScreen(); screenTex=S.tex; drawScreen=S.draw; drawScreen(0);
+      screenMat.map=screenTex; screenMat.emissive=new THREE.Color(0xffffff); screenMat.emissiveMap=screenTex; screenMat.emissiveIntensity=1.5;
+      screenMat.metalness=0; screenMat.roughness=0.4; screenMat.envMapIntensity=0.14; screenMat.needsUpdate=true;
     }
     // Schatten unter dem Modell
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.6, TARGET*1.3), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false }));
@@ -1235,7 +1324,7 @@ if (sec && canvas && stage && screenEl) {
     const op = reduce ? 1 : Math.min(1, p/0.36);
     if (mixer && clip){ mixer.setTime(easeOut(op) * OPEN_T); }   // 0 = zu → offen beim Scrollen
     // beim Aufklappen größer werden → offen füllt das MacBook fast den ganzen Screen
-    macRoot.scale.setScalar(0.6 + 0.5 * easeOut(op));
+    macRoot.scale.setScalar(0.64 + 0.56 * easeOut(op));
     macRoot.rotation.y = reduce ? -0.12 : (p-0.5)*0.42;   // sanfte Drehung
     macRoot.rotation.x = 0;
     const s2=0.40, e2=0.98, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
@@ -1249,7 +1338,7 @@ if (sec && canvas && stage && screenEl) {
   resize();
   function frame(){
     const r=sec.getBoundingClientRect();
-    if(r.bottom>-300 && r.top<innerHeight+300){ renderer.render(scene,cam); css.render(scene,cam); }  // nur nah am Viewport rendern (Performance)
+    if(r.bottom>-300 && r.top<innerHeight+300){ if(drawScreen) drawScreen(clock.getElapsedTime()); renderer.render(scene,cam); css.render(scene,cam); }  // nur nah am Viewport rendern (Performance)
     raf=requestAnimationFrame(frame);
   }
 
