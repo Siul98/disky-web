@@ -306,6 +306,33 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .ag-node .nn{font-size:11.5px;font-weight:700;color:#dde4ee}.ag-node .ns{font-size:10px;color:var(--mut);margin-top:-3px}
 .ag-node .pin{position:absolute;top:-2px;right:18px;width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;border:1.5px solid #0c0f15}
 @media(max-width:760px){.glimpse-tilt{transform:rotateX(12deg);padding-left:0}.ag-window{width:980px}}
+/* ── Ohne / Mit Disky (Conversion) ── */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+@media(max-width:760px){.cmp{grid-template-columns:1fr}}
+.cmpcol{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:24px 26px}
+.cmpcol--good{border-color:rgba(74,158,255,.42);box-shadow:0 0 0 1px rgba(74,158,255,.2) inset,0 0 70px -30px rgba(74,158,255,.75)}
+.cmphd{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em;margin-bottom:6px}
+.cmpdot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.cmpdot.bad{background:#ff6b6b;box-shadow:0 0 10px rgba(255,107,107,.55)}
+.cmpdot.good{background:#4ade80;box-shadow:0 0 10px rgba(74,222,128,.55)}
+.cmpcol ul{list-style:none;padding:0;margin:0}
+.cmpcol li{position:relative;padding:11px 0 11px 30px;font-size:15px;line-height:1.5;color:var(--mut);border-top:1px solid rgba(255,255,255,.05)}
+.cmpcol li:first-child{border-top:none}
+.cmpcol--bad li:before{content:"✕";position:absolute;left:2px;top:11px;color:#ff6b6b;font-weight:700;font-size:13px}
+.cmpcol--good li{color:#d3dae5}
+.cmpcol--good li:before{content:"✓";position:absolute;left:1px;top:11px;color:#4ade80;font-weight:700}
+/* ── Wert-Banner (ROI) ── */
+.valuebar{max-width:1080px;margin:0 auto;padding:0 24px}
+.valuebox{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center;text-align:center;
+  background:radial-gradient(120% 160% at 50% 0,rgba(74,222,128,.10),transparent 60%),var(--bg2);
+  border:1px solid var(--line);border-radius:22px;padding:26px 30px}
+.valuebox .vlead{font-size:clamp(17px,2.2vw,21px);font-weight:700;letter-spacing:-.01em;color:#eef1f6;max-width:60ch}
+.valuebox .vsub{color:var(--mut);font-size:14.5px;max-width:62ch;margin:0}
+/* ── Abschluss-CTA ── */
+.endcta-box{max-width:780px;margin:0 auto;text-align:center;
+  background:radial-gradient(120% 130% at 50% 0,rgba(74,158,255,.14),transparent 62%),var(--bg2);
+  border:1px solid var(--line);border-radius:26px;padding:50px 28px}
+.endcta-box .sec{margin-top:0}
 </style></head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -412,6 +439,42 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
         <path d="M21 15.5 l1.6 3.9 l3.9 1.6 l-3.9 1.6 l-1.6 3.9 l-1.6 -3.9 l-3.9 -1.6 l3.9 -1.6 Z" fill="currentColor" stroke="none"/></svg></div>
       <h3 data-t="hiw3_h3">Jederzeit wiederfinden</h3>
       <p data-t="hiw3_p">Tippe einen Namen und finde jede Datei in Sekunden — über alle Laufwerke, ohne eine einzige anzustecken.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="warum" style="padding-bottom:34px">
+  <h2 class="sec" data-t="cmp_h2">Warum Disky?</h2>
+  <p class="sec-sub" data-t="cmp_sub">Der Unterschied zwischen „liegt irgendwo auf einer Platte" und „in 2 Sekunden gefunden".</p>
+  <div class="cmp">
+    <div class="cmpcol cmpcol--bad">
+      <div class="cmphd"><span class="cmpdot bad"></span><span data-t="cmp_bad_t">Ohne Disky</span></div>
+      <ul data-th="cmp_bad_li">
+        <li>Zehn Platten durchstecken, nur um eine Datei zu finden</li>
+        <li>Keine Ahnung, welches Projekt schon ein Backup hat</li>
+        <li>Neue Platte kaufen, weil die alte „voll" ist</li>
+        <li>Dieselben Clips liegen drei Mal auf drei Platten</li>
+        <li>Stunden mit Suchen statt Schneiden</li>
+      </ul>
+    </div>
+    <div class="cmpcol cmpcol--good">
+      <div class="cmphd"><span class="cmpdot good"></span><span data-t="cmp_good_t">Mit Disky</span></div>
+      <ul data-th="cmp_good_li">
+        <li>Ein Suchfeld findet jede Datei — auch wenn die Platte im Schrank liegt</li>
+        <li>Disky meldet von selbst, was noch kein Backup hat</li>
+        <li>Erst aufräumen: oft ist die halbe Platte nur Cache &amp; Duplikate</li>
+        <li>Duplikate über alle Platten erkannt — auf den Gigabyte genau</li>
+        <li>In Sekunden gefunden, zurück zum Schnitt</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="valuebar" style="padding:0 0 70px">
+  <div class="valuebox">
+    <div>
+      <div class="vlead" data-th="val_lead">Bevor du die nächste 4-TB-Platte für 120&nbsp;€ kaufst: meistens liegen schon GB an Duplikaten und Cache auf den Platten, die du hast.</div>
+      <p class="vsub" data-t="val_sub">Disky rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst — und du löschst nur, was du selbst freigibst.</p>
     </div>
   </div>
 </section>
@@ -612,6 +675,16 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   <div class="faq" id="faqlist"></div>
 </section>
 
+<section class="section endcta" style="padding-top:10px">
+  <div class="endcta-box">
+    <h2 class="sec" data-t="end_h2">Behalte dein ganzes Archiv im Griff.</h2>
+    <p class="sec-sub" data-t="end_sub">Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis, nichts wird verändert.</p>
+    <div class="cta" style="justify-content:center;margin-top:6px">
+      <a class="btn big" href="#download" data-t="end_cta">Kostenlos starten</a>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="fcols">
     <div data-th="foot_tag"><b>Disky</b><br>Dein Festplatten-Katalog.<br>Lokal &amp; offline.</div>
@@ -671,6 +744,17 @@ const I18N={
  hiw2_p:{de:`Ein interaktives Rad zeigt sofort, was deinen Speicher füllt — Projekt für Projekt, bis zur einzelnen Datei.`,en:`An interactive wheel instantly shows what's filling your storage — project by project, down to the single file.`},
  hiw3_h3:{de:`Jederzeit wiederfinden`,en:`Find it anytime`},
  hiw3_p:{de:`Tippe einen Namen und finde jede Datei in Sekunden — über alle Laufwerke, ohne eine einzige anzustecken.`,en:`Type a name and find any file in seconds — across every drive, without plugging in a single one.`},
+ cmp_h2:{de:`Warum Disky?`,en:`Why Disky?`},
+ cmp_sub:{de:`Der Unterschied zwischen „liegt irgendwo auf einer Platte" und „in 2 Sekunden gefunden".`,en:`The difference between “somewhere on a drive” and “found in 2 seconds”.`},
+ cmp_bad_t:{de:`Ohne Disky`,en:`Without Disky`},
+ cmp_good_t:{de:`Mit Disky`,en:`With Disky`},
+ cmp_bad_li:{de:`<li>Zehn Platten durchstecken, nur um eine Datei zu finden</li><li>Keine Ahnung, welches Projekt schon ein Backup hat</li><li>Neue Platte kaufen, weil die alte „voll" ist</li><li>Dieselben Clips liegen drei Mal auf drei Platten</li><li>Stunden mit Suchen statt Schneiden</li>`,en:`<li>Digging through ten drives just to find one file</li><li>No idea which project already has a backup</li><li>Buying a new drive because the old one is “full”</li><li>The same clips sitting on three drives at once</li><li>Hours spent searching instead of editing</li>`},
+ cmp_good_li:{de:`<li>Ein Suchfeld findet jede Datei — auch wenn die Platte im Schrank liegt</li><li>Disky meldet von selbst, was noch kein Backup hat</li><li>Erst aufräumen: oft ist die halbe Platte nur Cache &amp; Duplikate</li><li>Duplikate über alle Platten erkannt — auf den Gigabyte genau</li><li>In Sekunden gefunden, zurück zum Schnitt</li>`,en:`<li>One search box finds any file — even when the drive is in the drawer</li><li>Disky tells you on its own what still has no backup</li><li>Clean up first: often half the drive is just cache &amp; duplicates</li><li>Duplicates spotted across every drive — to the gigabyte</li><li>Found in seconds, back to editing</li>`},
+ val_lead:{de:`Bevor du die nächste 4-TB-Platte für 120&nbsp;€ kaufst: meistens liegen schon GB an Duplikaten und Cache auf den Platten, die du hast.`,en:`Before you buy the next 4&nbsp;TB drive for €120: usually there are already GBs of duplicates and cache sitting on the drives you own.`},
+ val_sub:{de:`Disky rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst — und du löschst nur, was du selbst freigibst.`,en:`Disky calculates to the gigabyte how much you can free up — and you only delete what you release yourself.`},
+ end_h2:{de:`Behalte dein ganzes Archiv im Griff.`,en:`Keep your whole archive under control.`},
+ end_sub:{de:`Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis, nichts wird verändert.`,en:`Scan your first drive in seconds — the first 2 are free, nothing gets changed.`},
+ end_cta:{de:`Kostenlos starten`,en:`Get started free`},
  sc_asst_eb:{de:`Dein Assistent · im Hintergrund`,en:`Your assistant · in the background`},
  sc_asst_h3:{de:`Disky arbeitet für dich — nicht umgekehrt.`,en:`Disky works for you — not the other way around.`},
  sc_asst_p:{de:`Disky läuft still im Hintergrund und meldet sich nur, wenn's zählt: <b>welches Projekt noch kein Backup hat</b>, wo unnötiger Speicher liegt, was du gefahrlos freiräumen kannst. Kein Mehraufwand — Disky nimmt dir Arbeit ab.`,en:`Disky runs quietly in the background and only speaks up when it matters: <b>which project still has no backup</b>, where space is wasted, what you can safely free up. No extra work — Disky takes work off your hands.`},
@@ -872,6 +956,7 @@ applyLang(LANG);
 (function(){
   var cv=document.getElementById('stars'); if(!cv) return; var ctx=cv.getContext('2d'); if(!ctx) return;
   var dpr=Math.min(2,window.devicePixelRatio||1), w=0,h=0, stars=[], tk=0, raf=0;
+  var reduce=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
   function spawn(){ var n=Math.max(60,Math.min(240, Math.round(w*h/9000))); stars=[];
     for(var i=0;i<n;i++) stars.push([Math.random()*w, Math.random()*h, Math.random()*6.283, (Math.random()<0.32?1.7:0.9)+Math.random()*0.5, 0.25+Math.random()*0.55]); }
   function resize(){ w=innerWidth; h=innerHeight; cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); spawn(); }
@@ -879,8 +964,9 @@ applyLang(LANG);
     for(var i=0;i<stars.length;i++){ var s=stars[i]; var tw=0.5+0.5*Math.sin(tk*0.03+s[2]);
       ctx.globalAlpha=Math.min(1, s[4]*(0.35+0.65*tw)); ctx.fillStyle='#cfe6ff';
       var r=s[3]*(0.7+0.5*tw); ctx.beginPath(); ctx.arc(s[0],s[1],r,0,6.283); ctx.fill(); }
-    ctx.globalAlpha=1; raf=requestAnimationFrame(draw); }
+    ctx.globalAlpha=1; if(!reduce && !document.hidden) raf=requestAnimationFrame(draw); }
   resize(); addEventListener('resize',function(){ cancelAnimationFrame(raf); resize(); draw(); }); draw();
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden && !reduce){ cancelAnimationFrame(raf); draw(); } });
 })();
 </script>
 </body></html>
