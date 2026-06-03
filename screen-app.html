@@ -16,6 +16,8 @@
     var tries=0;
     (function go(){ var el=document.querySelector('.nav[data-v="'+v+'"]'); if(el){ el.click(); } else if(tries++<30){ setTimeout(go,120); } })();
   });
+  // Handshake: dem Parent melden, sobald die App-Navigation gerendert ist → Parent setzt die Ansicht zuverlässig
+  (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })();
   if(sessionStorage.getItem('diskyDemoSeeded')==='3') return;
   var TB=1e12, GB=1e9;
   var drives=[
