@@ -16,9 +16,9 @@
     var tries=0;
     (function go(){ var el=document.querySelector('.nav[data-v="'+v+'"]'); if(el){ el.click(); } else if(tries++<30){ setTimeout(go,120); } })();
   });
-  // Handshake: dem Parent melden, sobald die App-Navigation gerendert ist → Parent setzt die Ansicht zuverlässig
-  (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })();
-  if(sessionStorage.getItem('diskyDemoSeeded')==='3') return;
+  // Handshake: dem Parent melden, sobald die geseedete App-Navigation gerendert ist (NICHT vor dem Seed-Reload)
+  function pingReady(){ (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })(); }
+  if(sessionStorage.getItem('diskyDemoSeeded')==='3'){ pingReady(); return; }
   var TB=1e12, GB=1e9;
   var drives=[
     {label:'T9', driveType:'t9', bytes:2.3*TB, capacityBytes:3.6*TB, fileCount:18000, volumeName:'T9'},
