@@ -26,6 +26,8 @@ html,body{margin:0}
 body{background:var(--bg);color:var(--txt);
   font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* Funkelnde Sterne im Hintergrund (wie in der App) */
+#stars{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
 a{color:inherit;text-decoration:none}
 
 /* Nav */
@@ -306,7 +308,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 @media(max-width:760px){.glimpse-tilt{transform:rotateX(12deg);padding-left:0}.ag-window{width:980px}}
 </style></head>
 <body>
-
+<canvas id="stars" aria-hidden="true"></canvas>
 <nav>
   <a class="brand" href="index.html" title="Zur Startseite">
     <svg viewBox="0 0 100 100"><rect width="200" height="200" rx="46" fill="#11151c"/>
@@ -863,6 +865,22 @@ applyLang(LANG);
   const wrap=document.querySelector(".how");
   cards.forEach(c=>c.addEventListener("mouseenter",()=>{ paused=true; cards.forEach(x=>x.classList.remove("hot")); }));
   if(wrap) wrap.addEventListener("mouseleave",()=>{ paused=false; setHot(i); });
+})();
+</script>
+<script>
+/* Funkelnde Sterne — kleine, dezent schimmernde Punkte hinter dem Inhalt (wie in der App) */
+(function(){
+  var cv=document.getElementById('stars'); if(!cv) return; var ctx=cv.getContext('2d'); if(!ctx) return;
+  var dpr=Math.min(2,window.devicePixelRatio||1), w=0,h=0, stars=[], tk=0, raf=0;
+  function spawn(){ var n=Math.max(60,Math.min(240, Math.round(w*h/9000))); stars=[];
+    for(var i=0;i<n;i++) stars.push([Math.random()*w, Math.random()*h, Math.random()*6.283, (Math.random()<0.32?1.7:0.9)+Math.random()*0.5, 0.25+Math.random()*0.55]); }
+  function resize(){ w=innerWidth; h=innerHeight; cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); spawn(); }
+  function draw(){ tk++; ctx.clearRect(0,0,w,h);
+    for(var i=0;i<stars.length;i++){ var s=stars[i]; var tw=0.5+0.5*Math.sin(tk*0.03+s[2]);
+      ctx.globalAlpha=Math.min(1, s[4]*(0.35+0.65*tw)); ctx.fillStyle='#cfe6ff';
+      var r=s[3]*(0.7+0.5*tw); ctx.beginPath(); ctx.arc(s[0],s[1],r,0,6.283); ctx.fill(); }
+    ctx.globalAlpha=1; raf=requestAnimationFrame(draw); }
+  resize(); addEventListener('resize',function(){ cancelAnimationFrame(raf); resize(); draw(); }); draw();
 })();
 </script>
 </body></html>
