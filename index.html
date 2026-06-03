@@ -1226,7 +1226,7 @@ if (sec && canvas && stage && screenEl) {
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
-  let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null;
+  let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null, appHost = null;
   const CSS_FIX = new THREE.Quaternion();   // Ausrichtungs-Korrektur (per window.__fix tunebar)
 
   // Boden-Schatten (weiche Kontaktfläche)
@@ -1303,7 +1303,7 @@ if (sec && canvas && stage && screenEl) {
       const ctr=new THREE.Vector3(); bb.getCenter(ctr);
       const dims=[['x',sz.x],['y',sz.y],['z',sz.z]].sort((a,b)=>a[1]-b[1]);
       const normalAxis=dims[0][0];                 // dünnste Achse = Display-Normale
-      const host=document.createElement('div');
+      const host=document.createElement('div'); appHost=host;
       host.style.cssText='width:1600px;height:1000px;overflow:hidden;background:#0a0c10;opacity:0;transition:opacity .5s ease';
       appFrame=document.createElement('iframe');
       appFrame.src='screen-app.html?lang='+(LANG==='de'?'de':'en');
@@ -1403,8 +1403,8 @@ if (sec && canvas && stage && screenEl) {
     openP = Math.min(1, Math.max(0, (innerHeight - r.top) / span));
     apply();
   }
-  // Handshake: sobald die Live-App im iframe bereit ist, die aktuelle Ansicht zuverlässig setzen
-  addEventListener('message', (e)=>{ if(e&&e.data&&e.data.diskyReady){ lastView=null; if(ready) apply(); } });
+  // Handshake: sobald die Live-App im iframe bereit ist → einblenden + die aktuelle Ansicht zuverlässig setzen
+  addEventListener('message', (e)=>{ if(e&&e.data&&e.data.diskyReady){ if(appHost) appHost.style.opacity='1'; lastView=null; if(ready) apply(); } });
   addEventListener('scroll', onScroll, {passive:true});
   addEventListener('resize', ()=>{ resize(); onScroll(); });
   onScroll(); apply();
