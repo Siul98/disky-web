@@ -1161,7 +1161,7 @@ if (sec && canvas && stage && screenEl) {
 
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(30, W0()/H0(), 10, 12000);
-  cam.position.set(0, 430, 2520); cam.lookAt(0, 150, 0);   // näher dran
+  cam.position.set(0, 430, 2280); cam.lookAt(0, 205, 0);   // näher dran
 
   // Umgebungs-Reflexionen (macht das Alu echt)
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -1234,7 +1234,9 @@ if (sec && canvas && stage && screenEl) {
   function apply(){
     const op = reduce ? 1 : Math.min(1, p/0.36);
     if (mixer && clip){ mixer.setTime(easeOut(op) * OPEN_T); }   // 0 = zu → offen beim Scrollen
-    macRoot.rotation.y = reduce ? -0.16 : (p-0.5)*0.5;   // sanfte Drehung
+    // beim Aufklappen größer werden → offen füllt das MacBook fast den ganzen Screen
+    macRoot.scale.setScalar(0.6 + 0.5 * easeOut(op));
+    macRoot.rotation.y = reduce ? -0.12 : (p-0.5)*0.42;   // sanfte Drehung
     macRoot.rotation.x = 0;
     const s2=0.40, e2=0.98, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
     setFeat(Math.min(feats.length-1, Math.floor(fp*feats.length)));
