@@ -375,8 +375,8 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Captions als „laufende" Talking-Points LINKS neben dem MacBook (klar sichtbar, sliden rein) */
 .mb-caps{position:absolute;left:4vw;top:50%;transform:translateY(-50%);width:min(280px,25vw);height:180px;text-align:left;z-index:6;pointer-events:none}
-.mb-cap{position:absolute;left:0;right:0;top:0;opacity:0;transform:translateX(-24px);transition:opacity .4s ease,transform .4s cubic-bezier(.22,1,.36,1);pointer-events:none}
-.mb-cap.on{opacity:1;transform:none}
+.mb-cap{position:absolute;left:0;right:0;top:0;opacity:0;visibility:hidden;transform:translateX(-24px);transition:opacity .4s ease,transform .4s cubic-bezier(.22,1,.36,1),visibility 0s linear .4s;pointer-events:none}
+.mb-cap.on{opacity:1;visibility:visible;transform:none;transition:opacity .4s ease,transform .4s cubic-bezier(.22,1,.36,1),visibility 0s}
 .mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(19px,2.1vw,26px);letter-spacing:-.02em;margin:0 0 8px;
   background:linear-gradient(105deg,#fff,#eef2f7 40%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
 .mb-cap p{margin:0;color:#b8c3d2;font-size:15px;line-height:1.55;max-width:30ch;text-shadow:0 2px 14px rgba(0,0,0,.85)}
