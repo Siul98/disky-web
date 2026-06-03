@@ -1153,7 +1153,7 @@ if (sec && canvas && stage && screenEl) {
   renderer.setPixelRatio(Math.min(2, devicePixelRatio||1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.92;
+  renderer.toneMappingExposure = 0.86;
 
   const css = new CSS3DRenderer();
   css3dHost.appendChild(css.domElement);
@@ -1161,7 +1161,7 @@ if (sec && canvas && stage && screenEl) {
 
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(28, W0()/H0(), 300, 6000);   // enge Near/Far-Spanne → präziser Tiefenpuffer → kein Z-Fighting
-  cam.position.set(0, 600, 2750); cam.lookAt(0, 360, 0);   // ganzes MacBook im Bild, nie abgeschnitten
+  cam.position.set(0, 430, 2320); cam.lookAt(0, 470, 0);   // tiefer & frontaler → Screen gerade von vorn, ganzes MacBook im Bild
 
   // Umgebungs-Reflexionen (macht das Alu echt)
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -1170,7 +1170,7 @@ if (sec && canvas && stage && screenEl) {
   scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
   const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(300, 2400, 2200); scene.add(key);   // mittiger + schwächer → weicher, breiter Schein statt harter Hotspot
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
-  scene.environmentIntensity = 0.45;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
+  scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
   let screenMat = null, cssScreen = null, screenTex = null, drawScreen = null;
@@ -1295,7 +1295,18 @@ if (sec && canvas && stage && screenEl) {
     model.scale.setScalar(TARGET / Math.max(size.x, size.y, size.z));
     macRoot.add(model);
     // Display: kompletter Disky-Overview LIVE GECODET (Canvas) — selbstleuchtend, glüht im Disky-Look
-    model.traverse(o=>{ if(o.isMesh && o.material && o.material.name==='Material.002'){ screenMat=o.material; }});
+    model.traverse(o=>{
+      if(!(o.isMesh && o.material)) return;
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      mats.forEach(m=>{
+        if(m.name==='Material.002'){ screenMat=m; return; }
+        // Alu/Gehäuse mattieren → keine krasse Reflektion / kein harter Chromstreifen oben
+        if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.4); }
+        if('metalness' in m){ m.metalness = Math.min(m.metalness!=null?m.metalness:0.6, 0.5); }
+        m.envMapIntensity = 0.18;
+        m.needsUpdate = true;
+      });
+    });
     if(screenMat){
       const S=buildScreen(); screenTex=S.tex; drawScreen=S.draw; drawScreen(0);
       screenMat.map=screenTex; screenMat.emissive=new THREE.Color(0xffffff); screenMat.emissiveMap=screenTex; screenMat.emissiveIntensity=1.5;
