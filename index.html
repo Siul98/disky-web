@@ -136,11 +136,11 @@ h2.sec{text-align:center;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;ma
 .showcase:hover .scai-plays>path:nth-child(3){animation-delay:.36s}
 .showcase:hover .scai-plays>path:nth-child(4){animation-delay:.54s}
 @keyframes ringSettle{0%{transform:rotate(-44deg)}100%{transform:rotate(0deg)}}
-@keyframes hogOut{0%{transform:translate(0,0)}100%{transform:translate(5px,4px)}}
+@keyframes hogOut{0%{transform:scale(1)}100%{transform:scale(1.13)}}
 @keyframes hogPulse{0%,100%{stroke:#ff6b6b;filter:drop-shadow(0 0 4px rgba(255,107,107,.5))}50%{stroke:#ff4d4d;filter:drop-shadow(0 0 9px rgba(255,80,80,.95))}}
 .scsm-spin{transform-box:view-box;transform-origin:60px 60px}
 .showcase:hover .scsm-spin{animation:ringSettle 1s cubic-bezier(.2,.85,.25,1) both}
-.scsm-hog{transform-box:fill-box}
+.scsm-hog{transform-box:view-box;transform-origin:60px 60px;filter:drop-shadow(0 0 4px rgba(255,107,107,.45))}
 .showcase:hover .scsm-hog{animation:hogOut .55s cubic-bezier(.34,1.4,.5,1) 1s both, hogPulse 1.4s ease-in-out 1s infinite}
 .scdup-r{transform-box:fill-box}
 .showcase:hover .scdup-r{animation:scNudge 2.2s ease-in-out infinite}
@@ -580,7 +580,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
     <div class="sc-vis">
       <svg viewBox="0 0 120 120">
         <g class="scsm-spin"><g transform="rotate(-90 60 60)" fill="none" stroke-width="17" pathLength="100">
-          <circle class="scsm-hog" cx="60" cy="60" r="44" stroke="#4a9eff" stroke-dasharray="21 79" stroke-dashoffset="0"/>
+          <circle cx="60" cy="60" r="44" stroke="#4a9eff" stroke-dasharray="21 79" stroke-dashoffset="0"/>
           <circle cx="60" cy="60" r="44" stroke="#2dd4bf" stroke-dasharray="7 93" stroke-dashoffset="-22.3"/>
           <circle cx="60" cy="60" r="44" stroke="#6aa8ff" stroke-dasharray="13 87" stroke-dashoffset="-30.6"/>
           <circle cx="60" cy="60" r="44" stroke="#38bdf8" stroke-dasharray="16 84" stroke-dashoffset="-44.9"/>
@@ -588,6 +588,8 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
           <circle cx="60" cy="60" r="44" stroke="#22d3ee" stroke-dasharray="11 89" stroke-dashoffset="-68.5"/>
           <circle cx="60" cy="60" r="44" stroke="#5b93ef" stroke-dasharray="9 91" stroke-dashoffset="-80.8"/>
           <circle cx="60" cy="60" r="44" stroke="#14b8a6" stroke-dasharray="7 93" stroke-dashoffset="-91.1"/>
+          <!-- EIN Speicherfresser: genau ein roter Bogen (pathLength=100 → kein Wiederholen), ploppt beim Hover raus -->
+          <circle class="scsm-hog" cx="60" cy="60" r="44" stroke="#ff6b6b" pathLength="100" stroke-dasharray="15 85" stroke-dashoffset="0"/>
         </g></g>
         <text x="60" y="57" text-anchor="middle" fill="#eef1f6" font-size="15" font-weight="800" font-family="-apple-system,sans-serif" data-t="m_tb">1,4 TB</text>
         <text x="60" y="71" text-anchor="middle" fill="#8a93a3" font-size="8" font-family="-apple-system,sans-serif" data-t="m_used">belegt</text>
