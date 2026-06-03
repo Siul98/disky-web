@@ -333,32 +333,17 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   background:radial-gradient(120% 130% at 50% 0,rgba(74,158,255,.14),transparent 62%),var(--bg2);
   border:1px solid var(--line);border-radius:26px;padding:50px 28px}
 .endcta-box .sec{margin-top:0}
-/* ── MacBook (CSS-3D) Scroll-Showcase — echtes MacBook, dreht leicht beim Scrollen ── */
-.mb-scroll{position:relative;height:460vh}
+/* ── MacBook (echtes WebGL-3D · Three.js) — klappt auf & dreht beim Scrollen ── */
+.mb-scroll{position:relative;height:500vh}
 .mb-head{text-align:center;padding:64px 24px 0;position:relative;z-index:2}
 .mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
-.mb-stage{position:relative;width:min(960px,94vw);height:62vh;perspective:2400px;perspective-origin:50% 34%}
-.mb-device{position:absolute;left:50%;top:42%;width:min(660px,84vw);
-  transform:translate(-50%,-50%) rotateX(var(--rx,20deg)) rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg));
-  transform-style:preserve-3d;will-change:transform}
-/* Deckel = Display-Einheit (Alu-Rahmen, 16:10-Screen, dünne Ränder, Notch) */
-.mb-lid{position:relative;width:100%;aspect-ratio:16/10.55;transform-origin:50% 100%;transform:rotateX(var(--open,-3deg));transform-style:preserve-3d;
-  border-radius:20px;padding:10px 10px 13px;
-  background:linear-gradient(152deg,#3a4046 0%,#262b31 34%,#15181d 100%);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 34px 66px -26px rgba(0,0,0,.9)}
-.mb-screen{position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;background:#06080b;
-  box-shadow:inset 0 0 0 1px #000,inset 0 0 26px rgba(0,0,0,.55)}
-.mb-notch{position:absolute;z-index:6;top:10px;left:50%;transform:translateX(-50%);width:15%;height:12px;background:#0a0c10;border-radius:0 0 7px 7px}
-/* Tastatur-Deck (liegt flach am Scharnier, perspektivisch verkürzt) */
-.mb-deck{position:absolute;left:50%;top:100%;width:107%;height:62%;transform-origin:50% 0%;transform:translateX(-50%) rotateX(-90deg);
-  border-radius:0 0 18px 18px;background:linear-gradient(180deg,#2c3138 0%,#1b1f25 32%,#0f1216 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 50px 60px -26px rgba(0,0,0,.85)}
-.mb-deck .mb-kb{position:absolute;left:50%;top:12%;transform:translateX(-50%);width:82%;height:46%;border-radius:7px;opacity:.5;
-  background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 6.5px,transparent 6.5px 9.5px),repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 6.5px,transparent 6.5px 11px)}
-.mb-deck .mb-pad{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);width:32%;height:30%;border-radius:8px;background:rgba(255,255,255,.045);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
-.mb-deck::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:13%;height:7px;border-radius:0 0 6px 6px;background:#0b0d11}
+.mb-stage{position:relative;width:min(1060px,96vw);height:66vh}
+.mb-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mb-css3d{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+/* #mbScreens = Bildschirm-Inhalt (feste Design-Pixel, von CSS3D ins 3D-Modell platziert) */
+.mb-screens{width:1180px;height:738px;overflow:hidden;background:#0a0c10;position:relative}
 /* Feature-Ebenen im Screen */
-.mb-feat{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;display:flex;flex-direction:column;
+.mb-feat{position:absolute;inset:0;opacity:0;transition:opacity .35s ease;display:flex;flex-direction:column;
   padding:5% 6%;background:radial-gradient(120% 100% at 50% 0,rgba(74,158,255,.12),transparent 60%),#0b0e13}
 .mb-feat.on{opacity:1}
 .mb-feat .mf-bar{display:flex;align-items:center;gap:5px;margin-bottom:6%}
@@ -367,7 +352,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat .mf-vis svg{max-width:86%;max-height:100%;height:auto}
 /* Übersicht-Seite (echte App-UI) im Screen — auf Screenbreite skaliert */
 .mb-ov{position:absolute;inset:0;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0a0c10}
-.mb-ov .ag-window{flex:0 0 auto;transform:scale(var(--ags,.5));transform-origin:center;border:none!important;border-radius:0;box-shadow:none}
+.mb-ov .ag-window{flex:0 0 auto;transform:none;transform-origin:center;border:none!important;border-radius:0;box-shadow:none}
 .mb-feat.on .ag-node .disc{animation:ringIn 1.3s cubic-bezier(.22,1,.36,1) both}
 .mb-feat.on .ag-dr .agfill{animation:agGrow 1.2s cubic-bezier(.22,1,.36,1) both}
 @keyframes mfFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2.5%) scale(1.02)}}
@@ -386,6 +371,12 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-dots i.on{background:var(--acc);width:22px;border-radius:6px}
 @media(max-width:820px){.mb-scroll{height:auto}.mb-sticky{position:static;height:auto;padding:24px 0 40px}.mb-stage{height:62vh}}
 </style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -425,8 +416,9 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   </div>
   <div class="mb-sticky">
     <div class="mb-stage">
-      <div class="mb-device">
-        <div class="mb-lid"><span class="mb-notch"></span><div class="mb-screen">
+      <canvas class="mb-gl"></canvas>
+      <div class="mb-css3d" aria-hidden="true"></div>
+      <div class="mb-screens" id="mbScreens">
         <!-- 1 · Übersicht (echte App-UI, animiert) -->
         <div class="mb-feat on" data-i="0"><div class="mb-ov">
           <div class="ag-window">
@@ -504,8 +496,6 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
             <g class="mf-blink" fill="#fff" opacity=".92"><path d="M68 72 v16 l13 -8 Z"/><path d="M218 72 v16 l13 -8 Z"/><path d="M68 138 v16 l13 -8 Z"/><path d="M218 138 v16 l13 -8 Z"/></g>
           </svg></div>
         </div>
-      </div></div>
-        <div class="mb-deck"><span class="mb-kb"></span><span class="mb-pad"></span></div>
       </div>
     </div>
     <div class="mb-caps">
@@ -1130,39 +1120,129 @@ applyLang(LANG);
   if(wrap) wrap.addEventListener("mouseleave",()=>{ paused=false; setHot(i); });
 })();
 </script>
-<script>
-/* MacBook-Showcase: dreht leicht beim Scrollen, wechselt das Feature im Display; Übersicht skaliert auf Screenbreite */
-(function(){
-  var sec=document.querySelector('.mb-scroll'); if(!sec) return;
-  var dev=sec.querySelector('.mb-device');
-  var scr=sec.querySelector('.mb-screen');
-  var feats=[].slice.call(sec.querySelectorAll('.mb-feat'));
-  var caps=[].slice.call(sec.querySelectorAll('.mb-cap'));
-  var dots=[].slice.call(sec.querySelectorAll('.mb-dots i'));
-  var reduce=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-  var n=feats.length, cur=-1;
-  function setFeat(i){ if(i===cur) return; cur=i;
-    feats.forEach(function(f,k){ f.classList.toggle('on',k===i); });
-    caps.forEach(function(f,k){ f.classList.toggle('on',k===i); });
-    dots.forEach(function(f,k){ f.classList.toggle('on',k===i); }); }
-  function fitOv(){ if(scr&&dev){ var w=scr.clientWidth; if(w) dev.style.setProperty('--ags', (w/1180).toFixed(4)); } }
-  function onScroll(){
-    var r=sec.getBoundingClientRect();
-    var total=sec.offsetHeight-innerHeight;
-    if(total<=0){ if(dev){ dev.style.setProperty('--rx','13deg'); dev.style.setProperty('--ry','0deg'); } setFeat(0); return; }
-    var p = Math.min(1,Math.max(0,(-r.top)/total));
-    if(dev && !reduce){
-      dev.style.setProperty('--rx', (22 - 9*p).toFixed(2)+'deg');     // 22°→13°, richtet sich beim Scrollen leicht auf
-      dev.style.setProperty('--ry', ((p-0.5)*15).toFixed(2)+'deg');   // sanfte Drehung -7.5°→+7.5°
-    }
-    var s=0.06, e=0.97; var fp=Math.min(0.9999,Math.max(0,(p-s)/(e-s)));
-    setFeat(Math.min(n-1, Math.floor(fp*n)));
+<script type="module">
+/* MacBook-Showcase: echtes WebGL-3D (Three.js). Deckel klappt auf + dreht beim Scrollen;
+   die echte Übersicht-Seite liegt als live HTML (CSS3D) auf dem Bildschirm und bewegt sich mit. */
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const sec = document.querySelector('.mb-scroll');
+const stage = sec && sec.querySelector('.mb-stage');
+const canvas = sec && sec.querySelector('.mb-gl');
+const css3dHost = sec && sec.querySelector('.mb-css3d');
+const screenEl = document.getElementById('mbScreens');
+const caps = sec ? [].slice.call(sec.querySelectorAll('.mb-cap')) : [];
+const dots = sec ? [].slice.call(sec.querySelectorAll('.mb-dots i')) : [];
+const feats = screenEl ? [].slice.call(screenEl.querySelectorAll('.mb-feat')) : [];
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function setFeat(i){
+  feats.forEach((f,k)=>f.classList.toggle('on',k===i));
+  caps.forEach((f,k)=>f.classList.toggle('on',k===i));
+  dots.forEach((f,k)=>f.classList.toggle('on',k===i));
+}
+setFeat(0);
+
+if (sec && canvas && stage && screenEl) {
+  const W0 = ()=>stage.clientWidth||960, H0 = ()=>stage.clientHeight||560;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio||1));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+
+  const css = new CSS3DRenderer();
+  css3dHost.appendChild(css.domElement);
+  css.domElement.style.position='absolute'; css.domElement.style.top='0'; css.domElement.style.left='0';
+
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(32, W0()/H0(), 10, 12000);
+  cam.position.set(0, 720, 2680); cam.lookAt(0, 300, -10);
+
+  // Umgebungs-Reflexionen (macht das Alu echt)
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.55));
+  const key = new THREE.DirectionalLight(0xffffff, 2.1); key.position.set(900, 2200, 1700); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x88aaff, 1.1); rim.position.set(-1300, 900, -900); scene.add(rim);
+
+  const alu = new THREE.MeshStandardMaterial({ color:0x303338, metalness:0.86, roughness:0.42 });
+  const aluDark = new THREE.MeshStandardMaterial({ color:0x202327, metalness:0.8, roughness:0.5 });
+
+  const mac = new THREE.Group(); scene.add(mac);
+
+  // Maße (Welt-Einheiten)
+  const LIDW=1280, LIDH=800, LIDT=30, BASED=880, BASET=48;
+  // Unterteil / Tastatur-Deck
+  const base = new THREE.Mesh(new RoundedBoxGeometry(LIDW, BASET, BASED, 6, 22), alu);
+  base.position.set(0, BASET/2, BASED/2 - 0.0); mac.add(base);   // Vorderkante bei z=BASED, Scharnier bei z=0
+  // Deckel-Gruppe (Scharnier an der Hinterkante z=0)
+  const lid = new THREE.Group(); lid.position.set(0, BASET, 0); mac.add(lid);
+  const lidMesh = new THREE.Mesh(new RoundedBoxGeometry(LIDW, LIDH, LIDT, 6, 22), alu);
+  lidMesh.position.set(0, LIDH/2, -LIDT/2); lid.add(lidMesh);
+  // dunkle Glas-Front (Bezel)
+  const glass = new THREE.Mesh(new THREE.PlaneGeometry(LIDW-56, LIDH-56),
+    new THREE.MeshStandardMaterial({ color:0x05070a, metalness:0.2, roughness:0.25 }));
+  glass.position.set(0, LIDH/2, 1); lid.add(glass);
+
+  // CSS3D-Screen: die echte Übersicht-Seite liegt auf dem Display und bewegt sich mit dem Deckel
+  // CSS3D rendert ~1.22× größer als WebGL bei gleicher Welt-Größe → Korrektur, damit der
+  // Screen sauber INNERHALB des Bezels sitzt (Faktor ist kamera-konstant, also viewport-stabil).
+  const css3dScreen = new CSS3DObject(screenEl);
+  css3dScreen.scale.setScalar(0.82);
+  css3dScreen.position.set(0, LIDH/2, 16);
+  lid.add(css3dScreen);
+
+  // Boden-Schatten (weiche Kontaktfläche)
+  const shadowTex = (()=>{ const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d');
+    const rg=g.createRadialGradient(128,128,10,128,128,128); rg.addColorStop(0,'rgba(0,0,0,.55)'); rg.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=rg; g.fillRect(0,0,256,256); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(LIDW*1.7, BASED*2.1), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false }));
+  shadow.rotation.x = -Math.PI/2; shadow.position.set(0, 1, BASED*0.55); mac.add(shadow);
+
+  mac.position.y = -300;   // leicht zentrieren
+
+  const CLOSED = 1.46, OPEN = -0.13;   // Deckel-Winkel (rad): zu → offen
+  const easeOut = t => 1 - Math.pow(1-t, 3);
+
+  function resize(){
+    const w=W0(), h=H0();
+    renderer.setSize(w,h,false); css.setSize(w,h);
+    cam.aspect=w/h; cam.updateProjectionMatrix();
   }
-  fitOv(); setFeat(0);
-  addEventListener('scroll',onScroll,{passive:true});
-  addEventListener('resize',function(){ fitOv(); onScroll(); });
-  onScroll();
-})();
+  resize();
+
+  let p = 0, raf = 0, running = false;
+  function apply(){
+    const op = reduce ? 1 : Math.min(1, p/0.34);
+    lid.rotation.x = CLOSED + (OPEN-CLOSED)*easeOut(op);
+    mac.rotation.y = reduce ? -0.12 : (p-0.5)*0.5;        // sanfte Drehung
+    mac.rotation.x = -0.06 + (reduce?0:(1-op)*0.10);
+    const s2=0.30, e2=0.98, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
+    setFeat(Math.min(feats.length-1, Math.floor(fp*feats.length)));
+  }
+  function frame(){ renderer.render(scene,cam); css.render(scene,cam); raf=requestAnimationFrame(frame); }
+  function start(){ if(!running){ running=true; frame(); } }
+  function stop(){ running=false; cancelAnimationFrame(raf); }
+
+  function onScroll(){
+    const r=sec.getBoundingClientRect(); const total=sec.offsetHeight-innerHeight;
+    p = total>0 ? Math.min(1,Math.max(0,(-r.top)/total)) : 0;
+    apply();
+  }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', ()=>{ resize(); onScroll(); });
+  // Render-Loop nur, wenn die Sektion sichtbar ist (Performance)
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(es=>es.forEach(e=> e.isIntersecting?start():stop()),{rootMargin:'100px'}).observe(sec);
+  } else start();
+  onScroll(); apply();
+  renderer.render(scene,cam); css.render(scene,cam);   // 1× sofort rendern → kein „zu groß"-Aufblitzen
+}
 </script>
 <script>
 /* Funkelnde Sterne — kleine, dezent schimmernde Punkte hinter dem Inhalt (wie in der App) */
