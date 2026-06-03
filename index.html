@@ -947,12 +947,12 @@ const I18N={
  mb_sub:{de:`Scroll dich durch — jede Funktion direkt auf dem Mac.`,en:`Scroll through — every feature right on your Mac.`},
  mb_f1_t:{de:`Alles auf einen Blick`,en:`Everything at a glance`},
  mb_f1_d:{de:`Dein ganzes Archiv als eine lebendige Karte — jede Platte, ein Bild.`,en:`Your whole archive as one living map — every drive, one picture.`},
- mb_f2_t:{de:`Meldet sich, wenn's zählt`,en:`Speaks up when it matters`},
- mb_f2_d:{de:`Disky sagt dir, welche Platte volläuft und welches Projekt noch kein Backup hat.`,en:`Disky tells you which drive is filling up and which project still has no backup.`},
- mb_f3_t:{de:`Auch ohne angesteckte Platte`,en:`Even with nothing plugged in`},
- mb_f3_d:{de:`Der komplette Überblick — voll offline, kein Kabel nötig.`,en:`The full overview — completely offline, no cable needed.`},
- mb_f4_t:{de:`Dein Festplatten-Assistent`,en:`Your drive assistant`},
- mb_f4_d:{de:`Läuft still im Hintergrund und nimmt dir die Arbeit ab.`,en:`Runs quietly in the background and takes the work off your hands.`},
+ mb_f2_t:{de:`Sieh, was Platz frisst`,en:`See what eats space`},
+ mb_f2_d:{de:`Jeder Ordner als Ring — der größte Speicherfresser fällt sofort auf.`,en:`Every folder a ring — the biggest space hog stands out instantly.`},
+ mb_f3_t:{de:`Duplikate, plattenübergreifend`,en:`Duplicates, across drives`},
+ mb_f3_d:{de:`Dieselbe Datei doppelt? Disky findet sie — auf den Gigabyte genau.`,en:`The same file twice? Disky finds it — to the gigabyte.`},
+ mb_f4_t:{de:`Finde jedes Projekt`,en:`Find any project`},
+ mb_f4_d:{de:`Tippe einen Namen und sieh, auf welcher Platte es liegt — auch offline.`,en:`Type a name and see which drive it's on — even offline.`},
  m_ov:{de:`Übersicht`,en:`Overview`},
  m_drives:{de:`Festplatten`,en:`Drives`},
  m_proj:{de:`Projekte`,en:`Projects`},
@@ -1246,7 +1246,7 @@ if (sec && canvas && stage && screenEl) {
     const tex=new THREE.CanvasTexture(cv); tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=8;
     // gespiegelte Sterne (feste Positionen, funkeln) — wie das Sternenfeld der Seite
     const STARS = Array.from({length:30},(_,i)=>({ x:24+((i*173)%1560), y:18+((i*229)%964), r:0.7+(i%3)*0.7, a:0.05+(i%4)*0.025, p:i*1.7 }));
-    const ui=new Image(); let uiReady=false; ui.onload=()=>{uiReady=true;}; ui.src='assets/screen-app.png?v=cockpit';
+    const ui=new Image(); let uiReady=false; ui.onload=()=>{uiReady=true; draw(0);}; ui.src='assets/screen-app.png?v=cockpit';
     function draw(t){
       x.fillStyle='#0c0f15'; x.fillRect(0,0,1600,1000);
       if(uiReady){ const s=1600/ui.naturalWidth, dh=ui.naturalHeight*s, dy=(1000-dh)/2; x.drawImage(ui,0,dy,1600,dh); }
@@ -1263,6 +1263,9 @@ if (sec && canvas && stage && screenEl) {
   }
 
   // Echtes MacBook-Modell laden (Sketchfab, CC-BY · timblewee) — inkl. Aufklapp-Animation
+  // LAZY: erst laden, wenn die Sektion in die Nähe scrollt (spart 5 MB GLB + iframe beim Initial-Load)
+  let _macLoading=false;
+  function loadMac(){ if(_macLoading) return; _macLoading=true;
   new GLTFLoader().load('assets/macbook.glb', (gltf)=>{
     model = gltf.scene;
     // Zentrieren + auf feste Größe skalieren (GLB-Einheiten unbekannt → Auto-Fit)
@@ -1308,7 +1311,7 @@ if (sec && canvas && stage && screenEl) {
       appFrame.style.cssText='width:1600px;height:1000px;border:0;display:block;background:#0a0c10;pointer-events:none';
       // iframe lädt + seedet + reloadt intern → erst wenn die echte App da ist einblenden.
       // Solange zeigt das statische Cockpit-PNG dahinter (fast identisch → nahtlos).
-      appFrame.addEventListener('load', ()=>{ setTimeout(()=>{ host.style.opacity='1'; }, 500); });
+      appFrame.addEventListener('load', ()=>{ lastView=null; setTimeout(()=>{ host.style.opacity='1'; lastView=null; if(ready) apply(); }, 600); });
       host.appendChild(appFrame);
       const cssObj=new CSS3DObject(host); cssScreen=cssObj;
       // Fläche entlang der zwei großen Achsen → px↦lokale Einheiten
@@ -1340,6 +1343,13 @@ if (sec && canvas && stage && screenEl) {
       info:()=>{ const L=model.getObjectByName('Bevels_2'); const w=L?Math.min(1,Math.abs(L.quaternion.w)):1;
         return { p, mixerTime: mixer&&mixer.time, lidAngleDeg:(2*Math.acos(w)*180/Math.PI).toFixed(1) }; } };
   }, undefined, (err)=>console.warn('GLB load failed', err));
+  }
+  // Trigger: lade das MacBook, sobald die Sektion ~1 Viewport entfernt ist (rechtzeitig bereit)
+  if('IntersectionObserver' in window){
+    const mo=new IntersectionObserver((ents)=>{ if(ents.some(e=>e.isIntersecting)){ mo.disconnect(); loadMac(); } },
+      { rootMargin: '220% 0px 220% 0px' });
+    mo.observe(sec);
+  } else { loadMac(); }
 
   // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
@@ -1357,7 +1367,13 @@ if (sec && canvas && stage && screenEl) {
     cam.position.copy(DIR).multiplyScalar(dist).add(LOOK); cam.lookAt(LOOK);
     macRoot.rotation.x = 0;
     const s2=0.04, e2=0.92, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
-    setFeat(Math.min(feats.length-1, Math.floor(fp*feats.length)));
+    const fi=Math.min(feats.length-1, Math.floor(fp*feats.length));
+    setFeat(fi);
+    // Scroll steuert die ECHTE App im Display: Ansicht wechselt passend zur Caption mit
+    const VIEWS=['overview','map','dupes','search'];
+    const wantView=VIEWS[Math.min(VIEWS.length-1, fi)];
+    if(appFrame && appFrame.contentWindow && wantView!==lastView){ lastView=wantView;
+      try{ appFrame.contentWindow.postMessage({diskyView:wantView},'*'); }catch(e){} }
   }
   function resize(){
     const w=W0(), h=H0();
@@ -1367,7 +1383,7 @@ if (sec && canvas && stage && screenEl) {
   resize();
   function frame(){
     const r=sec.getBoundingClientRect();
-    if(r.bottom>-300 && r.top<innerHeight+300){ if(drawScreen) drawScreen(clock.getElapsedTime()); renderer.render(scene,cam); css.render(scene,cam); }  // nur nah am Viewport rendern (Performance)
+    if(r.bottom>-300 && r.top<innerHeight+300){ renderer.render(scene,cam); css.render(scene,cam); }  // nur nah am Viewport rendern (Performance). Screen-PNG ist statischer Platzhalter (einmal gezeichnet) hinter dem Live-iframe → kein Redraw pro Frame.
     raf=requestAnimationFrame(frame);
   }
 
