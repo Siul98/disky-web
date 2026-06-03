@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disky — alle deine Festplatten. Ein Katalog.</title>
+<meta name="description" content="Disky katalogisiert deine Festplatten & SSDs: finde jede Datei offline wieder, sieh deinen Speicher als interaktives Rad und entdecke Duplikate über alle Laufwerke. Läuft lokal im Browser.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0a0c10">
+<meta property="og:title" content="Disky — alle deine Festplatten. Ein Katalog.">
+<meta property="og:description" content="Finde jede Datei wieder — auch wenn die Platte im Schrank liegt. Lokal, offline, privat.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://disky.app">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* CI-Display-Schrift: General Sans (lokal) — Logo & Headlines. UI/Fließtext bleibt SF. */
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-700.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  --bg:#0a0c10; --bg2:#0f131a; --txt:#eef1f6; --mut:#9aa4b4; --line:#222a35;
+  --acc:#4a9eff; --acc2:#6a5cff; --mp4:#4a9eff; --mov:#7b61ff; --wav:#2dd4bf;
+  --fdisp:'General Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+}
+.brand,h1,h2.sec,.sc-text h3,.ag-brand b,.lk .wm,.ag-hello{font-family:var(--fdisp)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--txt);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;
+  gap:26px;padding:18px 32px;backdrop-filter:blur(14px);
+  background:linear-gradient(#0a0c10cc,#0a0c1000);}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px;letter-spacing:-.02em}
+.brand svg{width:30px;height:30px}
+.navlinks{margin-left:auto;display:flex;align-items:center;gap:26px;color:var(--mut);font-size:14px}
+.navlinks a:hover{color:var(--txt)}
+/* feste Breite, damit der Sprachumschalter beim Wechsel nicht verspringt (DE-Texte sind länger) */
+#account{display:inline-flex;align-items:center;justify-content:flex-end;gap:16px;min-width:252px}
+#account{display:inline-flex;align-items:center;gap:22px;margin-left:6px}
+.btn{display:inline-block;padding:10px 18px;border-radius:11px;font-weight:600;font-size:14px;
+  background:var(--acc);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{background:#3a8af0;transform:translateY(-1px)}
+.btn.ghost{background:#161b22;border:1px solid var(--line);color:var(--txt)}
+.btn.big{padding:16px 30px;font-size:16px;border-radius:13px;box-shadow:0 18px 44px -22px rgba(74,158,255,.95)}
+/* Download-Sektion */
+.dlbox{display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center}
+.dlmeta{color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}
+.dlnote{color:#6b7787;font-size:12.5px;max-width:430px;margin:2px auto 0;line-height:1.5}
+
+/* Hero */
+.hero{position:relative;height:340vh}
+.hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:0 24px}
+.hero-text{position:relative;z-index:5;will-change:opacity,transform;
+  display:flex;flex-direction:column;align-items:center;text-align:center}
+.glow{position:absolute;width:900px;height:900px;border-radius:50%;top:-300px;left:50%;z-index:0;
+  transform:translateX(-50%);background:radial-gradient(circle,#1b2c55 0%,#0a0c1000 60%);pointer-events:none}
+.eyebrow{display:inline-block;padding:6px 14px;border-radius:30px;border:1px solid var(--line);
+  background:#11151c;color:var(--mut);font-size:13px;margin-bottom:24px;position:relative;z-index:2}
+h1{position:relative;z-index:2;font-size:clamp(34px,6vw,68px);line-height:1.05;margin:0 0 20px;
+  letter-spacing:-.03em;font-weight:800;max-width:14ch;
+  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 .grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{position:relative;z-index:2;color:var(--mut);font-size:clamp(16px,2vw,20px);max-width:56ch;margin:0 0 34px}
+.cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.cta .btn{padding:14px 26px;font-size:15px}
+.hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:16px}
+/* Statischer Hero (ohne Scroll-Animation) */
+.hero2{position:relative;display:flex;justify-content:center;padding:150px 24px 40px;overflow:hidden}
+@media(max-width:760px){.hero2{padding:120px 20px 30px}}
+
+/* Fliegende Ordner (3D, jeder driftet einzeln) */
+.field{position:absolute;inset:0;z-index:3;pointer-events:none;perspective:1400px}
+.file{position:absolute;will-change:transform}
+.ficon{width:var(--w,108px);filter:drop-shadow(0 30px 30px rgba(0,0,0,.5));
+  transform:rotateX(var(--rx,8deg)) rotateY(var(--ry,-12deg));transform-style:preserve-3d}
+.ficon svg{width:100%;height:auto;display:block}
+.file .name{margin-top:12px;text-align:center;color:#d3d9e3;font-size:12.5px;font-weight:500;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);white-space:nowrap}
+
+/* Feature-Strip */
+.section{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:40px 24px 90px;scroll-margin-top:78px}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.feat{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:24px}
+.feat .ic{width:42px;height:42px;border-radius:11px;background:#16202e;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+.feat h3{margin:0 0 6px;font-size:17px}
+.feat p{margin:0;color:var(--mut);font-size:14px}
+h2.sec{text-align:center;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;margin:10px 0 6px;
+  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;width:100%}
+.sec-sub{text-align:center;color:var(--mut);margin:0 0 36px}
+/* ── How it works ── */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+.howcard{background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:34px 26px;text-align:center;
+  transition:transform .25s ease,border-color .5s ease,box-shadow .5s ease}
+.howcard:hover{transform:translateY(-4px)}
+.howcard.hot,.howcard:hover{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset,0 0 50px -14px rgba(74,158,255,.5)}
+.howcard .hicon{width:56px;height:56px;margin:4px auto 24px;color:#cfd6e0;transition:color .5s ease}
+.howcard.hot .hicon,.howcard:hover .hicon{color:var(--acc)}
+.howcard .hicon svg{width:100%;height:100%}
+.howcard h3{font-size:21px;margin:0 0 16px;letter-spacing:-.015em;transition:color .5s ease}
+.howcard.hot h3,.howcard:hover h3{color:var(--acc)}
+.howcard p{color:var(--mut);font-size:14.5px;line-height:1.6;margin:0}
+.step{display:inline-block;font-size:12px;font-weight:700;color:var(--mut);letter-spacing:.1em;margin-bottom:4px}
+.howcard .step{transition:color .5s ease}
+.howcard.hot .step,.howcard:hover .step{color:var(--acc)}
+@media(max-width:800px){.how{grid-template-columns:1fr}}
+/* ── Feature Deep-Dives ── */
+.showcases{display:flex;flex-direction:column;gap:32px;padding-bottom:30px}
+.showcase{display:flex;align-items:center;gap:50px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:26px;padding:44px 48px}
+.showcase.rev{flex-direction:row-reverse}
+.sc-text{flex:1}
+.sc-eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--acc);text-transform:uppercase;margin-bottom:10px}
+.sc-text h3{font-size:clamp(22px,3vw,32px);letter-spacing:-.02em;margin:0 0 14px;line-height:1.1;
+  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.sc-text p{color:var(--mut);font-size:16.5px;line-height:1.6;margin:0;max-width:44ch}
+.sc-vis{flex:0 0 280px;display:flex;justify-content:center;align-items:center;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.sc-vis svg{width:240px;height:auto;display:block;overflow:visible}
+.showcase:hover .sc-vis{transform:translateY(-4px)}
+/* Hover-Animationen der Feature-Illustrationen */
+@keyframes scPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes scPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes scSpin{to{transform:rotate(360deg)}}
+@keyframes scNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes scDraw{from{stroke-dashoffset:62}to{stroke-dashoffset:0}}
+.scd-check,.scdup-eq,.scdup-badge,.scai-plays>path{transform-box:fill-box;transform-origin:center}
+.showcase:hover .scd-check{animation:scPop .8s ease both}
+.scai-thumbs{transform-box:fill-box;transform-origin:center;transition:transform .5s}
+.showcase:hover .scai-thumbs{transform:scale(1.035)}
+.showcase:hover .scai-plays>path{animation:scPulse 1.4s ease-in-out infinite}
+.showcase:hover .scai-plays>path:nth-child(2){animation-delay:.18s}
+.showcase:hover .scai-plays>path:nth-child(3){animation-delay:.36s}
+.showcase:hover .scai-plays>path:nth-child(4){animation-delay:.54s}
+@keyframes ringSettle{0%{transform:rotate(-44deg)}100%{transform:rotate(0deg)}}
+@keyframes hogOut{0%{transform:translate(0,0)}100%{transform:translate(5px,4px)}}
+@keyframes hogPulse{0%,100%{stroke:#ff6b6b;filter:drop-shadow(0 0 4px rgba(255,107,107,.5))}50%{stroke:#ff4d4d;filter:drop-shadow(0 0 9px rgba(255,80,80,.95))}}
+.scsm-spin{transform-box:view-box;transform-origin:60px 60px}
+.showcase:hover .scsm-spin{animation:ringSettle 1s cubic-bezier(.2,.85,.25,1) both}
+.scsm-hog{transform-box:fill-box}
+.showcase:hover .scsm-hog{animation:hogOut .55s cubic-bezier(.34,1.4,.5,1) 1s both, hogPulse 1.4s ease-in-out 1s infinite}
+.scdup-r{transform-box:fill-box}
+.showcase:hover .scdup-r{animation:scNudge 2.2s ease-in-out infinite}
+.showcase:hover .scdup-eq{animation:scPulse 1.6s ease-in-out infinite}
+.showcase:hover .scdup-badge{animation:scPop .7s ease both}
+.scpriv-check{stroke-dasharray:62}
+.showcase:hover .scpriv-check{animation:scDraw .7s ease both}
+@keyframes scaIn{0%{opacity:0;transform:translateX(16px)}100%{opacity:1;transform:translateX(0)}}
+.sca-spark{transform-box:fill-box;transform-origin:center}
+.showcase:hover .sca-spark{animation:scPulse 1.6s ease-in-out infinite}
+.sca-tip{transform-box:fill-box}
+.showcase:hover .sca-tip{animation:scaIn .5s ease both}
+.showcase:hover .sca-d2{animation-delay:.13s}
+.showcase:hover .sca-d3{animation-delay:.26s}
+@media(max-width:800px){.showcase,.showcase.rev{flex-direction:column;text-align:center}
+  .sc-text p{margin:0 auto}.sc-eyebrow{display:block}}
+
+/* Pricing */
+.prices{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.price{flex:1;min-width:230px;max-width:300px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:20px;padding:26px}
+.price.best{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
+.price .pt{color:var(--mut);font-weight:600}
+.price .pp{font-size:34px;font-weight:800;margin:8px 0 14px}
+.price .pp span{font-size:14px;color:var(--mut);font-weight:500}
+.price ul{list-style:none;padding:0;margin:0 0 18px}
+.price li{padding:5px 0 5px 24px;position:relative;font-size:14px}
+.price li:before{content:"✓";position:absolute;left:0;color:#4ade80;font-weight:700}
+.price .btn{display:block;text-align:center}
+/* Konto oben rechts */
+.link{cursor:pointer;color:var(--mut);font-size:14px}
+.link:hover{color:var(--txt)}
+.prochip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:30px;
+  background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.45);color:#4ade80;font-size:13px;font-weight:600}
+.prochip .pdot{width:7px;height:7px;border-radius:50%;background:#4ade80}
+/* Trust */
+.trust{text-align:center;color:var(--mut);font-size:13.5px;margin-top:22px}
+.trust a{color:var(--acc)}
+/* FAQ */
+.faq{max-width:760px;margin:0 auto}
+.qa{border:1px solid var(--line);border-radius:14px;background:var(--bg2);margin-bottom:12px;overflow:hidden}
+.qa summary{cursor:pointer;padding:18px 20px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:after{content:"+";color:var(--mut);font-size:20px}
+.qa[open] summary:after{content:"–"}
+.qa .a{padding:0 20px 18px;color:var(--mut);font-size:14.5px}
+/* Footer */
+/* ── Sammel-Animation (Scroll) ── */
+.gather{position:relative;height:320vh}
+.gstick{position:sticky;top:0;height:100vh;overflow:hidden}
+.gstage{position:absolute;inset:0;z-index:3}
+.gbeams{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.ghead{position:absolute;top:8%;left:0;right:0;text-align:center;z-index:6;padding:0 20px;pointer-events:none}
+.ghead h2{font-size:clamp(26px,4vw,42px);letter-spacing:-.02em;margin:0 0 6px;font-weight:800;
+  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ghead p{color:var(--mut);margin:0;font-size:15px}
+.gfolder{position:absolute;left:0;top:0;width:88px;margin-left:-44px;margin-top:-36px;z-index:3;will-change:transform,opacity}
+.gfolder svg{width:100%;height:auto;display:block;filter:drop-shadow(0 22px 26px rgba(0,0,0,.55))}
+.hub{position:absolute;z-index:4;width:160px;height:160px;margin-left:-80px;margin-top:-80px;transform-origin:center center}
+.hglow{position:absolute;left:50%;top:50%;width:360px;height:360px;margin:-180px 0 0 -180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(74,158,255,.5) 0%,rgba(74,158,255,0) 64%);opacity:.35}
+.hsheen{position:absolute;inset:-6px;border-radius:50%;opacity:0;
+  background:conic-gradient(from 0deg,transparent 0%,rgba(140,200,255,.6) 12%,transparent 30%,transparent 100%);
+  -webkit-mask:radial-gradient(circle,transparent 53%,#000 55%);mask:radial-gradient(circle,transparent 53%,#000 55%);
+  animation:hsheenspin 3s linear infinite}
+@keyframes hsheenspin{to{transform:rotate(360deg)}}
+.hcore{position:absolute;inset:20px;border-radius:50%;background:radial-gradient(circle,rgba(22,32,52,.85),rgba(10,12,16,.35));
+  border:1px solid rgba(74,158,255,.28)}
+.hlogo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px}
+.hlogo svg{width:100%;height:100%;filter:drop-shadow(0 0 12px rgba(74,158,255,.65))}
+.hring{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;
+  border:2px solid rgba(120,190,255,.7);opacity:0}
+.hflash{position:absolute;left:50%;top:50%;width:180px;height:180px;margin:-90px 0 0 -90px;border-radius:50%;
+  background:radial-gradient(circle,rgba(190,225,255,.9),rgba(74,158,255,0) 60%);opacity:0}
+.hub.pulse .hring{animation:hubpulse .6s ease-out}
+.hub.pulse .hflash{animation:hubflash .5s ease-out}
+@keyframes hubpulse{0%{transform:scale(.75);opacity:.85}100%{transform:scale(1.9);opacity:0}}
+@keyframes hubflash{0%{opacity:.8;transform:scale(.55)}100%{opacity:0;transform:scale(1.25)}}
+.glist{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:290px;max-height:70vh;z-index:5}
+.gleft{position:absolute;left:6%;top:50%;transform:translateY(-50%);width:290px;z-index:5;text-align:left;opacity:0}
+.glh{font-size:21px;font-weight:800;margin:0 0 16px;letter-spacing:-.01em;
+  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.qrow{display:flex;align-items:center;gap:11px;padding:9px 0;font-size:15px;color:var(--mut);will-change:opacity,transform}
+.qmark{width:22px;height:22px;flex:0 0 auto;border-radius:50%;background:rgba(74,222,128,.14);
+  border:1px solid rgba(74,222,128,.5);color:#4ade80;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.glist h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:0 0 12px}
+.glist h3 b{color:var(--acc)}
+.gli{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:11px;background:var(--bg2);
+  border:1px solid var(--line);margin-bottom:8px;font-size:14px;opacity:0;will-change:opacity,transform}
+.gli .gfi{width:24px;height:19px;flex:0 0 auto}.gli .gfi svg{width:100%;height:100%}
+@media(max-width:980px){.glist,.gleft{display:none}}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;padding:44px 32px 30px}
+.fcols{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px}
+.fcols a{color:var(--mut);line-height:2}.fcols a:hover{color:var(--txt)}
+.fcols b{color:var(--txt)}
+.fbottom{text-align:center;margin-top:30px;color:#5b6675}
+/* Login Modal */
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(5,7,10,.72);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.lmodal{position:relative;width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:22px;padding:30px}
+.lmodal .x{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--mut);font-size:18px;cursor:pointer}
+.lbrand{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:6px}
+.lhint{color:var(--mut);font-size:13.5px;margin:0 0 18px}
+.llbl{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px}
+.linput{width:100%;padding:12px 14px;border-radius:11px;border:1px solid var(--line);background:var(--bg);
+  color:var(--txt);font-size:14px}
+.linput:focus{outline:none;border-color:var(--acc)}
+.lfull{display:block;width:100%;text-align:center;margin-top:18px;padding:13px;border:none;cursor:pointer}
+.lmsg{min-height:20px;margin-top:10px;font-size:13.5px}
+.lalt{margin-top:14px;color:var(--mut);font-size:13px;text-align:center}
+.lalt a{color:var(--acc)}
+@media(max-width:680px){.file{display:none}.file.keep{display:block}}
+/* ───────── App-Glimpse (perspektivischer Mockup) ───────── */
+.glimpse-wrap{max-width:1120px;margin:6px auto 0;padding:0 12px}
+.glimpse-stage{perspective:1300px;-webkit-mask-image:linear-gradient(to bottom,#000 58%,transparent 100%);mask-image:linear-gradient(to bottom,#000 58%,transparent 100%);overflow:hidden}
+.glimpse-tilt{transform-origin:50% 0%;transform:rotateX(20deg);-webkit-mask-image:linear-gradient(to right,#000 62%,transparent 100%);mask-image:linear-gradient(to right,#000 62%,transparent 100%);padding-left:40px}
+.glimpse-skew{transform:skewX(.26rad);transform-origin:0 0}
+.ag-window{width:1180px;min-height:560px;display:flex;border-radius:16px;overflow:hidden;
+  border:1px solid #2a3340;background:#0a0c10;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03)}
+.ag-side{width:230px;flex:0 0 230px;border-right:1px solid #1b2530;background:rgba(12,15,21,.6);padding:16px 12px;display:flex;flex-direction:column;gap:3px}
+.ag-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px}
+.ag-brand .l{width:26px;height:26px}.ag-brand b{font-size:17px;letter-spacing:-.02em}
+.ag-nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;color:var(--mut);font-size:13.5px;font-weight:600}
+.ag-nav .i{width:16px;height:16px;flex:0 0 auto;color:currentColor}
+.ag-nav.on{background:#172230;color:#eef1f6}.ag-nav.on .i{color:var(--acc)}
+.ag-scan{margin:12px 4px 4px;padding:10px;border-radius:10px;background:var(--acc);color:#fff;font-size:13.5px;font-weight:700;text-align:center}
+.ag-sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#5b6675;font-weight:700;margin:14px 8px 6px}
+.ag-dr{position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;color:var(--mut)}
+.ag-dr .agfill{position:absolute;left:0;top:0;bottom:0;width:var(--p,0);border-radius:8px;z-index:0;
+  background:linear-gradient(90deg,rgba(108,178,255,.34),rgba(47,127,240,.12));box-shadow:inset -1px 0 0 rgba(122,184,255,.45)}
+.ag-dr .dd{position:relative;z-index:1;width:8px;height:8px;border-radius:2px;flex:0 0 auto}
+.ag-dr .dn{position:relative;z-index:1;font-size:12.5px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#cdd5e0}
+.ag-dr .ds{position:relative;z-index:1;font-size:11px;color:#5b6675}
+.ag-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.ag-bar{padding:13px 26px;border-bottom:1px solid #1b2530;font-size:14px;font-weight:700;color:#cdd5e0}
+.ag-body{padding:22px 30px;flex:1}
+.ag-hello{font-size:26px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.ag-stat{display:flex;flex-wrap:wrap;gap:16px;margin:8px 0 14px;color:var(--mut);font-size:13px}
+.ag-stat b{color:#eef1f6;font-weight:700}.ag-stat .d{color:#39424f}
+.ag-const{position:relative;width:100%;aspect-ratio:16/9;border:1px solid #1b2530;border-radius:18px;overflow:hidden;
+  background:radial-gradient(120% 100% at 50% 42%,rgba(74,158,255,.10),transparent 60%),#0c0f15}
+.ag-const .csvg{position:absolute;inset:0;width:100%;height:100%}
+.ag-cline{stroke:url(#agln);stroke-width:.35;fill:none;opacity:.5}
+.ag-hub{position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:3}
+.ag-hub .ring{position:absolute;left:50%;top:28px;transform:translate(-50%,-50%);width:118px;height:118px;border-radius:50%;
+  background:radial-gradient(circle,rgba(74,158,255,.26),transparent 68%)}
+.ag-hub .core{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(160deg,#1b2230,#11151c);
+  border:1px solid #2c3a4f;box-shadow:0 10px 30px rgba(0,0,0,.5),0 0 30px rgba(74,158,255,.22)}
+.ag-hub .core svg{width:33px;height:33px}
+.ag-hub .ht{font-weight:800;font-size:12.5px}.ag-hub .hs{font-size:10px;color:var(--mut);margin-top:-4px}
+.ag-node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;z-index:2;width:110px}
+.ag-node .disc{position:relative;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--rc) calc(var(--ring)*1%),rgba(255,255,255,.07) 0)}
+@property --ring{syntax:"<number>";inherits:true;initial-value:0}
+@keyframes ringIn{from{--ring:0}}
+@keyframes agGrow{from{width:0}}
+/* Standard = gefüllt (sieht nie leer aus). Beim Reinscrollen läuft die Animation zusätzlich. */
+.glimpse-stage.play .ag-node .disc{animation:ringIn 1.2s cubic-bezier(.22,1,.36,1) both}
+.glimpse-stage.play .ag-dr .agfill{animation:agGrow 1.1s cubic-bezier(.22,1,.36,1) both}
+.ag-node .disc::before{content:"";position:absolute;inset:4px;border-radius:50%;background:#0e1218;border:1px solid #1b2530}
+.ag-node .disc .g{position:relative;width:26px;height:18px;border-radius:3px}
+.ag-node .nn{font-size:11.5px;font-weight:700;color:#dde4ee}.ag-node .ns{font-size:10px;color:var(--mut);margin-top:-3px}
+.ag-node .pin{position:absolute;top:-2px;right:18px;width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;border:1.5px solid #0c0f15}
+@media(max-width:760px){.glimpse-tilt{transform:rotateX(12deg);padding-left:0}.ag-window{width:980px}}
+</style></head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html" title="Zur Startseite">
+    <svg viewBox="0 0 100 100"><rect width="200" height="200" rx="46" fill="#11151c"/>
+      <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>
+    Disky
+  </a>
+  <div class="navlinks">
+    <a href="#features" data-t="nav_features">Funktionen</a>
+    <a href="#preise" data-t="nav_pricing">Preise</a>
+    <a href="#faq" data-t="nav_faq">FAQ</a>
+    <span id="langtoggle" class="navlang"></span>
+    <span id="account"></span>
+  </div>
+</nav>
+
+<header class="hero2">
+  <div class="glow"></div>
+  <div class="hero-text">
+    <h1 data-th="hero_h1">Alle deine Festplatten.<br><span class="grad">Ein Katalog.</span></h1>
+    <p class="lead" data-th="hero_lead">Disky scannt deine Festplatten &amp; SSDs, zeigt auf einen Blick was wo liegt,
+      findet Duplikate über alle Laufwerke — und du durchsuchst alles <b>offline</b>,
+      selbst wenn die Platte längst im Schrank liegt.</p>
+    <div class="cta">
+      <a class="btn" href="#download" data-t="hero_cta_start">Kostenlos starten</a>
+      <a class="btn ghost" href="#features" data-t="hero_cta_how">So funktioniert's</a>
+    </div>
+    <div class="hint" data-t="hero_hint">2 Platten gratis · keine Installation · nichts wird verändert</div>
+  </div>
+</header>
+
+<section class="section" style="padding-bottom:24px">
+  <h2 class="sec" data-t="s1_h2">Das ist Disky.</h2>
+  <p class="sec-sub" data-t="s1_sub">Dein ganzes Archiv auf einen Blick — auch wenn keine Platte angeschlossen ist.</p>
+  <div class="glimpse-wrap"><div class="glimpse-stage"><div class="glimpse-tilt"><div class="glimpse-skew">
+    <div class="ag-window">
+      <aside class="ag-side">
+        <div class="ag-brand"><span class="l"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg></span><b>Disky</b></div>
+        <div class="ag-nav on"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Übersicht</div>
+        <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="5" rx="1.5"/><rect x="3" y="14" width="18" height="5" rx="1.5"/></svg></span>Festplatten</div>
+        <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span>Projekte</div>
+        <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>Duplikate</div>
+        <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></span>KI-SuperSearch</div>
+        <div class="ag-scan">＋ Platte scannen</div>
+        <div class="ag-sec">Meine Platten</div>
+        <div class="ag-dr" style="--p:64%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">T9</span><span class="ds">2.3 TB</span></div>
+        <div class="ag-dr" style="--p:93%"><span class="agfill"></span><span class="dd" style="background:#f3701f"></span><span class="dn">LaCie Rugged</span><span class="ds">4.2 TB</span></div>
+        <div class="ag-dr" style="--p:38%"><span class="agfill"></span><span class="dd" style="background:#cfd3d9"></span><span class="dn">Studio RAID</span><span class="ds">10.9 TB</span></div>
+        <div class="ag-dr" style="--p:96%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">Archiv 2023</span><span class="ds">7.0 TB</span></div>
+        <div class="ag-dr" style="--p:80%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">Sony A7S</span><span class="ds">381 GB</span></div>
+      </aside>
+      <div class="ag-main">
+        <div class="ag-bar">Übersicht</div>
+        <div class="ag-body">
+          <div class="ag-hello">Willkommen zurück.</div>
+          <div class="ag-stat"><span><b>5</b> Platten</span><span class="d">·</span><span><b>112.594</b> Dateien</span><span class="d">·</span><span><b>24.8 TB</b> katalogisiert</span><span class="d">·</span><span><b>0</b> Duplikate</span></div>
+          <div class="ag-const">
+            <svg class="csvg" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs><linearGradient id="agln" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a9eff"/><stop offset="1" stop-color="#2c3a4f"/></linearGradient></defs>
+              <path class="ag-cline" d="M50 17 L50 51"/><path class="ag-cline" d="M86 40 L50 51"/>
+              <path class="ag-cline" d="M72 79 L50 51"/><path class="ag-cline" d="M28 79 L50 51"/><path class="ag-cline" d="M14 40 L50 51"/>
+            </svg>
+            <div class="ag-hub"><div class="ring"></div>
+              <div class="core"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg></div>
+              <div class="ht">Disky</div><div class="hs">5 Platten · ein Katalog</div></div>
+            <div class="ag-node" style="left:50%;top:17%;--ring:63;--rc:#4a9eff"><span class="pin"></span><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">T9</span><span class="ns">2.3 / 3.6 TB</span></div>
+            <div class="ag-node" style="left:86%;top:40%;--ring:92;--rc:#ff6b6b"><span class="pin"></span><span class="disc"><span class="g" style="background:#f3701f"></span></span><span class="nn">LaCie Rugged</span><span class="ns">4.2 / 4.5 TB</span></div>
+            <div class="ag-node" style="left:72%;top:79%;--ring:38;--rc:#4a9eff"><span class="disc"><span class="g" style="background:#cfd3d9"></span></span><span class="nn">Studio RAID</span><span class="ns">10.9 / 29.1 TB</span></div>
+            <div class="ag-node" style="left:28%;top:79%;--ring:96;--rc:#ff6b6b"><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">Archiv 2023</span><span class="ns">7.0 / 7.3 TB</span></div>
+            <div class="ag-node" style="left:14%;top:40%;--ring:80;--rc:#ffb454"><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">Sony A7S</span><span class="ns">381 / 476 GB</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div></div></div>
+</section>
+
+<section class="section" id="features">
+  <h2 class="sec" data-t="hiw_h2">So funktioniert's</h2>
+  <p class="sec-sub" data-t="hiw_sub">Einmal einrichten. Für immer den Überblick.</p>
+  <div class="how">
+    <div class="howcard hot">
+      <div class="step" data-t="hiw_step1">SCHRITT 1</div>
+      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="8" y="13" width="32" height="19" rx="4"/><line x1="8" y1="20" x2="40" y2="20" stroke-dasharray="2 3" opacity=".55"/>
+        <circle cx="14" cy="26" r="1.5" fill="currentColor" stroke="none"/><line x1="22" y1="26" x2="34" y2="26"/><line x1="16" y1="38" x2="32" y2="38"/></svg></div>
+      <h3 data-t="hiw1_h3">Einmal scannen</h3>
+      <p data-t="hiw1_p">Steck jede Platte einmal an. Disky liest sie aus — ab dann bleibt alles durchsuchbar, auch wenn sie längst im Schrank liegt.</p>
+    </div>
+    <div class="howcard">
+      <div class="step" data-t="hiw_step2">SCHRITT 2</div>
+      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+        <circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="5.5"/>
+        <line x1="24" y1="10" x2="24" y2="18.5" stroke-linecap="round"/><line x1="36.5" y1="29" x2="29" y2="26.4" stroke-linecap="round"/><line x1="12" y1="31" x2="19" y2="27" stroke-linecap="round"/></svg></div>
+      <h3 data-t="hiw2_h3">Auf einen Blick sehen</h3>
+      <p data-t="hiw2_p">Ein interaktives Rad zeigt sofort, was deinen Speicher füllt — Projekt für Projekt, bis zur einzelnen Datei.</p>
+    </div>
+    <div class="howcard">
+      <div class="step" data-t="hiw_step3">SCHRITT 3</div>
+      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="21" cy="21" r="12"/><line x1="30" y1="30" x2="40" y2="40"/>
+        <path d="M21 15.5 l1.6 3.9 l3.9 1.6 l-3.9 1.6 l-1.6 3.9 l-1.6 -3.9 l-3.9 -1.6 l3.9 -1.6 Z" fill="currentColor" stroke="none"/></svg></div>
+      <h3 data-t="hiw3_h3">Jederzeit wiederfinden</h3>
+      <p data-t="hiw3_p">Tippe einen Namen und finde jede Datei in Sekunden — über alle Laufwerke, ohne eine einzige anzustecken.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section showcases">
+  <div class="showcase rev">
+    <div class="sc-text">
+      <div class="sc-eyebrow" data-t="sc_asst_eb">Dein Assistent · im Hintergrund</div>
+      <h3 data-t="sc_asst_h3">Disky arbeitet für dich — nicht umgekehrt.</h3>
+      <p data-th="sc_asst_p">Disky läuft still im Hintergrund und meldet sich nur, wenn's zählt: <b>welches Projekt noch kein Backup hat</b>, wo unnötiger Speicher liegt, was du gefahrlos freiräumen kannst. Kein Mehraufwand — Disky nimmt dir Arbeit ab.</p>
+    </div>
+    <div class="sc-vis">
+      <svg viewBox="0 0 240 210">
+        <rect x="6" y="16" width="228" height="178" rx="16" fill="#11151c" stroke="#2a3340"/>
+        <circle class="sca-spark" cx="30" cy="40" r="11" fill="rgba(74,158,255,.16)"/>
+        <path class="sca-spark" fill="#4a9eff" d="M30 33 l1.6 4 l4 1.6 l-4 1.6 l-1.6 4 l-1.6 -4 l-4 -1.6 l4 -1.6 Z"/>
+        <rect x="48" y="35" width="92" height="9" rx="4.5" fill="#cdd5e0" opacity=".55"/>
+        <g class="sca-tip"><rect x="20" y="64" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="64" width="3.5" height="34" rx="2" fill="#4ade80"/><rect x="34" y="73" width="150" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="84" width="96" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="85" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
+        <g class="sca-tip sca-d2"><rect x="20" y="106" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="106" width="3.5" height="34" rx="2" fill="#ff6b6b"/><rect x="34" y="115" width="140" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="126" width="80" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="127" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
+        <g class="sca-tip sca-d3"><rect x="20" y="148" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="148" width="3.5" height="34" rx="2" fill="#4a9eff"/><rect x="34" y="157" width="120" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="168" width="92" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="169" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="showcase">
+    <div class="sc-text">
+      <div class="sc-eyebrow" data-t="sc1_eb">Offline-Katalog · der Kern</div>
+      <h3 data-t="sc1_h3">Finde dein Projekt — ohne eine einzige Platte anzustecken.</h3>
+      <p data-th="sc1_p">Disky hält <b>jede Festplatte offline einsehbar</b>. Tippe einen Projekt- oder Dateinamen und sieh in Sekunden, <b>auf welcher Platte</b> es liegt — auch wenn alle längst im Schrank liegen. Nie wieder zehn Platten durchstecken, nur um eine Datei zu suchen.</p>
+    </div>
+    <div class="sc-vis">
+      <svg viewBox="0 0 240 210">
+        <!-- Suchleiste -->
+        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
+        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
+        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif">Hochzeit Mai</text>
+        <!-- Treffer: gefunden auf einer (offline) Platte -->
+        <g font-family="-apple-system,sans-serif">
+          <g>
+            <rect x="8" y="54" width="224" height="44" rx="11" fill="rgba(74,158,255,.12)" stroke="#4a9eff"/>
+            <rect x="20" y="68" width="22" height="16" rx="3" fill="#f3701f"/><circle cx="31" cy="76" r="3.2" fill="#1a1f27"/>
+            <text x="52" y="73" fill="#eef1f6" font-size="12" font-weight="700">LaCie Rugged</text>
+            <text x="52" y="88" fill="#9aa6b8" font-size="9.5">/Hochzeit Mai · 248 GB</text>
+            <g class="scd-check"><g transform="translate(202,68)"><circle cx="8" cy="8" r="9" fill="#4a9eff"/><path d="M4 8.5 l2.6 2.6 l4.8 -5.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+          </g>
+          <g opacity=".5">
+            <rect x="8" y="106" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
+            <rect x="20" y="116" width="22" height="16" rx="3" fill="#2b313c"/>
+            <text x="52" y="129" fill="#cdd5e0" font-size="12" font-weight="600">Studio RAID</text>
+            <g transform="translate(176,116)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
+          </g>
+          <g opacity=".5">
+            <rect x="8" y="152" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
+            <rect x="20" y="162" width="22" height="16" rx="3" fill="#2b313c"/>
+            <text x="52" y="175" fill="#cdd5e0" font-size="12" font-weight="600">Archiv 2023</text>
+            <g transform="translate(176,162)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="showcase rev">
+    <div class="sc-text">
+      <div class="sc-eyebrow" data-t="sc2_eb">KI-Suche · 100% lokal</div>
+      <h3 data-t="sc2_h3">Such nach Inhalt — nicht nach Dateinamen.</h3>
+      <p data-th="sc2_p">Tippe „underwater" und Disky zeigt dir jeden Clip mit Wasser — über all deine Platten,
+        ohne eine einzige anzustecken. Die KI läuft komplett auf deinem Mac: kein Upload, keine Cloud.</p>
+    </div>
+    <div class="sc-vis">
+      <svg viewBox="0 0 240 210">
+        <defs>
+          <linearGradient id="oc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fc8ff"/><stop offset="1" stop-color="#0a4d8c"/></linearGradient>
+          <linearGradient id="oc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd6c6"/><stop offset="1" stop-color="#0c5f72"/></linearGradient>
+        </defs>
+        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
+        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
+        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif">underwater</text>
+        <g class="scai-thumbs">
+          <rect x="8" y="54" width="108" height="68" rx="11" fill="url(#oc1)"/>
+          <rect x="124" y="54" width="108" height="68" rx="11" fill="url(#oc2)"/>
+          <rect x="8" y="130" width="108" height="68" rx="11" fill="url(#oc2)"/>
+          <rect x="124" y="130" width="108" height="68" rx="11" fill="url(#oc1)"/>
+        </g>
+        <g class="scai-plays" fill="#ffffff" opacity="0.92">
+          <path d="M57 80 v16 l13 -8 Z"/><path d="M173 80 v16 l13 -8 Z"/>
+          <path d="M57 156 v16 l13 -8 Z"/><path d="M173 156 v16 l13 -8 Z"/>
+        </g>
+        <g font-family="-apple-system,sans-serif" font-size="9" font-weight="700">
+          <g><rect x="92" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="69.5" text-anchor="middle" fill="#7fd0ff">94</text></g>
+          <g><rect x="208" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="69.5" text-anchor="middle" fill="#7fd0ff">88</text></g>
+          <g><rect x="92" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="145.5" text-anchor="middle" fill="#7fd0ff">85</text></g>
+          <g><rect x="208" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="145.5" text-anchor="middle" fill="#7fd0ff">79</text></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="showcase">
+    <div class="sc-text">
+      <div class="sc-eyebrow" data-t="sc3_eb">Speicher-Karte</div>
+      <h3 data-t="sc3_h3">Sieh sofort, was Platz frisst.</h3>
+      <p data-th="sc3_p">Die Speicher-Karte zeigt jeden Ordner als Ring. Klick dich rein, bis du die eine Datei findest, die 200 GB blockiert. Ein <b>Aufräum-Assistent</b> markiert sogar automatisch Entbehrliches — After-Effects-/Premiere-Cache, Proxies und Duplikate — und rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst. Gelöscht wird nur, was du selbst freigibst.</p>
+    </div>
+    <div class="sc-vis">
+      <svg viewBox="0 0 120 120">
+        <g class="scsm-spin"><g transform="rotate(-90 60 60)" fill="none" stroke-width="17" pathLength="100">
+          <circle class="scsm-hog" cx="60" cy="60" r="44" stroke="#4a9eff" stroke-dasharray="21 79" stroke-dashoffset="0"/>
+          <circle cx="60" cy="60" r="44" stroke="#2dd4bf" stroke-dasharray="7 93" stroke-dashoffset="-22.3"/>
+          <circle cx="60" cy="60" r="44" stroke="#6aa8ff" stroke-dasharray="13 87" stroke-dashoffset="-30.6"/>
+          <circle cx="60" cy="60" r="44" stroke="#38bdf8" stroke-dasharray="16 84" stroke-dashoffset="-44.9"/>
+          <circle cx="60" cy="60" r="44" stroke="#4f6bf0" stroke-dasharray="5 95" stroke-dashoffset="-62.2"/>
+          <circle cx="60" cy="60" r="44" stroke="#22d3ee" stroke-dasharray="11 89" stroke-dashoffset="-68.5"/>
+          <circle cx="60" cy="60" r="44" stroke="#5b93ef" stroke-dasharray="9 91" stroke-dashoffset="-80.8"/>
+          <circle cx="60" cy="60" r="44" stroke="#14b8a6" stroke-dasharray="7 93" stroke-dashoffset="-91.1"/>
+        </g></g>
+        <text x="60" y="57" text-anchor="middle" fill="#eef1f6" font-size="15" font-weight="800" font-family="-apple-system,sans-serif">1,4 TB</text>
+        <text x="60" y="71" text-anchor="middle" fill="#8a93a3" font-size="8" font-family="-apple-system,sans-serif">belegt</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="showcase rev">
+    <div class="sc-text">
+      <div class="sc-eyebrow" data-t="sc4_eb">Duplikate</div>
+      <h3 data-t="sc4_h3">Doppelt? Nie wieder.</h3>
+      <p data-th="sc4_p">Disky erkennt gleiche Dateien über alle Platten hinweg — selbst wenn sie anders heißen — und sagt dir auf den Gigabyte genau, wie viel du freiräumen kannst.</p>
+    </div>
+    <div class="sc-vis">
+      <svg viewBox="0 0 220 150">
+        <g transform="translate(18,20)">
+          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
+          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g>
+        <g class="scdup-r"><g transform="translate(132,20)">
+          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
+          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g></g>
+        <text class="scdup-eq" x="110" y="56" text-anchor="middle" fill="#8a93a3" font-size="22" font-family="-apple-system,sans-serif">=</text>
+        <g class="scdup-badge"><g transform="translate(63,108)">
+          <rect x="0" y="0" width="94" height="28" rx="14" fill="rgba(74,222,128,.14)" stroke="rgba(74,222,128,.5)"/>
+          <text x="47" y="19" text-anchor="middle" fill="#4ade80" font-size="14" font-weight="700" font-family="-apple-system,sans-serif">spart 24 GB</text></g></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="showcase">
+    <div class="sc-text">
+      <div class="sc-eyebrow" data-t="sc5_eb">Privatsphäre</div>
+      <h3 data-t="sc5_h3">Deine Daten bleiben deine.</h3>
+      <p data-th="sc5_p">Alles läuft lokal in deinem Browser. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.</p>
+    </div>
+    <div class="sc-vis">
+      <svg viewBox="0 0 120 130">
+        <path fill="rgba(74,158,255,.10)" d="M60 14 l38 14 v28 c0 26 -20 44 -38 52 c-18 -8 -38 -26 -38 -52 v-28 Z"/>
+        <path fill="none" stroke="#4a9eff" stroke-width="4" stroke-linejoin="round" d="M60 14 l38 14 v28 c0 26 -20 44 -38 52 c-18 -8 -38 -26 -38 -52 v-28 Z"/>
+        <path class="scpriv-check" fill="none" stroke="#4a9eff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M44 62 l11 11 l22 -26"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="preise">
+  <h2 class="sec" data-t="pr_h2">Fair &amp; einfach</h2>
+  <p class="sec-sub" data-t="pr_sub">Die ersten 2 Platten sind gratis. Danach, wie du willst:</p>
+  <div class="prices">
+    <div class="price">
+      <div class="pt" data-t="pr_free_t">Kostenlos</div>
+      <div class="pp" data-th="pr_free_pp">0€</div>
+      <ul data-th="pr_free_li"><li>Bis zu 2 Platten</li><li>Voller Funktionsumfang</li><li>Für immer gratis</li></ul>
+      <a class="btn ghost" href="#download" data-t="pr_free_btn">Gratis starten</a>
+    </div>
+    <div class="price">
+      <div class="pt" data-t="pr_month_t">Monatlich</div>
+      <div class="pp" data-th="pr_month_pp">€4,99<span>/Monat</span></div>
+      <ul data-th="pr_month_li"><li>Unbegrenzt Platten</li><li>Alle Updates</li><li>Jederzeit kündbar</li></ul>
+      <a class="btn ghost" id="buyMonthly" href="#" data-t="pr_month_btn">Abo wählen</a>
+    </div>
+    <div class="price best">
+      <div class="pt" data-t="pr_year_t">Jährlich</div>
+      <div class="pp" data-th="pr_year_pp">€49,99<span>/Jahr</span></div>
+      <ul data-th="pr_year_li"><li>Unbegrenzt Platten</li><li>Alle Updates</li><li>~2 Monate gespart</li></ul>
+      <a class="btn" id="buyYearly" href="#" data-t="pr_year_btn">Abo wählen</a>
+    </div>
+  </div>
+  <p class="trust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:6px;opacity:.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-th="pr_trust">Sichere Zahlung über Lemon Squeezy · Steuern inklusive · 14 Tage Geld-zurück · schon gekauft? <a href="#" onclick="showLogin();return false">Lizenz aktivieren</a></span></p>
+</section>
+
+<section class="section" id="download">
+  <h2 class="sec" data-t="dl_h2">Lade Disky für deinen Mac</h2>
+  <p class="sec-sub" data-t="dl_sub">Ein Download, fertig. Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis.</p>
+  <div class="dlbox">
+    <a class="btn big" id="dlBtn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:-3px;margin-right:9px"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg><span id="dlBtnLbl" data-t="dl_btn_soon">Bald verfügbar – auf die Warteliste</span></a>
+    <div class="dlmeta"><span data-t="dl_req">macOS 12+ · Apple Silicon</span> · v<span id="dlVer">0.1.0</span></div>
+    <p class="dlnote" data-t="dl_note_soon">Wir legen gerade den letzten Schliff an (Notarisierung). Trag dich ein – du bekommst den Download als Erste:r.</p>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <h2 class="sec" data-t="faq_h2">Häufige Fragen</h2>
+  <div class="faq" id="faqlist"></div>
+</section>
+
+<footer>
+  <div class="fcols">
+    <div data-th="foot_tag"><b>Disky</b><br>Dein Festplatten-Katalog.<br>Lokal &amp; offline.</div>
+    <div><a href="#features" data-t="nav_features">Funktionen</a><br><a href="#preise" data-t="nav_pricing">Preise</a><br><a href="#faq" data-t="nav_faq">FAQ</a></div>
+    <div><a href="rechtliches.html#impressum" data-t="foot_imprint">Impressum</a><br>
+      <a href="rechtliches.html#datenschutz" data-t="foot_privacy">Datenschutz</a><br>
+      <a href="rechtliches.html#agb" data-t="foot_terms">AGB</a></div>
+    <div data-th="foot_support"><a href="mailto:hallo@disky.app">hallo@disky.app</a><br>Support &amp; Kontakt</div>
+  </div>
+  <div class="fbottom" data-t="foot_bottom">© 2026 Disky · made for Videografen &amp; Fotografen</div>
+</footer>
+
+<!-- Login / Konto Modal -->
+<div class="overlay" id="loginOverlay" style="display:none">
+  <div class="lmodal">
+    <button class="x" onclick="closeLogin()">✕</button>
+    <div class="lbrand">
+      <svg viewBox="0 0 100 100" width="34" height="34"><rect width="200" height="200" rx="46" fill="#11151c"/>
+        <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>
+      <b data-t="lg_title">Bei Disky anmelden</b>
+    </div>
+    <p class="lhint" data-t="lg_hint">Nach dem Kauf bekommst du einen Lizenzschlüssel per E-Mail. Gib ihn hier ein, um Disky Pro auf diesem Gerät freizuschalten.</p>
+    <label class="llbl" data-t="lg_email_lbl">E-Mail (optional)</label>
+    <input class="linput" id="loginEmail" type="email" placeholder="du@beispiel.de" data-tph="lg_email_ph">
+    <label class="llbl" data-t="lg_key_lbl">Lizenzschlüssel</label>
+    <input class="linput" id="loginKey" placeholder="DISKY-XXXX-XXXX-XXXX">
+    <button class="btn lfull" id="loginGo" data-t="lg_go">Anmelden &amp; freischalten</button>
+    <div class="lmsg" id="loginMsg"></div>
+    <div class="lalt" data-th="lg_alt">Noch keine Lizenz? <a href="#preise" onclick="closeLogin()">Pro holen</a> · oder <a href="#download">gratis starten (2 Platten)</a></div>
+  </div>
+</div>
+
+<script>
+// (Hero-Scroll-Animation entfernt — statischer Hero)
+
+/* ───────── i18n (EN/DE) — Standard Englisch, Auswahl in localStorage ───────── */
+const I18N={
+ title:{de:`Disky — alle deine Festplatten. Ein Katalog.`,en:`Disky — all your drives. One catalog.`},
+ nav_features:{de:`Funktionen`,en:`Features`},
+ nav_pricing:{de:`Preise`,en:`Pricing`},
+ nav_faq:{de:`FAQ`,en:`FAQ`},
+ hero_h1:{de:`Alle deine Festplatten.<br><span class="grad">Ein Katalog.</span>`,en:`All your drives.<br><span class="grad">One catalog.</span>`},
+ hero_lead:{de:`Disky ist deine Festplatten-Assistenz: Es katalogisiert alle deine Platten, läuft still im Hintergrund und meldet sich von selbst — <b>was noch ein Backup braucht</b>, <b>wo Speicher verschenkt wird</b>, und findet jede Datei <b>offline</b>. Weniger Arbeit, nicht mehr.`,en:`Disky is your drive assistant: it catalogs all your drives, runs quietly in the background and speaks up on its own — <b>what still needs a backup</b>, <b>where space is wasted</b>, and finds any file <b>offline</b>. Less work, not more.`},
+ hero_cta_start:{de:`Kostenlos starten`,en:`Get started free`},
+ hero_cta_how:{de:`So funktioniert's`,en:`How it works`},
+ hero_hint:{de:`2 Platten gratis · keine Installation · nichts wird verändert`,en:`2 drives free · no install · nothing gets changed`},
+ s1_h2:{de:`Das ist Disky.`,en:`This is Disky.`},
+ s1_sub:{de:`Dein ganzes Archiv auf einen Blick — auch wenn keine Platte angeschlossen ist.`,en:`Your whole archive at a glance — even when no drive is connected.`},
+ hiw_h2:{de:`So funktioniert's`,en:`How it works`},
+ hiw_sub:{de:`Einmal einrichten. Für immer den Überblick.`,en:`Set up once. Stay in control forever.`},
+ hiw_step1:{de:`SCHRITT 1`,en:`STEP 1`},
+ hiw_step2:{de:`SCHRITT 2`,en:`STEP 2`},
+ hiw_step3:{de:`SCHRITT 3`,en:`STEP 3`},
+ hiw1_h3:{de:`Einmal scannen`,en:`Scan once`},
+ hiw1_p:{de:`Steck jede Platte einmal an. Disky liest sie aus — ab dann bleibt alles durchsuchbar, auch wenn sie längst im Schrank liegt.`,en:`Plug in each drive once. Disky reads it — from then on everything stays searchable, even when it's long back on the shelf.`},
+ hiw2_h3:{de:`Auf einen Blick sehen`,en:`See it at a glance`},
+ hiw2_p:{de:`Ein interaktives Rad zeigt sofort, was deinen Speicher füllt — Projekt für Projekt, bis zur einzelnen Datei.`,en:`An interactive wheel instantly shows what's filling your storage — project by project, down to the single file.`},
+ hiw3_h3:{de:`Jederzeit wiederfinden`,en:`Find it anytime`},
+ hiw3_p:{de:`Tippe einen Namen und finde jede Datei in Sekunden — über alle Laufwerke, ohne eine einzige anzustecken.`,en:`Type a name and find any file in seconds — across every drive, without plugging in a single one.`},
+ sc_asst_eb:{de:`Dein Assistent · im Hintergrund`,en:`Your assistant · in the background`},
+ sc_asst_h3:{de:`Disky arbeitet für dich — nicht umgekehrt.`,en:`Disky works for you — not the other way around.`},
+ sc_asst_p:{de:`Disky läuft still im Hintergrund und meldet sich nur, wenn's zählt: <b>welches Projekt noch kein Backup hat</b>, wo unnötiger Speicher liegt, was du gefahrlos freiräumen kannst. Kein Mehraufwand — Disky nimmt dir Arbeit ab.`,en:`Disky runs quietly in the background and only speaks up when it matters: <b>which project still has no backup</b>, where space is wasted, what you can safely free up. No extra work — Disky takes work off your hands.`},
+ sc1_eb:{de:`Offline-Katalog · der Kern`,en:`Offline catalog · the core`},
+ sc1_h3:{de:`Finde dein Projekt — ohne eine einzige Platte anzustecken.`,en:`Find your project — without plugging in a single drive.`},
+ sc1_p:{de:`Disky hält <b>jede Festplatte offline einsehbar</b>. Tippe einen Projekt- oder Dateinamen und sieh in Sekunden, <b>auf welcher Platte</b> es liegt — auch wenn alle längst im Schrank liegen. Nie wieder zehn Platten durchstecken, nur um eine Datei zu suchen.`,en:`Disky keeps <b>every drive viewable offline</b>. Type a project or file name and see in seconds <b>which drive</b> it's on — even when they're all back in the drawer. Never dig through ten drives again just to find one file.`},
+ sc2_eb:{de:`KI-Suche · 100% lokal`,en:`AI search · 100% local`},
+ sc2_h3:{de:`Such nach Inhalt — nicht nach Dateinamen.`,en:`Search by content — not by file name.`},
+ sc2_p:{de:`Tippe „underwater" und Disky zeigt dir jeden Clip mit Wasser — über all deine Platten, ohne eine einzige anzustecken. Die KI läuft komplett auf deinem Mac: kein Upload, keine Cloud.`,en:`Type “underwater” and Disky shows you every clip with water — across all your drives, without plugging in a single one. The AI runs entirely on your Mac: no upload, no cloud.`},
+ sc3_eb:{de:`Speicher-Karte`,en:`Storage map`},
+ sc3_h3:{de:`Sieh sofort, was Platz frisst.`,en:`See instantly what's eating space.`},
+ sc3_p:{de:`Die Speicher-Karte zeigt jeden Ordner als Ring. Klick dich rein, bis du die eine Datei findest, die 200 GB blockiert. Ein <b>Aufräum-Assistent</b> markiert sogar automatisch Entbehrliches — After-Effects-/Premiere-Cache, Proxies und Duplikate — und rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst. Gelöscht wird nur, was du selbst freigibst.`,en:`The storage map shows every folder as a ring. Click your way in until you find the one file blocking 200 GB. A <b>Cleanup Assistant</b> even auto-flags the expendable — After Effects/Premiere cache, proxies and duplicates — and calculates to the gigabyte how much you can free up. Only what you release yourself gets deleted.`},
+ sc4_eb:{de:`Duplikate`,en:`Duplicates`},
+ sc4_h3:{de:`Doppelt? Nie wieder.`,en:`Duplicates? Never again.`},
+ sc4_p:{de:`Disky erkennt gleiche Dateien über alle Platten hinweg — selbst wenn sie anders heißen — und sagt dir auf den Gigabyte genau, wie viel du freiräumen kannst.`,en:`Disky detects identical files across all your drives — even when they're named differently — and tells you to the gigabyte exactly how much you can free up.`},
+ sc5_eb:{de:`Privatsphäre`,en:`Privacy`},
+ sc5_h3:{de:`Deine Daten bleiben deine.`,en:`Your data stays yours.`},
+ sc5_p:{de:`Alles läuft lokal in deinem Browser. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.`,en:`Everything runs locally in your browser. No upload, no cloud, no forced account. Disky <b>only reads</b> — and never changes anything on your drives.`},
+ pr_h2:{de:`Fair & einfach`,en:`Fair & simple`},
+ pr_sub:{de:`Die ersten 2 Platten sind gratis. Danach, wie du willst:`,en:`The first 2 drives are free. After that, your choice:`},
+ pr_free_t:{de:`Kostenlos`,en:`Free`},
+ pr_free_pp:{de:`0€`,en:`€0`},
+ pr_free_li:{de:`<li>Bis zu 2 Platten</li><li>Voller Funktionsumfang</li><li>Für immer gratis</li>`,en:`<li>Up to 2 drives</li><li>Full feature set</li><li>Free forever</li>`},
+ pr_free_btn:{de:`Gratis starten`,en:`Start free`},
+ pr_month_t:{de:`Monatlich`,en:`Monthly`},
+ pr_month_pp:{de:`€4,99<span>/Monat</span>`,en:`€4.99<span>/month</span>`},
+ pr_month_li:{de:`<li>Unbegrenzt Platten</li><li>Alle Updates</li><li>Jederzeit kündbar</li>`,en:`<li>Unlimited drives</li><li>All updates</li><li>Cancel anytime</li>`},
+ pr_month_btn:{de:`Abo wählen`,en:`Choose plan`},
+ pr_year_t:{de:`Jährlich`,en:`Yearly`},
+ pr_year_pp:{de:`€49,99<span>/Jahr</span>`,en:`€49.99<span>/year</span>`},
+ pr_year_li:{de:`<li>Unbegrenzt Platten</li><li>Alle Updates</li><li>~2 Monate gespart</li>`,en:`<li>Unlimited drives</li><li>All updates</li><li>~2 months free</li>`},
+ pr_year_btn:{de:`Abo wählen`,en:`Choose plan`},
+ pr_trust:{de:`Sichere Zahlung über Lemon Squeezy · Steuern inklusive · 14 Tage Geld-zurück · schon gekauft? <a href="#" onclick="showLogin();return false">Lizenz aktivieren</a>`,en:`Secure payment via Lemon Squeezy · taxes included · 14-day money-back · already bought? <a href="#" onclick="showLogin();return false">Activate license</a>`},
+ faq_h2:{de:`Häufige Fragen`,en:`Frequently asked`},
+ foot_tag:{de:`<b>Disky</b><br>Dein Festplatten-Katalog.<br>Lokal &amp; offline.`,en:`<b>Disky</b><br>Your hard-drive catalog.<br>Local &amp; offline.`},
+ foot_imprint:{de:`Impressum`,en:`Imprint`},
+ foot_privacy:{de:`Datenschutz`,en:`Privacy`},
+ foot_terms:{de:`AGB`,en:`Terms`},
+ foot_support:{de:`<a href="mailto:hallo@disky.app">hallo@disky.app</a><br>Support &amp; Kontakt`,en:`<a href="mailto:hallo@disky.app">hallo@disky.app</a><br>Support &amp; contact`},
+ foot_bottom:{de:`© 2026 Disky · made for Videografen & Fotografen`,en:`© 2026 Disky · made for videographers & photographers`},
+ lg_title:{de:`Bei Disky anmelden`,en:`Sign in to Disky`},
+ lg_hint:{de:`Nach dem Kauf bekommst du einen Lizenzschlüssel per E-Mail. Gib ihn hier ein, um Disky Pro auf diesem Gerät freizuschalten.`,en:`After purchase you'll get a license key by email. Enter it here to unlock Disky Pro on this device.`},
+ lg_email_lbl:{de:`E-Mail (optional)`,en:`Email (optional)`},
+ lg_email_ph:{de:`du@beispiel.de`,en:`you@example.com`},
+ lg_key_lbl:{de:`Lizenzschlüssel`,en:`License key`},
+ lg_go:{de:`Anmelden & freischalten`,en:`Sign in & unlock`},
+ lg_alt:{de:`Noch keine Lizenz? <a href="#preise" onclick="closeLogin()">Pro holen</a> · oder <a href="#download">gratis starten (2 Platten)</a>`,en:`No license yet? <a href="#preise" onclick="closeLogin()">Get Pro</a> · or <a href="#download">start free (2 drives)</a>`},
+ acc_signin:{de:`Anmelden`,en:`Sign in`},
+ acc_start:{de:`Kostenlos starten`,en:`Get started free`},
+ acc_openapp:{de:`Für Mac laden`,en:`Download for Mac`},
+ acc_signout:{de:`Abmelden`,en:`Sign out`},
+ dl_h2:{de:`Lade Disky für deinen Mac`,en:`Get Disky for your Mac`},
+ dl_sub:{de:`Ein Download, fertig. Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis.`,en:`One download, done. Scan your first drive in seconds — the first 2 are free.`},
+ dl_btn:{de:`Für Mac herunterladen`,en:`Download for Mac`},
+ dl_btn_soon:{de:`Bald verfügbar – auf die Warteliste`,en:`Coming soon – join the waitlist`},
+ dl_req:{de:`macOS 12+ · Apple Silicon`,en:`macOS 12+ · Apple Silicon`},
+ dl_note:{de:`Beim ersten Öffnen ggf. Rechtsklick → „Öffnen". Es wird nur gelesen — nichts gelöscht oder hochgeladen.`,en:`On first open, right-click → "Open" if prompted. Read-only — nothing deleted or uploaded.`},
+ dl_note_soon:{de:`Wir legen gerade den letzten Schliff an (Notarisierung). Trag dich ein – du bekommst den Download als Erste:r.`,en:`We're putting on the final touches (notarization). Join the list — you'll be first to get the download.`},
+ pr_soon:{de:`Bald`,en:`Soon`},
+ lg_msg_needkey:{de:`Bitte Lizenzschlüssel eingeben.`,en:`Please enter a license key.`},
+ lg_msg_check:{de:`Prüfe Schlüssel…`,en:`Checking key…`},
+ lg_msg_ok:{de:`Freigeschaltet — willkommen!`,en:`Unlocked — welcome!`},
+ lg_msg_neterr:{de:`Netzwerkfehler — zum Aktivieren bitte online sein.`,en:`Network error — please be online to activate.`},
+ lg_err_invalid:{de:`Ungültiger oder abgelaufener Schlüssel`,en:`Invalid or expired key`},
+};
+let LANG=(localStorage.getItem('diskyLang')||'en');
+function tt(k){const e=I18N[k];return e?(e[LANG]!=null?e[LANG]:e.en):k;}
+function updateLangBtn(){const el=document.getElementById('langtoggle');if(!el)return;
+  el.style.display='inline-flex';el.style.gap='2px';el.style.marginLeft='6px';
+  el.innerHTML=['en','de'].map(l=>`<button type="button" data-l="${l}" style="font:inherit;font-size:12px;font-weight:700;letter-spacing:.03em;padding:4px 8px;border-radius:7px;cursor:pointer;border:1px solid ${l===LANG?'rgba(74,158,255,.5)':'transparent'};background:${l===LANG?'rgba(74,158,255,.15)':'transparent'};color:${l===LANG?'#cfe0f5':'var(--mut)'}">${l.toUpperCase()}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>applyLang(b.getAttribute('data-l')));}
+function applyLang(l){if(l)LANG=l;localStorage.setItem('diskyLang',LANG);
+  document.documentElement.lang=LANG;
+  if(I18N.title)document.title=tt('title');
+  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=tt(el.getAttribute('data-t')));
+  document.querySelectorAll('[data-th]').forEach(el=>el.innerHTML=tt(el.getAttribute('data-th')));
+  document.querySelectorAll('[data-tph]').forEach(el=>el.placeholder=tt(el.getAttribute('data-tph')));
+  if(typeof renderFAQ==='function')renderFAQ();
+  if(typeof renderAccount==='function')renderAccount();
+  updateLangBtn();}
+
+/* ───────── Konto / Lizenz (geteilt mit der App via localStorage) ───────── */
+const DISKY={
+  CHECKOUT_MONTHLY:"https://disky.lemonsqueezy.com/buy/DEIN-MONATS-PRODUKT",
+  CHECKOUT_YEARLY:"https://disky.lemonsqueezy.com/buy/DEIN-JAHRES-PRODUKT",
+  // ↓ Nach dem ersten GitHub-Release hier den Link zur .dmg eintragen + DOWNLOAD_READY:true
+  // (z.B. https://github.com/Siul98/disky-web/releases/latest/download/Disky-arm64.dmg)
+  DOWNLOAD_URL:"https://github.com/Siul98/disky-web/releases/latest",
+  VERSION:"0.1.0",
+  // Launch-Schalter: solange false → Warteliste/E-Mail statt totem Link.
+  // Auf true setzen, sobald (a) die DMG als Release hochgeladen bzw. (b) Lemon-Squeezy-Produkte live sind.
+  DOWNLOAD_READY:false,
+  CHECKOUT_READY:false,
+  WAITLIST:"mailto:hallo@disky.app?subject="+encodeURIComponent("Disky – Warteliste (macOS)"),
+  CONTACT_PRO:"mailto:hallo@disky.app?subject="+encodeURIComponent("Disky Pro – Interesse"),
+};
+function getLicense(){try{return JSON.parse(localStorage.getItem("disky_license")||"null");}catch(e){return null;}}
+function setLicense(o){localStorage.setItem("disky_license",JSON.stringify(o));}
+function isPro(){const l=getLicense();return !!(l&&l.valid&&(!l.expires||Date.parse(l.expires)>Date.now()));}
+async function validateLicense(key){
+  const res=await fetch("https://api.lemonsqueezy.com/v1/licenses/validate",{
+    method:"POST",headers:{"Accept":"application/json","Content-Type":"application/x-www-form-urlencoded"},
+    body:new URLSearchParams({license_key:key})});
+  const d=await res.json().catch(()=>({}));
+  if(d&&d.valid){const exp=d.license_key&&d.license_key.expires_at;
+    const cur=getLicense()||{}; setLicense({key,valid:true,expires:exp||null,email:cur.email||null});return{ok:true};}
+  return{ok:false,error:(d&&d.error)||tt('lg_err_invalid')};
+}
+function renderAccount(){
+  const el=document.getElementById("account"); if(!el) return;
+  if(isPro()){
+    el.innerHTML=`<span class="prochip"><span class="pdot"></span>Disky Pro</span>
+      <a class="btn" href="#download">${tt('acc_openapp')}</a>
+      <a class="link" id="logoutBtn">${tt('acc_signout')}</a>`;
+    el.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem("disky_license");renderAccount();};
+  }else{
+    el.innerHTML=`<a class="link" id="loginBtn">${tt('acc_signin')}</a>
+      <a class="btn" href="#download">${tt('acc_start')}</a>`;
+    el.querySelector("#loginBtn").onclick=showLogin;
+  }
+}
+function showLogin(){const o=document.getElementById("loginOverlay");o.style.display="flex";
+  const e=getLicense();if(e&&e.email)document.getElementById("loginEmail").value=e.email;
+  document.getElementById("loginKey").focus();}
+function closeLogin(){document.getElementById("loginOverlay").style.display="none";}
+document.getElementById("loginOverlay").addEventListener("click",e=>{if(e.target.id==="loginOverlay")closeLogin();});
+document.getElementById("loginGo").onclick=async()=>{
+  const key=document.getElementById("loginKey").value.trim();
+  const email=document.getElementById("loginEmail").value.trim();
+  const msg=document.getElementById("loginMsg");
+  if(!key){msg.innerHTML='<span style="color:#ff6b6b">'+tt('lg_msg_needkey')+'</span>';return;}
+  msg.style.color="var(--mut)";msg.textContent=tt('lg_msg_check');
+  try{const r=await validateLicense(key);
+    if(r.ok){const l=getLicense();l.email=email||l.email;setLicense(l);
+      msg.innerHTML='<span style="color:#4ade80">'+tt('lg_msg_ok')+'</span>';
+      setTimeout(()=>{closeLogin();renderAccount();},1000);}
+    else msg.innerHTML='<span style="color:#ff6b6b">'+r.error+'</span>';
+  }catch(e){msg.innerHTML='<span style="color:#ff6b6b">'+tt('lg_msg_neterr')+'</span>';}
+};
+// Kauf-Buttons — solange Checkout nicht live: zur „Interesse"-Mail statt totem Placeholder-Link
+function buy(url){ const ok=DISKY.CHECKOUT_READY && url && !/DEIN-/.test(url); open(ok?url:DISKY.CONTACT_PRO,"_blank"); }
+document.getElementById("buyYearly")?.addEventListener("click",e=>{e.preventDefault();buy(DISKY.CHECKOUT_YEARLY);});
+document.getElementById("buyMonthly")?.addEventListener("click",e=>{e.preventDefault();buy(DISKY.CHECKOUT_MONTHLY);});
+// Download-Button + Version aus der Config — solange nicht notarisiert: Warteliste statt totem Release-Link
+(()=>{const b=document.getElementById("dlBtn");
+  if(b){ if(DISKY.DOWNLOAD_READY){ b.href=DISKY.DOWNLOAD_URL; const l=document.getElementById("dlBtnLbl"); if(l)l.setAttribute("data-t","dl_btn"); const n=document.querySelector(".dlnote"); if(n)n.setAttribute("data-t","dl_note"); }
+         else { b.href=DISKY.WAITLIST; } }
+  const v=document.getElementById("dlVer");if(v)v.textContent=DISKY.VERSION;})();
+
+/* FAQ */
+const FAQ={
+ de:[
+  ["Ist Disky sicher? Kann es Dateien löschen?","Nein. Disky liest deine Platten nur, um den Katalog zu erstellen — es kann technisch nichts löschen, verschieben oder verändern. Duplikate werden nur angezeigt; wegwerfen tust du selbst."],
+  ["Funktioniert das wirklich offline?","Ja. Du scannst jede Platte einmal, danach liegt der Katalog lokal in deinem Browser. Suchen, Karte und Duplikate funktionieren auch, wenn die Platte abgesteckt ist — komplett ohne Internet."],
+  ["Welche Browser werden unterstützt?","Zum Scannen brauchst du Chrome oder Edge (die nötige Lese-Technik fehlt in Safari/Firefox). Ansehen geht überall."],
+  ["Was kostet Disky?","Die ersten 2 Platten sind gratis — mit vollem Funktionsumfang. Für unbegrenzt viele Platten: 4,99 €/Monat oder 49,99 €/Jahr."],
+  ["Wie aktiviere ich Pro auf einem zweiten Gerät?","Mit deinem Lizenzschlüssel: oben rechts auf Anmelden klicken und den Schlüssel eingeben."],
+  ["Werden meine Daten hochgeladen?","Nein. Es gibt keinen Upload und keine Cloud. Alles bleibt auf deinem Rechner."],
+ ],
+ en:[
+  ["Is Disky safe? Can it delete files?","No. Disky only reads your drives to build the catalog — it technically cannot delete, move or change anything. Duplicates are only shown; you do the deleting yourself."],
+  ["Does it really work offline?","Yes. You scan each drive once, then the catalog lives locally in your browser. Search, map and duplicates work even when the drive is unplugged — completely without internet."],
+  ["Which browsers are supported?","To scan you need Chrome or Edge (Safari/Firefox lack the required read access). Viewing works everywhere."],
+  ["What does Disky cost?","The first 2 drives are free — with the full feature set. For unlimited drives: €4.99/month or €49.99/year."],
+  ["How do I activate Pro on a second device?","With your license key: click Sign in at the top right and enter the key."],
+  ["Is my data uploaded?","No. There's no upload and no cloud. Everything stays on your machine."],
+ ],
+};
+function renderFAQ(){const el=document.getElementById("faqlist");if(!el)return;
+  el.innerHTML=(FAQ[LANG]||FAQ.en).map(([q,a])=>`<details class="qa"><summary>${q}</summary><div class="a">${a}</div></details>`).join("");}
+
+applyLang(LANG);
+
+/* App-Glimpse: Balken & Ringe animieren, sobald er ins Bild scrollt */
+(function(){
+  const stage=document.querySelector(".glimpse-stage"); if(!stage) return;
+  let done=false;
+  const check=()=>{ if(done) return; const r=stage.getBoundingClientRect();
+    if(r.top < innerHeight*0.82 && r.bottom > 60){ done=true; stage.classList.add("play"); window.removeEventListener("scroll",check); } };
+  window.addEventListener("scroll",check,{passive:true});
+  check();
+})();
+
+/* „So funktioniert's"-Karten: nacheinander aufleuchten + Hover-Highlight */
+(function(){
+  const cards=[...document.querySelectorAll(".how .howcard")];
+  if(cards.length<2) return;
+  let i=0, paused=false;
+  const setHot=n=>cards.forEach((c,k)=>c.classList.toggle("hot",k===n));
+  setHot(0);
+  setInterval(()=>{ if(!paused){ i=(i+1)%cards.length; setHot(i); } }, 2200);
+  const wrap=document.querySelector(".how");
+  cards.forEach(c=>c.addEventListener("mouseenter",()=>{ paused=true; cards.forEach(x=>x.classList.remove("hot")); }));
+  if(wrap) wrap.addEventListener("mouseleave",()=>{ paused=false; setHot(i); });
+})();
+</script>
+</body></html>
