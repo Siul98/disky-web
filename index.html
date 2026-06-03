@@ -1245,9 +1245,11 @@ if (sec && canvas && stage && screenEl) {
     cam.aspect=w/h; cam.updateProjectionMatrix();
   }
   resize();
-  function frame(){ if(mixer) mixer.update(0); renderer.render(scene,cam); css.render(scene,cam); raf=requestAnimationFrame(frame); }
-  function start(){ if(!running){ running=true; frame(); } }
-  function stop(){ running=false; cancelAnimationFrame(raf); }
+  function frame(){
+    const r=sec.getBoundingClientRect();
+    if(r.bottom>-300 && r.top<innerHeight+300){ renderer.render(scene,cam); css.render(scene,cam); }  // nur nah am Viewport rendern (Performance)
+    raf=requestAnimationFrame(frame);
+  }
 
   function onScroll(){
     const r=sec.getBoundingClientRect(); const total=sec.offsetHeight-innerHeight;
@@ -1256,12 +1258,8 @@ if (sec && canvas && stage && screenEl) {
   }
   addEventListener('scroll', onScroll, {passive:true});
   addEventListener('resize', ()=>{ resize(); onScroll(); });
-  // Render-Loop nur, wenn die Sektion sichtbar ist (Performance)
-  if('IntersectionObserver' in window){
-    new IntersectionObserver(es=>es.forEach(e=> e.isIntersecting?start():stop()),{rootMargin:'100px'}).observe(sec);
-  } else start();
   onScroll(); apply();
-  renderer.render(scene,cam); css.render(scene,cam);   // 1× sofort rendern → kein „zu groß"-Aufblitzen
+  frame();   // Render-Loop läuft durchgehend (rendert nur nah am Viewport)
 }
 </script>
 <script>
