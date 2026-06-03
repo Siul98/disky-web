@@ -883,15 +883,24 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 
 /* ───────── Scroll-Reveal: Benefits animieren beim Durchscrollen rein ───────── */
 (function(){
-  document.documentElement.classList.add('reveal-on');
   var els = [].slice.call(document.querySelectorAll('.showcase'));
-  if(!('IntersectionObserver' in window) || !els.length){ els.forEach(function(e){e.classList.add('in');}); return; }
-  var io = new IntersectionObserver(function(ents){
-    ents.forEach(function(en){
-      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }   // einmal reinanimieren, dann sichtbar bleiben
-    });
-  }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-  els.forEach(function(e){ io.observe(e); });
+  if(!els.length) return;
+  document.documentElement.classList.add('reveal-on');
+  function reveal(){
+    var vh = window.innerHeight || 800;
+    for(var i=els.length-1;i>=0;i--){
+      var r=els[i].getBoundingClientRect();
+      if(r.top < vh*0.9 && r.bottom > 0){ els[i].classList.add('in'); els.splice(i,1); }
+    }
+    if(!els.length) window.removeEventListener('scroll', onScroll);
+  }
+  var ticking=false;
+  function onScroll(){ if(ticking) return; ticking=true; requestAnimationFrame(function(){ ticking=false; reveal(); }); }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  reveal();                                              // sofort prüfen (was schon im Bild ist)
+  setTimeout(reveal, 300);                               // nach Layout nochmal
+  setTimeout(function(){ els.slice().forEach(function(e){e.classList.add('in');}); }, 4500);  // Sicherheitsnetz: nie unsichtbar hängen bleiben
 })();
 
 /* ───────── i18n (EN/DE) — Standard Englisch, Auswahl in localStorage ───────── */
