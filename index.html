@@ -1344,12 +1344,16 @@ if (sec && canvas && stage && screenEl) {
         return { p, mixerTime: mixer&&mixer.time, lidAngleDeg:(2*Math.acos(w)*180/Math.PI).toFixed(1) }; } };
   }, undefined, (err)=>console.warn('GLB load failed', err));
   }
-  // Trigger: lade das MacBook, sobald die Sektion ~1 Viewport entfernt ist (rechtzeitig bereit)
+  // Trigger: GLB + Live-App im HINTERGRUND laden, sobald die Seite idle ist → schneller First Paint,
+  // aber rechtzeitig fertig, bevor man hinscrollt (GLB 5 MB + iframe brauchen ein paar Sekunden).
+  if('requestIdleCallback' in window){ requestIdleCallback(()=>loadMac(), { timeout: 2000 }); }
+  else { setTimeout(loadMac, 1200); }
+  // Fallback: spätestens wenn die Sektion in die Nähe kommt
   if('IntersectionObserver' in window){
     const mo=new IntersectionObserver((ents)=>{ if(ents.some(e=>e.isIntersecting)){ mo.disconnect(); loadMac(); } },
-      { rootMargin: '220% 0px 220% 0px' });
+      { rootMargin: '300% 0px 300% 0px' });
     mo.observe(sec);
-  } else { loadMac(); }
+  }
 
   // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
