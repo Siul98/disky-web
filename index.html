@@ -1173,6 +1173,7 @@ if (sec && canvas && stage && screenEl) {
   scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
   const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(300, 2400, 2200); scene.add(key);   // mittiger + schwächer → weicher, breiter Schein statt harter Hotspot
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
+  const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // kleines Rim-Light: Kantenglanz von hinten-oben
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
@@ -1196,7 +1197,7 @@ if (sec && canvas && stage && screenEl) {
     const tex=new THREE.CanvasTexture(cv); tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=8;
     // gespiegelte Sterne (feste Positionen, funkeln) — wie das Sternenfeld der Seite
     const STARS = Array.from({length:30},(_,i)=>({ x:24+((i*173)%1560), y:18+((i*229)%964), r:0.7+(i%3)*0.7, a:0.05+(i%4)*0.025, p:i*1.7 }));
-    const ui=new Image(); let uiReady=false; ui.onload=()=>{uiReady=true;}; ui.src='assets/screen-app.png';
+    const ui=new Image(); let uiReady=false; ui.onload=()=>{uiReady=true;}; ui.src='assets/screen-app.png?v=cockpit';
     function draw(t){
       x.fillStyle='#0c0f15'; x.fillRect(0,0,1600,1000);
       if(uiReady){ const s=1600/ui.naturalWidth, dh=ui.naturalHeight*s, dy=(1000-dh)/2; x.drawImage(ui,0,dy,1600,dh); }
