@@ -1214,7 +1214,7 @@ if (sec && canvas && stage && screenEl) {
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
-  let screenMat = null, cssScreen = null, screenTex = null, drawScreen = null;
+  let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null;
   const CSS_FIX = new THREE.Quaternion();   // Ausrichtungs-Korrektur (per window.__fix tunebar)
 
   // Boden-Schatten (weiche Kontaktfläche)
@@ -1266,7 +1266,7 @@ if (sec && canvas && stage && screenEl) {
       if(!(o.isMesh && o.material)) return;
       const mats = Array.isArray(o.material) ? o.material : [o.material];
       mats.forEach(m=>{
-        if(m.name==='Material.002'){ screenMat=m; return; }
+        if(m.name==='Material.002'){ screenMat=m; screenMesh=o; return; }
         // Alu/Gehäuse mattieren → keine krasse Reflektion / kein harter Chromstreifen oben
         if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.4); }
         if('metalness' in m){ m.metalness = Math.min(m.metalness!=null?m.metalness:0.6, 0.5); }
@@ -1280,6 +1280,40 @@ if (sec && canvas && stage && screenEl) {
       screenMat.metalness=0; screenMat.roughness=0.82; screenMat.envMapIntensity=0.05;   // hohe Rauheit → Highlight breit & weich statt harter Hotspot
       screenMat.polygonOffset=true; screenMat.polygonOffsetFactor=-2; screenMat.polygonOffsetUnits=-2;   // Screen vor die Glasfläche → kein Z-Fighting
       screenMat.depthWrite=true; screenMat.needsUpdate=true;
+    }
+    // === ECHTE LIVE-APP als iframe auf dem Display (CSS3D, am Screen-Mesh verankert → folgt Aufklappen/Zoom) ===
+    if(screenMesh){
+      screenMesh.geometry.computeBoundingBox();
+      const bb=screenMesh.geometry.boundingBox, sz=new THREE.Vector3(); bb.getSize(sz);
+      const ctr=new THREE.Vector3(); bb.getCenter(ctr);
+      const dims=[['x',sz.x],['y',sz.y],['z',sz.z]].sort((a,b)=>a[1]-b[1]);
+      const normalAxis=dims[0][0];                 // dünnste Achse = Display-Normale
+      const host=document.createElement('div');
+      host.style.cssText='width:1600px;height:1000px;overflow:hidden;background:#0a0c10;opacity:0;transition:opacity .5s ease';
+      appFrame=document.createElement('iframe');
+      appFrame.src='screen-app.html?lang='+(LANG==='de'?'de':'en');
+      appFrame.setAttribute('scrolling','no'); appFrame.setAttribute('tabindex','-1');
+      appFrame.style.cssText='width:1600px;height:1000px;border:0;display:block;background:#0a0c10;pointer-events:none';
+      // iframe lädt + seedet + reloadt intern → erst wenn die echte App da ist einblenden.
+      // Solange zeigt das statische Cockpit-PNG dahinter (fast identisch → nahtlos).
+      appFrame.addEventListener('load', ()=>{ setTimeout(()=>{ host.style.opacity='1'; }, 500); });
+      host.appendChild(appFrame);
+      const cssObj=new CSS3DObject(host); cssScreen=cssObj;
+      // Fläche entlang der zwei großen Achsen → px↦lokale Einheiten
+      const planeW = normalAxis==='x'? sz.z : sz.x;
+      const planeH = normalAxis==='y'? sz.z : sz.y;
+      cssObj.scale.set(planeW/1600, planeH/1000, 1);
+      cssObj.position.copy(ctr);
+      if(normalAxis==='y') cssObj.rotation.x=Math.PI/2;       // Display schaut zum Betrachter (nicht Rückseite)
+      else if(normalAxis==='x') cssObj.rotation.y=Math.PI/2;
+      screenMesh.add(cssObj);
+      css3dHost.style.display='block';
+      window.__css={ o:cssObj,
+        set:(q)=>{ ['px','py','pz'].forEach((k,i)=>{ if(q[k]!=null) cssObj.position.setComponent(i,q[k]); });
+          ['rx','ry','rz'].forEach((k)=>{ if(q[k]!=null) cssObj.rotation[k[1]]=q[k]; });
+          if(q.sx!=null)cssObj.scale.x=q.sx; if(q.sy!=null)cssObj.scale.y=q.sy; if(q.flip!=null)cssObj.scale.x=Math.abs(cssObj.scale.x)*(q.flip?-1:1);
+          renderer.render(scene,cam); css.render(scene,cam); },
+        info:()=>({sz:sz.toArray().map(v=>+v.toFixed(1)), normalAxis, pos:cssObj.position.toArray().map(v=>+v.toFixed(1)), rot:[cssObj.rotation.x,cssObj.rotation.y,cssObj.rotation.z].map(v=>+v.toFixed(3)), scale:cssObj.scale.toArray().map(v=>+v.toFixed(4))}) };
     }
     // Schatten unter dem Modell
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.6, TARGET*1.3), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false }));
@@ -1295,10 +1329,9 @@ if (sec && canvas && stage && screenEl) {
         return { p, mixerTime: mixer&&mixer.time, lidAngleDeg:(2*Math.acos(w)*180/Math.PI).toFixed(1) }; } };
   }, undefined, (err)=>console.warn('GLB load failed', err));
 
-  // App-Screen (CSS3D) — wird nach dem Laden auf dem Display platziert (Stufe 2)
-  css3dHost.style.display = 'none';
+  // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
-  let p = 0, raf = 0, running = false, animDir = -1;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
+  let p = 0, raf = 0, running = false, animDir = -1, lastView = null;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
   const OPEN_T = 3.9;   // Sekunde im Clip, an der der Deckel ~105° offen ist (Peak 120° @ 4.54s)
   const START_T = 1.5;   // Deckel startet leicht geöffnet (~40°)
   function apply(){
