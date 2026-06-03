@@ -333,27 +333,31 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   background:radial-gradient(120% 130% at 50% 0,rgba(74,158,255,.14),transparent 62%),var(--bg2);
   border:1px solid var(--line);border-radius:26px;padding:50px 28px}
 .endcta-box .sec{margin-top:0}
-/* ── MacBook (CSS-3D) Scroll-Showcase — klappt auf & dreht beim Scrollen ── */
-.mb-scroll{position:relative;height:480vh}
+/* ── MacBook (CSS-3D) Scroll-Showcase — echtes MacBook, dreht leicht beim Scrollen ── */
+.mb-scroll{position:relative;height:460vh}
 .mb-head{text-align:center;padding:64px 24px 0;position:relative;z-index:2}
 .mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
-.mb-stage{position:relative;width:min(900px,92vw);height:58vh;perspective:2000px;perspective-origin:50% 40%}
-.mb-device{position:absolute;left:50%;top:48%;width:min(600px,78vw);aspect-ratio:16/10;
-  transform:translate(-50%,-50%) rotateX(var(--rx,18deg)) rotateZ(var(--rz,0deg)) rotateY(var(--ry,0deg));
+.mb-stage{position:relative;width:min(960px,94vw);height:62vh;perspective:2400px;perspective-origin:50% 34%}
+.mb-device{position:absolute;left:50%;top:42%;width:min(660px,84vw);
+  transform:translate(-50%,-50%) rotateX(var(--rx,20deg)) rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg));
   transform-style:preserve-3d;will-change:transform}
-.mb-lid{position:absolute;inset:0;transform-origin:50% 100%;transform:rotateX(var(--open,-88deg));transform-style:preserve-3d;
-  border-radius:16px 16px 9px 9px;background:#0a0c10;border:2px solid #232a33;
-  box-shadow:0 0 0 1px rgba(0,0,0,.5),0 36px 70px -22px rgba(0,0,0,.8)}
-.mb-bezel{position:absolute;inset:9px;border-radius:8px;overflow:hidden;background:#05070a;box-shadow:inset 0 0 0 1px rgba(120,160,210,.07)}
-.mb-cam{position:absolute;z-index:3;top:3px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#10151c}
-.mb-base{position:absolute;left:-1.5%;top:100%;width:103%;height:64%;transform-origin:50% 0%;transform:rotateX(-90deg);
-  border-radius:2px 2px 14px 14px;background:linear-gradient(180deg,#262b33,#171b21 55%,#0e1116);
-  box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 40px 50px -24px rgba(0,0,0,.7)}
-.mb-base::before{content:"";position:absolute;left:50%;top:15%;transform:translateX(-50%);width:78%;height:42%;border-radius:6px;
-  background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 7px,transparent 7px 10px);opacity:.55}
-.mb-base::after{content:"";position:absolute;left:50%;bottom:9%;transform:translateX(-50%);width:30%;height:28%;border-radius:7px;
-  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-.mb-hinge{position:absolute;left:8%;top:100%;width:84%;height:5px;transform:translateY(-2px);border-radius:0 0 4px 4px;background:linear-gradient(180deg,#2b313a,#0b0d11)}
+/* Deckel = Display-Einheit (Alu-Rahmen, 16:10-Screen, dünne Ränder, Notch) */
+.mb-lid{position:relative;width:100%;aspect-ratio:16/10.55;transform-origin:50% 100%;transform:rotateX(var(--open,-3deg));transform-style:preserve-3d;
+  border-radius:20px;padding:10px 10px 13px;
+  background:linear-gradient(152deg,#3a4046 0%,#262b31 34%,#15181d 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 34px 66px -26px rgba(0,0,0,.9)}
+.mb-screen{position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;background:#06080b;
+  box-shadow:inset 0 0 0 1px #000,inset 0 0 26px rgba(0,0,0,.55)}
+.mb-notch{position:absolute;z-index:6;top:10px;left:50%;transform:translateX(-50%);width:15%;height:12px;background:#0a0c10;border-radius:0 0 7px 7px}
+/* Tastatur-Deck (liegt flach am Scharnier, perspektivisch verkürzt) */
+.mb-deck{position:absolute;left:50%;top:100%;width:107%;height:62%;transform-origin:50% 0%;transform:translateX(-50%) rotateX(-90deg);
+  border-radius:0 0 18px 18px;background:linear-gradient(180deg,#2c3138 0%,#1b1f25 32%,#0f1216 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 50px 60px -26px rgba(0,0,0,.85)}
+.mb-deck .mb-kb{position:absolute;left:50%;top:12%;transform:translateX(-50%);width:82%;height:46%;border-radius:7px;opacity:.5;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 6.5px,transparent 6.5px 9.5px),repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 6.5px,transparent 6.5px 11px)}
+.mb-deck .mb-pad{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);width:32%;height:30%;border-radius:8px;background:rgba(255,255,255,.045);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
+.mb-deck::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:13%;height:7px;border-radius:0 0 6px 6px;background:#0b0d11}
+/* Feature-Ebenen im Screen */
 .mb-feat{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;display:flex;flex-direction:column;
   padding:5% 6%;background:radial-gradient(120% 100% at 50% 0,rgba(74,158,255,.12),transparent 60%),#0b0e13}
 .mb-feat.on{opacity:1}
@@ -361,11 +365,16 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat .mf-bar i{width:7px;height:7px;border-radius:50%;background:#2b333f;display:block}
 .mb-feat .mf-vis{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
 .mb-feat .mf-vis svg{max-width:86%;max-height:100%;height:auto}
+/* Übersicht-Seite (echte App-UI) im Screen — auf Screenbreite skaliert */
+.mb-ov{position:absolute;inset:0;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0a0c10}
+.mb-ov .ag-window{flex:0 0 auto;transform:scale(var(--ags,.5));transform-origin:center;border:none!important;border-radius:0;box-shadow:none}
+.mb-feat.on .ag-node .disc{animation:ringIn 1.3s cubic-bezier(.22,1,.36,1) both}
+.mb-feat.on .ag-dr .agfill{animation:agGrow 1.2s cubic-bezier(.22,1,.36,1) both}
 @keyframes mfFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2.5%) scale(1.02)}}
 .mb-feat.on .mf-vis{animation:mfFloat 6s ease-in-out infinite}
 @keyframes mfBlink{0%,100%{opacity:.5}50%{opacity:1}}
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
-@media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}.mb-device{--open:0deg!important}}
+@media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 .mb-caps{margin-top:18px;height:70px;position:relative;width:min(720px,92vw);text-align:center}
 .mb-cap{position:absolute;inset:0;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
 .mb-cap.on{opacity:1;transform:none}
@@ -417,19 +426,49 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   <div class="mb-sticky">
     <div class="mb-stage">
       <div class="mb-device">
-        <div class="mb-base"></div>
-        <div class="mb-hinge"></div>
-        <div class="mb-lid"><div class="mb-bezel"><span class="mb-cam"></span>
-        <!-- 1 · Übersicht -->
-        <div class="mb-feat on" data-i="0">
-          <div class="mf-bar"><i></i><i></i><i></i></div>
-          <div class="mf-vis"><svg viewBox="0 0 320 190">
-            <g stroke="#2c3a4f" stroke-width="1.3" fill="none" opacity=".8"><line x1="160" y1="96" x2="84" y2="48"/><line x1="160" y1="96" x2="236" y2="48"/><line x1="160" y1="96" x2="84" y2="146"/><line x1="160" y1="96" x2="236" y2="146"/></g>
-            <g class="mf-blink"><circle cx="84" cy="48" r="13" fill="none" stroke="#4a9eff" stroke-width="3"/><circle cx="236" cy="48" r="13" fill="none" stroke="#ff6b6b" stroke-width="3"/><circle cx="84" cy="146" r="13" fill="none" stroke="#2dd4bf" stroke-width="3"/><circle cx="236" cy="146" r="13" fill="none" stroke="#ffb454" stroke-width="3"/></g>
-            <circle cx="160" cy="96" r="20" fill="#11161f" stroke="#2c3a4f" stroke-width="1.3"/>
-            <g transform="translate(160 96) scale(.34)"><ellipse cx="0" cy="0" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="4.2"/><g transform="rotate(58)"><ellipse cx="0" cy="0" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="4.2"/></g><circle r="8" fill="#4a9eff"/></g>
-          </svg></div>
-        </div>
+        <div class="mb-lid"><span class="mb-notch"></span><div class="mb-screen">
+        <!-- 1 · Übersicht (echte App-UI, animiert) -->
+        <div class="mb-feat on" data-i="0"><div class="mb-ov">
+          <div class="ag-window">
+            <aside class="ag-side">
+              <div class="ag-brand"><span class="l"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg></span><b>Disky</b></div>
+              <div class="ag-nav on"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span data-t="m_ov">Übersicht</span></div>
+              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="5" rx="1.5"/><rect x="3" y="14" width="18" height="5" rx="1.5"/></svg></span><span data-t="m_drives">Festplatten</span></div>
+              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span><span data-t="m_proj">Projekte</span></div>
+              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span><span data-t="m_dupes">Duplikate</span></div>
+              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></span><span data-t="m_search">KI-SuperSearch</span></div>
+              <div class="ag-scan" data-t="m_scan">＋ Platte scannen</div>
+              <div class="ag-sec" data-t="m_mydrives">Meine Platten</div>
+              <div class="ag-dr" style="--p:64%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">T9</span><span class="ds">2.3 TB</span></div>
+              <div class="ag-dr" style="--p:93%"><span class="agfill"></span><span class="dd" style="background:#f3701f"></span><span class="dn">LaCie Rugged</span><span class="ds">4.2 TB</span></div>
+              <div class="ag-dr" style="--p:38%"><span class="agfill"></span><span class="dd" style="background:#cfd3d9"></span><span class="dn">Studio RAID</span><span class="ds">10.9 TB</span></div>
+              <div class="ag-dr" style="--p:96%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn" data-t="m_archive">Archiv 2023</span><span class="ds">7.0 TB</span></div>
+              <div class="ag-dr" style="--p:80%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">Sony A7S</span><span class="ds">381 GB</span></div>
+            </aside>
+            <div class="ag-main">
+              <div class="ag-bar" data-t="m_ov">Übersicht</div>
+              <div class="ag-body">
+                <div class="ag-hello" data-t="m_hello">Willkommen zurück.</div>
+                <div class="ag-stat" data-th="m_stat"><span><b>5</b> Platten</span><span class="d">·</span><span><b>112.594</b> Dateien</span><span class="d">·</span><span><b>24,8 TB</b> katalogisiert</span><span class="d">·</span><span><b>0</b> Duplikate</span></div>
+                <div class="ag-const">
+                  <svg class="csvg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs><linearGradient id="agln2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a9eff"/><stop offset="1" stop-color="#2c3a4f"/></linearGradient></defs>
+                    <path class="ag-cline" d="M50 17 L50 51"/><path class="ag-cline" d="M86 40 L50 51"/>
+                    <path class="ag-cline" d="M72 79 L50 51"/><path class="ag-cline" d="M28 79 L50 51"/><path class="ag-cline" d="M14 40 L50 51"/>
+                  </svg>
+                  <div class="ag-hub"><div class="ring"></div>
+                    <div class="core"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg></div>
+                    <div class="ht">Disky</div><div class="hs" data-t="m_hubsub">5 Platten · ein Katalog</div></div>
+                  <div class="ag-node" style="left:50%;top:17%;--ring:63;--rc:#4a9eff"><span class="pin"></span><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">T9</span><span class="ns">2.3 / 3.6 TB</span></div>
+                  <div class="ag-node" style="left:86%;top:40%;--ring:92;--rc:#ff6b6b"><span class="pin"></span><span class="disc"><span class="g" style="background:#f3701f"></span></span><span class="nn">LaCie Rugged</span><span class="ns">4.2 / 4.5 TB</span></div>
+                  <div class="ag-node" style="left:72%;top:79%;--ring:38;--rc:#4a9eff"><span class="disc"><span class="g" style="background:#cfd3d9"></span></span><span class="nn">Studio RAID</span><span class="ns">10.9 / 29.1 TB</span></div>
+                  <div class="ag-node" style="left:28%;top:79%;--ring:96;--rc:#ff6b6b"><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn" data-t="m_archive">Archiv 2023</span><span class="ns">7.0 / 7.3 TB</span></div>
+                  <div class="ag-node" style="left:14%;top:40%;--ring:80;--rc:#ffb454"><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">Sony A7S</span><span class="ns">381 / 476 GB</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div></div>
         <!-- 2 · Speicher-Karte -->
         <div class="mb-feat" data-i="1">
           <div class="mf-bar"><i></i><i></i><i></i></div>
@@ -465,7 +504,9 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
             <g class="mf-blink" fill="#fff" opacity=".92"><path d="M68 72 v16 l13 -8 Z"/><path d="M218 72 v16 l13 -8 Z"/><path d="M68 138 v16 l13 -8 Z"/><path d="M218 138 v16 l13 -8 Z"/></g>
           </svg></div>
         </div>
-      </div></div></div>
+      </div></div>
+        <div class="mb-deck"><span class="mb-kb"></span><span class="mb-pad"></span></div>
+      </div>
     </div>
     <div class="mb-caps">
       <div class="mb-cap on"><h3 data-t="mb_f1_t">Alles auf einen Blick</h3><p data-t="mb_f1_d">Dein ganzes Archiv als eine Karte — auch wenn keine Platte angeschlossen ist.</p></div>
@@ -1090,37 +1131,37 @@ applyLang(LANG);
 })();
 </script>
 <script>
-/* MacBook-Showcase: Scroll klappt den Deckel auf, dreht leicht & wechselt das Feature im Display */
+/* MacBook-Showcase: dreht leicht beim Scrollen, wechselt das Feature im Display; Übersicht skaliert auf Screenbreite */
 (function(){
   var sec=document.querySelector('.mb-scroll'); if(!sec) return;
   var dev=sec.querySelector('.mb-device');
+  var scr=sec.querySelector('.mb-screen');
   var feats=[].slice.call(sec.querySelectorAll('.mb-feat'));
   var caps=[].slice.call(sec.querySelectorAll('.mb-cap'));
   var dots=[].slice.call(sec.querySelectorAll('.mb-dots i'));
   var reduce=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
   var n=feats.length, cur=-1;
-  function easeOut(t){ return 1-Math.pow(1-t,3); }
   function setFeat(i){ if(i===cur) return; cur=i;
     feats.forEach(function(f,k){ f.classList.toggle('on',k===i); });
     caps.forEach(function(f,k){ f.classList.toggle('on',k===i); });
     dots.forEach(function(f,k){ f.classList.toggle('on',k===i); }); }
-  var OPEN=0.32;   // erste 32% Scroll = Deckel klappt auf, danach Feature-Tour
+  function fitOv(){ if(scr&&dev){ var w=scr.clientWidth; if(w) dev.style.setProperty('--ags', (w/1180).toFixed(4)); } }
   function onScroll(){
     var r=sec.getBoundingClientRect();
     var total=sec.offsetHeight-innerHeight;
-    if(total<=0){ if(dev){ dev.style.setProperty('--open','0deg'); dev.style.setProperty('--rx','10deg'); dev.style.setProperty('--ry','0deg'); } setFeat(0); return; }
+    if(total<=0){ if(dev){ dev.style.setProperty('--rx','13deg'); dev.style.setProperty('--ry','0deg'); } setFeat(0); return; }
     var p = Math.min(1,Math.max(0,(-r.top)/total));
     if(dev && !reduce){
-      var op=Math.min(1, p/OPEN);
-      dev.style.setProperty('--open', (-88 + 88*easeOut(op)).toFixed(2)+'deg');
-      dev.style.setProperty('--rx', (19 - 7*op).toFixed(2)+'deg');     // beim Öffnen leicht aufrichten
-      dev.style.setProperty('--ry', ((p-0.5)*14).toFixed(2)+'deg');    // sanfte Drehung übers Scrollen
+      dev.style.setProperty('--rx', (22 - 9*p).toFixed(2)+'deg');     // 22°→13°, richtet sich beim Scrollen leicht auf
+      dev.style.setProperty('--ry', ((p-0.5)*15).toFixed(2)+'deg');   // sanfte Drehung -7.5°→+7.5°
     }
-    var fp = Math.min(0.9999, Math.max(0,(p-OPEN-0.02)/(1-OPEN-0.02)));
+    var s=0.06, e=0.97; var fp=Math.min(0.9999,Math.max(0,(p-s)/(e-s)));
     setFeat(Math.min(n-1, Math.floor(fp*n)));
   }
-  if(reduce && dev){ dev.style.setProperty('--open','0deg'); dev.style.setProperty('--rx','12deg'); }
-  setFeat(0); addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); onScroll();
+  fitOv(); setFeat(0);
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',function(){ fitOv(); onScroll(); });
+  onScroll();
 })();
 </script>
 <script>
