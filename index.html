@@ -334,8 +334,8 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   border:1px solid var(--line);border-radius:26px;padding:50px 28px}
 .endcta-box .sec{margin-top:0}
 /* ── MacBook (echtes WebGL-3D · Three.js) — klappt auf & dreht beim Scrollen ── */
-.mb-scroll{position:relative;height:260vh}
-.mb-head{text-align:center;padding:64px 24px 0;position:relative;z-index:2}
+.mb-scroll{position:relative;height:230vh}
+.mb-head{text-align:center;position:absolute;top:0;left:0;right:0;padding:4vh 24px 0;z-index:3;pointer-events:none}
 .mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
 .mb-stage{position:relative;width:min(1280px,99vw);height:78vh}
 .mb-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -410,11 +410,11 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 </header>
 
 <section class="mb-scroll" id="inaction">
-  <div class="mb-head">
-    <h2 class="sec" data-t="mb_h2">Sieh Disky in Aktion.</h2>
-    <p class="sec-sub" data-t="mb_sub">Scroll dich durch — jede Funktion direkt auf dem Mac.</p>
-  </div>
   <div class="mb-sticky">
+    <div class="mb-head">
+      <h2 class="sec" data-t="mb_h2">Sieh Disky in Aktion.</h2>
+      <p class="sec-sub" data-t="mb_sub">Scroll dich durch — jede Funktion direkt auf dem Mac.</p>
+    </div>
     <div class="mb-stage">
       <canvas class="mb-gl"></canvas>
       <div class="mb-css3d" aria-hidden="true"></div>
@@ -1204,6 +1204,8 @@ if (sec && canvas && stage && screenEl) {
       {n:'Sony A7S',u:0.381,c:0.476,col:'#f5b942',dot:'#f5b942',a:198},
     ];
     const fmt=v=> v>=1? v.toFixed(1)+' TB' : Math.round(v*1000)+' GB';
+    // dezente Glas-Spiegelung: feste Sternpositionen (obere ~2/3) + weicher Schein
+    const STARS = Array.from({length:20},(_,i)=>({ x:50+((i*173)%1500), y:24+((i*191)%620), r:0.8+(i%3)*0.55, a:0.05+(i%4)*0.018, p:i*1.7 }));
     function rr(px,py,w,h,r){ x.beginPath(); x.moveTo(px+r,py); x.arcTo(px+w,py,px+w,py+h,r); x.arcTo(px+w,py+h,px,py+h,r); x.arcTo(px,py+h,px,py,r); x.arcTo(px,py,px+w,py,r); x.closePath(); }
     function atom(ax,ay,r,col){ x.save(); x.translate(ax,ay); x.strokeStyle=col; x.lineWidth=Math.max(1.6,r*0.11);
       for(let i=0;i<3;i++){ x.save(); x.rotate(i*Math.PI/3); x.beginPath(); x.ellipse(0,0,r,r*0.42,0,0,7); x.stroke(); x.restore(); }
@@ -1281,6 +1283,13 @@ if (sec && canvas && stage && screenEl) {
       atom(cx,cy-1,18,C.acc);
       x.fillStyle=C.txt; x.textAlign='center'; x.font='700 18px -apple-system,system-ui,sans-serif'; x.fillText('Disky',cx,cy+58);
       x.fillStyle=C.mut; x.font='500 13px -apple-system,system-ui,sans-serif'; x.fillText('5 drives · one catalog',cx,cy+78); x.textAlign='left';
+      // ---- dezente Glas-Spiegelung: weicher diagonaler Schein + gespiegelte Sterne ----
+      const sh = x.createLinearGradient(0,0,1150,1000);
+      sh.addColorStop(0,'rgba(255,255,255,0.05)'); sh.addColorStop(0.4,'rgba(255,255,255,0.012)'); sh.addColorStop(0.62,'rgba(255,255,255,0)');
+      x.fillStyle=sh; x.fillRect(0,0,1600,1000);
+      x.save();
+      for(const s of STARS){ x.globalAlpha=s.a*(0.55+0.45*Math.sin(t*0.8+s.p)); x.fillStyle='#fff'; x.beginPath(); x.arc(s.x,s.y,s.r,0,7); x.fill(); }
+      x.restore();
       tex.needsUpdate=true;
     }
     return {tex, draw};
@@ -1312,7 +1321,7 @@ if (sec && canvas && stage && screenEl) {
     });
     if(screenMat){
       const S=buildScreen(); screenTex=S.tex; drawScreen=S.draw; drawScreen(0);
-      screenMat.map=screenTex; screenMat.emissive=new THREE.Color(0xffffff); screenMat.emissiveMap=screenTex; screenMat.emissiveIntensity=1.5;
+      screenMat.map=screenTex; screenMat.emissive=new THREE.Color(0xffffff); screenMat.emissiveMap=screenTex; screenMat.emissiveIntensity=1.85;   // leichter Glow
       screenMat.metalness=0; screenMat.roughness=0.82; screenMat.envMapIntensity=0.05;   // hohe Rauheit → Highlight breit & weich statt harter Hotspot
       screenMat.polygonOffset=true; screenMat.polygonOffsetFactor=-2; screenMat.polygonOffsetUnits=-2;   // Screen vor die Glasfläche → kein Z-Fighting
       screenMat.depthWrite=true; screenMat.needsUpdate=true;
@@ -1344,7 +1353,7 @@ if (sec && canvas && stage && screenEl) {
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
     macRoot.rotation.y = reduce ? -0.04 : (1-e)*0.14;   // dreht beim Öffnen flach → Screen schaut gerade, nichts seitlich abgeschnitten
     // durchgehender Dolly-Zoom über den GANZEN Scroll-Weg — fährt rein, schneidet das MacBook nie an
-    const dist = reduce ? DIST0*0.85 : DIST0 - 440*p;
+    const dist = reduce ? DIST0*0.88 : DIST0 - 340*p;
     cam.position.copy(DIR).multiplyScalar(dist).add(LOOK); cam.lookAt(LOOK);
     macRoot.rotation.x = 0;
     const s2=0.04, e2=0.92, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
