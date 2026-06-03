@@ -133,11 +133,7 @@ h2.sec{text-align:center;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;ma
 .reveal-on .showcase .sc-vis{opacity:0;transform:translateY(30px) scale(.96)}
 .reveal-on .showcase.in .sc-vis{opacity:1;transform:translateY(-4px) scale(1);
   transition:opacity .75s cubic-bezier(.22,1,.36,1) .12s,transform .75s cubic-bezier(.22,1,.36,1) .12s}
-@media(prefers-reduced-motion:reduce){
-  /* nur sanftes Fade, keine Bewegung/Schleifen-Animation (barrierefrei) */
-  .reveal-on .showcase,.reveal-on .showcase .sc-text>*,.reveal-on .showcase .sc-vis{transform:none!important}
-  .showcase.in *{animation:none!important}
-}
+/* Scroll-Reveal läuft bewusst auch bei „Bewegung reduzieren" (scroll-gesteuert, vom Nutzer ausgelöst) */
 /* Hover-Animationen der Feature-Illustrationen */
 @keyframes scPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes scPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
@@ -1176,7 +1172,9 @@ const screenEl = document.getElementById('mbScreens');
 const caps = sec ? [].slice.call(sec.querySelectorAll('.mb-cap')) : [];
 const dots = sec ? [].slice.call(sec.querySelectorAll('.mb-dots i')) : [];
 const feats = screenEl ? [].slice.call(screenEl.querySelectorAll('.mb-feat')) : [];
-const reduce = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) && location.search.indexOf('motion')===-1;
+// MacBook-Animation ist scroll-gesteuert (vom Nutzer kontrolliert) → standardmäßig AN, auch bei „Bewegung reduzieren".
+// Mit ?still=1 lässt sich der statische Zustand erzwingen.
+const reduce = location.search.indexOf('still')!==-1;
 
 function setFeat(i){
   feats.forEach((f,k)=>f.classList.toggle('on',k===i));
@@ -1344,7 +1342,7 @@ if (sec && canvas && stage && screenEl) {
 (function(){
   var cv=document.getElementById('stars'); if(!cv) return; var ctx=cv.getContext('2d'); if(!ctx) return;
   var dpr=Math.min(2,window.devicePixelRatio||1), w=0,h=0, stars=[], tk=0, raf=0;
-  var reduce=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var reduce=(location.search.indexOf('still')!==-1);   // Sterne funkeln standardmäßig (mit ?still=1 statisch)
   function spawn(){ var n=Math.max(60,Math.min(240, Math.round(w*h/9000))); stars=[];
     for(var i=0;i<n;i++) stars.push([Math.random()*w, Math.random()*h, Math.random()*6.283, (Math.random()<0.32?1.7:0.9)+Math.random()*0.5, 0.25+Math.random()*0.55]); }
   function resize(){ w=innerWidth; h=innerHeight; cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); spawn(); }
