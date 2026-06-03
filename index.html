@@ -120,7 +120,24 @@ h2.sec{text-align:center;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;ma
 .sc-text p{color:var(--mut);font-size:16.5px;line-height:1.6;margin:0;max-width:44ch}
 .sc-vis{flex:0 0 280px;display:flex;justify-content:center;align-items:center;transition:transform .5s cubic-bezier(.22,1,.36,1)}
 .sc-vis svg{width:240px;height:auto;display:block;overflow:visible}
-.showcase:hover .sc-vis{transform:translateY(-4px)}
+.showcase.in .sc-vis{transform:translateY(-4px)}
+/* ── Scroll-Reveal: jeder Benefit faded/slidet rein beim Durchscrollen (Trigger via .in) ── */
+.reveal-on .showcase{opacity:0;transform:translateY(46px);
+  transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal-on .showcase.in{opacity:1;transform:none}
+.reveal-on .showcase .sc-text>*{opacity:0;transform:translateY(16px);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.reveal-on .showcase.in .sc-eyebrow{opacity:1;transform:none;transition-delay:.06s}
+.reveal-on .showcase.in .sc-text h3{opacity:1;transform:none;transition-delay:.14s}
+.reveal-on .showcase.in .sc-text p{opacity:1;transform:none;transition-delay:.22s}
+.reveal-on .showcase .sc-vis{opacity:0;transform:translateY(30px) scale(.96)}
+.reveal-on .showcase.in .sc-vis{opacity:1;transform:translateY(-4px) scale(1);
+  transition:opacity .75s cubic-bezier(.22,1,.36,1) .12s,transform .75s cubic-bezier(.22,1,.36,1) .12s}
+@media(prefers-reduced-motion:reduce){
+  /* nur sanftes Fade, keine Bewegung/Schleifen-Animation (barrierefrei) */
+  .reveal-on .showcase,.reveal-on .showcase .sc-text>*,.reveal-on .showcase .sc-vis{transform:none!important}
+  .showcase.in *{animation:none!important}
+}
 /* Hover-Animationen der Feature-Illustrationen */
 @keyframes scPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes scPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
@@ -128,33 +145,33 @@ h2.sec{text-align:center;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em;ma
 @keyframes scNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
 @keyframes scDraw{from{stroke-dashoffset:62}to{stroke-dashoffset:0}}
 .scd-check,.scdup-eq,.scdup-badge,.scai-plays>path{transform-box:fill-box;transform-origin:center}
-.showcase:hover .scd-check{animation:scPop .8s ease both}
+.showcase.in .scd-check{animation:scPop .8s ease both}
 .scai-thumbs{transform-box:fill-box;transform-origin:center;transition:transform .5s}
-.showcase:hover .scai-thumbs{transform:scale(1.035)}
-.showcase:hover .scai-plays>path{animation:scPulse 1.4s ease-in-out infinite}
-.showcase:hover .scai-plays>path:nth-child(2){animation-delay:.18s}
-.showcase:hover .scai-plays>path:nth-child(3){animation-delay:.36s}
-.showcase:hover .scai-plays>path:nth-child(4){animation-delay:.54s}
+.showcase.in .scai-thumbs{transform:scale(1.035)}
+.showcase.in .scai-plays>path{animation:scPulse 1.4s ease-in-out infinite}
+.showcase.in .scai-plays>path:nth-child(2){animation-delay:.18s}
+.showcase.in .scai-plays>path:nth-child(3){animation-delay:.36s}
+.showcase.in .scai-plays>path:nth-child(4){animation-delay:.54s}
 @keyframes ringSettle{0%{transform:rotate(-44deg)}100%{transform:rotate(0deg)}}
 @keyframes hogOut{0%{transform:scale(1)}100%{transform:scale(1.13)}}
 @keyframes hogPulse{0%,100%{stroke:#ff6b6b;filter:drop-shadow(0 0 4px rgba(255,107,107,.5))}50%{stroke:#ff4d4d;filter:drop-shadow(0 0 9px rgba(255,80,80,.95))}}
 .scsm-spin{transform-box:view-box;transform-origin:60px 60px}
-.showcase:hover .scsm-spin{animation:ringSettle 1s cubic-bezier(.2,.85,.25,1) both}
+.showcase.in .scsm-spin{animation:ringSettle 1s cubic-bezier(.2,.85,.25,1) both}
 .scsm-hog{transform-box:view-box;transform-origin:60px 60px}
-.showcase:hover .scsm-hog{animation:hogOut .55s cubic-bezier(.34,1.4,.5,1) 1s both, hogPulse 1.4s ease-in-out 1s infinite}
+.showcase.in .scsm-hog{animation:hogOut .55s cubic-bezier(.34,1.4,.5,1) 1s both, hogPulse 1.4s ease-in-out 1s infinite}
 .scdup-r{transform-box:fill-box}
-.showcase:hover .scdup-r{animation:scNudge 2.2s ease-in-out infinite}
-.showcase:hover .scdup-eq{animation:scPulse 1.6s ease-in-out infinite}
-.showcase:hover .scdup-badge{animation:scPop .7s ease both}
+.showcase.in .scdup-r{animation:scNudge 2.2s ease-in-out infinite}
+.showcase.in .scdup-eq{animation:scPulse 1.6s ease-in-out infinite}
+.showcase.in .scdup-badge{animation:scPop .7s ease both}
 .scpriv-check{stroke-dasharray:62}
-.showcase:hover .scpriv-check{animation:scDraw .7s ease both}
+.showcase.in .scpriv-check{animation:scDraw .7s ease both}
 @keyframes scaIn{0%{opacity:0;transform:translateX(16px)}100%{opacity:1;transform:translateX(0)}}
 .sca-spark{transform-box:fill-box;transform-origin:center}
-.showcase:hover .sca-spark{animation:scPulse 1.6s ease-in-out infinite}
+.showcase.in .sca-spark{animation:scPulse 1.6s ease-in-out infinite}
 .sca-tip{transform-box:fill-box}
-.showcase:hover .sca-tip{animation:scaIn .5s ease both}
-.showcase:hover .sca-d2{animation-delay:.13s}
-.showcase:hover .sca-d3{animation-delay:.26s}
+.showcase.in .sca-tip{animation:scaIn .5s ease both}
+.showcase.in .sca-d2{animation-delay:.13s}
+.showcase.in .sca-d3{animation-delay:.26s}
 @media(max-width:800px){.showcase,.showcase.rev{flex-direction:column;text-align:center}
   .sc-text p{margin:0 auto}.sc-eyebrow{display:block}}
 
@@ -863,6 +880,19 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 
 <script>
 // (Hero-Scroll-Animation entfernt — statischer Hero)
+
+/* ───────── Scroll-Reveal: Benefits animieren beim Durchscrollen rein ───────── */
+(function(){
+  document.documentElement.classList.add('reveal-on');
+  var els = [].slice.call(document.querySelectorAll('.showcase'));
+  if(!('IntersectionObserver' in window) || !els.length){ els.forEach(function(e){e.classList.add('in');}); return; }
+  var io = new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }   // einmal reinanimieren, dann sichtbar bleiben
+    });
+  }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+  els.forEach(function(e){ io.observe(e); });
+})();
 
 /* ───────── i18n (EN/DE) — Standard Englisch, Auswahl in localStorage ───────── */
 const I18N={
