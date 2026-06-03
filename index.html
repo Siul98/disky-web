@@ -1357,7 +1357,7 @@ if (sec && canvas && stage && screenEl) {
 
   // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
-  let p = 0, openP = 0, raf = 0, running = false, animDir = -1, lastView = null;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
+  let p = 0, openP = 0, raf = 0, running = false, animDir = -1, lastView = null, _rp = 0;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
   const OPEN_T = 3.9;   // Sekunde im Clip, an der der Deckel ~105° offen ist (Peak 120° @ 4.54s)
   const START_T = 1.5;   // Deckel startet leicht geöffnet (~40°)
   function apply(){
@@ -1377,7 +1377,11 @@ if (sec && canvas && stage && screenEl) {
     const VIEWS=['overview','map','dupes','search'];
     const wantView=VIEWS[Math.min(VIEWS.length-1, fi)];
     if(appFrame && appFrame.contentWindow && wantView!==lastView){ lastView=wantView;
-      try{ appFrame.contentWindow.postMessage({diskyView:wantView},'*'); }catch(e){} }
+      try{ appFrame.contentWindow.postMessage({diskyView:wantView},'*'); }catch(e){}
+      // CSS3D-iframe-Layer zum Neuzeichnen zwingen — ein statischer 3D-Transform repaintet das iframe sonst nicht,
+      // d.h. die neue Ansicht würde erst beim nächsten Scrollen sichtbar. Kurzes, unsichtbares Opacity-Toggle erzwingt Recomposite.
+      let _n=0; clearInterval(_rp); _rp=setInterval(()=>{ if(appFrame) appFrame.style.opacity=(_n&1)?'1':'0.998'; if(++_n>22){ clearInterval(_rp); if(appFrame) appFrame.style.opacity='1'; } }, 70);
+    }
   }
   function resize(){
     const w=W0(), h=H0();
