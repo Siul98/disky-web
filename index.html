@@ -376,16 +376,25 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
-.mb-caps{position:absolute;left:max(3.5vw,20px);top:50%;transform:translateY(-50%);width:min(360px,33vw);display:flex;flex-direction:column;gap:13px;z-index:6;pointer-events:none}
-.mb-cap{position:relative;padding-left:17px;border-left:2px solid transparent;opacity:0;visibility:hidden;transform:translateY(18px);
-  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),border-color .45s ease,filter .45s ease,visibility 0s linear .6s}
-.mb-cap.shown{opacity:.4;visibility:visible;transform:none;filter:saturate(.35);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),border-color .45s ease,filter .45s ease,visibility 0s}
-.mb-cap.on{opacity:1;visibility:visible;transform:none;filter:none;border-left-color:var(--acc)}
-.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(17px,1.7vw,22px);letter-spacing:-.02em;margin:0;line-height:1.15;
+.mb-caps{position:absolute;left:max(4vw,22px);top:50%;transform:translateY(-50%);width:min(448px,40vw);display:flex;flex-direction:column;gap:22px;z-index:6;pointer-events:none;counter-reset:cap}
+/* dezente Timeline-Schiene hinter den Nummern-Badges */
+.mb-caps::before{content:'';position:absolute;left:15px;top:18px;bottom:18px;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(120,150,210,.22) 12%,rgba(120,150,210,.22) 88%,transparent)}
+.mb-cap{counter-increment:cap;position:relative;padding-left:50px;min-height:32px;opacity:0;visibility:hidden;transform:translateY(20px);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s linear .6s}
+/* Nummern-Badge (verziert) */
+.mb-cap::before{content:counter(cap,decimal-leading-zero);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font:700 12px/1 var(--fmono,ui-monospace,'SF Mono',monospace);letter-spacing:.04em;
+  color:#90a4c4;background:rgba(16,22,34,.9);border:1px solid rgba(120,150,210,.2);transition:color .4s ease,background .4s ease,border-color .4s ease,box-shadow .4s ease}
+.mb-cap.shown{opacity:.45;visibility:visible;transform:none;filter:saturate(.4);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s}
+.mb-cap.on{opacity:1;visibility:visible;transform:none;filter:none}
+.mb-cap.on::before{color:#e7eeff;background:linear-gradient(135deg,rgba(91,140,255,.4),rgba(122,108,255,.32));border-color:rgba(150,180,255,.75);box-shadow:0 0 20px rgba(91,140,255,.45)}
+.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(20px,2.3vw,30px);letter-spacing:-.025em;margin:0;line-height:1.12;
   background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;text-shadow:0 2px 18px rgba(0,0,0,.8)}
-.mb-cap p{margin:0;color:#b8c3d2;font-size:13.5px;line-height:1.5;max-width:32ch;text-shadow:0 2px 14px rgba(0,0,0,.85);
+.mb-cap.on h3{background:linear-gradient(105deg,#fff,#d2e2ff 55%,#9db6ff);-webkit-background-clip:text;background-clip:text}
+.mb-cap p{margin:0;color:#c2cddc;font-size:15px;line-height:1.5;max-width:34ch;text-shadow:0 2px 14px rgba(0,0,0,.85);
   max-height:0;opacity:0;overflow:hidden;transition:max-height .55s cubic-bezier(.22,1,.36,1),opacity .45s ease,margin .45s ease}
-.mb-cap.on p{max-height:90px;opacity:1;margin-top:7px}
+.mb-cap.on p{max-height:120px;opacity:1;margin-top:9px}
 .mb-dots{display:none}
 /* schmale Screens: Punkte mittig unter den Mac */
 @media(max-width:1080px){
@@ -1409,7 +1418,7 @@ if (sec && canvas && stage && screenEl) {
     const hFov = 2*Math.atan(Math.tan(vFov/2)*cam.aspect);
     const fitH = (size.y/2)/Math.tan(vFov/2);
     const fitW = (size.x/2)/Math.tan(hFov/2);
-    screenDist = Math.max(fitH, fitW) * 1.12;   // eng am Display
+    screenDist = Math.max(fitH, fitW) * 1.42;   // Display groß & lesbar, aber NICHT randvoll → links bleibt Platz für die großen Captions
     if(wasT!=null && mixer && clip) mixer.setTime(wasT);
   }
   function apply(){
@@ -1419,7 +1428,7 @@ if (sec && canvas && stage && screenEl) {
     const e = easeOut(op);
     if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // fast zu → weit offen
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
-    _baseRotY = mob ? 0.0 : (reduce ? 0.08 : (0.06 + (1-e)*0.09));   // mobil frontal/zentriert; Desktop leicht angewinkelt
+    _baseRotY = mob ? 0.0 : (reduce ? 0.22 : (0.22 + (1-e)*0.07));   // mobil frontal; Desktop STÄRKER angewinkelt (Rücken weiter nach rechts raus, Screen mehr zu uns)
     macRoot.rotation.y = _baseRotY;
     macRoot.rotation.x = 0;
     needsRender = true;
@@ -1432,7 +1441,7 @@ if (sec && canvas && stage && screenEl) {
       const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
       // Blickpunkt wandert HOCH ins Display, bleibt aber rechts versetzt → linke Talking-Points bleiben frei
       _lk.set(
-        THREE.MathUtils.lerp(LOOK.x, screenCenter.x, zt*0.18) - 30*zt,   // bleibt deutlich rechts → linke Talking-Points frei
+        THREE.MathUtils.lerp(LOOK.x, screenCenter.x, zt*0.06) - 300*zt,   // bleibt WEIT rechts → linke große Talking-Points komplett frei (kein Overlap mit dem Screen)
         THREE.MathUtils.lerp(LOOK.y, screenCenter.y, zt*0.96),
         THREE.MathUtils.lerp(LOOK.z, screenCenter.z, zt*0.9)
       );
