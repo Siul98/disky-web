@@ -70,17 +70,12 @@ h1 .grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-c
 .cta .btn{padding:14px 26px;font-size:15px}
 .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:16px}
 /* Konkrete Punkte als scannbare Chips (kühne Headline → schnell konkret) */
-.hero-pts{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:740px;margin:4px 0 32px}
+.hero-pts{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:760px;margin:6px auto 24px}
 .hpt{display:flex;align-items:center;gap:9px;padding:10px 16px;border-radius:30px;border:1px solid var(--line);
   background:linear-gradient(180deg,rgba(20,26,36,.7),rgba(13,17,24,.7));color:#cdd7e4;font-size:14px;line-height:1;white-space:nowrap;
   box-shadow:0 1px 0 rgba(255,255,255,.03) inset}
 .hpt svg{width:17px;height:17px;color:#7fb8ff;flex:0 0 auto}
 @media(max-width:760px){.hero-pts{gap:8px;margin:2px 0 26px}.hpt{font-size:12.5px;padding:9px 13px;gap:7px}.hpt svg{width:15px;height:15px}}
-/* Statischer Hero (ohne Scroll-Animation) */
-.hero2{position:relative;display:flex;justify-content:center;align-items:center;min-height:94vh;padding:96px 24px 56px;overflow:hidden}
-/* Lebende Platten-Konstellation: Nodes am Rand, Lichtlinien laufen nach innen zur Headline ("One catalog") */
-.hero-con{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-@media(max-width:760px){.hero2{min-height:88vh;padding:110px 20px 40px}}
 
 /* Fliegende Ordner (3D, jeder driftet einzeln) */
 .field{position:absolute;inset:0;z-index:3;pointer-events:none;perspective:1400px}
@@ -359,12 +354,12 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-scroll{position:relative;height:230vh}
 .mb-head{text-align:center;flex:0 0 auto;padding:clamp(64px,8vh,92px) 24px 0;z-index:3;position:relative;width:100%}
 /* Merged Hero: Jarvis-Headline + CTAs im Kopf der MacBook-Sektion */
+.mb-head{will-change:opacity,transform}
 .mb-head .hero-h{margin:0 auto 22px;max-width:18ch}
 .mb-head .cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .mb-head .cta .btn{padding:14px 26px;font-size:15px}
 .mb-head .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:14px}
 /* Platinen-Hintergrund füllt die Hero-Sticky, hinter Headline (z3) + Laptop (z4) */
-.mb-sticky > .hero-con{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden}
 .mb-stage{position:relative;width:min(1340px,99vw);flex:1 1 auto;min-height:0;align-self:stretch;margin:0 auto}
 .mb-gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;will-change:transform}
@@ -450,12 +445,15 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 
 <section class="mb-scroll" id="inaction">
   <div class="mb-sticky">
-    <canvas class="hero-con" aria-hidden="true"></canvas>
     <div class="mb-head">
       <h1 class="hero-h" data-th="hero_h1">Jarvis für dein<br><span class="grad">Datenmanagement.</span></h1>
+      <div class="hero-pts">
+        <span class="hpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><span data-t="hero_p1">Findet jedes Projekt — auch im Schrank</span></span>
+        <span class="hpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-t="hero_p2">Warnt, bevor ein Backup fehlt</span></span>
+        <span class="hpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="11" height="11" rx="2"/><path d="M10 17a4 4 0 004 4h7"/><rect x="10" y="10" width="11" height="11" rx="2"/></svg><span data-t="hero_p3">Duplikate & Speicherfresser, plattenübergreifend</span></span>
+      </div>
       <div class="cta">
         <a class="btn" href="#download" data-t="hero_cta_start">Kostenlos starten</a>
-        <a class="btn ghost" href="#features" data-t="hero_cta_how">So funktioniert's</a>
       </div>
       <div class="hint" data-t="hero_hint">2 Platten gratis · keine Installation · nichts wird verändert</div>
     </div>
@@ -1195,6 +1193,7 @@ applyLang(LANG);
 
 const sec = document.querySelector('.mb-scroll');
 const stage = sec && sec.querySelector('.mb-stage');
+const mbHead = sec && sec.querySelector('.mb-head');
 const canvas = sec && sec.querySelector('.mb-gl');
 const css3dHost = sec && sec.querySelector('.mb-css3d');
 const screenEl = document.getElementById('mbScreens');
@@ -1280,10 +1279,10 @@ if (sec && canvas && stage && screenEl) {
   scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
   const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(300, 2400, 2200); scene.add(key);   // mittiger + schwächer → weicher, breiter Schein statt harter Hotspot
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
-  const rim2 = new THREE.DirectionalLight(0xbcd6ff, 1.3); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
-  // BACKLIGHT/Rim: zwei starke Lichter von HINTER dem Laptop → die Kanten leuchten & heben sich vom dunklen Hintergrund ab
-  const rim3 = new THREE.DirectionalLight(0x9cc4ff, 3.0); rim3.position.set(-850, 650, -1600); scene.add(rim3);   // hinten-links → linke/obere Kanten
-  const rim4 = new THREE.DirectionalLight(0xaad2ff, 2.4); rim4.position.set(900, 550, -1500); scene.add(rim4);    // hinten-rechts → rechte Kanten
+  const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
+  // BACKLIGHT (nur Kanten): zwei flache, grazing Lichter direkt von HINTER dem Laptop → nur die Silhouetten-Kanten leuchten, Flächen bleiben unverändert
+  const rim3 = new THREE.DirectionalLight(0xaccaff, 3.2); rim3.position.set(-1300, 380, -1150); scene.add(rim3);   // hinten-links, flach → linke Kante
+  const rim4 = new THREE.DirectionalLight(0xb4d6ff, 3.2); rim4.position.set(1300, 360, -1150); scene.add(rim4);    // hinten-rechts, flach → rechte Kante
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
@@ -1344,7 +1343,7 @@ if (sec && canvas && stage && screenEl) {
       mats.forEach(m=>{
         if(m.name==='Material.002'){ screenMat=m; screenMesh=o; return; }
         // Alu/Gehäuse mattieren → keine krasse Reflektion / kein harter Chromstreifen oben
-        if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.28); }   // etwas glatter → Kanten fangen das Rim-Light deutlicher
+        if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.4); }   // matt (Szene unverändert) — der Edge-Glow kommt rein übers Backlight
         if('metalness' in m){ m.metalness = Math.min(m.metalness!=null?m.metalness:0.6, 0.5); }
         m.envMapIntensity = 0.18;
         m.needsUpdate = true;
@@ -1454,7 +1453,7 @@ if (sec && canvas && stage && screenEl) {
       cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
     } else {
       const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
-      const presDist = DIST0 * 1.16;   // Präsentation: Laptop etwas kleiner → passt komplett rechts NEBEN die Captions (links bleibt frei)
+      const presDist = DIST0 * 1.24;   // Präsentation: Laptop kleiner → rechts neben den Captions, mit Rand (nie angeschnitten)
       _lk.set(
         (-340)*(1-ie) - 120*zt + THREE.MathUtils.lerp(0, screenCenter.x, zt*0.06),   // Intro zentriert → Präsentation WEIT rechts → Zoom; links bleibt dunkler Raum für die Punkte
         THREE.MathUtils.lerp(360, screenCenter.y, zt*0.96),                            // Aim: vertikale Mitte → hoch ins Display
@@ -1465,9 +1464,17 @@ if (sec && canvas && stage && screenEl) {
       cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
     }
     // Intro: Laptop hebt sich an und ÜBERDECKT die Jarvis-Headline → gibt sie beim Scrollen frei
-    const tf = (!mob && ie>0.001) ? ('translateY('+(-170*ie).toFixed(1)+'px)') : '';
+    const tf = (!mob && ie>0.001) ? ('translateY('+(-300*ie).toFixed(1)+'px)') : '';
     if(canvas) canvas.style.transform = tf;
     if(css3dHost) css3dHost.style.transform = tf;
+    // Beim Scrollen WEG von der Main-Headline: Kopf (Headline+Punkte+CTA) gleitet hoch & faded aus → Feature-Tour übernimmt
+    if(mbHead){
+      const headP = mob ? 1 : Math.max(0, Math.min(1, (0.4 - p)/0.22));   // sichtbar bis ~p=0.18, ausgeblendet bis p=0.40
+      const hsmooth = headP*headP*(3-2*headP);
+      mbHead.style.opacity = hsmooth.toFixed(3);
+      mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
+      mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
+    }
     // Captions/Feature-Tour erst NACH dem Intro (während frontal verdeckt: keine Punkte)
     const s2=0.24, e2=0.94, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
     const fi=(!mob && p<0.2) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
@@ -1538,85 +1545,6 @@ if (sec && canvas && stage && screenEl) {
     ctx.globalAlpha=1; if(!reduce && !document.hidden) raf=requestAnimationFrame(draw); }
   resize(); addEventListener('resize',function(){ cancelAnimationFrame(raf); resize(); draw(); }); draw();
   document.addEventListener('visibilitychange',function(){ if(!document.hidden && !reduce){ cancelAnimationFrame(raf); draw(); } });
-})();
-</script>
-<script>
-/* Hero-Hintergrund: SSD-PLATINE — Controller + NAND-Chips, geroutete Leiterbahn-Busse, Vias, fließende Signal-Pulse. Disky-Blau, dezent. Maus-Parallax. Pausiert außer Sicht. */
-(function(){
-  var cv=document.querySelector('.hero-con'); if(!cv) return; var x=cv.getContext('2d'); if(!x) return;
-  var DPR=Math.min(2,window.devicePixelRatio||1), W=0,H=0, raf=0, t0=null, mx=0,my=0, tmx=0,tmy=0;
-  var chips=[], traces=[], vias=[];
-  function R(a,b){ return a+Math.random()*(b-a); }
-  function base(){ return Math.min(W,H); }
-  function plen(p){ var L=0; for(var i=1;i<p.length;i++){ var dx=p[i][0]-p[i-1][0], dy=p[i][1]-p[i-1][1]; L+=Math.sqrt(dx*dx+dy*dy);} return L; }
-  function ptAt(p, t){ var target=t*plen(p), acc=0; for(var i=1;i<p.length;i++){ var dx=p[i][0]-p[i-1][0], dy=p[i][1]-p[i-1][1], seg=Math.sqrt(dx*dx+dy*dy); if(acc+seg>=target){ var f=seg?(target-acc)/seg:0; return [p[i-1][0]+dx*f, p[i-1][1]+dy*f]; } acc+=seg; } return p[p.length-1]; }
-  function rr(rx,ry,rw,rh,r){ x.beginPath(); x.moveTo(rx+r,ry); x.arcTo(rx+rw,ry,rx+rw,ry+rh,r); x.arcTo(rx+rw,ry+rh,rx,ry+rh,r); x.arcTo(rx,ry+rh,rx,ry,r); x.arcTo(rx,ry,rx+rw,ry,r); x.closePath(); }
-  function turn(d){ var o; if(d[0]!==0 && d[1]!==0) o=[[d[0],0],[0,d[1]]]; else if(d[0]!==0) o=[[0,1],[0,-1],[d[0],1],[d[0],-1]]; else o=[[1,0],[-1,0],[1,d[1]],[-1,d[1]]]; return o[(Math.random()*o.length)|0]; }
-  function genBundle(){
-    var ch=chips[(Math.random()*chips.length)|0], side=(Math.random()*4)|0, dir, sx, sy, perp;
-    if(side===0){ dir=[0,-1]; sy=ch.y; sx=ch.x+R(0.2,0.8)*ch.w; perp=[1,0]; }
-    else if(side===1){ dir=[1,0]; sx=ch.x+ch.w; sy=ch.y+R(0.2,0.8)*ch.h; perp=[0,1]; }
-    else if(side===2){ dir=[0,1]; sy=ch.y+ch.h; sx=ch.x+R(0.2,0.8)*ch.w; perp=[1,0]; }
-    else { dir=[-1,0]; sx=ch.x; sy=ch.y+R(0.2,0.8)*ch.h; perp=[0,1]; }
-    var pts=[[sx,sy]], px=sx, py=sy, d=dir.slice(), segs=2+((Math.random()*3)|0);
-    for(var s=0;s<segs;s++){ var len=R(50, base()*0.34); px+=d[0]*len; py+=d[1]*len;
-      px=Math.max(6,Math.min(W-6,px)); py=Math.max(6,Math.min(H-6,py)); pts.push([px,py]); d=turn(d);
-      if(px<=6||px>=W-6||py<=6||py>=H-6) break; }
-    var count=2+((Math.random()*4)|0), sp=R(6,9), out=[];
-    for(var k=0;k<count;k++){ var off=(k-(count-1)/2)*sp;
-      var poly=pts.map(function(p){ return [p[0]+perp[0]*off, p[1]+perp[1]*off]; });
-      out.push({pts:poly, ph:Math.random()*6.283, sp:R(0.16,0.4), bright:R(0.09,0.2)});
-      var e=poly[poly.length-1]; vias.push([e[0],e[1]]); }
-    return out;
-  }
-  function addPins(ch){ var n=Math.max(3,Math.round(ch.w/16)); for(var i=0;i<n;i++){ var tx=ch.x+ch.w*((i+0.5)/n); vias.push([tx,ch.y]); vias.push([tx,ch.y+ch.h]); }
-    var m=Math.max(2,Math.round(ch.h/16)); for(var j=0;j<m;j++){ var ty=ch.y+ch.h*((j+0.5)/m); vias.push([ch.x,ty]); vias.push([ch.x+ch.w,ty]); } }
-  function build(){ chips=[]; traces=[]; vias=[]; var cx=W*0.5, cy=H*0.46, b=base();
-    var cw=b*0.17, chh=cw*0.72; chips.push({x:cx-cw/2, y:cy-chh/2, w:cw, h:chh, ctrl:true});
-    var spots=[[0.15,0.26],[0.85,0.24],[0.12,0.78],[0.88,0.74],[0.5,0.1],[0.5,0.9]];
-    for(var i=0;i<spots.length;i++){ var w=b*R(0.1,0.13), h=w*R(0.55,0.7); chips.push({x:W*spots[i][0]-w/2, y:H*spots[i][1]-h/2, w:w, h:h}); }
-    for(var c=0;c<chips.length;c++) addPins(chips[c]);
-    var NB=Math.max(11, Math.round(W/140)); for(var bd=0;bd<NB;bd++) traces.push.apply(traces, genBundle());
-  }
-  function layout(){ var r=cv.getBoundingClientRect(); W=r.width; H=r.height; cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); x.setTransform(DPR,0,0,DPR,0,0); build(); }
-  function draw(ts){ if(t0==null)t0=ts; var t=(ts-t0)/1000;
-    mx+=(tmx-mx)*0.05; my+=(tmy-my)*0.05; var ox=mx*0.01, oy=my*0.01;
-    x.clearRect(0,0,W,H); x.save(); x.translate(ox,oy); x.globalAlpha=Math.min(1,t/1.1);
-    var cx=W*0.5, cy=H*0.46, b=base();
-    var g=x.createRadialGradient(cx,cy,0,cx,cy,b*0.5);
-    g.addColorStop(0,'rgba(42,82,175,0.15)'); g.addColorStop(0.55,'rgba(30,60,140,0.04)'); g.addColorStop(1,'rgba(10,12,16,0)');
-    x.fillStyle=g; x.fillRect(-ox,-oy,W,H);
-    x.lineCap='round'; x.lineJoin='round';
-    for(var i=0;i<traces.length;i++){ var p=traces[i].pts; x.strokeStyle='rgba(96,150,235,'+traces[i].bright+')'; x.lineWidth=1.1;
-      x.beginPath(); x.moveTo(p[0][0],p[0][1]); for(var j=1;j<p.length;j++) x.lineTo(p[j][0],p[j][1]); x.stroke(); }
-    for(var v=0;v<vias.length;v++){ var vi=vias[v];
-      x.fillStyle='rgba(120,160,225,0.2)'; x.beginPath(); x.arc(vi[0],vi[1],2.1,0,6.283); x.fill();
-      x.strokeStyle='rgba(140,180,240,0.16)'; x.lineWidth=1; x.beginPath(); x.arc(vi[0],vi[1],3.3,0,6.283); x.stroke(); }
-    for(var i2=0;i2<traces.length;i2++){ var tr=traces[i2], pp=((t*tr.sp + tr.ph/6.283)%1.0), q=ptAt(tr.pts,pp), fade=Math.sin(pp*Math.PI);
-      var pg=x.createRadialGradient(q[0],q[1],0,q[0],q[1],6); pg.addColorStop(0,'rgba(150,200,255,'+(0.8*fade)+')'); pg.addColorStop(1,'rgba(150,200,255,0)');
-      x.fillStyle=pg; x.beginPath(); x.arc(q[0],q[1],6,0,6.283); x.fill(); }
-    for(var c=0;c<chips.length;c++){ var ch=chips[c], rad=Math.min(10,ch.w*0.06);
-      x.strokeStyle='rgba(110,150,215,0.3)'; x.lineWidth=1.4;
-      var pn=Math.max(3,Math.round(ch.w/16)); for(var pi=0;pi<pn;pi++){ var px2=ch.x+ch.w*((pi+0.5)/pn);
-        x.beginPath(); x.moveTo(px2,ch.y-5); x.lineTo(px2,ch.y); x.stroke(); x.beginPath(); x.moveTo(px2,ch.y+ch.h); x.lineTo(px2,ch.y+ch.h+5); x.stroke(); }
-      var pm=Math.max(2,Math.round(ch.h/16)); for(var pj=0;pj<pm;pj++){ var py2=ch.y+ch.h*((pj+0.5)/pm);
-        x.beginPath(); x.moveTo(ch.x-5,py2); x.lineTo(ch.x,py2); x.stroke(); x.beginPath(); x.moveTo(ch.x+ch.w,py2); x.lineTo(ch.x+ch.w+5,py2); x.stroke(); }
-      var grd=x.createLinearGradient(ch.x,ch.y,ch.x,ch.y+ch.h); grd.addColorStop(0,'rgba(22,30,46,0.9)'); grd.addColorStop(1,'rgba(13,19,30,0.9)');
-      rr(ch.x,ch.y,ch.w,ch.h,rad); x.fillStyle=grd; x.fill();
-      x.strokeStyle= ch.ctrl?'rgba(120,165,255,0.55)':'rgba(90,130,200,0.32)'; x.lineWidth=1.2; x.stroke();
-      if(ch.ctrl){ var cg=x.createRadialGradient(ch.x+ch.w/2,ch.y+ch.h/2,0,ch.x+ch.w/2,ch.y+ch.h/2,ch.w*0.55);
-        cg.addColorStop(0,'rgba(90,140,255,'+(0.2+0.07*Math.sin(t*1.5))+')'); cg.addColorStop(1,'rgba(90,140,255,0)');
-        rr(ch.x,ch.y,ch.w,ch.h,rad); x.fillStyle=cg; x.fill();
-        x.fillStyle='rgba(150,185,255,0.5)'; x.beginPath(); x.arc(ch.x+11,ch.y+11,2.5,0,6.283); x.fill(); } }
-    x.restore();
-    raf=requestAnimationFrame(draw);
-  }
-  function start(){ if(!raf) raf=requestAnimationFrame(draw); }
-  function stop(){ cancelAnimationFrame(raf); raf=0; }
-  layout(); addEventListener('resize',layout,{passive:true});
-  addEventListener('mousemove',function(e){ tmx=e.clientX-innerWidth/2; tmy=e.clientY-innerHeight/2; },{passive:true});
-  if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting?start():stop(); }); },{threshold:0}).observe(cv); } else start();
-  document.addEventListener('visibilitychange',function(){ document.hidden?stop():start(); });
 })();
 </script>
 </body></html>
