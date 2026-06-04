@@ -573,7 +573,10 @@ select.txt{cursor:pointer}
 .sb-help{margin-top:auto;display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.02);color:#cfe0f5;font:inherit;font-size:13px;font-weight:600;cursor:pointer;width:100%;text-align:left;transition:background .15s,border-color .15s,transform .15s;-webkit-app-region:no-drag}
 .sb-help:hover{border-color:rgba(74,158,255,.55);background:rgba(74,158,255,.1);transform:translateY(-1px)}
 .sb-help .hic{width:16px;height:16px;flex:0 0 auto;color:var(--acc)}.sb-help .hic svg{width:100%;height:100%}
-.sb-help .hbadge{margin-left:auto;font-size:9.5px;font-weight:800;letter-spacing:.04em;color:#7ee0a6;background:rgba(74,222,128,.14);border:1px solid rgba(74,222,128,.4);border-radius:20px;padding:2px 7px}
+.sb-help .htxt{display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.2}
+.sb-help .htitle{font-size:13px;font-weight:600;color:#cfe0f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-help .hbadge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#7ee0a6;white-space:nowrap}
+.sb-help .hbadge::before{content:"";width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.9);flex:0 0 auto}
 .sb-lang{margin-top:12px;display:flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.02);align-self:flex-start;-webkit-app-region:no-drag}
 /* Feedback-Modal */
 .fbk{max-width:520px;width:92vw}
@@ -1374,8 +1377,7 @@ select.txt{cursor:pointer}
     <div id="sbDrives"></div>
     <button class="sb-help" id="feedbackBtn" title="Feedback, Wünsche & Bugs — wir antworten schnell">
       <span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-      <span data-i18n="fb_btn">Feedback & Hilfe</span>
-      <span class="hbadge" data-i18n="fb_badge">schnelle Antwort</span>
+      <span class="htxt"><span class="htitle" data-i18n="fb_btn">Feedback & Hilfe</span><span class="hbadge" data-i18n="fb_badge">schnelle Antwort</span></span>
     </button>
     <div class="sb-lang" id="sbLang" role="group" aria-label="Sprache / Language">
       <button data-lang="de">DE</button><button data-lang="en">EN</button>
