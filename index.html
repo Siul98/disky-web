@@ -1216,7 +1216,7 @@ if (sec && canvas && stage && screenEl) {
 
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(28, W0()/H0(), 300, 9000);   // enge Near/Far-Spanne → präziser Tiefenpuffer → kein Z-Fighting
-  cam.position.set(-150, 360, 2740); cam.lookAt(-150, 360, 0);   // groß + tiefer angepeilt (mehr Boden-Rand) + links gepannt → MacBook rechts, KOMPLETT im Bild
+  cam.position.set(-150, 360, 2380); cam.lookAt(-150, 360, 0);   // GRÖSSER (näher dran) + tiefer angepeilt + links gepannt → MacBook rechts, KOMPLETT im Bild
   const isMobile = ()=> matchMedia('(max-width:820px)').matches;
   let LOOK = new THREE.Vector3(-150, 360, 0);                     // Blickpunkt (Desktop: rechts versetzt; Mobil: zentriert)
   let DIR  = new THREE.Vector3().subVectors(cam.position, LOOK).normalize();  // Blickrichtung (für Dolly-Zoom)
@@ -1245,7 +1245,7 @@ if (sec && canvas && stage && screenEl) {
       if(wasT!=null && mixer && clip) mixer.setTime(wasT);
     } else {
       LOOK.set(-150, 360, 0);
-      cam.position.set(-150, 360, 2740);
+      cam.position.set(-150, 360, 2380);
       DIR.subVectors(cam.position, LOOK).normalize();
       DIST0 = cam.position.distanceTo(LOOK);
     }
@@ -1374,7 +1374,7 @@ if (sec && canvas && stage && screenEl) {
       mixer = new THREE.AnimationMixer(model); clip = gltf.animations[0];
       const a = mixer.clipAction(clip); a.play();   // nicht pausen! sonst ignoriert setTime() den Clip
     }
-    ready = true; frameView(); apply();   // Auto-Fit jetzt mit geladenem Modell (mobil zentriert + komplett im Bild)
+    ready = true; computeScreenTarget(); frameView(); apply();   // Screen-Ziel + Framing mit geladenem Modell
     window.__mb = { setP:(v)=>{ p=v; apply(); renderer.render(scene,cam); },
       info:()=>{ const L=model.getObjectByName('Bevels_2'); const w=L?Math.min(1,Math.abs(L.quaternion.w)):1;
         return { p, mixerTime: mixer&&mixer.time, lidAngleDeg:(2*Math.acos(w)*180/Math.PI).toFixed(1) }; } };
@@ -1394,21 +1394,55 @@ if (sec && canvas && stage && screenEl) {
   // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
   let p = 0, openP = 0, raf = 0, running = false, animDir = -1, lastView = null, _rp = 0, _baseRotY = 0, needsRender = true;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
-  const OPEN_T = 3.9;   // Sekunde im Clip, an der der Deckel ~105° offen ist (Peak 120° @ 4.54s)
-  const START_T = 1.5;   // Deckel startet leicht geöffnet (~40°)
+  const OPEN_T = 4.35;   // Sekunde im Clip, an der der Deckel weit offen ist (~115°, Peak 120° @ 4.54s) — kräftigere Auffalt-Geste
+  const START_T = 0.7;   // Deckel startet fast zu (~20°) → die Aufklapp-Bewegung ist viel deutlicher
+  const _lk = new THREE.Vector3();                 // wiederverwendeter Lerp-Vektor (Zoom-in-den-Screen)
+  let screenCenter = new THREE.Vector3(-150, 360, 0);   // Welt-Mittelpunkt des Displays (für Hinein-Zoom)
+  let screenDist = null;                            // Distanz, bei der das Display den Frame füllt
+  // Display anvisieren: Mittelpunkt + Fit-Distanz aus der Screen-Mesh-Box (offen)
+  function computeScreenTarget(){
+    if(!screenMesh) return;
+    const wasT = mixer && clip ? mixer.time : null;
+    if(mixer && clip) mixer.setTime(OPEN_T);
+    macRoot.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(screenMesh);
+    const c = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    screenCenter.copy(c);
+    const vFov = cam.fov*Math.PI/180;
+    const hFov = 2*Math.atan(Math.tan(vFov/2)*cam.aspect);
+    const fitH = (size.y/2)/Math.tan(vFov/2);
+    const fitW = (size.x/2)/Math.tan(hFov/2);
+    screenDist = Math.max(fitH, fitW) * 1.12;   // eng am Display
+    if(wasT!=null && mixer && clip) mixer.setTime(wasT);
+  }
   function apply(){
     const mob = isMobile();
-    const op = (reduce||mob) ? 1 : Math.min(1, openP/0.55);   // öffnet durchgehend ab Auftauchen; mobil immer ganz offen (lesbar)
+    // Aufklappen: scroll-gesteuert (auch mobil → „klappt sich ein bisschen auf"), kräftigere Geste (fast zu → weit offen)
+    const op = reduce ? 1 : Math.min(1, openP/0.6);
     const e = easeOut(op);
-    if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // leicht offen → ganz offen
+    if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // fast zu → weit offen
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
     _baseRotY = mob ? 0.0 : (reduce ? 0.08 : (0.06 + (1-e)*0.09));   // mobil frontal/zentriert; Desktop leicht angewinkelt
     macRoot.rotation.y = _baseRotY;
-    needsRender = true;
-    // durchgehender Dolly-Zoom über den GANZEN Scroll-Weg — fährt rein, schneidet das MacBook nie an
-    const dist = mob ? DIST0 : (reduce ? DIST0*0.94 : DIST0 - 150*p);   // mobil: fester Auto-Fit-Abstand (nie angeschnitten)
-    cam.position.copy(DIR).multiplyScalar(dist).add(LOOK); cam.lookAt(LOOK);
     macRoot.rotation.x = 0;
+    needsRender = true;
+    if(mob){
+      // Mobil: zentriert, Auto-Fit-Abstand — klappt beim Scrollen auf, nie angeschnitten (kein Hinein-Zoom)
+      cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
+    } else {
+      // Desktop: GROSSE Establishing-Ansicht (ganzer Laptop), dann beim Scrollen IN DEN SCREEN zoomen → man erkennt was passiert
+      const zt = reduce ? 0.16 : easeOut(Math.min(1, Math.max(0, (p-0.04)/0.94)));
+      const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
+      // Blickpunkt wandert HOCH ins Display, bleibt aber rechts versetzt → linke Talking-Points bleiben frei
+      _lk.set(
+        THREE.MathUtils.lerp(LOOK.x, screenCenter.x, zt*0.18) - 30*zt,   // bleibt deutlich rechts → linke Talking-Points frei
+        THREE.MathUtils.lerp(LOOK.y, screenCenter.y, zt*0.96),
+        THREE.MathUtils.lerp(LOOK.z, screenCenter.z, zt*0.9)
+      );
+      const dist = DIST0 + (tgtDist - DIST0) * zt;              // Dolly fährt bis dicht ans Display
+      cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
+    }
     const s2=0.04, e2=0.92, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
     const fi=Math.min(feats.length-1, Math.floor(fp*feats.length));
     setFeat(fi);
@@ -1426,7 +1460,8 @@ if (sec && canvas && stage && screenEl) {
     const w=W0(), h=H0();
     renderer.setSize(w,h,false); css.setSize(w,h);
     cam.aspect=w/h; cam.updateProjectionMatrix();
-    frameView();   // Framing neu berechnen (Desktop ⇄ Mobil-Auto-Fit, abhängig von Breite/Aspect)
+    computeScreenTarget();   // Screen-Ziel an neuen Aspect anpassen
+    frameView();             // Framing neu berechnen (Desktop ⇄ Mobil-Auto-Fit, abhängig von Breite/Aspect)
     needsRender=true;
   }
   resize();
