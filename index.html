@@ -1280,7 +1280,10 @@ if (sec && canvas && stage && screenEl) {
   scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
   const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(300, 2400, 2200); scene.add(key);   // mittiger + schwächer → weicher, breiter Schein statt harter Hotspot
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
-  const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // kleines Rim-Light: Kantenglanz von hinten-oben
+  const rim2 = new THREE.DirectionalLight(0xbcd6ff, 1.3); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
+  // BACKLIGHT/Rim: zwei starke Lichter von HINTER dem Laptop → die Kanten leuchten & heben sich vom dunklen Hintergrund ab
+  const rim3 = new THREE.DirectionalLight(0x9cc4ff, 3.0); rim3.position.set(-850, 650, -1600); scene.add(rim3);   // hinten-links → linke/obere Kanten
+  const rim4 = new THREE.DirectionalLight(0xaad2ff, 2.4); rim4.position.set(900, 550, -1500); scene.add(rim4);    // hinten-rechts → rechte Kanten
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
@@ -1341,7 +1344,7 @@ if (sec && canvas && stage && screenEl) {
       mats.forEach(m=>{
         if(m.name==='Material.002'){ screenMat=m; screenMesh=o; return; }
         // Alu/Gehäuse mattieren → keine krasse Reflektion / kein harter Chromstreifen oben
-        if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.4); }
+        if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.28); }   // etwas glatter → Kanten fangen das Rim-Light deutlicher
         if('metalness' in m){ m.metalness = Math.min(m.metalness!=null?m.metalness:0.6, 0.5); }
         m.envMapIntensity = 0.18;
         m.needsUpdate = true;
@@ -1451,12 +1454,14 @@ if (sec && canvas && stage && screenEl) {
       cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
     } else {
       const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
+      const presDist = DIST0 * 1.16;   // Präsentation: Laptop etwas kleiner → passt komplett rechts NEBEN die Captions (links bleibt frei)
       _lk.set(
-        (-150)*(1-ie) - 200*zt + THREE.MathUtils.lerp(0, screenCenter.x, zt*0.06),   // zentriert (Intro) → rechts (Präsentation) → etwas weiter rechts (Zoom), aber nie rechts angeschnitten
+        (-340)*(1-ie) - 120*zt + THREE.MathUtils.lerp(0, screenCenter.x, zt*0.06),   // Intro zentriert → Präsentation WEIT rechts → Zoom; links bleibt dunkler Raum für die Punkte
         THREE.MathUtils.lerp(360, screenCenter.y, zt*0.96),                            // Aim: vertikale Mitte → hoch ins Display
         THREE.MathUtils.lerp(0, screenCenter.z, zt*0.9)
       );
-      const dist = DIST0 + (tgtDist - DIST0) * zt;              // Dolly fährt erst in Präsentation bis dicht ans Display
+      // Dolly: Intro groß (DIST0) → Präsentation kleiner (presDist) → Zoom in den Screen (tgtDist)
+      const dist = (DIST0 + (presDist-DIST0)*(1-ie))*(1-zt) + tgtDist*zt;
       cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
     }
     // Intro: Laptop hebt sich an und ÜBERDECKT die Jarvis-Headline → gibt sie beim Scrollen frei
