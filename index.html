@@ -61,17 +61,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:cent
   transform:translateX(-50%);background:radial-gradient(circle,#1b2c55 0%,#0a0c1000 60%);pointer-events:none}
 .eyebrow{display:inline-block;padding:6px 14px;border-radius:30px;border:1px solid var(--line);
   background:#11151c;color:var(--mut);font-size:13px;margin-bottom:24px;position:relative;z-index:2}
-h1{position:relative;z-index:2;font-size:clamp(34px,6vw,68px);line-height:1.05;margin:0 0 20px;
-  letter-spacing:-.03em;font-weight:800;max-width:14ch;
+h1{position:relative;z-index:2;font-size:clamp(40px,7vw,82px);line-height:1.02;margin:0 0 22px;
+  letter-spacing:-.035em;font-weight:800;max-width:14ch;
   background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 h1 .grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{position:relative;z-index:2;color:var(--mut);font-size:clamp(16px,2vw,20px);max-width:56ch;margin:0 0 34px}
+.lead{position:relative;z-index:2;color:#c4cedd;font-size:clamp(17px,2.1vw,22px);max-width:30ch;margin:0 0 34px;line-height:1.4}
 .cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .cta .btn{padding:14px 26px;font-size:15px}
 .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:16px}
 /* Statischer Hero (ohne Scroll-Animation) */
-.hero2{position:relative;display:flex;justify-content:center;padding:150px 24px 40px;overflow:hidden}
-@media(max-width:760px){.hero2{padding:120px 20px 30px}}
+.hero2{position:relative;display:flex;justify-content:center;align-items:center;min-height:94vh;padding:96px 24px 56px;overflow:hidden}
+/* Lebende Platten-Konstellation: Nodes am Rand, Lichtlinien laufen nach innen zur Headline ("One catalog") */
+.hero-con{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+@media(max-width:760px){.hero2{min-height:88vh;padding:110px 20px 40px}}
 
 /* Fliegende Ordner (3D, jeder driftet einzeln) */
 .field{position:absolute;inset:0;z-index:3;pointer-events:none;perspective:1400px}
@@ -424,12 +426,10 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 </nav>
 
 <header class="hero2">
-  <div class="glow"></div>
+  <canvas class="hero-con" aria-hidden="true"></canvas>
   <div class="hero-text">
     <h1 data-th="hero_h1">Alle deine Festplatten.<br><span class="grad">Ein Katalog.</span></h1>
-    <p class="lead" data-th="hero_lead">Disky scannt deine Festplatten &amp; SSDs, zeigt auf einen Blick was wo liegt,
-      findet Duplikate über alle Laufwerke — und du durchsuchst alles <b>offline</b>,
-      selbst wenn die Platte längst im Schrank liegt.</p>
+    <p class="lead" data-th="hero_lead">Finde jede Datei über <b>alle</b> deine Platten — auch die, die längst im Schrank liegt.</p>
     <div class="cta">
       <a class="btn" href="#download" data-t="hero_cta_start">Kostenlos starten</a>
       <a class="btn ghost" href="#features" data-t="hero_cta_how">So funktioniert's</a>
@@ -920,7 +920,7 @@ const I18N={
  nav_pricing:{de:`Preise`,en:`Pricing`},
  nav_faq:{de:`FAQ`,en:`FAQ`},
  hero_h1:{de:`Alle deine Festplatten.<br><span class="grad">Ein Katalog.</span>`,en:`All your drives.<br><span class="grad">One catalog.</span>`},
- hero_lead:{de:`Disky ist deine Festplatten-Assistenz: Es katalogisiert alle deine Platten, läuft still im Hintergrund und meldet sich von selbst — <b>was noch ein Backup braucht</b>, <b>wo Speicher verschenkt wird</b>, und findet jede Datei <b>offline</b>. Weniger Arbeit, nicht mehr.`,en:`Disky is your drive assistant: it catalogs all your drives, runs quietly in the background and speaks up on its own — <b>what still needs a backup</b>, <b>where space is wasted</b>, and finds any file <b>offline</b>. Less work, not more.`},
+ hero_lead:{de:`Finde jede Datei über <b>alle</b> deine Platten — auch die, die längst im Schrank liegt.`,en:`Find any file across <b>every</b> drive you own — even the ones unplugged in a drawer.`},
  hero_cta_start:{de:`Kostenlos starten`,en:`Get started free`},
  hero_cta_how:{de:`So funktioniert's`,en:`How it works`},
  hero_hint:{de:`2 Platten gratis · keine Installation · nichts wird verändert`,en:`2 drives free · no install · nothing gets changed`},
@@ -1380,16 +1380,12 @@ if (sec && canvas && stage && screenEl) {
         return { p, mixerTime: mixer&&mixer.time, lidAngleDeg:(2*Math.acos(w)*180/Math.PI).toFixed(1) }; } };
   }, undefined, (err)=>console.warn('GLB load failed', err));
   }
-  // Trigger: GLB + Live-App im HINTERGRUND laden, sobald die Seite idle ist → schneller First Paint,
-  // aber rechtzeitig fertig, bevor man hinscrollt (GLB 5 MB + iframe brauchen ein paar Sekunden).
-  if('requestIdleCallback' in window){ requestIdleCallback(()=>loadMac(), { timeout: 2000 }); }
-  else { setTimeout(loadMac, 1200); }
-  // Fallback: spätestens wenn die Sektion in die Nähe kommt
-  if('IntersectionObserver' in window){
-    const mo=new IntersectionObserver((ents)=>{ if(ents.some(e=>e.isIntersecting)){ mo.disconnect(); loadMac(); } },
-      { rootMargin: '300% 0px 300% 0px' });
-    mo.observe(sec);
-  }
+  // Trigger: GLB(5MB)+iframe erst beim ERSTEN Scrollen laden (= Absicht runterzugehen) → der Hero (erste
+  // Ansicht inkl. lebender Konstellation) bleibt beim Laden UNGEBLOCKT und erscheint sofort. Fallback-Timer,
+  // falls nie gescrollt wird. So startet der schwere Load nicht, während man noch den Hero bewundert.
+  let _kick=()=>{ _kick=()=>{}; loadMac(); };
+  addEventListener('scroll', ()=>_kick(), { once:true, passive:true });
+  setTimeout(()=>_kick(), 7000);
 
   // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
 
@@ -1508,6 +1504,56 @@ if (sec && canvas && stage && screenEl) {
     ctx.globalAlpha=1; if(!reduce && !document.hidden) raf=requestAnimationFrame(draw); }
   resize(); addEventListener('resize',function(){ cancelAnimationFrame(raf); resize(); draw(); }); draw();
   document.addEventListener('visibilitychange',function(){ if(!document.hidden && !reduce){ cancelAnimationFrame(raf); draw(); } });
+})();
+</script>
+<script>
+/* Lebende Platten-Konstellation im Hero — Platten-Nodes am Rand, Lichtlinien laufen nach innen zur Headline ("One catalog"), Licht-Pulse fließen ins Zentrum. Maus-Parallax. Pausiert außer Sicht. */
+(function(){
+  var cv=document.querySelector('.hero-con'); if(!cv) return; var x=cv.getContext('2d'); if(!x) return;
+  var DPR=Math.min(2,window.devicePixelRatio||1), W=0,H=0, raf=0, t0=null, formed=false, mx=0,my=0, tmx=0,tmy=0;
+  // Node-Positionen als Anteil von W,H — am Rand verteilt, der mittige Text-Bereich bleibt frei
+  var DEF=[[0.10,0.30,6],[0.07,0.62,5],[0.20,0.83,6],[0.90,0.28,6],[0.93,0.60,5],[0.81,0.84,6],[0.32,0.15,5],[0.67,0.14,5]];
+  var nodes=[];
+  function layout(){ var r=cv.getBoundingClientRect(); W=r.width; H=r.height; cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); x.setTransform(DPR,0,0,DPR,0,0);
+    nodes=DEF.map(function(d,i){ return {x:d[0]*W, y:d[1]*H, s:d[2], ph:i*0.8, dr:0.6+(i%3)*0.3}; }); }
+  function draw(ts){ if(t0==null)t0=ts; var t=(ts-t0)/1000; var cx=W*0.5, cy=H*0.46;
+    mx+=(tmx-mx)*0.06; my+=(tmy-my)*0.06;
+    x.clearRect(0,0,W,H);
+    var form=Math.min(1,t/1.7), fe=formed?1:(1-Math.pow(1-form,3)); if(form>=1)formed=true;
+    // Hub-Glow = das "One catalog"-Zentrum
+    var rad=Math.min(W,H)*0.42, hub=x.createRadialGradient(cx,cy,0,cx,cy,rad);
+    hub.addColorStop(0,'rgba(74,110,255,'+(0.20*fe)+')'); hub.addColorStop(0.5,'rgba(74,110,255,'+(0.05*fe)+')'); hub.addColorStop(1,'rgba(10,12,16,0)');
+    x.fillStyle=hub; x.fillRect(0,0,W,H);
+    for(var i=0;i<nodes.length;i++){ var n=nodes[i];
+      var nx=n.x+Math.sin(t*0.4+n.ph)*7*n.dr + mx*0.018*n.dr;
+      var ny=n.y+Math.cos(t*0.33+n.ph)*7*n.dr + my*0.018*n.dr;
+      // Linie Node -> Hub, gestaffeltes Einzeichnen beim Laden
+      var ld=Math.max(0,Math.min(1, fe*nodes.length*1.3 - i*0.9));
+      if(ld>0){ var ex=nx+(cx-nx)*ld, ey=ny+(cy-ny)*ld, g=x.createLinearGradient(nx,ny,cx,cy);
+        g.addColorStop(0,'rgba(108,150,255,0)'); g.addColorStop(0.12,'rgba(120,160,255,0.45)'); g.addColorStop(0.9,'rgba(122,108,255,0.10)'); g.addColorStop(1,'rgba(122,108,255,0)');
+        x.strokeStyle=g; x.lineWidth=1.3; x.beginPath(); x.moveTo(nx,ny); x.lineTo(ex,ey); x.stroke(); }
+      // Licht-Puls fließt nach innen (Daten -> Katalog)
+      if(ld>=1){ var pp=((t*0.45 + i*0.21)%1.0), px=nx+(cx-nx)*pp, py=ny+(cy-ny)*pp, fade=Math.sin(pp*Math.PI);
+        var pg=x.createRadialGradient(px,py,0,px,py,8); pg.addColorStop(0,'rgba(170,200,255,'+(0.85*fade)+')'); pg.addColorStop(1,'rgba(170,200,255,0)');
+        x.fillStyle=pg; x.beginPath(); x.arc(px,py,8,0,6.283); x.fill(); }
+      // Node = Platte: Glow + Ring + Kern (wie die Platten-Ringe in der App)
+      var pulse=0.85+0.15*Math.sin(t*1.3+n.ph), ng=x.createRadialGradient(nx,ny,0,nx,ny,n.s*3.4);
+      ng.addColorStop(0,'rgba(120,160,255,'+(0.5*fe*pulse)+')'); ng.addColorStop(1,'rgba(120,160,255,0)');
+      x.fillStyle=ng; x.beginPath(); x.arc(nx,ny,n.s*3.4,0,6.283); x.fill();
+      x.strokeStyle='rgba(185,208,255,'+(0.9*fe)+')'; x.lineWidth=1.6; x.beginPath(); x.arc(nx,ny,n.s,0,6.283); x.stroke();
+      x.fillStyle='rgba(225,236,255,'+fe+')'; x.beginPath(); x.arc(nx,ny,n.s*0.4,0,6.283); x.fill();
+    }
+    // Zentrum-Kern
+    var cg=x.createRadialGradient(cx,cy,0,cx,cy,18); cg.addColorStop(0,'rgba(205,220,255,'+(0.9*fe)+')'); cg.addColorStop(1,'rgba(120,150,255,0)');
+    x.fillStyle=cg; x.beginPath(); x.arc(cx,cy,18,0,6.283); x.fill();
+    raf=requestAnimationFrame(draw);
+  }
+  function start(){ if(!raf) raf=requestAnimationFrame(draw); }
+  function stop(){ cancelAnimationFrame(raf); raf=0; }
+  layout(); addEventListener('resize',layout,{passive:true});
+  addEventListener('mousemove',function(e){ tmx=e.clientX-innerWidth/2; tmy=e.clientY-innerHeight/2; },{passive:true});
+  if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting?start():stop(); }); },{threshold:0}).observe(cv); } else start();
+  document.addEventListener('visibilitychange',function(){ document.hidden?stop():start(); });
 })();
 </script>
 </body></html>
