@@ -65,10 +65,17 @@ h1{position:relative;z-index:2;font-size:clamp(40px,7vw,82px);line-height:1.02;m
   letter-spacing:-.035em;font-weight:800;max-width:14ch;
   background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 h1 .grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{position:relative;z-index:2;color:#c4cedd;font-size:clamp(17px,2.1vw,22px);max-width:30ch;margin:0 0 34px;line-height:1.4}
+.lead{position:relative;z-index:2;color:#c4cedd;font-size:clamp(17px,2.1vw,22px);max-width:50ch;margin:0 0 26px;line-height:1.4}
 .cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .cta .btn{padding:14px 26px;font-size:15px}
 .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:16px}
+/* Konkrete Punkte als scannbare Chips (kühne Headline → schnell konkret) */
+.hero-pts{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:740px;margin:4px 0 32px}
+.hpt{display:flex;align-items:center;gap:9px;padding:10px 16px;border-radius:30px;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(20,26,36,.7),rgba(13,17,24,.7));color:#cdd7e4;font-size:14px;line-height:1;white-space:nowrap;
+  box-shadow:0 1px 0 rgba(255,255,255,.03) inset}
+.hpt svg{width:17px;height:17px;color:#7fb8ff;flex:0 0 auto}
+@media(max-width:760px){.hero-pts{gap:8px;margin:2px 0 26px}.hpt{font-size:12.5px;padding:9px 13px;gap:7px}.hpt svg{width:15px;height:15px}}
 /* Statischer Hero (ohne Scroll-Animation) */
 .hero2{position:relative;display:flex;justify-content:center;align-items:center;min-height:94vh;padding:96px 24px 56px;overflow:hidden}
 /* Lebende Platten-Konstellation: Nodes am Rand, Lichtlinien laufen nach innen zur Headline ("One catalog") */
@@ -437,8 +444,13 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 <header class="hero2">
   <canvas class="hero-con" aria-hidden="true"></canvas>
   <div class="hero-text">
-    <h1 data-th="hero_h1">Alle deine Festplatten.<br><span class="grad">Ein Katalog.</span></h1>
-    <p class="lead" data-th="hero_lead">Finde jede Datei über <b>alle</b> deine Platten — auch die, die längst im Schrank liegt.</p>
+    <h1 data-th="hero_h1">Dein persönlicher Assistent<br><span class="grad">für jede Festplatte.</span></h1>
+    <p class="lead" data-th="hero_lead">Kennt jede Datei auf jeder Platte. Auch offline.</p>
+    <div class="hero-pts">
+      <span class="hpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><span data-t="hero_p1">Findet jedes Projekt — auch im Schrank</span></span>
+      <span class="hpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-t="hero_p2">Warnt, bevor ein Backup fehlt</span></span>
+      <span class="hpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="11" height="11" rx="2"/><path d="M10 17a4 4 0 004 4h7"/><rect x="10" y="10" width="11" height="11" rx="2"/></svg><span data-t="hero_p3">Duplikate & Speicherfresser, plattenübergreifend</span></span>
+    </div>
     <div class="cta">
       <a class="btn" href="#download" data-t="hero_cta_start">Kostenlos starten</a>
       <a class="btn ghost" href="#features" data-t="hero_cta_how">So funktioniert's</a>
@@ -928,8 +940,11 @@ const I18N={
  nav_features:{de:`Funktionen`,en:`Features`},
  nav_pricing:{de:`Preise`,en:`Pricing`},
  nav_faq:{de:`FAQ`,en:`FAQ`},
- hero_h1:{de:`Alle deine Festplatten.<br><span class="grad">Ein Katalog.</span>`,en:`All your drives.<br><span class="grad">One catalog.</span>`},
- hero_lead:{de:`Finde jede Datei über <b>alle</b> deine Platten — auch die, die längst im Schrank liegt.`,en:`Find any file across <b>every</b> drive you own — even the ones unplugged in a drawer.`},
+ hero_h1:{de:`Dein persönlicher Assistent<br><span class="grad">für jede Festplatte.</span>`,en:`Your personal assistant<br><span class="grad">for every drive.</span>`},
+ hero_lead:{de:`Kennt jede Datei auf jeder Platte. Auch offline.`,en:`Knows every file on every drive. Even offline.`},
+ hero_p1:{de:`Findet jedes Projekt — auch im Schrank`,en:`Finds any project — even unplugged`},
+ hero_p2:{de:`Warnt, bevor ein Backup fehlt`,en:`Warns before a backup is missing`},
+ hero_p3:{de:`Duplikate & Speicherfresser, plattenübergreifend`,en:`Duplicates & space hogs, across drives`},
  hero_cta_start:{de:`Kostenlos starten`,en:`Get started free`},
  hero_cta_how:{de:`So funktioniert's`,en:`How it works`},
  hero_hint:{de:`2 Platten gratis · keine Installation · nichts wird verändert`,en:`2 drives free · no install · nothing gets changed`},
