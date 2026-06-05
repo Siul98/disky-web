@@ -361,7 +361,12 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-head .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:14px}
 /* Platinen-Hintergrund füllt die Hero-Sticky, hinter Headline (z3) + Laptop (z4) */
 .mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden}
-.mb-stage{position:relative;width:min(1340px,99vw);flex:1 1 auto;min-height:0;align-self:stretch;margin:0 auto}
+.mb-stage{position:relative;width:min(1340px,99vw);flex:1 1 auto;min-height:0;align-self:stretch;margin:0 auto;
+  /* Feather: Laptop-Kanten laufen weich in den Sternenhintergrund aus statt hart abzuschneiden (Komposition + Sicherheitsnetz auf jeder Auflösung) */
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 93%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 3%,#000 94%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 93%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 3%,#000 94%,transparent 100%);
+  mask-composite:intersect}
 .mb-gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;will-change:transform}
 .mb-css3d{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4;will-change:transform}
 /* #mbScreens = Bildschirm-Inhalt (feste Design-Pixel, von CSS3D ins 3D-Modell platziert) */
@@ -1265,6 +1270,14 @@ if (sec && canvas && stage && screenEl) {
       cam.position.set(-150, 360, 2380);
       DIR.subVectors(cam.position, LOOK).normalize();
       DIST0 = cam.position.distanceTo(LOOK);
+      // Laptop-Bounding-Box in PRÄSENTATIONS-Drehung einmal vermessen (Welt-Einheiten, auflösungsunabhängig).
+      // Distanz/Ziel werden dann pro Frame mit der LIVE-Aspect berechnet → passt sich jeder Fenstergröße an, nie angeschnitten.
+      if(model){ const wasT2=mixer&&clip?mixer.time:null, wasR2=macRoot.rotation.y;
+        if(mixer&&clip)mixer.setTime(OPEN_T);
+        macRoot.rotation.y=-0.26; macRoot.updateMatrixWorld(true);
+        const b=new THREE.Box3().setFromObject(model), s=b.getSize(new THREE.Vector3()), c=b.getCenter(new THREE.Vector3());
+        presBox={ hw:s.x/2, hh:s.y/2, cx:c.x, cy:c.y };
+        macRoot.rotation.y=wasR2; macRoot.updateMatrixWorld(true); if(wasT2!=null&&mixer&&clip)mixer.setTime(wasT2); }
     }
   }
 
@@ -1411,6 +1424,7 @@ if (sec && canvas && stage && screenEl) {
   const _lk = new THREE.Vector3();                 // wiederverwendeter Lerp-Vektor (Zoom-in-den-Screen)
   let screenCenter = new THREE.Vector3(-150, 360, 0);   // Welt-Mittelpunkt des Displays (für Hinein-Zoom)
   let screenDist = null;                            // Distanz, bei der das Display den Frame füllt
+  let presBox = null;   // Welt-Bounding-Box des Laptops in PRÄSENTATIONS-Drehung (-0.26) — einmal gemessen, auflösungsunabhängig
   // Display anvisieren: Mittelpunkt + Fit-Distanz aus der Screen-Mesh-Box (offen)
   function computeScreenTarget(){
     if(!screenMesh) return;
@@ -1425,7 +1439,7 @@ if (sec && canvas && stage && screenEl) {
     const hFov = 2*Math.atan(Math.tan(vFov/2)*cam.aspect);
     const fitH = (size.y/2)/Math.tan(vFov/2);
     const fitW = (size.x/2)/Math.tan(hFov/2);
-    screenDist = Math.max(fitH, fitW) * 1.42;   // Display groß & lesbar, aber NICHT randvoll → links bleibt Platz für die großen Captions
+    screenDist = Math.max(fitH, fitW) * 1.16;   // Display GROSS & lesbar (näher dran) — links bleibt nur noch wenig Rand für die Captions
     if(wasT!=null && mixer && clip) mixer.setTime(wasT);
   }
   function apply(){
@@ -1438,7 +1452,7 @@ if (sec && canvas && stage && screenEl) {
     // CHOREOGRAFIE: INTRO (frontal + zentriert, hebt sich & verdeckt die Jarvis-Headline) → PRÄSENTATION (nach rechts + nach AUSSEN gedreht) → ZOOM in den Screen
     const introP = mob ? 0 : Math.max(0, Math.min(1, (0.22 - p)/0.22));   // 1 am Start → 0 ab p=0.22
     const ie = easeOut(introP);
-    const zt = (reduce ? 0.14 : easeOut(Math.min(1, Math.max(0, (p-0.26)/0.7))));   // Hinein-Zoom startet ERST nach dem Intro
+    const zt = (reduce ? 0.14 : easeOut(Math.min(1, Math.max(0, (p-0.24)/0.52))));   // Hinein-Zoom startet nach dem Intro, erreicht den großen Screen früher
     // Rotation: frontal (0) im Intro → nach AUSSEN gedreht in Präsentation (negativ = die andere Richtung als zuvor)
     _baseRotY = mob ? 0.0 : (reduce ? -0.26 : -0.26*(1-ie));
     macRoot.rotation.y = _baseRotY;
@@ -1448,16 +1462,20 @@ if (sec && canvas && stage && screenEl) {
       // Mobil: zentriert, Auto-Fit-Abstand — klappt beim Scrollen auf, nie angeschnitten
       cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
     } else {
-      const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
-      const introDist = DIST0 * 0.8;   // Intro: Laptop GROSS (sitzt unter dem Text, voll sichtbar)
-      const presDist = DIST0 * 1.06;   // Präsentation/Tour: Laptop GROSS, rechts neben den Captions (mit Rand, nie angeschnitten)
-      _lk.set(
-        (-340)*(1-ie) - 120*zt + THREE.MathUtils.lerp(0, screenCenter.x, zt*0.06),   // Intro zentriert → Präsentation WEIT rechts → Zoom; links bleibt dunkler Raum für die Punkte
-        THREE.MathUtils.lerp(360, screenCenter.y, zt*0.96),                            // Aim: vertikale Mitte → hoch ins Display
-        THREE.MathUtils.lerp(0, screenCenter.z, zt*0.9)
-      );
-      // Dolly: Intro groß (DIST0) → Präsentation kleiner (presDist) → Zoom in den Screen (tgtDist)
-      const dist = (introDist + (presDist-introDist)*(1-ie))*(1-zt) + tgtDist*zt;
+      const introDist = DIST0 * 0.8;   // Intro: Laptop GROSS, frontal, sitzt unter dem Text
+      // PRÄSENTATION adaptiv: den gedrehten Laptop so einpassen, dass er GROSS ist und garantiert komplett im Bild bleibt — auf JEDER Auflösung.
+      const tanV = Math.tan(cam.fov*Math.PI/360);   // halbes vertikales FOV
+      const tanH = tanV * cam.aspect;               // halbes horizontales FOV (live Fenster-Aspect)
+      const M = 1.18, TX = 0.06;                   // Laptop GROSS & präsent — Kanten laufen bewusst in den weichen Feather aus (.mb-stage-Maske), nie ein harter Schnitt; leicht rechts der Bildmitte
+      let presDist, presAimX, presAimY;
+      if(presBox){
+        presDist  = Math.max(presBox.hh/(M*tanV), presBox.hw/((M-TX)*tanH));   // Distanz, bei der weder Höhe noch (rechts versetzte) Breite über den Rand laufen
+        presAimX  = presBox.cx - TX*presDist*tanH;                              // Kamera-Ziel so, dass die Laptop-Mitte bei NDC +TX landet
+        presAimY  = presBox.cy;                                                 // vertikal zentriert
+      } else { presDist = DIST0*1.06; presAimX = -340; presAimY = 360; }
+      // Blend INTRO (frontal, zentriert) → PRÄSENTATION (adaptiv) über ie  (ie=1 Intro, ie=0 Präsentation)
+      const dist = introDist*ie + presDist*(1-ie);
+      _lk.set( presAimX*(1-ie), 360*ie + presAimY*(1-ie), 0 );
       cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
     }
     // Kopf (Headline+Punkte+CTA) gleitet hoch & faded aus; sobald er weg ist, rücken Laptop UND Captions nach OBEN und füllen den freien Raum (kein leerer Bereich oben mehr)
@@ -1468,7 +1486,7 @@ if (sec && canvas && stage && screenEl) {
       mbHead.style.opacity = hsmooth.toFixed(3);
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
       mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
-      upShift = mob ? 0 : -(1-hsmooth)*215;   // wenn der Kopf weg ist → Laptop+Captions hoch in den freien Raum
+      upShift = mob ? 0 : -(1-hsmooth) * innerHeight * 0.255;   // Laptop+Captions in die vertikale Mitte schieben (proportional zur Fensterhöhe → auf jeder Auflösung zentriert, nie unten angeschnitten)
     }
     const tf = upShift ? ('translateY('+upShift.toFixed(1)+'px)') : '';
     if(canvas) canvas.style.transform = tf;
