@@ -354,6 +354,16 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-scroll{position:relative;height:230vh}
 .mb-head{text-align:center;flex:0 0 auto;padding:clamp(64px,8vh,92px) 24px 0;z-index:3;position:relative;width:100%}
 /* Merged Hero: Jarvis-Headline + CTAs im Kopf der MacBook-Sektion */
+/* Cinematischer Light-Ray hinter dem MacBook — weicher diagonaler Strahl von oben-rechts (wie Apple-Mockups) */
+.hero-ray{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
+.hero-ray::before{content:'';position:absolute;inset:-25% -12%;
+  background:radial-gradient(42% 52% at 75% 4%,rgba(186,210,255,.38),rgba(130,160,255,.1) 40%,transparent 62%),
+             radial-gradient(95% 75% at 92% -12%,rgba(130,160,255,.16),transparent 54%)}
+.hero-ray::after{content:'';position:absolute;top:-45%;left:-12%;right:-12%;height:190%;
+  background:linear-gradient(119deg,transparent 40%,rgba(190,212,255,.22) 49%,rgba(215,226,255,.12) 53%,rgba(190,212,255,.06) 58%,transparent 66%);
+  filter:blur(24px);transform:translateZ(0);animation:rayBreath 9s ease-in-out infinite}
+@keyframes rayBreath{0%,100%{opacity:.85;transform:translateX(0)}50%{opacity:1;transform:translateX(18px)}}
+@media(prefers-reduced-motion:reduce){.hero-ray::after{animation:none}}
 .mb-head{will-change:opacity,transform}
 .mb-head .hero-h{margin:0 auto 22px;max-width:18ch}
 .mb-head .cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
@@ -445,6 +455,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 
 <section class="mb-scroll" id="inaction">
   <div class="mb-sticky">
+    <div class="hero-ray" aria-hidden="true"></div>
     <div class="mb-head">
       <h1 class="hero-h" data-th="hero_h1">Jarvis für dein<br><span class="grad">Datenmanagement.</span></h1>
       <div class="hero-pts">
@@ -1277,7 +1288,7 @@ if (sec && canvas && stage && screenEl) {
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
   scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
-  const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(300, 2400, 2200); scene.add(key);   // mittiger + schwächer → weicher, breiter Schein statt harter Hotspot
+  const key = new THREE.DirectionalLight(0xffffff, 0.58); key.position.set(1700, 2300, 1700); scene.add(key);   // von OBEN-RECHTS (passend zum Light-Ray) → Laptop fängt den Strahl
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
   const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
   // BACKLIGHT (nur Kanten): zwei flache, grazing Lichter direkt von HINTER dem Laptop → nur die Silhouetten-Kanten leuchten, Flächen bleiben unverändert
