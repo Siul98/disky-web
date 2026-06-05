@@ -1449,8 +1449,8 @@ if (sec && canvas && stage && screenEl) {
       cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
     } else {
       const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
-      const introDist = DIST0 * 0.9;   // Intro: Laptop GRÖSSER (sitzt unter dem Text, voll sichtbar)
-      const presDist = DIST0 * 1.24;   // Präsentation: Laptop kleiner → rechts neben den Captions, mit Rand (nie angeschnitten)
+      const introDist = DIST0 * 0.8;   // Intro: Laptop GROSS (sitzt unter dem Text, voll sichtbar)
+      const presDist = DIST0 * 1.06;   // Präsentation/Tour: Laptop GROSS, rechts neben den Captions (mit Rand, nie angeschnitten)
       _lk.set(
         (-340)*(1-ie) - 120*zt + THREE.MathUtils.lerp(0, screenCenter.x, zt*0.06),   // Intro zentriert → Präsentation WEIT rechts → Zoom; links bleibt dunkler Raum für die Punkte
         THREE.MathUtils.lerp(360, screenCenter.y, zt*0.96),                            // Aim: vertikale Mitte → hoch ins Display
