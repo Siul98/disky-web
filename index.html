@@ -1281,6 +1281,9 @@ if (sec && canvas && stage && screenEl) {
         presBox={ hw:s.x/2, hh:s.y/2, cx:c.x, cy:c.y };
         if(screenMesh){ const sb=new THREE.Box3().setFromObject(screenMesh), sc=sb.getCenter(new THREE.Vector3()), ssz=sb.getSize(new THREE.Vector3());
           presBox.scx=sc.x; presBox.scy=sc.y; presBox.shw=ssz.x/2; presBox.shh=ssz.y/2; }   // Screen-Box: der lesbare Teil, der NIE in den Feather laufen darf
+        // Screen-Mitte auch FRONTAL (Drehung 0) messen → das Intro zielt darauf und startet exakt zentriert
+        macRoot.rotation.y=0; macRoot.updateMatrixWorld(true);
+        if(screenMesh){ const sb0=new THREE.Box3().setFromObject(screenMesh), sc0=sb0.getCenter(new THREE.Vector3()); presBox.scx0=sc0.x; presBox.scy0=sc0.y; }
         macRoot.rotation.y=wasR2; macRoot.updateMatrixWorld(true); if(wasT2!=null&&mixer&&clip)mixer.setTime(wasT2); }
     }
   }
@@ -1454,7 +1457,7 @@ if (sec && canvas && stage && screenEl) {
     if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // fast zu → weit offen
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
     // CHOREOGRAFIE: INTRO (frontal + zentriert, hebt sich & verdeckt die Jarvis-Headline) → PRÄSENTATION (nach rechts + nach AUSSEN gedreht) → ZOOM in den Screen
-    const introP = mob ? 0 : Math.max(0, Math.min(1, (0.22 - p)/0.22));   // 1 am Start → 0 ab p=0.22
+    const introP = mob ? 0 : Math.max(0, Math.min(1, (0.5 - p)/0.5));   // 1 am Start → 0 erst ab p=0.5: die Bewegung 1.→2. Position ist lang gestreckt
     const ie = easeOut(introP);
     const zt = (reduce ? 0.14 : easeOut(Math.min(1, Math.max(0, (p-0.24)/0.52))));   // Hinein-Zoom startet nach dem Intro, erreicht den großen Screen früher
     // Rotation: frontal (0) im Intro → nach AUSSEN gedreht in Präsentation (negativ = die andere Richtung als zuvor)
@@ -1470,26 +1473,28 @@ if (sec && canvas && stage && screenEl) {
       // nur Rahmen/Tastatur dürfen in den weichen Auslauf laufen. Bühne füllt jetzt das VOLLE Fenster → Laptop wird groß & ist mittig.
       const tanV = Math.tan(cam.fov*Math.PI/360);   // halbes vertikales FOV
       const tanH = tanV * cam.aspect;               // halbes horizontales FOV (live Fenster-Aspect)
-      const MsV = 0.84, MxH = 0.98, TX = 0.06;      // Screen füllt vertikal 84% (sicher im Bild); Laptop-Körper horizontal bis 98% (Seiten feathern); leicht rechts der Mitte
+      const MsV = 0.84, MxH = 1.06, TX = 0.13;      // Screen füllt vertikal 84% (sicher im Bild); in der Präsentation deutlich nach rechts (TX) — links bleibt Raum für Captions
       let presDist, presCx, presCy;
       if(presBox && presBox.shh){
-        presDist = Math.max(presBox.shh/(MsV*tanV), presBox.hw/((MxH-TX)*tanH));   // vertikal: Screen sicher; horizontal: Laptop-Breite an die Feather-Kante
-        presCx = presBox.scx; presCy = presBox.scy;                               // Ziel = Screen-Mitte
+        presDist = Math.max(presBox.shh/(MsV*tanV), presBox.hw/((MxH-TX)*tanH));   // vertikal: Screen sicher; horizontal: Laptop-Körper darf an die Feather-Kante
+        presCx = presBox.scx; presCy = presBox.scy;                               // Ziel = Screen-Mitte (gedreht)
       } else if(presBox){
         presDist = Math.max(presBox.hh/(0.98*tanV), presBox.hw/((MxH-TX)*tanH));
         presCx = presBox.cx; presCy = presBox.cy;
       } else { presDist = DIST0*1.06; presCx = -150; presCy = 360; }
       const introDist = presDist * 1.34;   // Intro: frontal & etwas kleiner → lässt Platz für die Headline darüber
-      // Blend INTRO → PRÄSENTATION über ie (ie=1 Intro, ie=0 Präsentation); TX (Rechts-Versatz) nur in der Präsentation
       const dist = introDist*ie + presDist*(1-ie);
-      _lk.set( presCx - (TX*(1-ie))*dist*tanH, presCy, 0 );
+      // Intro zielt auf die FRONTALE Screen-Mitte (scx0) → startet EXAKT zentriert; Präsentation auf die gedrehte Mitte minus Rechts-Versatz (TX)
+      const introX = (presBox && presBox.scx0!=null) ? presBox.scx0 : presCx;
+      const presX  = presCx - TX*dist*tanH;
+      _lk.set( introX*ie + presX*(1-ie), presCy, 0 );
       cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
     }
     // Kopf (Headline+Punkte+CTA) faded aus. Bühne füllt jetzt das volle Fenster → der Laptop ist von Haus aus mittig.
     // Im INTRO (Headline sichtbar) schieben wir den Laptop nach UNTEN, damit er unter der Headline sitzt; sobald die Headline weg ist, steht er zentriert.
     let downShift = 0;
     if(mbHead){
-      const headP = mob ? 1 : Math.max(0, Math.min(1, (0.4 - p)/0.22));   // sichtbar bis ~p=0.18, ausgeblendet bis p=0.40
+      const headP = mob ? 1 : Math.max(0, Math.min(1, (0.46 - p)/0.26));   // länger sichtbar, faded p≈0.20→0.46 (begleitet die gestreckte Bewegung)
       const hsmooth = headP*headP*(3-2*headP);
       mbHead.style.opacity = hsmooth.toFixed(3);
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
@@ -1500,9 +1505,9 @@ if (sec && canvas && stage && screenEl) {
     if(canvas) canvas.style.transform = tf;
     if(css3dHost) css3dHost.style.transform = tf;
     if(mbCaps) mbCaps.style.transform = 'translateY(-50%)';
-    // Captions/Feature-Tour erst NACH dem Intro (während frontal verdeckt: keine Punkte)
-    const s2=0.24, e2=0.94, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
-    const fi=(!mob && p<0.2) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
+    // Captions/Feature-Tour laufen schon WÄHREND der Bewegung 1.→2. Position nebenher (früher Start)
+    const s2=0.13, e2=0.96, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
+    const fi=(!mob && p<0.11) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
     setFeat(fi);
     // Scroll steuert die ECHTE App im Display: Ansicht wechselt passend zur Caption mit
     const VIEWS=['overview','map','dupes','search'];
