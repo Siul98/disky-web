@@ -1189,6 +1189,7 @@ applyLang(LANG);
 const sec = document.querySelector('.mb-scroll');
 const stage = sec && sec.querySelector('.mb-stage');
 const mbHead = sec && sec.querySelector('.mb-head');
+const mbCaps = sec && sec.querySelector('.mb-caps');
 const canvas = sec && sec.querySelector('.mb-gl');
 const css3dHost = sec && sec.querySelector('.mb-css3d');
 const screenEl = document.getElementById('mbScreens');
@@ -1459,17 +1460,20 @@ if (sec && canvas && stage && screenEl) {
       const dist = (introDist + (presDist-introDist)*(1-ie))*(1-zt) + tgtDist*zt;
       cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
     }
-    // Kein Überdecken mehr — Laptop sitzt sauber UNTER dem Text und verdeckt nichts
-    if(canvas) canvas.style.transform = '';
-    if(css3dHost) css3dHost.style.transform = '';
-    // Beim Scrollen WEG von der Main-Headline: Kopf (Headline+Punkte+CTA) gleitet hoch & faded aus → Feature-Tour übernimmt
+    // Kopf (Headline+Punkte+CTA) gleitet hoch & faded aus; sobald er weg ist, rücken Laptop UND Captions nach OBEN und füllen den freien Raum (kein leerer Bereich oben mehr)
+    let upShift = 0;
     if(mbHead){
       const headP = mob ? 1 : Math.max(0, Math.min(1, (0.4 - p)/0.22));   // sichtbar bis ~p=0.18, ausgeblendet bis p=0.40
       const hsmooth = headP*headP*(3-2*headP);
       mbHead.style.opacity = hsmooth.toFixed(3);
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
       mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
+      upShift = mob ? 0 : -(1-hsmooth)*215;   // wenn der Kopf weg ist → Laptop+Captions hoch in den freien Raum
     }
+    const tf = upShift ? ('translateY('+upShift.toFixed(1)+'px)') : '';
+    if(canvas) canvas.style.transform = tf;
+    if(css3dHost) css3dHost.style.transform = tf;
+    if(mbCaps) mbCaps.style.transform = 'translateY(calc(-50% + '+upShift.toFixed(1)+'px))';
     // Captions/Feature-Tour erst NACH dem Intro (während frontal verdeckt: keine Punkte)
     const s2=0.24, e2=0.94, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));
     const fi=(!mob && p<0.2) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
