@@ -1558,7 +1558,29 @@ if (sec && canvas && stage && screenEl) {
       // CSS3D-iframe-Layer zum Neuzeichnen zwingen — ein statischer 3D-Transform repaintet das iframe sonst nicht,
       // d.h. die neue Ansicht würde erst beim nächsten Scrollen sichtbar. Kurzes, unsichtbares Opacity-Toggle erzwingt Recomposite.
       let _n=0; clearInterval(_rp); _rp=setInterval(()=>{ if(appFrame) appFrame.style.opacity=(_n&1)?'1':'0.998'; needsRender=true; if(++_n>22){ clearInterval(_rp); if(appFrame) appFrame.style.opacity='1'; needsRender=true; } }, 70);
+      // Bei „Find any project" (search) die Tipp-Demo starten, sonst stoppen
+      if(!mob && wantView==='search'){ stopSearchDemo(); setTimeout(startSearchDemo, 1700); } else stopSearchDemo();
     }
+  }
+  // ── „Find any project"-Demo: tippt automatisch Projektnamen in die Deep Search des iframes + erzwingt Repaint ──
+  let _sd=null;
+  function stopSearchDemo(){ if(_sd){ _sd.stop=true; clearTimeout(_sd.t); clearInterval(_sd.rp); _sd=null; if(appFrame) appFrame.style.opacity='1'; needsRender=true; } }
+  function startSearchDemo(){
+    stopSearchDemo();
+    const st=_sd={stop:false,t:0,rp:0}, queries=['Wedding','Doku Nordsee','Berlin']; let qi=0;
+    // Kontinuierlicher, unsichtbarer Opacity-Toggle → erzwingt den CSS3D-Recomposite die GANZE Demo über, sonst friert das Tippen im Composite ein
+    let _rn=0; st.rp=setInterval(()=>{ if(appFrame){ _rn^=1; appFrame.style.opacity=_rn?'0.997':'1'; } needsRender=true; }, 55);
+    const dw=()=> (appFrame && appFrame.contentDocument && appFrame.contentWindow) ? [appFrame.contentDocument, appFrame.contentWindow] : null;
+    const setVal=(el,val,win)=>{ el.value=val; el.dispatchEvent(new win.Event('input',{bubbles:true})); needsRender=true; };
+    function type(text,done){ if(st.stop) return; const d=dw(); if(!d){ st.t=setTimeout(()=>type(text,done),250); return; }
+      const pill=d[0].querySelector('.deep-pill[data-mode="all"]'); if(pill && !pill.classList.contains('on')) pill.click();
+      let i=0; (function step(){ if(st.stop) return; const d2=dw(); if(!d2){ return; } const el=d2[0].getElementById('deepQ'); if(!el){ st.t=setTimeout(step,200); return; }
+        setVal(el, text.slice(0,i), d2[1]);
+        if(i++<text.length) st.t=setTimeout(step, 95+Math.random()*75); else st.t=setTimeout(done, 1700); })();
+    }
+    function cycle(){ if(st.stop) return; type(queries[qi%queries.length], ()=>{ if(st.stop) return;
+      const d=dw(); if(d){ const el=d[0].getElementById('deepQ'); if(el) setVal(el,'',d[1]); } qi++; st.t=setTimeout(cycle, 650); }); }
+    st.t=setTimeout(cycle, 600);
   }
   function resize(){
     const w=W0(), h=H0();
@@ -1575,6 +1597,7 @@ if (sec && canvas && stage && screenEl) {
   function frame(){
     const r=sec.getBoundingClientRect();
     const inView = r.bottom>-200 && r.top<innerHeight+200;
+    if(!inView && _sd){ stopSearchDemo(); lastView=null; }   // außer Sicht: Tipp-Demo stoppen, beim Wiederkommen neu auslösen
     const now=performance.now();
     if(inView && _idleOK && !isMobile() && macRoot && now-_lastIdle>33){
       // SANFTE DAUERBEWEGUNG: der Laptop atmet leicht weiter (Scroll-Basis + Sinus-Drift) → steht nie ganz still. ~30fps gedrosselt.
