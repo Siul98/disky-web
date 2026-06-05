@@ -354,16 +354,6 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-scroll{position:relative;height:230vh}
 .mb-head{text-align:center;flex:0 0 auto;padding:clamp(64px,8vh,92px) 24px 0;z-index:3;position:relative;width:100%}
 /* Merged Hero: Jarvis-Headline + CTAs im Kopf der MacBook-Sektion */
-/* Cinematischer Light-Ray hinter dem MacBook — weicher diagonaler Strahl von oben-rechts (wie Apple-Mockups) */
-.hero-ray{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
-.hero-ray::before{content:'';position:absolute;inset:-25% -12%;
-  background:radial-gradient(42% 52% at 75% 4%,rgba(186,210,255,.38),rgba(130,160,255,.1) 40%,transparent 62%),
-             radial-gradient(95% 75% at 92% -12%,rgba(130,160,255,.16),transparent 54%)}
-.hero-ray::after{content:'';position:absolute;top:-45%;left:-12%;right:-12%;height:190%;
-  background:linear-gradient(119deg,transparent 40%,rgba(190,212,255,.22) 49%,rgba(215,226,255,.12) 53%,rgba(190,212,255,.06) 58%,transparent 66%);
-  filter:blur(24px);transform:translateZ(0);animation:rayBreath 9s ease-in-out infinite}
-@keyframes rayBreath{0%,100%{opacity:.85;transform:translateX(0)}50%{opacity:1;transform:translateX(18px)}}
-@media(prefers-reduced-motion:reduce){.hero-ray::after{animation:none}}
 .mb-head{will-change:opacity,transform}
 .mb-head .hero-h{margin:0 auto 22px;max-width:18ch}
 .mb-head .cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
@@ -395,19 +385,14 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
-.mb-caps{position:absolute;left:max(4vw,22px);top:50%;transform:translateY(-50%);width:min(448px,40vw);display:flex;flex-direction:column;gap:22px;z-index:6;pointer-events:none;counter-reset:cap}
-/* dezente Timeline-Schiene hinter den Nummern-Badges */
-.mb-caps::before{content:'';position:absolute;left:15px;top:18px;bottom:18px;width:1px;
-  background:linear-gradient(180deg,transparent,rgba(120,150,210,.22) 12%,rgba(120,150,210,.22) 88%,transparent)}
-.mb-cap{counter-increment:cap;position:relative;padding-left:50px;min-height:32px;opacity:0;visibility:hidden;transform:translateY(20px);
+.mb-caps{position:absolute;left:max(4vw,22px);top:50%;transform:translateY(-50%);width:min(440px,40vw);display:flex;flex-direction:column;gap:20px;z-index:6;pointer-events:none}
+.mb-cap{position:relative;padding-left:18px;opacity:0;visibility:hidden;transform:translateY(20px);
   transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s linear .6s}
-/* Nummern-Badge (verziert) */
-.mb-cap::before{content:counter(cap,decimal-leading-zero);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font:700 12px/1 var(--fmono,ui-monospace,'SF Mono',monospace);letter-spacing:.04em;
-  color:#90a4c4;background:rgba(16,22,34,.9);border:1px solid rgba(120,150,210,.2);transition:color .4s ease,background .4s ease,border-color .4s ease,box-shadow .4s ease}
-.mb-cap.shown{opacity:.45;visibility:visible;transform:none;filter:saturate(.4);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s}
+/* schlanker Akzent-Balken NUR beim aktiven Punkt (kein durchgehender Streifen) */
+.mb-cap::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;border-radius:2px;background:transparent;transition:background .4s ease,box-shadow .4s ease}
+.mb-cap.shown{opacity:.4;visibility:visible;transform:none;filter:saturate(.4);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s}
 .mb-cap.on{opacity:1;visibility:visible;transform:none;filter:none}
-.mb-cap.on::before{color:#e7eeff;background:linear-gradient(135deg,rgba(91,140,255,.4),rgba(122,108,255,.32));border-color:rgba(150,180,255,.75);box-shadow:0 0 20px rgba(91,140,255,.45)}
+.mb-cap.on::before{background:linear-gradient(180deg,var(--acc),var(--acc2));box-shadow:0 0 14px rgba(91,140,255,.5)}
 .mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(20px,2.3vw,30px);letter-spacing:-.025em;margin:0;line-height:1.12;
   background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;text-shadow:0 2px 18px rgba(0,0,0,.8)}
 .mb-cap.on h3{background:linear-gradient(105deg,#fff,#d2e2ff 55%,#9db6ff);-webkit-background-clip:text;background-clip:text}
@@ -455,7 +440,6 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 
 <section class="mb-scroll" id="inaction">
   <div class="mb-sticky">
-    <div class="hero-ray" aria-hidden="true"></div>
     <div class="mb-head">
       <h1 class="hero-h" data-th="hero_h1">Jarvis für dein<br><span class="grad">Datenmanagement.</span></h1>
       <div class="hero-pts">
@@ -1288,7 +1272,7 @@ if (sec && canvas && stage && screenEl) {
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
   scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
-  const key = new THREE.DirectionalLight(0xffffff, 0.58); key.position.set(1700, 2300, 1700); scene.add(key);   // von OBEN-RECHTS (passend zum Light-Ray) → Laptop fängt den Strahl
+  const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(400, 2400, 2100); scene.add(key);   // weiches Key-Light von oben-vorne
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
   const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
   // BACKLIGHT (nur Kanten): zwei flache, grazing Lichter direkt von HINTER dem Laptop → nur die Silhouetten-Kanten leuchten, Flächen bleiben unverändert
@@ -1464,6 +1448,7 @@ if (sec && canvas && stage && screenEl) {
       cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
     } else {
       const tgtDist = (screenDist!=null) ? screenDist : DIST0*0.55;
+      const introDist = DIST0 * 0.9;   // Intro: Laptop GRÖSSER (sitzt unter dem Text, voll sichtbar)
       const presDist = DIST0 * 1.24;   // Präsentation: Laptop kleiner → rechts neben den Captions, mit Rand (nie angeschnitten)
       _lk.set(
         (-340)*(1-ie) - 120*zt + THREE.MathUtils.lerp(0, screenCenter.x, zt*0.06),   // Intro zentriert → Präsentation WEIT rechts → Zoom; links bleibt dunkler Raum für die Punkte
@@ -1471,13 +1456,12 @@ if (sec && canvas && stage && screenEl) {
         THREE.MathUtils.lerp(0, screenCenter.z, zt*0.9)
       );
       // Dolly: Intro groß (DIST0) → Präsentation kleiner (presDist) → Zoom in den Screen (tgtDist)
-      const dist = (DIST0 + (presDist-DIST0)*(1-ie))*(1-zt) + tgtDist*zt;
+      const dist = (introDist + (presDist-introDist)*(1-ie))*(1-zt) + tgtDist*zt;
       cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
     }
-    // Intro: Laptop hebt sich an und ÜBERDECKT die Jarvis-Headline → gibt sie beim Scrollen frei
-    const tf = (!mob && ie>0.001) ? ('translateY('+(-300*ie).toFixed(1)+'px)') : '';
-    if(canvas) canvas.style.transform = tf;
-    if(css3dHost) css3dHost.style.transform = tf;
+    // Kein Überdecken mehr — Laptop sitzt sauber UNTER dem Text und verdeckt nichts
+    if(canvas) canvas.style.transform = '';
+    if(css3dHost) css3dHost.style.transform = '';
     // Beim Scrollen WEG von der Main-Headline: Kopf (Headline+Punkte+CTA) gleitet hoch & faded aus → Feature-Tour übernimmt
     if(mbHead){
       const headP = mob ? 1 : Math.max(0, Math.min(1, (0.4 - p)/0.22));   // sichtbar bis ~p=0.18, ausgeblendet bis p=0.40
