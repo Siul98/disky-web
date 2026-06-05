@@ -629,24 +629,25 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
       <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="8" y="13" width="32" height="19" rx="4"/><line x1="8" y1="20" x2="40" y2="20" stroke-dasharray="2 3" opacity=".55"/>
         <circle cx="14" cy="26" r="1.5" fill="currentColor" stroke="none"/><line x1="22" y1="26" x2="34" y2="26"/><line x1="16" y1="38" x2="32" y2="38"/></svg></div>
-      <h3 data-t="hiw1_h3">Einmal scannen</h3>
-      <p data-t="hiw1_p">Steck jede Platte einmal an. Disky liest sie aus — ab dann bleibt alles durchsuchbar, auch wenn sie längst im Schrank liegt.</p>
+      <h3 data-t="hiw1_h3">Einmal anstecken</h3>
+      <p data-t="hiw1_p">Steck jede Platte einmal an. Disky liest sie (nur lesend) aus und merkt sich alles — auch wenn sie längst im Schrank liegt.</p>
     </div>
     <div class="howcard">
       <div class="step" data-t="hiw_step2">SCHRITT 2</div>
-      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
-        <circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="5.5"/>
-        <line x1="24" y1="10" x2="24" y2="18.5" stroke-linecap="round"/><line x1="36.5" y1="29" x2="29" y2="26.4" stroke-linecap="round"/><line x1="12" y1="31" x2="19" y2="27" stroke-linecap="round"/></svg></div>
-      <h3 data-t="hiw2_h3">Auf einen Blick sehen</h3>
-      <p data-t="hiw2_p">Ein interaktives Rad zeigt sofort, was deinen Speicher füllt — Projekt für Projekt, bis zur einzelnen Datei.</p>
+      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 6l14 5.5v9.6c0 8.8-6 14.7-14 17.4-8-2.7-14-8.6-14-17.4V11.5z"/>
+        <path d="M17.5 23.5l4.5 4.5 9-10"/></svg></div>
+      <h3 data-t="hiw2_h3">Disky behält den Überblick</h3>
+      <p data-t="hiw2_p">Wie ein stiller Assistent verfolgt Disky im Hintergrund, was gesichert ist, was doppelt liegt, was Platz frisst und was noch aktiv oder schon fertig ist — ganz von selbst.</p>
     </div>
     <div class="howcard">
       <div class="step" data-t="hiw_step3">SCHRITT 3</div>
       <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="21" cy="21" r="12"/><line x1="30" y1="30" x2="40" y2="40"/>
-        <path d="M21 15.5 l1.6 3.9 l3.9 1.6 l-3.9 1.6 l-1.6 3.9 l-1.6 -3.9 l-3.9 -1.6 l3.9 -1.6 Z" fill="currentColor" stroke="none"/></svg></div>
-      <h3 data-t="hiw3_h3">Jederzeit wiederfinden</h3>
-      <p data-t="hiw3_p">Tippe einen Namen und finde jede Datei in Sekunden — über alle Laufwerke, ohne eine einzige anzustecken.</p>
+        <path d="M24 10a8.5 8.5 0 0 0-8.5 8.5c0 7.5-3.3 9.5-3.3 9.5h23.6s-3.3-2-3.3-9.5A8.5 8.5 0 0 0 24 10z"/>
+        <path d="M20.5 34.5a3.5 3.5 0 0 0 7 0"/>
+        <circle cx="34.5" cy="13.5" r="3" fill="currentColor" stroke="none"/></svg></div>
+      <h3 data-t="hiw3_h3">Es meldet sich — und antwortet</h3>
+      <p data-t="hiw3_p">Disky sagt dir von selbst Bescheid, wenn's zählt — „dieses Projekt hat kein Backup", „32 GB freigebbar". Und wann immer du suchst: tippe einen Namen und finde jede Datei in Sekunden über alle Platten.</p>
     </div>
   </div>
 </section>
@@ -969,16 +970,16 @@ const I18N={
  s1_h2:{de:`Das ist Disky.`,en:`This is Disky.`},
  s1_sub:{de:`Dein ganzes Archiv auf einen Blick — auch wenn keine Platte angeschlossen ist.`,en:`Your whole archive at a glance — even when no drive is connected.`},
  hiw_h2:{de:`So funktioniert's`,en:`How it works`},
- hiw_sub:{de:`Einmal einrichten. Für immer den Überblick.`,en:`Set up once. Stay in control forever.`},
+ hiw_sub:{de:`Einmal einrichten — dann passt Disky für dich auf deine Daten auf.`,en:`Set it up once — then Disky watches your data for you.`},
  hiw_step1:{de:`SCHRITT 1`,en:`STEP 1`},
  hiw_step2:{de:`SCHRITT 2`,en:`STEP 2`},
  hiw_step3:{de:`SCHRITT 3`,en:`STEP 3`},
- hiw1_h3:{de:`Einmal scannen`,en:`Scan once`},
- hiw1_p:{de:`Steck jede Platte einmal an. Disky liest sie aus — ab dann bleibt alles durchsuchbar, auch wenn sie längst im Schrank liegt.`,en:`Plug in each drive once. Disky reads it — from then on everything stays searchable, even when it's long back on the shelf.`},
- hiw2_h3:{de:`Auf einen Blick sehen`,en:`See it at a glance`},
- hiw2_p:{de:`Ein interaktives Rad zeigt sofort, was deinen Speicher füllt — Projekt für Projekt, bis zur einzelnen Datei.`,en:`An interactive wheel instantly shows what's filling your storage — project by project, down to the single file.`},
- hiw3_h3:{de:`Jederzeit wiederfinden`,en:`Find it anytime`},
- hiw3_p:{de:`Tippe einen Namen und finde jede Datei in Sekunden — über alle Laufwerke, ohne eine einzige anzustecken.`,en:`Type a name and find any file in seconds — across every drive, without plugging in a single one.`},
+ hiw1_h3:{de:`Einmal anstecken`,en:`Plug in once`},
+ hiw1_p:{de:`Steck jede Platte einmal an. Disky liest sie (nur lesend) aus und merkt sich alles — auch wenn sie längst im Schrank liegt.`,en:`Plug in each drive once. Disky reads it (read-only) and remembers everything — even when it's long back in the drawer.`},
+ hiw2_h3:{de:`Disky behält den Überblick`,en:`Disky keeps watch`},
+ hiw2_p:{de:`Wie ein stiller Assistent verfolgt Disky im Hintergrund, was gesichert ist, was doppelt liegt, was Platz frisst und was noch aktiv oder schon fertig ist — ganz von selbst.`,en:`Like a quiet assistant, Disky tracks in the background what's backed up, what's duplicated, what eats space, and what's still active vs. done — all on its own.`},
+ hiw3_h3:{de:`Es meldet sich — und antwortet`,en:`It speaks up — and answers`},
+ hiw3_p:{de:`Disky sagt dir von selbst Bescheid, wenn's zählt — „dieses Projekt hat kein Backup", „32 GB freigebbar". Und wann immer du suchst: tippe einen Namen und finde jede Datei in Sekunden über alle Platten.`,en:`Disky tells you on its own when it matters — “this project has no backup”, “32 GB reclaimable”. And whenever you need something, just type a name and find any file across every drive in seconds.`},
  cmp_h2:{de:`Warum Disky?`,en:`Why Disky?`},
  cmp_sub:{de:`Der Unterschied zwischen „liegt irgendwo auf einer Platte" und „in 2 Sekunden gefunden".`,en:`The difference between “somewhere on a drive” and “found in 2 seconds”.`},
  cmp_bad_t:{de:`Ohne Disky`,en:`Without Disky`},
