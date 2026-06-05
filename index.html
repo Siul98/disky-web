@@ -352,7 +352,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .endcta-box .sec{margin-top:0}
 /* ── MacBook (echtes WebGL-3D · Three.js) — klappt auf & dreht beim Scrollen ── */
 .mb-scroll{position:relative;height:370vh}
-.mb-head{text-align:center;position:absolute;top:0;left:0;right:0;padding:clamp(40px,5.2vh,68px) 24px 0;z-index:3;width:100%}
+.mb-head{text-align:center;position:absolute;top:0;left:0;right:0;padding:clamp(86px,13vh,150px) 24px 0;z-index:3;width:100%}
 /* Merged Hero: Jarvis-Headline + CTAs im Kopf der MacBook-Sektion */
 .mb-head{will-change:opacity,transform}
 /* Größer & cooler — tighter Tracking, knappe Zeilenhöhe; der untere Rand taucht hinter dem Laptop ab (z5 > z3) */
@@ -361,7 +361,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 /* Aura: lebendiges Leuchten + Light-Rays + Staubpartikel HINTER dem Laptop */
 .mb-aura{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 /* Maskierte Headline — Wörter steigen aus dem Boden (Apple-Style), Wort für Wort */
-.hero-h .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.16em 0 .26em;margin:-.16em 0 -.26em}
+.hero-h .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.26em 0 .28em;margin:-.26em 0 -.28em}
 .hero-h .wi{display:inline-block;transform:translateY(118%);background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero-h.rise .wi{animation:wordRise .95s cubic-bezier(.16,1,.3,1) both}
 @keyframes wordRise{0%{transform:translateY(118%)}100%{transform:translateY(0)}}
@@ -1618,8 +1618,8 @@ if (sec && canvas && stage && screenEl) {
       mbHead.style.opacity = hsmooth.toFixed(3);
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
       mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
-      // Intro: Laptop leicht nach oben → sein oberer Rand küsst nur den Titel-Boden. Präsentation: 0 → zentriert
-      downShift = mob ? 0 : -hsmooth * innerHeight * 0.05;
+      // Intro: Laptop tiefer setzen → Text bekommt Luft und sitzt mittiger; nur Boden des Titels grenzt an. Präsentation: 0 → zentriert
+      downShift = mob ? 0 : hsmooth * innerHeight * 0.07;
     }
     // Overline über dem Laptop: blendet ein, sobald die Headline weg ist (Präsentation)
     if(mbOver){ const op=Math.max(0,Math.min(1,(p-0.35)/0.13)); mbOver.style.opacity=(mob?0:op*op*(3-2*op)).toFixed(3); }   // Overline kommt ERST, wenn die Headline weg ist (sauberer Wechsel)
