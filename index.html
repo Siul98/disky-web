@@ -1725,7 +1725,7 @@ if (sec && canvas && stage && screenEl) {
         presDist = Math.max(presBox.hh/(0.98*tanV), presBox.hw/((MxH-TX)*tanH));
         presCx = presBox.cx; presCy = presBox.cy;
       } else { presDist = DIST0*1.06; presCx = -150; presCy = 360; }
-      const introDist = presDist * 1.34;   // Intro: frontal & etwas kleiner → lässt Platz für die Headline darüber
+      const introDist = presDist * 0.82;   // Intro: frontal & SEHR GROSS — nur der Screen füllt, Tastatur liegt unter dem Fold
       const dist = (introDist*ie + presDist*(1-ie)) * (1 - 0.045*p);   // zoomt über den ganzen Scroll minimal weiter rein → permanente Bewegung
       // Intro zielt auf die FRONTALE Screen-Mitte (scx0) → startet EXAKT zentriert; Präsentation auf die gedrehte Mitte minus Rechts-Versatz (TX)
       const introX = (presBox && presBox.scx0!=null) ? presBox.scx0 : presCx;
@@ -1742,8 +1742,9 @@ if (sec && canvas && stage && screenEl) {
       mbHead.style.opacity = hsmooth.toFixed(3);
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
       mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
-      // Intro: Laptop tiefer setzen → Text bekommt Luft und sitzt mittiger; nur Boden des Titels grenzt an. Präsentation: 0 → zentriert
-      downShift = mob ? 0 : hsmooth * innerHeight * 0.07;
+      // Intro: Laptop GROSS & tief — Basis unter dem Fold, nur der obere Screen-Rand lugt hoch & überdeckt den Titel-Boden.
+      // Beim Scrollen (hsmooth 1→0) steigt er auf, klappt weiter aus und kommt voll ins Bild.
+      downShift = mob ? 0 : hsmooth * innerHeight * 0.20;
     }
     // Overline über dem Laptop: blendet ein, sobald die Headline weg ist (Präsentation)
     if(mbOver){ const op=Math.max(0,Math.min(1,(p-0.35)/0.13)); mbOver.style.opacity=(mob?0:op*op*(3-2*op)).toFixed(3); }   // Overline kommt ERST, wenn die Headline weg ist (sauberer Wechsel)
