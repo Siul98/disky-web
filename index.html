@@ -1321,12 +1321,17 @@ if (sec && canvas && stage && screenEl) {
   const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
   const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
   // BACKLIGHT (nur Kanten): zwei flache, grazing Lichter direkt von HINTER dem Laptop → nur die Silhouetten-Kanten leuchten, Flächen bleiben unverändert
-  const rim3 = new THREE.DirectionalLight(0xaccaff, 3.2); rim3.position.set(-1300, 380, -1150); scene.add(rim3);   // hinten-links, flach → linke Kante
-  const rim4 = new THREE.DirectionalLight(0xb4d6ff, 3.2); rim4.position.set(1300, 360, -1150); scene.add(rim4);    // hinten-rechts, flach → rechte Kante
+  const rim3 = new THREE.DirectionalLight(0xaccaff, 3.8); rim3.position.set(-1300, 380, -1150); scene.add(rim3);   // hinten-links, flach → linke Kante
+  const rim4 = new THREE.DirectionalLight(0xb4d6ff, 3.8); rim4.position.set(1300, 360, -1150); scene.add(rim4);    // hinten-rechts, flach → rechte Kante
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
   // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
-  let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null, appHost = null;
+  let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null, appHost = null, appGlare = null;
+  // Display-Spiegelung an die aktuelle Drehung koppeln: mehr Drehung → Reflexion sichtbarer, Glanzstreifen wandert mit
+  function updateGlare(roty){ if(!appGlare) return; const a=Math.min(1, Math.abs(roty)/0.42);
+    appGlare.style.opacity=(0.06 + a*0.20).toFixed(3);
+    appGlare.style.setProperty('--gb', (50 - (roty/0.42)*40).toFixed(1)+'%');
+    appGlare.style.setProperty('--gx', (34 - (roty/0.42)*26).toFixed(1)+'%'); }
   const CSS_FIX = new THREE.Quaternion();   // Ausrichtungs-Korrektur (per window.__fix tunebar)
 
   // Boden-Schatten (weiche Kontaktfläche)
@@ -1413,6 +1418,15 @@ if (sec && canvas && stage && screenEl) {
       // Solange zeigt das statische Cockpit-PNG dahinter (fast identisch → nahtlos).
       appFrame.addEventListener('load', ()=>{ lastView=null; setTimeout(()=>{ host.style.opacity='1'; lastView=null; if(ready) apply(); }, 600); });
       host.appendChild(appFrame);
+      // Großflächige, weiche Display-Spiegelung — wandert beim Drehen (Update in apply()/Idle via updateGlare). Sehr dezent, blend „screen".
+      const glare=document.createElement('div'); appGlare=glare;
+      glare.style.cssText='position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;'
+        +'background:'
+          +'radial-gradient(135% 80% at var(--gx,30%) -12%, rgba(200,222,255,.18), rgba(200,222,255,.05) 38%, transparent 58%),'  /* kühle Sky-Reflexion oben */
+          +'linear-gradient(112deg, transparent 40%, rgba(255,255,255,.045) 47%, rgba(255,255,255,.13) 50%, rgba(255,255,255,.045) 53%, transparent 60%);'  /* breiter, weicher Glanzstreifen */
+        +'background-repeat:no-repeat;background-size:160% 130%, 280% 100%;background-position:var(--gx,30%) 0, var(--gb,50%) 0;'
+        +'transition:opacity .5s ease';
+      host.appendChild(glare);
       const cssObj=new CSS3DObject(host); cssScreen=cssObj;
       // Fläche entlang der zwei großen Achsen → px↦lokale Einheiten
       const planeW = normalAxis==='x'? sz.z : sz.x;
@@ -1488,6 +1502,7 @@ if (sec && canvas && stage && screenEl) {
     _baseRotY = mob ? 0.0 : (reduce ? -0.26 : (-0.26*(1-ie) - 0.10*p));   // dreht über den GANZEN Scroll langsam weiter → bewegt sich permanent, steht nie still
     macRoot.rotation.y = _baseRotY;
     macRoot.rotation.x = 0;
+    updateGlare(_baseRotY);
     needsRender = true;
     if(mob){
       // Mobil: zentriert, Auto-Fit-Abstand — klappt beim Scrollen auf, nie angeschnitten
@@ -1566,6 +1581,7 @@ if (sec && canvas && stage && screenEl) {
       _lastIdle=now; const t=now/1000;
       macRoot.rotation.y=_baseRotY + Math.sin(t*0.5)*0.021;
       macRoot.rotation.x=Math.sin(t*0.37+1.2)*0.011;
+      updateGlare(macRoot.rotation.y);
       renderer.render(scene,cam); css.render(scene,cam); needsRender=false;
     } else if(needsRender){
       if(inView){ renderer.render(scene,cam); css.render(scene,cam); }
