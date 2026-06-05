@@ -1610,7 +1610,7 @@ if (sec && canvas && stage && screenEl) {
     if(css3dHost) css3dHost.style.transform = tf;
     if(mbCaps) mbCaps.style.transform = 'translateY(-50%)';
     // Captions/Feature-Tour laufen schon WÄHREND der Bewegung 1.→2. Position nebenher (früher Start)
-    const s2=0.12, e2=1.0, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));   // 4 Punkte = saubere gleiche Viertel von 0.12 bis zum Ende (kein toter Schwanz)
+    const s2=0.12, e2=1.0, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));   // 5 Punkte = gleiche Fünftel von 0.12 bis Ende (kein toter Schwanz)
     const fi=(!mob && p<0.09) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
     setFeat(fi);
     // Scroll steuert die ECHTE App im Display: Ansicht wechselt passend zur Caption mit
