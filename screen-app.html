@@ -18,46 +18,62 @@
   });
   // Handshake: dem Parent melden, sobald die geseedete App-Navigation gerendert ist (NICHT vor dem Seed-Reload)
   function pingReady(){ (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })(); }
-  if(sessionStorage.getItem('diskyDemoSeeded')==='3'){ pingReady(); return; }
+  if(sessionStorage.getItem('diskyDemoSeeded')==='5'){ pingReady(); return; }
   var TB=1e12, GB=1e9;
   var drives=[
     {label:'T9', driveType:'t9', bytes:2.3*TB, capacityBytes:3.6*TB, fileCount:18000, volumeName:'T9'},
     {label:'LaCie Rugged', driveType:'ssd', bytes:4.2*TB, capacityBytes:4.5*TB, fileCount:24000, volumeName:'LaCie Rugged'},
     {label:'Studio RAID', driveType:'ssd', bytes:10.9*TB, capacityBytes:29.1*TB, fileCount:41000, volumeName:'Studio RAID'},
     {label:'Archive 2023', driveType:'ssd', bytes:7.0*TB, capacityBytes:7.3*TB, fileCount:22000, volumeName:'Archive 2023'},
-    {label:'Sony A7S', driveType:'ssd', bytes:381*GB, capacityBytes:476*GB, fileCount:7594, volumeName:'Sony A7S'}
+    {label:'Sony A7S', driveType:'ssd', bytes:381*GB, capacityBytes:476*GB, fileCount:7594, volumeName:'Sony A7S'},
+    {label:'Macintosh HD', driveType:'mac', bytes:0.62*TB, capacityBytes:1.0*TB, fileCount:9240, volumeName:'Macintosh HD', internal:true, scannedAt:Date.now()-1000*60*60*5}
   ];
   function MB(n){ return Math.round(n*1048576); }
   function GBy(n){ return Math.round(n*1073741824); }
   function genFiles(ids){
-    var F=[], h=1;
-    function add(d,proj,sub,name,ext,size,hash){
+    var F=[], h=1, DAY=86400000, NOW=Date.now();
+    var REC=NOW-9*DAY, MIDR=NOW-70*DAY, OLD=NOW-260*DAY;   // kürzlich aktiv · mittel · lange inaktiv (>6 Mon)
+    function add(d,proj,sub,name,ext,size,hash,mt){
       var rel=proj+'/'+(sub?sub+'/':'')+name+'.'+ext;
-      F.push({driveId:ids[d], project:proj, relPath:rel, name:name+'.'+ext, ext:ext, size:size, mtime:0, hash:hash||('h'+(h++))});
+      F.push({driveId:ids[d], project:proj, relPath:rel, name:name+'.'+ext, ext:'.'+ext, size:size, mtime:mt||0, hash:hash||('h'+(h++))});
     }
     var i;
-    for(i=1;i<=16;i++) add(0,'Wedding Mai 2026','RAW','IMG_'+(1000+i),'cr3',MB(26+(i%6)*3));
-    for(i=1;i<=7;i++) add(0,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4), i<=5?('DUPW'+i):null);
-    add(0,'Wedding Mai 2026','Export','wedding_film','mp4',GBy(7.8));
-    add(0,'Wedding Mai 2026','Project','wedding','prproj',MB(72));
-    for(i=1;i<=10;i++) add(0,'Wedding Mai 2026','Cache','proxy_'+i,'mxf',GBy(0.55));
-    for(i=1;i<=12;i++) add(0,'Berlin Citytrip','Footage','B0'+(20+i),'mp4',GBy(0.85));
-    for(i=1;i<=6;i++) add(0,'Berlin Citytrip','Stills','DSC_'+(700+i),'jpg',MB(9));
-    for(i=1;i<=8;i++) add(1,'Client Nova Ad','Footage','N0'+(10+i),'mov',GBy(2.1));
-    add(1,'Client Nova Ad','Export','nova_30s_final','mp4',GBy(4.4));
-    add(1,'Client Nova Ad','Project','nova','aep',MB(180));
-    for(i=1;i<=5;i++) add(1,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4),'DUPW'+i);
-    for(i=1;i<=14;i++) add(2,'Doku Nordsee','Footage','C'+(100+i),'braw',GBy(3.2), i<=8?('DUPN'+i):null);
-    add(2,'Doku Nordsee','Export','nordsee_master','mov',GBy(22.0));
-    for(i=1;i<=9;i++) add(2,'Doku Nordsee','Cache','render_'+i,'mxf',GBy(1.1));
-    for(i=1;i<=20;i++) add(2,'Archive 2022','Photos','2022_'+(100+i),'dng',MB(45));
-    for(i=1;i<=8;i++) add(3,'Doku Nordsee','Footage','C'+(100+i),'braw',GBy(3.2),'DUPN'+i);
-    for(i=1;i<=10;i++) add(3,'Misc','Documents','scan_'+(20+i),'pdf',MB(4));
-    for(i=1;i<=18;i++) add(4,'B-Roll Library','Nature','underwater_'+(10+i),'mp4',GBy(0.7));
-    for(i=1;i<=8;i++) add(4,'B-Roll Library','City','street_'+(10+i),'mp4',GBy(0.5));
+    // Wedding — fertig (Export vorhanden), aber nur teilweise gesichert → „Wirklich fertig?"-Review
+    for(i=1;i<=16;i++) add(0,'Wedding Mai 2026','RAW','IMG_'+(1000+i),'cr3',MB(26+(i%6)*3),null,MIDR);
+    for(i=1;i<=7;i++) add(0,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4), i<=5?('DUPW'+i):null, MIDR);
+    add(0,'Wedding Mai 2026','Export','wedding_film','mp4',GBy(7.8),null,MIDR);
+    add(0,'Wedding Mai 2026','Project','wedding','prproj',MB(72),null,MIDR);
+    for(i=1;i<=10;i++) add(0,'Wedding Mai 2026','Cache','proxy_'+i,'mxf',GBy(0.55),null,MIDR);
+    // Berlin Citytrip — frisches Rohmaterial, noch kein Backup → ROT
+    for(i=1;i<=12;i++) add(0,'Berlin Citytrip','Footage','B0'+(20+i),'mp4',GBy(0.85),null,REC);
+    for(i=1;i<=6;i++) add(0,'Berlin Citytrip','Stills','DSC_'+(700+i),'jpg',MB(9),null,REC);
+    // Client Nova Ad — fertig UND auf zwei Platten gesichert → GRÜN (freigebbar)
+    for(i=1;i<=8;i++) add(1,'Client Nova Ad','Footage','N0'+(10+i),'mov',GBy(2.1),'NOVA'+i,OLD);
+    add(1,'Client Nova Ad','Export','nova_30s_final','mp4',GBy(4.4),'NOVAEX',OLD);
+    add(1,'Client Nova Ad','Project','nova','aep',MB(180),null,OLD);
+    for(i=1;i<=8;i++) add(2,'Client Nova Ad','Footage','N0'+(10+i),'mov',GBy(2.1),'NOVA'+i,OLD);
+    add(2,'Client Nova Ad','Export','nova_30s_final','mp4',GBy(4.4),'NOVAEX',OLD);
+    for(i=1;i<=5;i++) add(1,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4),'DUPW'+i,MIDR);
+    // Doku Nordsee — überwiegend, aber nicht vollständig gesichert → GELB (teilweise)
+    for(i=1;i<=14;i++) add(2,'Doku Nordsee','Footage','C'+(100+i),'braw',GBy(3.2), i<=12?('DUPN'+i):null, MIDR);
+    add(2,'Doku Nordsee','Export','nordsee_master','mov',GBy(8.0),'DUPNEX',MIDR);
+    for(i=1;i<=9;i++) add(2,'Doku Nordsee','Cache','render_'+i,'mxf',GBy(1.1),null,MIDR);
+    for(i=1;i<=20;i++) add(2,'Archive 2022','Photos','2022_'+(100+i),'dng',MB(45),null,OLD);
+    for(i=1;i<=12;i++) add(3,'Doku Nordsee','Footage','C'+(100+i),'braw',GBy(3.2),'DUPN'+i,MIDR);
+    add(3,'Doku Nordsee','Export','nordsee_master','mov',GBy(8.0),'DUPNEX',MIDR);
+    for(i=1;i<=10;i++) add(3,'Misc','Documents','scan_'+(20+i),'pdf',MB(4),null,OLD);
+    for(i=1;i<=18;i++) add(4,'B-Roll Library','Nature','underwater_'+(10+i),'mp4',GBy(0.7),null,OLD);
+    for(i=1;i<=8;i++) add(4,'B-Roll Library','City','street_'+(10+i),'mp4',GBy(0.5),null,OLD);
+    // Macintosh HD (interne SSD) — laufendes Projekt liegt nur lokal → ROT, aktiv → „auf Archiv auslagern"
+    for(i=1;i<=10;i++) add(5,'Reel Sommer 2026','Footage','R0'+(10+i),'mov',GBy(1.2),null,REC);
+    add(5,'Reel Sommer 2026','Selects','reel_sommer_v3','mp4',GBy(3.1),null,REC);
+    add(5,'Reel Sommer 2026','Project','reel_sommer','prproj',MB(58),null,REC);
+    for(i=1;i<=8;i++) add(5,'Reel Sommer 2026','Cache','peak_'+i,'pek',MB(140),null,REC);
+    for(i=1;i<=12;i++) add(5,'Photos Library','Masters','PH_'+(100+i),'heic',MB(8),null,REC);
+    for(i=1;i<=4;i++) add(5,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4),'DUPW'+i,MIDR);
     return F;
   }
-  function done(){ try{sessionStorage.setItem('diskyDemoSeeded','3');}catch(e){} }
+  function done(){ try{sessionStorage.setItem('diskyDemoSeeded','5');}catch(e){} }
   try{
     var r=indexedDB.open('drivecat',1);
     r.onupgradeneeded=function(e){ var db=e.target.result;
@@ -1370,7 +1386,7 @@ select.txt{cursor:pointer}
       <button class="nav on" data-v="overview"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span data-i18n="nav_overview">Overview</span></button>
       <button class="nav" data-v="search"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></span><span data-i18n="nav_search">Deep Search</span></button>
       <button class="nav" data-v="map"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12V3.2"/><path d="M12 12l7.6 4.6"/></svg></span><span data-i18n="nav_map">Storage Map</span></button>
-      <button class="nav" data-v="backup"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span data-i18n="nav_backup">Backup Assistant</span></button>
+      <button class="nav" data-v="backup"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span data-i18n="nav_backup">Project Manager</span></button>
       <button class="nav" data-v="dupes"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span><span data-i18n="nav_dupes">Duplicate Finder</span></button>
     </nav>
     <button class="sb-scan" id="scanBtn" data-i18n="scan_btn">＋ Platte scannen</button>
@@ -1924,7 +1940,7 @@ if(lang!=="en" && lang!=="de") lang="de";
 const I18N = {
  de:{
    // Navigation + Shell
-   nav_overview:"Übersicht", nav_search:"Deep Search", nav_map:"Speicher-Karte", nav_backup:"Backup-Assistent", nav_dupes:"Duplikate",
+   nav_overview:"Übersicht", nav_search:"Deep Search", nav_map:"Speicher-Karte", nav_backup:"Project-Manager", nav_dupes:"Duplikate",
    scan_btn:"＋ Platte scannen", search_ph:"Suchen… (Projekt, Platte, Dateiname, Pfad)",
    sb_my_drives:"Meine Platten", sb_manage:"verwalten", sb_manage_t:"Platten verwalten – umbenennen, aus Katalog entfernen", sb_click_map:"Klick öffnet die Speicher-Karte",
    acct_login:"Anmelden", acct_pro:"Disky Pro", acct_free:l=>`Gratis · ${l} Platten`,
@@ -1935,7 +1951,7 @@ const I18N = {
    hero_search_eb:"Finden", hero_search_t:"Deep Search", hero_search_d:"Finden Sie jede Datei über alle Platten — nach Name, nach Inhalt (KI) oder nach Projekt. Auch wenn die Platte nicht angeschlossen ist.",
    hero_map_eb:"Speicherplatz", hero_map_t:"Storage Map", hero_map_d:"Sehen Sie sofort, was Ihren Speicher frisst — größte Ordner und Dateien jeder Platte als interaktive Karte. Wählen Sie oben die Platte.",
    hero_dupes_eb:"Platz zurückholen", hero_dupes_t:"Duplicate Finder", hero_dupes_d:"Identische Dateien, doppelt gespeichert — per Prüfsumme erkannt, nicht per Name. Entfernt wird nur, was Sie freigeben.",
-   hero_backup_eb:"Schützen Sie Ihre Shoots", hero_backup_t:"Backup-Assistent", hero_backup_d:"Welche Shoots liegen doppelt gesichert — und welche nur einmal?",
+   hero_backup_eb:"Ihre Projekte", hero_backup_t:"Project-Manager", hero_backup_d:"Welche Projekte liegen doppelt gesichert, welche nur einmal — und was ist noch aktiv oder längst fertig?",
    hero_gather_eb:"Liefern", hero_gather_t:"Sammeln & Übertragen", hero_gather_d:"Sammeln Sie Dateien über alle Platten hinweg. Disky sagt Ihnen, welche Platten Sie anstecken müssen, und kopiert alles zusammen ans Ziel.",
    // Account
    acct_signin:"Anmelden",
@@ -2063,7 +2079,7 @@ const I18N = {
    ctx_reveal_file:"Im Finder anzeigen", ctx_reveal_folder:"Im Finder öffnen", ctx_open_map:"In der Karte öffnen", ctx_show_map:"In der Karte zeigen", ctx_copy_path:"Pfad kopieren", ctx_copy_name:"Namen kopieren", ctx_copied:"Pfad kopiert ✓", ctx_offline:"Platte nicht angeschlossen",
  },
  en:{
-   nav_overview:"Overview", nav_search:"Deep Search", nav_map:"Storage Map", nav_backup:"Backup Assistant", nav_dupes:"Duplicate Finder",
+   nav_overview:"Overview", nav_search:"Deep Search", nav_map:"Storage Map", nav_backup:"Project Manager", nav_dupes:"Duplicate Finder",
    scan_btn:"＋ Scan a drive", search_ph:"Search… (project, drive, file name, path)",
    sb_my_drives:"My drives", sb_manage:"manage", sb_manage_t:"Manage drives – rename, remove from catalog", sb_click_map:"Click opens the Storage Map",
    acct_login:"Sign in", acct_pro:"Disky Pro", acct_free:l=>`Free · ${l} drives`,
@@ -2073,7 +2089,7 @@ const I18N = {
    hero_search_eb:"Find", hero_search_t:"Deep Search", hero_search_d:"Find any file across all your drives — by name, by content (AI), or by project. Even when the drive is unplugged.",
    hero_map_eb:"Storage", hero_map_t:"Storage Map", hero_map_d:"See instantly what's eating your space — each drive's biggest folders and files as an interactive map. Pick the drive above.",
    hero_dupes_eb:"Reclaim space", hero_dupes_t:"Duplicate Finder", hero_dupes_d:"Identical files, stored twice — matched by checksum, not by name. Only what you release gets removed.",
-   hero_backup_eb:"Protect your shoots", hero_backup_t:"Backup Assistant", hero_backup_d:"Which shoots are backed up twice — and which only once?",
+   hero_backup_eb:"Your projects", hero_backup_t:"Project Manager", hero_backup_d:"Which projects are backed up twice, which only once — and what's still active vs. long done?",
    hero_gather_eb:"Deliver", hero_gather_t:"Gather & Transfer", hero_gather_d:"Collect files across all drives. Disky tells you which drives to plug in, and copies everything to your destination.",
    acct_signin:"Sign in",
    fb_btn:"Feedback & help", fb_badge:"fast reply", fb_title:"Feedback & help",
@@ -4087,9 +4103,9 @@ async function renderMap(){
   fillMapInfo(drives.find(d=>d.id===mapDriveId));
 }
 // relative Zeit „vor X"
-function agoStr(ms){ if(!ms) return ""; const s=Math.max(0,(Date.now()-ms)/1000);
-  if(s<90) return "gerade eben"; const m=s/60; if(m<90) return `vor ${Math.round(m)} Min`;
-  const h=m/60; if(h<36) return `vor ${Math.round(h)} Std`; return `vor ${Math.round(h/24)} Tg`; }
+function agoStr(ms){ if(!ms) return ""; const s=Math.max(0,(Date.now()-ms)/1000); const en=lang==="en";
+  if(s<90) return en?"just now":"gerade eben"; const m=s/60; if(m<90) return en?`${Math.round(m)} min ago`:`vor ${Math.round(m)} Min`;
+  const h=m/60; if(h<36) return en?`${Math.round(h)} h ago`:`vor ${Math.round(h)} Std`; return en?`${Math.round(h/24)} d ago`:`vor ${Math.round(h/24)} Tg`; }
 // „zuletzt gescannt · ↻ aktualisieren" — nur für die interne Mac-Platte (immer verbunden → up to date halten)
 function fillMapInfo(cur){
   const el=document.getElementById("mapInfo"); if(!el) return;
@@ -4130,6 +4146,7 @@ async function buildAndDraw(){
   if(window.diskyNative?.reveal){ try{ const drv=drives.find(d=>d.id===mapDriveId);
     const vols=await getVolumes(); const v=vols.find(x=>x.volumeName===drv?.volumeName||x.name===drv?.volumeName||x.volumeName===drv?.label||x.name===drv?.label);
     _mapMount=v?v.mount:null; }catch(e){} }
+  await new Promise(r=>setTimeout(r, 430));          // kurzer, bewusster Lade-Moment → der Glow-Platzhalter ist sichtbar, bevor sich das Rad ausbreitet
   document.querySelector(".sun-skel")?.remove();   // Daten da → Glow-Platzhalter weg, Rad breitet sich aus
   renderCleanup(files);
   drawSun();
