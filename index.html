@@ -2,7 +2,7 @@
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Disky — alle deine Festplatten. Ein Katalog.</title>
-<meta name="description" content="Disky katalogisiert deine Festplatten & SSDs: finde jede Datei offline wieder, sieh deinen Speicher als interaktives Rad und entdecke Duplikate über alle Laufwerke. Läuft lokal im Browser.">
+<meta name="description" content="Disky katalogisiert deine Festplatten & SSDs: finde jede Datei offline wieder, sieh deinen Speicher als interaktives Rad und entdecke Duplikate über alle Laufwerke. Native Mac-App — lokal & offline.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="theme-color" content="#0a0c10">
 <meta property="og:title" content="Disky — alle deine Festplatten. Ein Katalog.">
@@ -864,7 +864,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
     <div class="sc-text">
       <div class="sc-eyebrow" data-t="sc5_eb">Privatsphäre</div>
       <h3 data-t="sc5_h3">Deine Daten bleiben deine.</h3>
-      <p data-th="sc5_p">Alles läuft lokal in deinem Browser. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.</p>
+      <p data-th="sc5_p">Alles läuft lokal auf deinem Mac. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.</p>
     </div>
     <div class="sc-vis">
       <svg viewBox="0 0 120 130">
@@ -1121,7 +1121,7 @@ const I18N={
  sc4_p:{de:`Disky erkennt gleiche Dateien über alle Platten hinweg — selbst wenn sie anders heißen — und sagt dir auf den Gigabyte genau, wie viel du freiräumen kannst.`,en:`Disky detects identical files across all your drives — even when they're named differently — and tells you to the gigabyte exactly how much you can free up.`},
  sc5_eb:{de:`Privatsphäre`,en:`Privacy`},
  sc5_h3:{de:`Deine Daten bleiben deine.`,en:`Your data stays yours.`},
- sc5_p:{de:`Alles läuft lokal in deinem Browser. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.`,en:`Everything runs locally in your browser. No upload, no cloud, no forced account. Disky <b>only reads</b> — and never changes anything on your drives.`},
+ sc5_p:{de:`Alles läuft lokal auf deinem Mac. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.`,en:`Everything runs locally on your Mac. No upload, no cloud, no forced account. Disky <b>only reads</b> — and never changes anything on your drives.`},
  pr_h2:{de:`Fair & einfach`,en:`Fair & simple`},
  pr_sub:{de:`Die ersten 2 Platten sind gratis. Danach, wie du willst:`,en:`The first 2 drives are free. After that, your choice:`},
  pr_free_t:{de:`Kostenlos`,en:`Free`},
@@ -1299,16 +1299,16 @@ document.getElementById("buyMonthly")?.addEventListener("click",e=>{e.preventDef
 const FAQ={
  de:[
   ["Ist Disky sicher? Kann es Dateien löschen?","Nein. Disky liest deine Platten nur, um den Katalog zu erstellen — es kann technisch nichts löschen, verschieben oder verändern. Duplikate werden nur angezeigt; wegwerfen tust du selbst."],
-  ["Funktioniert das wirklich offline?","Ja. Du scannst jede Platte einmal, danach liegt der Katalog lokal in deinem Browser. Suchen, Karte und Duplikate funktionieren auch, wenn die Platte abgesteckt ist — komplett ohne Internet."],
-  ["Welche Browser werden unterstützt?","Zum Scannen brauchst du Chrome oder Edge (die nötige Lese-Technik fehlt in Safari/Firefox). Ansehen geht überall."],
+  ["Funktioniert das wirklich offline?","Ja. Du scannst jede Platte einmal, danach liegt der Katalog lokal auf deinem Mac. Suchen, Karte und Duplikate funktionieren auch, wenn die Platte abgesteckt ist — komplett ohne Internet."],
+  ["Auf welchen Macs läuft Disky?","Disky ist eine native Mac-App für macOS 12 oder neuer auf Apple Silicon (M1–M4). Kein Browser, kein Plug-in — einfach laden und scannen."],
   ["Was kostet Disky?","Die ersten 2 Platten sind gratis — mit vollem Funktionsumfang. Für unbegrenzt viele Platten: 4,99 €/Monat oder 49,99 €/Jahr."],
   ["Wie aktiviere ich Pro auf einem zweiten Gerät?","Mit deinem Lizenzschlüssel: oben rechts auf Anmelden klicken und den Schlüssel eingeben."],
   ["Werden meine Daten hochgeladen?","Nein. Es gibt keinen Upload und keine Cloud. Alles bleibt auf deinem Rechner."],
  ],
  en:[
   ["Is Disky safe? Can it delete files?","No. Disky only reads your drives to build the catalog — it technically cannot delete, move or change anything. Duplicates are only shown; you do the deleting yourself."],
-  ["Does it really work offline?","Yes. You scan each drive once, then the catalog lives locally in your browser. Search, map and duplicates work even when the drive is unplugged — completely without internet."],
-  ["Which browsers are supported?","To scan you need Chrome or Edge (Safari/Firefox lack the required read access). Viewing works everywhere."],
+  ["Does it really work offline?","Yes. You scan each drive once, then the catalog lives locally on your Mac. Search, map and duplicates work even when the drive is unplugged — completely without internet."],
+  ["Which Macs does Disky run on?","Disky is a native Mac app for macOS 12 or newer on Apple Silicon (M1–M4). No browser, no plug-in — just download and scan."],
   ["What does Disky cost?","The first 2 drives are free — with the full feature set. For unlimited drives: €4.99/month or €49.99/year."],
   ["How do I activate Pro on a second device?","With your license key: click Sign in at the top right and enter the key."],
   ["Is my data uploaded?","No. There's no upload and no cloud. Everything stays on your machine."],
