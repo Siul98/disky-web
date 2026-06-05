@@ -1515,6 +1515,26 @@ if (sec && canvas && stage && screenEl) {
       mixer = new THREE.AnimationMixer(model); clip = gltf.animations[0];
       const a = mixer.clipAction(clip); a.play();   // nicht pausen! sonst ignoriert setTime() den Clip
     }
+    // MacBook geladen: smooth einblenden statt hartem Pop-in
+    macRoot.traverse(o=>{ if(o.isMesh && o.material){
+      const mats=Array.isArray(o.material)?o.material:[o.material];
+      mats.forEach(m=>{ m.transparent=true; m.opacity=0; m.needsUpdate=true; });
+    }});
+    let _fadeT=0; const _fadeStep=()=>{
+      _fadeT=Math.min(1,_fadeT+0.04);
+      const eas=_fadeT*_fadeT*(3-2*_fadeT); // smoothstep
+      macRoot.traverse(o=>{ if(o.isMesh&&o.material){
+        const mats=Array.isArray(o.material)?o.material:[o.material];
+        mats.forEach(m=>{ if(m.transparent) m.opacity=eas; });
+      }});
+      needsRender=true;
+      if(_fadeT<1) requestAnimationFrame(_fadeStep);
+      else macRoot.traverse(o=>{ if(o.isMesh&&o.material){
+        const mats=Array.isArray(o.material)?o.material:[o.material];
+        mats.forEach(m=>{ m.transparent=false; m.opacity=1; m.needsUpdate=true; });
+      }});
+    };
+    requestAnimationFrame(_fadeStep);
     ready = true; computeScreenTarget(); frameView(); apply();   // Screen-Ziel + Framing mit geladenem Modell
     window.__mb = { setP:(v)=>{ p=v; apply(); renderer.render(scene,cam); },
       info:()=>{ const L=model.getObjectByName('Bevels_2'); const w=L?Math.min(1,Math.abs(L.quaternion.w)):1;
