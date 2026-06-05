@@ -1277,6 +1277,8 @@ if (sec && canvas && stage && screenEl) {
         macRoot.rotation.y=-0.26; macRoot.updateMatrixWorld(true);
         const b=new THREE.Box3().setFromObject(model), s=b.getSize(new THREE.Vector3()), c=b.getCenter(new THREE.Vector3());
         presBox={ hw:s.x/2, hh:s.y/2, cx:c.x, cy:c.y };
+        if(screenMesh){ const sb=new THREE.Box3().setFromObject(screenMesh), sc=sb.getCenter(new THREE.Vector3()), ssz=sb.getSize(new THREE.Vector3());
+          presBox.scx=sc.x; presBox.scy=sc.y; presBox.shw=ssz.x/2; presBox.shh=ssz.y/2; }   // Screen-Box: der lesbare Teil, der NIE in den Feather laufen darf
         macRoot.rotation.y=wasR2; macRoot.updateMatrixWorld(true); if(wasT2!=null&&mixer&&clip)mixer.setTime(wasT2); }
     }
   }
@@ -1466,12 +1468,17 @@ if (sec && canvas && stage && screenEl) {
       // PRÄSENTATION adaptiv: den gedrehten Laptop so einpassen, dass er GROSS ist und garantiert komplett im Bild bleibt — auf JEDER Auflösung.
       const tanV = Math.tan(cam.fov*Math.PI/360);   // halbes vertikales FOV
       const tanH = tanV * cam.aspect;               // halbes horizontales FOV (live Fenster-Aspect)
-      const M = 1.18, TX = 0.06;                   // Laptop GROSS & präsent — Kanten laufen bewusst in den weichen Feather aus (.mb-stage-Maske), nie ein harter Schnitt; leicht rechts der Bildmitte
+      // WICHTIG: Distanz wird am SCREEN bemessen, nicht am ganzen Laptop. So bleibt der lesbare Screen IMMER komplett & außerhalb des Feathers;
+      // nur Rahmen/Tastatur dürfen über den Rand in den weichen Auslauf laufen. (Ursache des alten „Abschneidens": Laptop auf 118% → Screen-Kante lief in den Feather.)
+      const MsV = 0.86, MxH = 0.99, TX = 0.06;     // Screen füllt vertikal 86% (sicher im Bild); Laptop-Körper horizontal bis 99% (Seiten feathern); leicht rechts der Mitte
       let presDist, presAimX, presAimY;
-      if(presBox){
-        presDist  = Math.max(presBox.hh/(M*tanV), presBox.hw/((M-TX)*tanH));   // Distanz, bei der weder Höhe noch (rechts versetzte) Breite über den Rand laufen
-        presAimX  = presBox.cx - TX*presDist*tanH;                              // Kamera-Ziel so, dass die Laptop-Mitte bei NDC +TX landet
-        presAimY  = presBox.cy;                                                 // vertikal zentriert
+      if(presBox && presBox.shh){
+        presDist  = Math.max(presBox.shh/(MsV*tanV), presBox.hw/((MxH-TX)*tanH));   // vertikal: Screen sicher; horizontal: Laptop-Breite darf an die Feather-Kante
+        presAimX  = presBox.scx - TX*presDist*tanH;
+        presAimY  = presBox.scy;                                                    // auf die Screen-Mitte → Header oben bleibt drin, Tastatur läuft unten weich aus
+      } else if(presBox){
+        presDist  = Math.max(presBox.hh/(0.99*tanV), presBox.hw/((MxH-TX)*tanH));
+        presAimX  = presBox.cx - TX*presDist*tanH; presAimY = presBox.cy;
       } else { presDist = DIST0*1.06; presAimX = -340; presAimY = 360; }
       // Blend INTRO (frontal, zentriert) → PRÄSENTATION (adaptiv) über ie  (ie=1 Intro, ie=0 Präsentation)
       const dist = introDist*ie + presDist*(1-ie);
