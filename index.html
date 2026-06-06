@@ -397,8 +397,8 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 /* Merged Hero: Jarvis-Headline + CTAs im Kopf der MacBook-Sektion */
 .mb-head{will-change:opacity,transform}
 /* Größer & cooler — tighter Tracking, knappe Zeilenhöhe; der untere Rand taucht hinter dem Laptop ab (z5 > z3) */
-/* Schriftgröße zusätzlich durch die Viewport-HÖHE begrenzt → 2 Zeilen laufen auf kurzen Fenstern nie oben aus dem Bild */
-.mb-head .hero-h{margin:0 auto 18px;max-width:16ch;font-size:min(clamp(40px,6.4vw,84px), 11.5vh);letter-spacing:-.035em;line-height:1.02}
+/* Schriftgröße zusätzlich durch die Viewport-HÖHE begrenzt → 2 Zeilen passen auf kurzen Fenstern immer komplett über den Laptop, nie oben angeschnitten */
+.mb-head .hero-h{margin:0 auto 18px;max-width:16ch;font-size:min(clamp(38px,6.2vw,82px), 9.5vh);letter-spacing:-.035em;line-height:1.02}
 .mb-head .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:14px}
 /* Aura: lebendiges Leuchten + Light-Rays + Staubpartikel HINTER dem Laptop */
 .mb-aura{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
@@ -1682,8 +1682,9 @@ if (sec && canvas && stage && screenEl) {
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
       mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
       // Intro: Laptop GROSS & tief — Basis unter dem Fold, nur der obere Screen-Rand lugt hoch & überdeckt den Titel-Boden.
+      // Auf KURZEN Fenstern extra nach unten, damit der (kompaktere) Titel komplett über dem Laptop bleibt — nie überdeckt.
       // Beim Scrollen (hsmooth 1→0) steigt er auf, klappt weiter aus und kommt voll ins Bild.
-      downShift = mob ? 0 : hsmooth * innerHeight * 0.20;
+      downShift = mob ? 0 : hsmooth * (innerHeight * 0.20 + Math.max(0, 800 - innerHeight) * 0.5);
     }
     // Overline über dem Laptop: blendet ein, sobald die Headline weg ist (Präsentation)
     if(mbOver){ const op=Math.max(0,Math.min(1,(p-0.35)/0.13)); mbOver.style.opacity=(mob?0:op*op*(3-2*op)).toFixed(3); }   // Overline kommt ERST, wenn die Headline weg ist (sauberer Wechsel)
