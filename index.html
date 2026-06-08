@@ -1458,7 +1458,10 @@ if (sec && canvas && stage && screenEl) {
   const rim4 = new THREE.DirectionalLight(0xb4d6ff, 3.8); rim4.position.set(1300, 360, -1150); scene.add(rim4);    // hinten-rechts, flach → rechte Kante
   scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
 
-  // Echte Disky-App als LIVE-HTML (CSS3D) auf dem Display → animiert & identisch zur App
+  // PERFORMANCE: Das Display zeigt die statische Cockpit-Textur (echter Screenshot, 1:1) statt einer LIVE-App im iframe.
+  // Das live iframe (eigener App-Lauf + CSS3D-Neukomposition pro Frame) war die Haupt-Lag-Quelle. Bei Hero-Größe sieht der
+  // statische Screenshot identisch aus — aber das Scrollen/Rendern läuft butterweich. (Auf true → wieder Live-Screen.)
+  const LIVE_SCREEN = false;
   let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null, appHost = null, appGlare = null;
   // Display-Spiegelung an die aktuelle Drehung koppeln: mehr Drehung → Reflexion sichtbarer, Glanzstreifen wandert mit
   function updateGlare(roty){ if(!appGlare) return; const a=Math.min(1, Math.abs(roty)/0.42);
@@ -1541,6 +1544,7 @@ if (sec && canvas && stage && screenEl) {
       const ctr=new THREE.Vector3(); bb.getCenter(ctr);
       const dims=[['x',sz.x],['y',sz.y],['z',sz.z]].sort((a,b)=>a[1]-b[1]);
       const normalAxis=dims[0][0];                 // dünnste Achse = Display-Normale
+      if(LIVE_SCREEN){
       const host=document.createElement('div'); appHost=host;
       host.style.cssText='width:1600px;height:1000px;overflow:hidden;background:#0a0c10;opacity:0;transition:opacity .5s ease';
       appFrame=document.createElement('iframe');
@@ -1576,6 +1580,7 @@ if (sec && canvas && stage && screenEl) {
           if(q.sx!=null)cssObj.scale.x=q.sx; if(q.sy!=null)cssObj.scale.y=q.sy; if(q.flip!=null)cssObj.scale.x=Math.abs(cssObj.scale.x)*(q.flip?-1:1);
           renderer.render(scene,cam); css.render(scene,cam); },
         info:()=>({sz:sz.toArray().map(v=>+v.toFixed(1)), normalAxis, pos:cssObj.position.toArray().map(v=>+v.toFixed(1)), rot:[cssObj.rotation.x,cssObj.rotation.y,cssObj.rotation.z].map(v=>+v.toFixed(3)), scale:cssObj.scale.toArray().map(v=>+v.toFixed(4))}) };
+      }   // Ende if(LIVE_SCREEN)
     }
     // Schatten unter dem Modell
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.6, TARGET*1.3), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false }));
@@ -1599,10 +1604,11 @@ if (sec && canvas && stage && screenEl) {
       }});
       needsRender=true;
       if(_fadeT<1) requestAnimationFrame(_fadeStep);
-      else macRoot.traverse(o=>{ if(o.isMesh&&o.material){
+      else { macRoot.traverse(o=>{ if(o.isMesh&&o.material){
         const mats=Array.isArray(o.material)?o.material:[o.material];
         mats.forEach(m=>{ m.transparent=false; m.opacity=1; m.needsUpdate=true; });
       }});
+        var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }   // MacBook steht → Sofort-Poster sanft ausblenden (greift auch ohne Live-iframe)
     };
     requestAnimationFrame(_fadeStep);
     ready = true; computeScreenTarget(); frameView(); apply();   // Screen-Ziel + Framing mit geladenem Modell
@@ -1757,15 +1763,15 @@ if (sec && canvas && stage && screenEl) {
     const inView = r.bottom>-200 && r.top<innerHeight+200;
     if(!inView && _sd){ stopSearchDemo(); lastView=null; }   // außer Sicht: Tipp-Demo stoppen, beim Wiederkommen neu auslösen
     const now=performance.now();
-    if(inView && _idleOK && !isMobile() && macRoot && now-_lastIdle>33){
-      // SANFTE DAUERBEWEGUNG: der Laptop atmet leicht weiter (Scroll-Basis + Sinus-Drift) → steht nie ganz still. ~30fps gedrosselt.
+    if(inView && _idleOK && !isMobile() && macRoot && now-_lastIdle>40){
+      // SANFTE DAUERBEWEGUNG: der Laptop atmet leicht weiter — jetzt NUR WebGL (kein iframe/CSS3D mehr) → sehr günstig. ~25fps gedrosselt.
       _lastIdle=now; const t=now/1000;
       macRoot.rotation.y=_baseRotY + Math.sin(t*0.5)*0.021;
       macRoot.rotation.x=Math.sin(t*0.37+1.2)*0.011;
       updateGlare(macRoot.rotation.y);
-      renderer.render(scene,cam); css.render(scene,cam); needsRender=false;
+      renderer.render(scene,cam); if(cssScreen) css.render(scene,cam); needsRender=false;
     } else if(needsRender){
-      if(inView){ renderer.render(scene,cam); css.render(scene,cam); }
+      if(inView){ renderer.render(scene,cam); if(cssScreen) css.render(scene,cam); }
       needsRender=false;
     }
     raf=requestAnimationFrame(frame);
