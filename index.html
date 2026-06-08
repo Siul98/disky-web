@@ -1368,8 +1368,8 @@ if (sec && canvas && stage && screenEl) {
 
   // Boden-Schatten (weiche Kontaktfläche)
   const shadowTex = (()=>{ const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d');
-    const rg=g.createRadialGradient(128,128,4,128,128,116); rg.addColorStop(0,'rgba(0,0,0,.5)'); rg.addColorStop(.42,'rgba(0,0,0,.24)'); rg.addColorStop(.72,'rgba(0,0,0,.06)'); rg.addColorStop(1,'rgba(0,0,0,0)');
-    g.fillStyle=rg; g.fillRect(0,0,256,256); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();   // weicher Blob, an den Rändern komplett transparent → kein hartes Rechteck
+    const rg=g.createRadialGradient(128,128,2,128,128,126); rg.addColorStop(0,'rgba(0,0,0,.66)'); rg.addColorStop(.26,'rgba(0,0,0,.34)'); rg.addColorStop(.54,'rgba(0,0,0,.10)'); rg.addColorStop(.78,'rgba(0,0,0,.02)'); rg.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=rg; g.fillRect(0,0,256,256); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();   // dunkler, enger Kern + langer weicher Auslauf → realistischer Kontaktschatten, Ränder komplett transparent
 
   const macRoot = new THREE.Group(); scene.add(macRoot);
   let mixer=null, clip=null, model=null, ready=false;
@@ -1508,9 +1508,10 @@ if (sec && canvas && stage && screenEl) {
         info:()=>({sz:sz.toArray().map(v=>+v.toFixed(1)), normalAxis, pos:cssObj.position.toArray().map(v=>+v.toFixed(1)), rot:[cssObj.rotation.x,cssObj.rotation.y,cssObj.rotation.z].map(v=>+v.toFixed(3)), scale:cssObj.scale.toArray().map(v=>+v.toFixed(4))}) };
       }   // Ende if(LIVE_SCREEN)
     }
-    // Schatten unter dem Modell
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.25, TARGET*0.78), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false, opacity:0.42 }));
-    shadow.rotation.x=-Math.PI/2; shadow.position.y=-TARGET*0.27; shadow.position.z=TARGET*0.04; macRoot.add(shadow);   // flacher, breiter, weicher Kontakt-Schatten direkt unter dem Laptop
+    // Kontaktschatten EXAKT an der Laptop-Basis (statt geraten) — eng, weich, realistisch
+    const _mbb=new THREE.Box3().setFromObject(model), _mc=_mbb.getCenter(new THREE.Vector3());
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*0.96, TARGET*0.56), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false, opacity:0.55 }));
+    shadow.rotation.x=-Math.PI/2; shadow.position.set(_mc.x, _mbb.min.y + TARGET*0.004, _mc.z + TARGET*0.05); macRoot.add(shadow);
     // Aufklapp-Animation (wird beim Scrollen gescrubbt)
     if (gltf.animations && gltf.animations.length){
       mixer = new THREE.AnimationMixer(model); clip = gltf.animations[0];
