@@ -1534,6 +1534,25 @@ if (sec && canvas && stage && screenEl) {
       x.save();
       for(const st of STARS){ const tw=0.5+0.5*Math.sin(t*0.9+st.p); x.globalAlpha=st.a*(0.35+0.65*tw); x.fillStyle='#dbe8ff'; x.beginPath(); x.arc(st.x,st.y,st.r,0,7); x.fill(); }
       x.restore();
+      // ── Atom „lebt": pulsierender Kern + umlaufende Elektronen (leicht, additives Licht über dem Standbild) ──
+      const ax=908, ay=540;
+      x.save(); x.globalCompositeOperation='lighter';
+      const pa=0.5+0.5*Math.sin(t*1.5);
+      const cg=x.createRadialGradient(ax,ay,0,ax,ay,140);
+      cg.addColorStop(0,'rgba(120,180,255,'+(0.09+0.15*pa).toFixed(3)+')');
+      cg.addColorStop(0.55,'rgba(60,130,240,'+(0.03+0.05*pa).toFixed(3)+')');
+      cg.addColorStop(1,'rgba(60,130,240,0)');
+      x.fillStyle=cg; x.beginPath(); x.arc(ax,ay,140,0,7); x.fill();
+      x.fillStyle='rgba(205,228,255,'+(0.32+0.5*pa).toFixed(3)+')'; x.beginPath(); x.arc(ax,ay,5+1.6*pa,0,7); x.fill();
+      const rx=98, ry=30, rots=[0,1.05,2.1], spd=[1.1,-0.9,1.35];
+      for(let e=0;e<3;e++){ const th=t*spd[e]+e*2.1, c=Math.cos(rots[e]), s2=Math.sin(rots[e]);
+        const exx=Math.cos(th)*rx, eyy=Math.sin(th)*ry;
+        const px=ax+exx*c-eyy*s2, py=ay+exx*s2+eyy*c;
+        const eg=x.createRadialGradient(px,py,0,px,py,15); eg.addColorStop(0,'rgba(160,215,255,0.85)'); eg.addColorStop(1,'rgba(120,180,255,0)');
+        x.fillStyle=eg; x.beginPath(); x.arc(px,py,15,0,7); x.fill();
+        x.fillStyle='rgba(225,242,255,0.95)'; x.beginPath(); x.arc(px,py,2.5,0,7); x.fill();
+      }
+      x.restore();
       tex.needsUpdate=true;
     }
     return {tex, draw};
@@ -1793,12 +1812,14 @@ if (sec && canvas && stage && screenEl) {
   resize();
   // PERFORMANCE: nur rendern, wenn sich was ändert (Scroll/Resize/Laden) — kein 60fps-Dauerrendern im Leerlauf.
   // Das Live-iframe animiert (Uhr/Atom) als eigene DOM-Ebene von selbst weiter, auch ohne Re-Render.
-  let _lastIdle=0;
+  let _lastIdle=0, _lastScreen=0;
   function frame(){
     const r=sec.getBoundingClientRect();
     const inView = r.bottom>-200 && r.top<innerHeight+200;
     if(!inView && _sd){ stopSearchDemo(); lastView=null; }   // außer Sicht: Tipp-Demo stoppen, beim Wiederkommen neu auslösen
     const now=performance.now();
+    // Screen „lebt": Textur mit ~12fps neu zeichnen (Atom pulsiert/umkreist) — nur sichtbar + wenn Bewegung erlaubt. Sehr günstig (Canvas + 1 Texture-Upload).
+    if(drawScreen && inView && _idleOK && !isMobile() && now-_lastScreen>80){ _lastScreen=now; drawScreen(now*0.001); needsRender=true; }
     if(inView && _idleOK && !isMobile() && macRoot && now-_lastIdle>40){
       // SANFTE DAUERBEWEGUNG: der Laptop atmet leicht weiter — jetzt NUR WebGL (kein iframe/CSS3D mehr) → sehr günstig. ~25fps gedrosselt.
       _lastIdle=now; const t=now/1000;
