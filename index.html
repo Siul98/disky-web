@@ -423,6 +423,9 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   -webkit-mask-composite:source-in;
   mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 93%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 3%,#000 94%,transparent 100%);
   mask-composite:intersect}
+/* Sofort-Poster: statisches (transparentes) MacBook-Standbild, sichtbar bevor Three.js+GLB laden → Hero ist auf jedem Gerät SOFORT da. Blendet weich weg, sobald die echte 3D-App im Screen steht. */
+.mb-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;z-index:6;opacity:1;transition:opacity .8s ease;pointer-events:none}
+.mb-poster.gone{opacity:0}
 .mb-gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;will-change:transform}
 .mb-css3d{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4;will-change:transform}
 /* #mbScreens = Bildschirm-Inhalt (feste Design-Pixel, von CSS3D ins 3D-Modell platziert) */
@@ -494,6 +497,9 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
   "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
 }}
 </script>
+<!-- Schneller auf frischem Gerät: Three.js früh anstoßen + GLB vorladen (laufen parallel zum Sofort-Poster) -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js">
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -522,6 +528,7 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
       <h2 class="mb-over-h" data-th="mb_over_h">See <b>everything</b>. Find <b>anything</b>. Lose <b>nothing</b>.</h2>
     </div>
     <div class="mb-stage">
+      <img class="mb-poster" id="mbPoster" src="assets/hero-poster-de.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
       <canvas class="mb-gl"></canvas>
       <div class="mb-css3d" aria-hidden="true"></div>
       <div class="mb-screens" id="mbScreens">
@@ -1182,6 +1189,7 @@ function applyLang(l){if(l)LANG=l;localStorage.setItem('diskyLang',LANG);
   document.querySelectorAll('[data-t]').forEach(el=>el.textContent=tt(el.getAttribute('data-t')));
   document.querySelectorAll('[data-th]').forEach(el=>el.innerHTML=tt(el.getAttribute('data-th')));
   document.querySelectorAll('[data-tph]').forEach(el=>el.placeholder=tt(el.getAttribute('data-tph')));
+  var _pp=document.getElementById('mbPoster'); if(_pp){ var _ps='assets/hero-poster-'+LANG+'.webp'; if(_pp.getAttribute('src')!==_ps) _pp.src=_ps; }
   if(typeof renderFAQ==='function')renderFAQ();
   if(typeof renderAccount==='function')renderAccount();
   updateLangBtn();
@@ -1369,14 +1377,16 @@ if (sec && canvas && stage && screenEl) {
  let _mbStarted=false;
  async function startMB(){
   if(_mbStarted) return; _mbStarted=true;
+  setTimeout(()=>{ var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }, 7000);   // Sicherheitsnetz: Poster spätestens nach 7s weg (falls iframe-App nie lädt) → echtes 3D wird sichtbar
   const THREE = await import('three');
   const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
   const { CSS3DRenderer, CSS3DObject } = await import('three/addons/renderers/CSS3DRenderer.js');
   const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
+  const { MeshoptDecoder } = await import('three/addons/libs/meshopt_decoder.module.js');   // entpackt die komprimierte (meshopt) GLB — Decoder aus demselben CDN
   const W0 = ()=>stage.clientWidth||960, H0 = ()=>stage.clientHeight||560;
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-  renderer.setPixelRatio(Math.min(2, devicePixelRatio||1));
+  renderer.setPixelRatio(Math.min(1.5, devicePixelRatio||1));   // Retina-Cap 1.5 → deutlich flüssiger, Antialias kaschiert den Rest
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.86;
@@ -1494,7 +1504,7 @@ if (sec && canvas && stage && screenEl) {
   // LAZY: erst laden, wenn die Sektion in die Nähe scrollt (spart 5 MB GLB + iframe beim Initial-Load)
   let _macLoading=false;
   function loadMac(){ if(_macLoading) return; _macLoading=true;
-  new GLTFLoader().load('assets/macbook.glb', (gltf)=>{
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('assets/macbook.glb', (gltf)=>{
     model = gltf.scene;
     // Zentrieren + auf feste Größe skalieren (GLB-Einheiten unbekannt → Auto-Fit)
     let box = new THREE.Box3().setFromObject(model);
@@ -1539,7 +1549,7 @@ if (sec && canvas && stage && screenEl) {
       appFrame.style.cssText='width:1600px;height:1000px;border:0;display:block;background:#0a0c10;pointer-events:none';
       // iframe lädt + seedet + reloadt intern → erst wenn die echte App da ist einblenden.
       // Solange zeigt das statische Cockpit-PNG dahinter (fast identisch → nahtlos).
-      appFrame.addEventListener('load', ()=>{ lastView=null; setTimeout(()=>{ host.style.opacity='1'; lastView=null; if(ready) apply(); }, 600); });
+      appFrame.addEventListener('load', ()=>{ lastView=null; setTimeout(()=>{ host.style.opacity='1'; lastView=null; if(ready) apply(); var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }, 600); });
       host.appendChild(appFrame);
       // Großflächige, weiche Display-Spiegelung — wandert beim Drehen (Update in apply()/Idle via updateGlare). Sehr dezent, blend „screen".
       const glare=document.createElement('div'); appGlare=glare;
