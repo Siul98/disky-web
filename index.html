@@ -451,11 +451,21 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
-.mb-caps{position:absolute;left:max(4vw,26px);top:50%;transform:translateY(-50%);width:min(460px,42vw);display:flex;flex-direction:column;gap:20px;z-index:6;pointer-events:none}
-.mb-cap{position:relative;display:flex;gap:15px;align-items:flex-start;opacity:0;visibility:hidden;transform:translateY(22px);
-  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s linear .6s}
-.mb-cap.shown{opacity:.5;visibility:visible;transform:none;filter:saturate(.45);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,visibility 0s}
-.mb-cap.on{opacity:1;visibility:visible;transform:none;filter:none}
+.mb-caps{position:absolute;left:max(4vw,30px);top:50%;transform:translateY(-50%);width:min(470px,40vw);display:flex;flex-direction:column;gap:13px;z-index:6;pointer-events:none}
+/* Feature-Tiles als Liquid-Glass-Karten */
+.mb-cap{position:relative;display:flex;gap:16px;align-items:flex-start;padding:17px 20px;border-radius:19px;isolation:isolate;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.015) 60%);border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(11px) saturate(150%);-webkit-backdrop-filter:blur(11px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 12px 34px rgba(0,0,0,.3);
+  opacity:0;visibility:hidden;transform:translateY(22px);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,border-color .45s ease,background .45s ease,box-shadow .45s ease,visibility 0s linear .6s}
+.mb-cap::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 42%);mix-blend-mode:screen;opacity:.7}
+.mb-cap.shown{opacity:.62;visibility:visible;transform:none;filter:saturate(.6);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,border-color .45s ease,background .45s ease,box-shadow .45s ease,visibility 0s}
+.mb-cap.on{opacity:1;visibility:visible;transform:none;filter:none;
+  background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(255,255,255,.03) 65%);border-color:rgba(122,162,255,.45);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 0 0 1px rgba(122,162,255,.16),0 16px 48px rgba(40,80,200,.30)}
+html.lite .mb-cap{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.045)}
+html.lite .mb-cap.on{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(255,255,255,.03))}
 /* kleine Index-Nummer 01..04 — über dem Titel in der Textspalte (überlappt das Icon nicht) */
 .mb-num{display:block;font-family:var(--fdisp),system-ui;font-size:10.5px;font-weight:800;letter-spacing:.24em;color:rgba(140,165,210,.42);margin-bottom:3px;transition:color .45s ease,text-shadow .45s ease}
 .mb-cap.on .mb-num{color:#9db6ff;text-shadow:0 0 12px rgba(91,140,255,.6)}
@@ -762,165 +772,6 @@ try{ if(!window.__LITE){
   </div>
 </section>
 
-<section class="section showcases">
-  <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="sc_eb">Was Disky kann</span></span></div>
-  <h2 class="sec" data-t="sc_h2">Sechs Superkräfte für dein Archiv.</h2>
-  <p class="sec-sub" data-t="sc_sub">Jede einzeln stark. Zusammen unschlagbar.</p>
-  <div class="showcase rev">
-    <div class="sc-text">
-      <div class="sc-eyebrow" data-t="sc_asst_eb">Dein Assistent · im Hintergrund</div>
-      <h3 data-t="sc_asst_h3">Disky arbeitet für dich — nicht umgekehrt.</h3>
-      <p data-th="sc_asst_p">Disky läuft still im Hintergrund und meldet sich nur, wenn's zählt: <b>welches Projekt noch kein Backup hat</b>, wo unnötiger Speicher liegt, was du gefahrlos freiräumen kannst. Kein Mehraufwand — Disky nimmt dir Arbeit ab.</p>
-    </div>
-    <div class="sc-vis">
-      <svg viewBox="0 0 240 210">
-        <rect x="6" y="16" width="228" height="178" rx="16" fill="#11151c" stroke="#2a3340"/>
-        <circle class="sca-spark" cx="30" cy="40" r="11" fill="rgba(74,158,255,.16)"/>
-        <path class="sca-spark" fill="#4a9eff" d="M30 33 l1.6 4 l4 1.6 l-4 1.6 l-1.6 4 l-1.6 -4 l-4 -1.6 l4 -1.6 Z"/>
-        <rect x="48" y="35" width="92" height="9" rx="4.5" fill="#cdd5e0" opacity=".55"/>
-        <g class="sca-tip"><rect x="20" y="64" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="64" width="3.5" height="34" rx="2" fill="#4ade80"/><rect x="34" y="73" width="150" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="84" width="96" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="85" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
-        <g class="sca-tip sca-d2"><rect x="20" y="106" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="106" width="3.5" height="34" rx="2" fill="#ff6b6b"/><rect x="34" y="115" width="140" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="126" width="80" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="127" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
-        <g class="sca-tip sca-d3"><rect x="20" y="148" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="148" width="3.5" height="34" rx="2" fill="#4a9eff"/><rect x="34" y="157" width="120" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="168" width="92" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="169" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
-      </svg>
-    </div>
-  </div>
-  <div class="showcase">
-    <div class="sc-text">
-      <div class="sc-eyebrow" data-t="sc1_eb">Offline-Katalog · der Kern</div>
-      <h3 data-t="sc1_h3">Finde dein Projekt — ohne eine einzige Platte anzustecken.</h3>
-      <p data-th="sc1_p">Disky hält <b>jede Festplatte offline einsehbar</b>. Tippe einen Projekt- oder Dateinamen und sieh in Sekunden, <b>auf welcher Platte</b> es liegt — auch wenn alle längst im Schrank liegen. Nie wieder zehn Platten durchstecken, nur um eine Datei zu suchen.</p>
-    </div>
-    <div class="sc-vis">
-      <svg viewBox="0 0 240 210">
-        <!-- Suchleiste -->
-        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
-        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
-        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif" data-t="m_wedding">Hochzeit Mai</text>
-        <!-- Treffer: gefunden auf einer (offline) Platte -->
-        <g font-family="-apple-system,sans-serif">
-          <g>
-            <rect x="8" y="54" width="224" height="44" rx="11" fill="rgba(74,158,255,.12)" stroke="#4a9eff"/>
-            <rect x="20" y="68" width="22" height="16" rx="3" fill="#f3701f"/><circle cx="31" cy="76" r="3.2" fill="#1a1f27"/>
-            <text x="52" y="73" fill="#eef1f6" font-size="12" font-weight="700">LaCie Rugged</text>
-            <text x="52" y="88" fill="#9aa6b8" font-size="9.5" data-t="m_weddingpath">/Hochzeit Mai · 248 GB</text>
-            <g class="scd-check"><g transform="translate(202,68)"><circle cx="8" cy="8" r="9" fill="#4a9eff"/><path d="M4 8.5 l2.6 2.6 l4.8 -5.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>
-          </g>
-          <g opacity=".5">
-            <rect x="8" y="106" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
-            <rect x="20" y="116" width="22" height="16" rx="3" fill="#2b313c"/>
-            <text x="52" y="129" fill="#cdd5e0" font-size="12" font-weight="600">Studio RAID</text>
-            <g transform="translate(176,116)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
-          </g>
-          <g opacity=".5">
-            <rect x="8" y="152" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
-            <rect x="20" y="162" width="22" height="16" rx="3" fill="#2b313c"/>
-            <text x="52" y="175" fill="#cdd5e0" font-size="12" font-weight="600" data-t="m_archive">Archiv 2023</text>
-            <g transform="translate(176,162)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
-          </g>
-        </g>
-      </svg>
-    </div>
-  </div>
-
-  <div class="showcase rev">
-    <div class="sc-text">
-      <div class="sc-eyebrow" data-t="sc2_eb">KI-Suche · 100% lokal</div>
-      <h3 data-t="sc2_h3">Such nach Inhalt — nicht nach Dateinamen.</h3>
-      <p data-th="sc2_p">Tippe „underwater" und Disky zeigt dir jeden Clip mit Wasser — über all deine Platten,
-        ohne eine einzige anzustecken. Die KI läuft komplett auf deinem Mac: kein Upload, keine Cloud.</p>
-    </div>
-    <div class="sc-vis">
-      <svg viewBox="0 0 240 210">
-        <defs>
-          <linearGradient id="oc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fc8ff"/><stop offset="1" stop-color="#0a4d8c"/></linearGradient>
-          <linearGradient id="oc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd6c6"/><stop offset="1" stop-color="#0c5f72"/></linearGradient>
-        </defs>
-        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
-        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
-        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif">underwater</text>
-        <g class="scai-thumbs">
-          <rect x="8" y="54" width="108" height="68" rx="11" fill="url(#oc1)"/>
-          <rect x="124" y="54" width="108" height="68" rx="11" fill="url(#oc2)"/>
-          <rect x="8" y="130" width="108" height="68" rx="11" fill="url(#oc2)"/>
-          <rect x="124" y="130" width="108" height="68" rx="11" fill="url(#oc1)"/>
-        </g>
-        <g class="scai-plays" fill="#ffffff" opacity="0.92">
-          <path d="M57 80 v16 l13 -8 Z"/><path d="M173 80 v16 l13 -8 Z"/>
-          <path d="M57 156 v16 l13 -8 Z"/><path d="M173 156 v16 l13 -8 Z"/>
-        </g>
-        <g font-family="-apple-system,sans-serif" font-size="9" font-weight="700">
-          <g><rect x="92" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="69.5" text-anchor="middle" fill="#7fd0ff">94</text></g>
-          <g><rect x="208" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="69.5" text-anchor="middle" fill="#7fd0ff">88</text></g>
-          <g><rect x="92" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="145.5" text-anchor="middle" fill="#7fd0ff">85</text></g>
-          <g><rect x="208" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="145.5" text-anchor="middle" fill="#7fd0ff">79</text></g>
-        </g>
-      </svg>
-    </div>
-  </div>
-
-  <div class="showcase">
-    <div class="sc-text">
-      <div class="sc-eyebrow" data-t="sc3_eb">Speicher-Karte</div>
-      <h3 data-t="sc3_h3">Sieh sofort, was Platz frisst.</h3>
-      <p data-th="sc3_p">Die Speicher-Karte zeigt jeden Ordner als Ring. Klick dich rein, bis du die eine Datei findest, die 200 GB blockiert. Ein <b>Aufräum-Assistent</b> markiert sogar automatisch Entbehrliches — After-Effects-/Premiere-Cache, Proxies und Duplikate — und rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst. Gelöscht wird nur, was du selbst freigibst.</p>
-    </div>
-    <div class="sc-vis">
-      <svg viewBox="0 0 120 120">
-        <g class="scsm-spin"><g transform="rotate(-90 60 60)" fill="none" stroke-width="17" pathLength="100">
-          <circle cx="60" cy="60" r="44" stroke="#4a9eff" stroke-dasharray="21 79" stroke-dashoffset="0"/>
-          <circle cx="60" cy="60" r="44" stroke="#2dd4bf" stroke-dasharray="7 93" stroke-dashoffset="-22.3"/>
-          <circle cx="60" cy="60" r="44" stroke="#6aa8ff" stroke-dasharray="13 87" stroke-dashoffset="-30.6"/>
-          <circle cx="60" cy="60" r="44" stroke="#38bdf8" stroke-dasharray="16 84" stroke-dashoffset="-44.9"/>
-          <circle cx="60" cy="60" r="44" stroke="#4f6bf0" stroke-dasharray="5 95" stroke-dashoffset="-62.2"/>
-          <circle cx="60" cy="60" r="44" stroke="#22d3ee" stroke-dasharray="11 89" stroke-dashoffset="-68.5"/>
-          <circle cx="60" cy="60" r="44" stroke="#5b93ef" stroke-dasharray="9 91" stroke-dashoffset="-80.8"/>
-          <circle cx="60" cy="60" r="44" stroke="#14b8a6" stroke-dasharray="7 93" stroke-dashoffset="-91.1"/>
-          <!-- EIN Speicherfresser: bleibt im Ring (kein Rausploppen → keine Lücke), füllt das erste Segment sauber, wird rot + glüht -->
-          <circle class="scsm-hog" cx="60" cy="60" r="44" stroke="#4a9eff" pathLength="100" stroke-dasharray="21 79" stroke-dashoffset="0"/>
-        </g></g>
-        <text x="60" y="57" text-anchor="middle" fill="#eef1f6" font-size="15" font-weight="800" font-family="-apple-system,sans-serif" data-t="m_tb">1,4 TB</text>
-        <text x="60" y="71" text-anchor="middle" fill="#8a93a3" font-size="8" font-family="-apple-system,sans-serif" data-t="m_used">belegt</text>
-      </svg>
-    </div>
-  </div>
-
-  <div class="showcase rev">
-    <div class="sc-text">
-      <div class="sc-eyebrow" data-t="sc4_eb">Duplikate</div>
-      <h3 data-t="sc4_h3">Doppelt? Nie wieder.</h3>
-      <p data-th="sc4_p">Disky erkennt gleiche Dateien über alle Platten hinweg — selbst wenn sie anders heißen — und sagt dir auf den Gigabyte genau, wie viel du freiräumen kannst.</p>
-    </div>
-    <div class="sc-vis">
-      <svg viewBox="0 0 220 150">
-        <g transform="translate(18,20)">
-          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
-          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g>
-        <g class="scdup-r"><g transform="translate(132,20)">
-          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
-          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g></g>
-        <text class="scdup-eq" x="110" y="56" text-anchor="middle" fill="#8a93a3" font-size="22" font-family="-apple-system,sans-serif">=</text>
-        <g class="scdup-badge"><g transform="translate(63,108)">
-          <rect x="0" y="0" width="94" height="28" rx="14" fill="rgba(74,222,128,.14)" stroke="rgba(74,222,128,.5)"/>
-          <text x="47" y="19" text-anchor="middle" fill="#4ade80" font-size="14" font-weight="700" font-family="-apple-system,sans-serif" data-t="m_saves">spart 24 GB</text></g></g>
-      </svg>
-    </div>
-  </div>
-
-  <div class="showcase">
-    <div class="sc-text">
-      <div class="sc-eyebrow" data-t="sc5_eb">Privatsphäre</div>
-      <h3 data-t="sc5_h3">Deine Daten bleiben deine.</h3>
-      <p data-th="sc5_p">Alles läuft lokal auf deinem Mac. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.</p>
-    </div>
-    <div class="sc-vis">
-      <svg viewBox="0 0 120 130">
-        <path fill="rgba(74,158,255,.10)" d="M60 14 l38 14 v28 c0 26 -20 44 -38 52 c-18 -8 -38 -26 -38 -52 v-28 Z"/>
-        <path fill="none" stroke="#4a9eff" stroke-width="4" stroke-linejoin="round" d="M60 14 l38 14 v28 c0 26 -20 44 -38 52 c-18 -8 -38 -26 -38 -52 v-28 Z"/>
-        <path class="scpriv-check" fill="none" stroke="#4a9eff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M44 62 l11 11 l22 -26"/>
-      </svg>
-    </div>
-  </div>
-</section>
 
 <!-- Trust-Band: Diskys Killer-Differenzierer — lokal & privat -->
 <section class="section reveal-on glow-sec" style="padding-bottom:clamp(40px,5vh,64px)">
@@ -1653,7 +1504,7 @@ if (sec && canvas && stage && screenEl) {
       }   // Ende if(LIVE_SCREEN)
     }
     // Schatten unter dem Modell
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.6, TARGET*1.3), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false }));
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.6, TARGET*1.3), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false, opacity:0.5 }));
     shadow.rotation.x=-Math.PI/2; shadow.position.y=-TARGET*0.30; macRoot.add(shadow);
     // Aufklapp-Animation (wird beim Scrollen gescrubbt)
     if (gltf.animations && gltf.animations.length){
@@ -1741,7 +1592,7 @@ if (sec && canvas && stage && screenEl) {
       // nur Rahmen/Tastatur dürfen in den weichen Auslauf laufen. Bühne füllt jetzt das VOLLE Fenster → Laptop wird groß & ist mittig.
       const tanV = Math.tan(cam.fov*Math.PI/360);   // halbes vertikales FOV
       const tanH = tanV * cam.aspect;               // halbes horizontales FOV (live Fenster-Aspect)
-      const MsV = 0.84, MxH = 1.14, TX = 0.21;      // Screen füllt vertikal 84% (sicher im Bild); in der Präsentation noch weiter nach rechts (TX) — links bleibt Raum für die Bezeichnungen
+      const MsV = 0.52, MxH = 0.72, TX = 0.34;      // MacBook ~40% kleiner (Screen füllt nur noch ~52% der Höhe) + klar nach RECHTS versetzt → links freier Platz für die großen Feature-Tiles, keine Überlappung
       let presDist, presCx, presCy;
       if(presBox && presBox.shh){
         presDist = Math.max(presBox.shh/(MsV*tanV), presBox.hw/((MxH-TX)*tanH));   // vertikal: Screen sicher; horizontal: Laptop-Körper darf an die Feather-Kante
@@ -1750,7 +1601,7 @@ if (sec && canvas && stage && screenEl) {
         presDist = Math.max(presBox.hh/(0.98*tanV), presBox.hw/((MxH-TX)*tanH));
         presCx = presBox.cx; presCy = presBox.cy;
       } else { presDist = DIST0*1.06; presCx = -150; presCy = 360; }
-      const introDist = presDist * 1.30;   // Intro: ZURÜCKGEZOGEN → der (noch geschlossene) Laptop ist KOMPLETT im Bild, man sieht den Deckel; beim Scrollen dollyt die Kamera rein während er aufklappt
+      const introDist = presDist * 0.82;   // Intro: geschlossener Laptop in schöner GROSSER Größe & zentriert (Deckel klar sichtbar); beim Scrollen klappt er auf UND rückt kleiner nach rechts in die Präsentation
       const dist = (introDist*ie + presDist*(1-ie)) * (1 - 0.045*p);   // zoomt über den ganzen Scroll minimal weiter rein → permanente Bewegung
       // Intro zielt auf die FRONTALE Screen-Mitte (scx0) → startet EXAKT zentriert; Präsentation auf die gedrehte Mitte minus Rechts-Versatz (TX)
       const introX = (presBox && presBox.scx0!=null) ? presBox.scx0 : presCx;
