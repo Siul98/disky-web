@@ -451,41 +451,48 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
-.mb-caps{position:absolute;left:max(4vw,30px);top:50%;transform:translateY(-50%);width:min(470px,40vw);display:flex;flex-direction:column;gap:13px;z-index:6;pointer-events:none}
-/* Feature-Tiles als Liquid-Glass-Karten (Panel-Stil: Eyebrow + Gradient-Headline + Beschreibung) */
-.mb-eb{display:block;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#9db6ff;margin-bottom:9px;transition:color .45s ease,text-shadow .45s ease}
+.mb-caps{position:absolute;left:max(4vw,30px);top:50%;width:min(540px,44vw);height:0;z-index:6;pointer-events:none}
+/* Feature-Panels (mit Charts) als MILCHGLAS-STAPEL: aktive scharf & zentriert, gezeigte wandern hoch + unscharf (JS setzt transform/filter/opacity) */
+.mb-eb{display:block;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#9db6ff;margin-bottom:8px}
 .mb-cap.on .mb-eb{color:#bcd3ff;text-shadow:0 0 14px rgba(91,140,255,.55)}
-.mb-cap{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:19px 22px;border-radius:19px;isolation:isolate;
-  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.015) 60%);border:1px solid rgba(255,255,255,.09);
-  backdrop-filter:blur(11px) saturate(150%);-webkit-backdrop-filter:blur(11px) saturate(150%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 12px 34px rgba(0,0,0,.3);
-  opacity:0;visibility:hidden;transform:translateY(22px);
-  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,border-color .45s ease,background .45s ease,box-shadow .45s ease,visibility 0s linear .6s}
-.mb-cap::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 42%);mix-blend-mode:screen;opacity:.7}
-.mb-cap.shown{opacity:.62;visibility:visible;transform:none;filter:saturate(.6);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .45s ease,border-color .45s ease,background .45s ease,box-shadow .45s ease,visibility 0s}
-.mb-cap.on{opacity:1;visibility:visible;transform:none;filter:none;
-  background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(255,255,255,.03) 65%);border-color:rgba(122,162,255,.45);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 0 0 1px rgba(122,162,255,.16),0 16px 48px rgba(40,80,200,.30)}
-html.lite .mb-cap{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.045)}
+.mb-cap{position:absolute;left:0;right:0;top:0;display:flex;gap:15px;align-items:center;padding:17px 19px;border-radius:20px;isolation:isolate;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02) 60%);border:1px solid rgba(255,255,255,.10);
+  backdrop-filter:blur(13px) saturate(150%);-webkit-backdrop-filter:blur(13px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 16px 46px rgba(0,0,0,.42);
+  opacity:0;transform:translateY(-50%);will-change:transform,filter,opacity;
+  transition:transform .6s cubic-bezier(.22,1,.36,1),filter .55s ease,opacity .5s ease,border-color .5s ease,background .5s ease,box-shadow .5s ease}
+.mb-cap::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 42%);mix-blend-mode:screen;opacity:.7}
+.mb-cap.on{border-color:rgba(122,162,255,.45);background:linear-gradient(135deg,rgba(91,140,255,.16),rgba(255,255,255,.03) 65%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 0 0 1px rgba(122,162,255,.16),0 18px 54px rgba(40,80,200,.32)}
+html.lite .mb-cap{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.05)}
 html.lite .mb-cap.on{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(255,255,255,.03))}
-/* kleine Index-Nummer 01..04 — über dem Titel in der Textspalte (überlappt das Icon nicht) */
-.mb-num{display:block;font-family:var(--fdisp),system-ui;font-size:10.5px;font-weight:800;letter-spacing:.24em;color:rgba(140,165,210,.42);margin-bottom:3px;transition:color .45s ease,text-shadow .45s ease}
-.mb-cap.on .mb-num{color:#9db6ff;text-shadow:0 0 12px rgba(91,140,255,.6)}
-/* Symbol-Kachel mit Glas-Look; aktiv: Akzent-Glow + sanfter Puls */
-.mb-ic{flex:0 0 auto;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;border:1px solid rgba(122,162,255,.16);
-  background:linear-gradient(160deg,rgba(26,34,52,.72),rgba(15,21,34,.55));color:#8ea7e0;backdrop-filter:blur(4px);
-  transition:border-color .45s ease,background .45s ease,color .45s ease,box-shadow .45s ease,transform .45s cubic-bezier(.22,1,.36,1);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
-.mb-ic svg{width:23px;height:23px}
-.mb-cap.on .mb-ic{border-color:rgba(122,162,255,.55);background:linear-gradient(160deg,rgba(91,140,255,.34),rgba(91,140,255,.06));color:#dbe7ff;transform:translateY(-1px) scale(1.04);
-  box-shadow:0 0 26px rgba(91,140,255,.45),inset 0 1px 0 rgba(255,255,255,.12);animation:mbIcPulse 3s ease-in-out infinite}
-@keyframes mbIcPulse{0%,100%{box-shadow:0 0 18px rgba(91,140,255,.34),inset 0 1px 0 rgba(255,255,255,.12)}50%{box-shadow:0 0 36px rgba(91,140,255,.64),inset 0 1px 0 rgba(255,255,255,.14)}}
-.mb-cap-tx{min-width:0;padding-top:2px}
-.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(21px,2.35vw,30px);letter-spacing:-.025em;margin:0;line-height:1.12;
-  background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;text-shadow:0 2px 18px rgba(0,0,0,.8)}
-.mb-cap.on h3{background:linear-gradient(105deg,#fff,#d6e4ff 52%,#9db6ff);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 16px rgba(91,140,255,.25))}
-.mb-cap p{margin:0;color:#c2cddc;font-size:14.5px;line-height:1.5;max-width:32ch;text-shadow:0 2px 14px rgba(0,0,0,.85);
-  max-height:0;opacity:0;overflow:hidden;transition:max-height .55s cubic-bezier(.22,1,.36,1),opacity .45s ease,margin .45s ease}
-.mb-cap.on p{max-height:120px;opacity:1;margin-top:8px}
+.cap-tx{flex:1;min-width:0}
+.cap-vis{flex:0 0 auto;width:clamp(104px,12vw,142px);display:flex;align-items:center;justify-content:center}
+.cap-vis svg{width:100%;height:auto;max-height:118px;display:block;overflow:visible}
+.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(17px,1.85vw,23px);letter-spacing:-.02em;margin:0;line-height:1.12;
+  background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mb-cap.on h3{background:linear-gradient(105deg,#fff,#d6e4ff 52%,#9db6ff);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 16px rgba(91,140,255,.22))}
+.cap-p{margin:7px 0 0;color:#c2cddc;font-size:13px;line-height:1.42;max-width:34ch}
+/* Chart-Animationen (laufen, wenn Panel aktiv) */
+.scd-check,.scdup-eq,.scdup-badge,.scai-plays>path{transform-box:fill-box;transform-origin:center}
+.mb-cap.on .scd-check{animation:scPop .8s ease both}
+.scai-thumbs{transform-box:fill-box;transform-origin:center;transition:transform .5s}.mb-cap.on .scai-thumbs{transform:scale(1.03)}
+.mb-cap.on .scai-plays>path{animation:scPulse 1.4s ease-in-out infinite}
+.mb-cap.on .scai-plays>path:nth-child(2){animation-delay:.18s}.mb-cap.on .scai-plays>path:nth-child(3){animation-delay:.36s}.mb-cap.on .scai-plays>path:nth-child(4){animation-delay:.54s}
+.scsm-spin{transform-box:view-box;transform-origin:60px 60px}.mb-cap.on .scsm-spin{animation:ringSettle 1s cubic-bezier(.2,.85,.25,1) both}
+.scsm-hog{transform-box:view-box;transform-origin:60px 60px}.mb-cap.on .scsm-hog{animation:hogPulse 1.6s ease-in-out 1s infinite}
+.scdup-r{transform-box:fill-box}.mb-cap.on .scdup-r{animation:scNudge 2.2s ease-in-out infinite}
+.mb-cap.on .scdup-eq{animation:scPulse 1.6s ease-in-out infinite}.mb-cap.on .scdup-badge{animation:scPop .7s ease both}
+.scpriv-check{stroke-dasharray:62}.mb-cap.on .scpriv-check{animation:scDraw .7s ease both}
+.sca-spark{transform-box:fill-box;transform-origin:center}.mb-cap.on .sca-spark{animation:scPulse 1.6s ease-in-out infinite}
+.sca-tip{transform-box:fill-box}.mb-cap.on .sca-tip{animation:scaIn .5s ease both}
+@keyframes scPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes scPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes scNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes scDraw{from{stroke-dashoffset:62}to{stroke-dashoffset:0}}
+@keyframes ringSettle{0%{transform:rotate(-44deg)}100%{transform:rotate(0deg)}}
+@keyframes hogPulse{0%,100%{stroke:#ff6b6b;filter:drop-shadow(0 0 4px rgba(255,107,107,.5))}50%{stroke:#ff4d4d;filter:drop-shadow(0 0 9px rgba(255,80,80,.95))}}
+@keyframes scaIn{0%{opacity:0;transform:translateX(16px)}100%{opacity:1;transform:translateX(0)}}
 .mb-dots{display:none}
 /* schmale Screens: Punkte mittig unter den Mac */
 @media(max-width:1080px){
@@ -500,9 +507,10 @@ html.lite .mb-cap.on{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba
   .mb-head .hero-h{font-size:clamp(38px,11vw,64px)}
   .mb-stage{position:relative;inset:auto;height:58vh;width:100%}
   /* Mobil: alle Talking-Points als saubere Liste unter dem Mac, Beschreibungen sichtbar */
-  .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(560px,92vw);margin:20px auto 0;gap:16px}
-  .mb-cap{opacity:1!important;visibility:visible!important;transform:none!important;filter:none!important;border-left-color:rgba(122,162,255,.4)}
-  .mb-cap p{max-height:140px!important;opacity:1!important;margin-top:6px!important;max-width:none}
+  .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(560px,92vw);margin:20px auto 0;display:flex;flex-direction:column;gap:16px}
+  .mb-cap{position:relative!important;top:auto!important;opacity:1!important;transform:none!important;filter:none!important;flex-direction:column;align-items:flex-start}
+  .cap-vis{width:100%;max-width:220px;margin-top:12px}
+  .cap-p{max-width:none}
 }
 /* ── LITE-Modus (schwach/sparsam/mobil/reduced-motion): statisches Poster-Hero ohne Scroll-Pinning + ohne teure Effekte ── */
 html.lite .mb-scroll{height:auto}
@@ -511,9 +519,10 @@ html.lite .mb-head{position:static;top:auto;left:auto;right:auto;padding:clamp(7
 html.lite .mb-stage{position:relative;inset:auto;height:min(74vh,660px);width:100%;margin-top:-2vh}
 html.lite .mb-over{display:none}
 html.lite .mb-poster{object-fit:contain}
-html.lite .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(640px,92vw);margin:18px auto 0;gap:14px}
-html.lite .mb-cap{opacity:1!important;visibility:visible!important;transform:none!important;filter:none!important;border-left-color:rgba(122,162,255,.4)}
-html.lite .mb-cap p{max-height:170px!important;opacity:1!important;margin-top:6px!important;max-width:none}
+html.lite .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(640px,92vw);margin:18px auto 0;display:flex;flex-direction:column;gap:14px}
+html.lite .mb-cap{position:relative!important;top:auto!important;opacity:1!important;transform:none!important;filter:none!important;flex-direction:column;align-items:flex-start}
+html.lite .cap-vis{width:100%;max-width:240px;margin-top:12px}
+html.lite .cap-p{max-width:none}
 html.lite nav{backdrop-filter:none;background:#0b0e13f2}
 html.lite .glow{display:none}
 html.lite .mb-aura{display:none}
@@ -676,11 +685,96 @@ try{ if(!window.__LITE){
         </div>
       </div>
       <div class="mb-caps">
-        <div class="mb-cap on"><span class="mb-eb" data-t="cap1_eb">Dein Cockpit</span><h3 data-t="mb_f1_t">Alles auf einen Blick</h3><p data-t="mb_f1_d"></p></div>
-        <div class="mb-cap"><span class="mb-eb" data-t="sc3_eb">Speicher-Karte</span><h3 data-t="sc3_h3">Sieh sofort, was Platz frisst.</h3><p data-t="mb_f2_d"></p></div>
-        <div class="mb-cap"><span class="mb-eb" data-t="cap3_eb">Projekt-Manager</span><h3 data-t="cap3_h">Gesichert — oder nicht?</h3><p data-t="mb_fpm_d"></p></div>
-        <div class="mb-cap"><span class="mb-eb" data-t="sc4_eb">Duplikate</span><h3 data-t="sc4_h3">Doppelt? Nie wieder.</h3><p data-t="mb_f3_d"></p></div>
-        <div class="mb-cap"><span class="mb-eb" data-t="sc2_eb">KI-Suche · 100% lokal</span><h3 data-t="sc2_h3">Such nach Inhalt — nicht nach Dateinamen.</h3><p data-t="mb_f4_d"></p></div>
+        <div class="mb-cap on"><div class="cap-tx"><span class="mb-eb" data-t="sc1_eb"></span><h3 data-t="sc1_h3"></h3><p class="cap-p" data-t="mb_f1_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 240 210">
+        <!-- Suchleiste -->
+        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
+        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
+        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif" data-t="m_wedding">Hochzeit Mai</text>
+        <!-- Treffer: gefunden auf einer (offline) Platte -->
+        <g font-family="-apple-system,sans-serif">
+          <g>
+            <rect x="8" y="54" width="224" height="44" rx="11" fill="rgba(74,158,255,.12)" stroke="#4a9eff"/>
+            <rect x="20" y="68" width="22" height="16" rx="3" fill="#f3701f"/><circle cx="31" cy="76" r="3.2" fill="#1a1f27"/>
+            <text x="52" y="73" fill="#eef1f6" font-size="12" font-weight="700">LaCie Rugged</text>
+            <text x="52" y="88" fill="#9aa6b8" font-size="9.5" data-t="m_weddingpath">/Hochzeit Mai · 248 GB</text>
+            <g class="scd-check"><g transform="translate(202,68)"><circle cx="8" cy="8" r="9" fill="#4a9eff"/><path d="M4 8.5 l2.6 2.6 l4.8 -5.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+          </g>
+          <g opacity=".5">
+            <rect x="8" y="106" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
+            <rect x="20" y="116" width="22" height="16" rx="3" fill="#2b313c"/>
+            <text x="52" y="129" fill="#cdd5e0" font-size="12" font-weight="600">Studio RAID</text>
+            <g transform="translate(176,116)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
+          </g>
+          <g opacity=".5">
+            <rect x="8" y="152" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
+            <rect x="20" y="162" width="22" height="16" rx="3" fill="#2b313c"/>
+            <text x="52" y="175" fill="#cdd5e0" font-size="12" font-weight="600" data-t="m_archive">Archiv 2023</text>
+            <g transform="translate(176,162)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
+          </g>
+        </g>
+      </svg></div></div>
+        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc3_eb"></span><h3 data-t="sc3_h3"></h3><p class="cap-p" data-t="mb_f2_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 120 120">
+        <g class="scsm-spin"><g transform="rotate(-90 60 60)" fill="none" stroke-width="17" pathLength="100">
+          <circle cx="60" cy="60" r="44" stroke="#4a9eff" stroke-dasharray="21 79" stroke-dashoffset="0"/>
+          <circle cx="60" cy="60" r="44" stroke="#2dd4bf" stroke-dasharray="7 93" stroke-dashoffset="-22.3"/>
+          <circle cx="60" cy="60" r="44" stroke="#6aa8ff" stroke-dasharray="13 87" stroke-dashoffset="-30.6"/>
+          <circle cx="60" cy="60" r="44" stroke="#38bdf8" stroke-dasharray="16 84" stroke-dashoffset="-44.9"/>
+          <circle cx="60" cy="60" r="44" stroke="#4f6bf0" stroke-dasharray="5 95" stroke-dashoffset="-62.2"/>
+          <circle cx="60" cy="60" r="44" stroke="#22d3ee" stroke-dasharray="11 89" stroke-dashoffset="-68.5"/>
+          <circle cx="60" cy="60" r="44" stroke="#5b93ef" stroke-dasharray="9 91" stroke-dashoffset="-80.8"/>
+          <circle cx="60" cy="60" r="44" stroke="#14b8a6" stroke-dasharray="7 93" stroke-dashoffset="-91.1"/>
+          <!-- EIN Speicherfresser: bleibt im Ring (kein Rausploppen → keine Lücke), füllt das erste Segment sauber, wird rot + glüht -->
+          <circle class="scsm-hog" cx="60" cy="60" r="44" stroke="#4a9eff" pathLength="100" stroke-dasharray="21 79" stroke-dashoffset="0"/>
+        </g></g>
+        <text x="60" y="57" text-anchor="middle" fill="#eef1f6" font-size="15" font-weight="800" font-family="-apple-system,sans-serif" data-t="m_tb">1,4 TB</text>
+        <text x="60" y="71" text-anchor="middle" fill="#8a93a3" font-size="8" font-family="-apple-system,sans-serif" data-t="m_used">belegt</text>
+      </svg></div></div>
+        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc_asst_eb"></span><h3 data-t="sc_asst_h3"></h3><p class="cap-p" data-t="mb_fpm_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 240 210">
+        <rect x="6" y="16" width="228" height="178" rx="16" fill="#11151c" stroke="#2a3340"/>
+        <circle class="sca-spark" cx="30" cy="40" r="11" fill="rgba(74,158,255,.16)"/>
+        <path class="sca-spark" fill="#4a9eff" d="M30 33 l1.6 4 l4 1.6 l-4 1.6 l-1.6 4 l-1.6 -4 l-4 -1.6 l4 -1.6 Z"/>
+        <rect x="48" y="35" width="92" height="9" rx="4.5" fill="#cdd5e0" opacity=".55"/>
+        <g class="sca-tip"><rect x="20" y="64" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="64" width="3.5" height="34" rx="2" fill="#4ade80"/><rect x="34" y="73" width="150" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="84" width="96" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="85" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
+        <g class="sca-tip sca-d2"><rect x="20" y="106" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="106" width="3.5" height="34" rx="2" fill="#ff6b6b"/><rect x="34" y="115" width="140" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="126" width="80" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="127" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
+        <g class="sca-tip sca-d3"><rect x="20" y="148" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="148" width="3.5" height="34" rx="2" fill="#4a9eff"/><rect x="34" y="157" width="120" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="168" width="92" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="169" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
+      </svg></div></div>
+        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc4_eb"></span><h3 data-t="sc4_h3"></h3><p class="cap-p" data-t="mb_f3_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 220 150">
+        <g transform="translate(18,20)">
+          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
+          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g>
+        <g class="scdup-r"><g transform="translate(132,20)">
+          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
+          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g></g>
+        <text class="scdup-eq" x="110" y="56" text-anchor="middle" fill="#8a93a3" font-size="22" font-family="-apple-system,sans-serif">=</text>
+        <g class="scdup-badge"><g transform="translate(63,108)">
+          <rect x="0" y="0" width="94" height="28" rx="14" fill="rgba(74,222,128,.14)" stroke="rgba(74,222,128,.5)"/>
+          <text x="47" y="19" text-anchor="middle" fill="#4ade80" font-size="14" font-weight="700" font-family="-apple-system,sans-serif" data-t="m_saves">spart 24 GB</text></g></g>
+      </svg></div></div>
+        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc2_eb"></span><h3 data-t="sc2_h3"></h3><p class="cap-p" data-t="mb_f4_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 240 210">
+        <defs>
+          <linearGradient id="oc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fc8ff"/><stop offset="1" stop-color="#0a4d8c"/></linearGradient>
+          <linearGradient id="oc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd6c6"/><stop offset="1" stop-color="#0c5f72"/></linearGradient>
+        </defs>
+        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
+        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
+        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif">underwater</text>
+        <g class="scai-thumbs">
+          <rect x="8" y="54" width="108" height="68" rx="11" fill="url(#oc1)"/>
+          <rect x="124" y="54" width="108" height="68" rx="11" fill="url(#oc2)"/>
+          <rect x="8" y="130" width="108" height="68" rx="11" fill="url(#oc2)"/>
+          <rect x="124" y="130" width="108" height="68" rx="11" fill="url(#oc1)"/>
+        </g>
+        <g class="scai-plays" fill="#ffffff" opacity="0.92">
+          <path d="M57 80 v16 l13 -8 Z"/><path d="M173 80 v16 l13 -8 Z"/>
+          <path d="M57 156 v16 l13 -8 Z"/><path d="M173 156 v16 l13 -8 Z"/>
+        </g>
+        <g font-family="-apple-system,sans-serif" font-size="9" font-weight="700">
+          <g><rect x="92" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="69.5" text-anchor="middle" fill="#7fd0ff">94</text></g>
+          <g><rect x="208" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="69.5" text-anchor="middle" fill="#7fd0ff">88</text></g>
+          <g><rect x="92" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="145.5" text-anchor="middle" fill="#7fd0ff">85</text></g>
+          <g><rect x="208" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="145.5" text-anchor="middle" fill="#7fd0ff">79</text></g>
+        </g>
+      </svg></div></div>
       </div>
       <div class="mb-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
     </div>
@@ -1262,8 +1356,15 @@ function setFeat(i){
   if(i===_lastFeat) return;   // nur bei echtem Wechsel umschalten → keine Transition-Neustarts
   _lastFeat=i;
   feats.forEach((f,k)=>f.classList.toggle('on',k===i));
-  // Punkte bauen sich auf: alle bis zum aktuellen sichtbar ("shown"), der aktuelle hervorgehoben ("on")
-  caps.forEach((f,k)=>{ f.classList.toggle('shown',k<=i); f.classList.toggle('on',k===i); });
+  // MILCHGLAS-STAPEL: aktive Karte zentriert & scharf; bereits gezeigte wandern nach oben + werden unscharf (Milchglas); kommende liegen unten & unsichtbar
+  caps.forEach((c,k)=>{
+    const d=k-i; c.classList.toggle('on',d===0);
+    let tf,bl,op,z;
+    if(d===0){ tf='translateY(-50%) scale(1)'; bl=0; op=1; z=30; }
+    else if(d<0){ const a=-d; tf='translateY(calc(-50% - '+(a*118)+'px)) scale('+Math.max(0.72,1-a*0.075).toFixed(3)+')'; bl=Math.min(11,a*3.6); op=Math.max(0,0.52-(a-1)*0.24); z=30-a; }
+    else { tf='translateY(calc(-50% + 72px)) scale(0.94)'; bl=2; op=0; z=1; }
+    c.style.transform=tf; c.style.filter=bl?('blur('+bl.toFixed(1)+'px)'):'none'; c.style.opacity=op; c.style.zIndex=z;
+  });
   dots.forEach((f,k)=>f.classList.toggle('on',k===i));
 }
 setFeat(0);
