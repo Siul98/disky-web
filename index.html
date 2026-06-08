@@ -452,8 +452,10 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
 .mb-caps{position:absolute;left:max(4vw,30px);top:50%;transform:translateY(-50%);width:min(470px,40vw);display:flex;flex-direction:column;gap:13px;z-index:6;pointer-events:none}
-/* Feature-Tiles als Liquid-Glass-Karten */
-.mb-cap{position:relative;display:flex;gap:16px;align-items:flex-start;padding:17px 20px;border-radius:19px;isolation:isolate;
+/* Feature-Tiles als Liquid-Glass-Karten (Panel-Stil: Eyebrow + Gradient-Headline + Beschreibung) */
+.mb-eb{display:block;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#9db6ff;margin-bottom:9px;transition:color .45s ease,text-shadow .45s ease}
+.mb-cap.on .mb-eb{color:#bcd3ff;text-shadow:0 0 14px rgba(91,140,255,.55)}
+.mb-cap{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:19px 22px;border-radius:19px;isolation:isolate;
   background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.015) 60%);border:1px solid rgba(255,255,255,.09);
   backdrop-filter:blur(11px) saturate(150%);-webkit-backdrop-filter:blur(11px) saturate(150%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 12px 34px rgba(0,0,0,.3);
@@ -478,7 +480,7 @@ html.lite .mb-cap.on{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba
   box-shadow:0 0 26px rgba(91,140,255,.45),inset 0 1px 0 rgba(255,255,255,.12);animation:mbIcPulse 3s ease-in-out infinite}
 @keyframes mbIcPulse{0%,100%{box-shadow:0 0 18px rgba(91,140,255,.34),inset 0 1px 0 rgba(255,255,255,.12)}50%{box-shadow:0 0 36px rgba(91,140,255,.64),inset 0 1px 0 rgba(255,255,255,.14)}}
 .mb-cap-tx{min-width:0;padding-top:2px}
-.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(19px,2.1vw,27px);letter-spacing:-.025em;margin:0;line-height:1.14;
+.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(21px,2.35vw,30px);letter-spacing:-.025em;margin:0;line-height:1.12;
   background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;text-shadow:0 2px 18px rgba(0,0,0,.8)}
 .mb-cap.on h3{background:linear-gradient(105deg,#fff,#d6e4ff 52%,#9db6ff);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 16px rgba(91,140,255,.25))}
 .mb-cap p{margin:0;color:#c2cddc;font-size:14.5px;line-height:1.5;max-width:32ch;text-shadow:0 2px 14px rgba(0,0,0,.85);
@@ -674,11 +676,11 @@ try{ if(!window.__LITE){
         </div>
       </div>
       <div class="mb-caps">
-        <div class="mb-cap on"><span class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg></span><div class="mb-cap-tx"><span class="mb-num">01</span><h3 data-t="mb_f1_t">Alles auf einen Blick</h3><p data-t="mb_f1_d">Dein ganzes Archiv als eine Karte — auch wenn keine Platte angeschlossen ist.</p></div></div>
-        <div class="mb-cap"><span class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3v3.6M21 12h-3.6"/></svg></span><div class="mb-cap-tx"><span class="mb-num">02</span><h3 data-t="mb_f2_t">Sieh, was Platz frisst</h3><p data-t="mb_f2_d">Jeder Ordner als Ring — ein roter zeigt sofort den größten Speicherfresser.</p></div></div>
-        <div class="mb-cap"><span class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3.2v5.1c0 4.7-3.2 7.9-7.5 9.3-4.3-1.4-7.5-4.6-7.5-9.3V6.2z"/><path d="M9 11.8l2.1 2.1 4-4.2"/></svg></span><div class="mb-cap-tx"><span class="mb-num">03</span><h3 data-t="mb_fpm_t">Dein Project-Manager</h3><p data-t="mb_fpm_d">Disky sieht jedes Projekt: gesichert oder nicht, aktiv oder längst fertig — und sagt dir, was von der SSD aufs Archiv gehört.</p></div></div>
-        <div class="mb-cap"><span class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="11" height="11" rx="2.2"/><path d="M10 17a4 4 0 004 4h7"/><rect x="10" y="10" width="11" height="11" rx="2.2"/></svg></span><div class="mb-cap-tx"><span class="mb-num">04</span><h3 data-t="mb_f3_t">Duplikate, plattenübergreifend</h3><p data-t="mb_f3_d">Disky erkennt doppelte Dateien über alle Platten — auf den Gigabyte genau.</p></div></div>
-        <div class="mb-cap"><span class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/><path d="M10.5 7.6l.7 1.7 1.7.7-1.7.7-.7 1.7-.7-1.7-1.7-.7 1.7-.7z"/></svg></span><div class="mb-cap-tx"><span class="mb-num">05</span><h3 data-t="mb_f4_t">Such nach Inhalt</h3><p data-t="mb_f4_d">Tippe „underwater" und finde jeden Clip — komplett lokal per KI.</p></div></div>
+        <div class="mb-cap on"><span class="mb-eb" data-t="cap1_eb">Dein Cockpit</span><h3 data-t="mb_f1_t">Alles auf einen Blick</h3><p data-t="mb_f1_d"></p></div>
+        <div class="mb-cap"><span class="mb-eb" data-t="sc3_eb">Speicher-Karte</span><h3 data-t="sc3_h3">Sieh sofort, was Platz frisst.</h3><p data-t="mb_f2_d"></p></div>
+        <div class="mb-cap"><span class="mb-eb" data-t="cap3_eb">Projekt-Manager</span><h3 data-t="cap3_h">Gesichert — oder nicht?</h3><p data-t="mb_fpm_d"></p></div>
+        <div class="mb-cap"><span class="mb-eb" data-t="sc4_eb">Duplikate</span><h3 data-t="sc4_h3">Doppelt? Nie wieder.</h3><p data-t="mb_f3_d"></p></div>
+        <div class="mb-cap"><span class="mb-eb" data-t="sc2_eb">KI-Suche · 100% lokal</span><h3 data-t="sc2_h3">Such nach Inhalt — nicht nach Dateinamen.</h3><p data-t="mb_f4_d"></p></div>
       </div>
       <div class="mb-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
     </div>
@@ -1004,6 +1006,9 @@ const I18N={
  sc_asst_eb:{de:`Dein Assistent · im Hintergrund`,en:`Your assistant · in the background`},
  sc_asst_h3:{de:`Disky arbeitet für dich — nicht umgekehrt.`,en:`Disky works for you — not the other way around.`},
  sc_asst_p:{de:`Disky läuft still im Hintergrund und meldet sich nur, wenn's zählt: <b>welches Projekt noch kein Backup hat</b>, wo unnötiger Speicher liegt, was du gefahrlos freiräumen kannst. Kein Mehraufwand — Disky nimmt dir Arbeit ab.`,en:`Disky runs quietly in the background and only speaks up when it matters: <b>which project still has no backup</b>, where space is wasted, what you can safely free up. No extra work — Disky takes work off your hands.`},
+ cap1_eb:{de:`Dein Cockpit`,en:`Your cockpit`},
+ cap3_eb:{de:`Projekt-Manager`,en:`Project manager`},
+ cap3_h:{de:`Gesichert — oder nicht?`,en:`Backed up — or not?`},
  sc1_eb:{de:`Offline-Katalog · der Kern`,en:`Offline catalog · the core`},
  sc1_h3:{de:`Finde dein Projekt — ohne eine einzige Platte anzustecken.`,en:`Find your project — without plugging in a single drive.`},
  sc1_p:{de:`Disky hält <b>jede Festplatte offline einsehbar</b>. Tippe einen Projekt- oder Dateinamen und sieh in Sekunden, <b>auf welcher Platte</b> es liegt — auch wenn alle längst im Schrank liegen. Nie wieder zehn Platten durchstecken, nur um eine Datei zu suchen.`,en:`Disky keeps <b>every drive viewable offline</b>. Type a project or file name and see in seconds <b>which drive</b> it's on — even when they're all back in the drawer. Never dig through ten drives again just to find one file.`},
@@ -1363,8 +1368,8 @@ if (sec && canvas && stage && screenEl) {
 
   // Boden-Schatten (weiche Kontaktfläche)
   const shadowTex = (()=>{ const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d');
-    const rg=g.createRadialGradient(128,128,10,128,128,128); rg.addColorStop(0,'rgba(0,0,0,.5)'); rg.addColorStop(1,'rgba(0,0,0,0)');
-    g.fillStyle=rg; g.fillRect(0,0,256,256); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();
+    const rg=g.createRadialGradient(128,128,4,128,128,116); rg.addColorStop(0,'rgba(0,0,0,.5)'); rg.addColorStop(.42,'rgba(0,0,0,.24)'); rg.addColorStop(.72,'rgba(0,0,0,.06)'); rg.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=rg; g.fillRect(0,0,256,256); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();   // weicher Blob, an den Rändern komplett transparent → kein hartes Rechteck
 
   const macRoot = new THREE.Group(); scene.add(macRoot);
   let mixer=null, clip=null, model=null, ready=false;
@@ -1504,8 +1509,8 @@ if (sec && canvas && stage && screenEl) {
       }   // Ende if(LIVE_SCREEN)
     }
     // Schatten unter dem Modell
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.6, TARGET*1.3), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false, opacity:0.5 }));
-    shadow.rotation.x=-Math.PI/2; shadow.position.y=-TARGET*0.30; macRoot.add(shadow);
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*1.25, TARGET*0.78), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false, opacity:0.42 }));
+    shadow.rotation.x=-Math.PI/2; shadow.position.y=-TARGET*0.27; shadow.position.z=TARGET*0.04; macRoot.add(shadow);   // flacher, breiter, weicher Kontakt-Schatten direkt unter dem Laptop
     // Aufklapp-Animation (wird beim Scrollen gescrubbt)
     if (gltf.animations && gltf.animations.length){
       mixer = new THREE.AnimationMixer(model); clip = gltf.animations[0];
@@ -1570,12 +1575,12 @@ if (sec && canvas && stage && screenEl) {
   function apply(){
     const mob = isMobile();
     // Aufklappen: an den REINEN Scroll-Fortschritt p gekoppelt → bei Scroll 0 ist der Deckel zu (man sieht den Deckel), öffnet sich erst beim Scrollen, voll offen ab p≈0.42
-    const op = reduce ? 1 : Math.min(1, Math.max(0, p)/0.42);
+    const op = reduce ? 1 : Math.min(1, Math.max(0, (p-0.16))/0.30);   // öffnet ERST ab p=0.16 (wenn die Headline schon weg ist) → kein Überlappen mit dem Titel
     const e = easeOut(op);
     if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // fast zu → weit offen
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
     // CHOREOGRAFIE: INTRO (frontal + zentriert, hebt sich & verdeckt die Jarvis-Headline) → PRÄSENTATION (nach rechts + nach AUSSEN gedreht) → ZOOM in den Screen
-    const introP = mob ? 0 : Math.max(0, Math.min(1, (0.4 - p)/0.4));   // 1 am Start → 0 ab p=0.4: Laptop kommt an, dann laufen die Punkte gleichmäßig weiter
+    const introP = mob ? 0 : Math.max(0, Math.min(1, (0.30 - p)/0.30));   // Intro (zentriert, geschlossen) → rückt bis p=0.30 nach rechts in die Präsentation
     const ie = easeOut(introP);
     const zt = (reduce ? 0.14 : easeOut(Math.min(1, Math.max(0, (p-0.24)/0.52))));   // Hinein-Zoom startet nach dem Intro, erreicht den großen Screen früher
     // Rotation: frontal (0) im Intro → nach AUSSEN gedreht in Präsentation (negativ = die andere Richtung als zuvor)
@@ -1592,7 +1597,7 @@ if (sec && canvas && stage && screenEl) {
       // nur Rahmen/Tastatur dürfen in den weichen Auslauf laufen. Bühne füllt jetzt das VOLLE Fenster → Laptop wird groß & ist mittig.
       const tanV = Math.tan(cam.fov*Math.PI/360);   // halbes vertikales FOV
       const tanH = tanV * cam.aspect;               // halbes horizontales FOV (live Fenster-Aspect)
-      const MsV = 0.52, MxH = 0.72, TX = 0.34;      // MacBook ~40% kleiner (Screen füllt nur noch ~52% der Höhe) + klar nach RECHTS versetzt → links freier Platz für die großen Feature-Tiles, keine Überlappung
+      const MsV = 0.62, MxH = 0.86, TX = 0.30;      // MacBook wieder ~20% größer (Screen füllt ~62% der Höhe), klar rechts versetzt → links Platz für die Tiles, keine Überlappung
       let presDist, presCx, presCy;
       if(presBox && presBox.shh){
         presDist = Math.max(presBox.shh/(MsV*tanV), presBox.hw/((MxH-TX)*tanH));   // vertikal: Screen sicher; horizontal: Laptop-Körper darf an die Feather-Kante
@@ -1613,7 +1618,7 @@ if (sec && canvas && stage && screenEl) {
     // Im INTRO (Headline sichtbar) schieben wir den Laptop nach UNTEN, damit er unter der Headline sitzt; sobald die Headline weg ist, steht er zentriert.
     let downShift = 0;
     if(mbHead){
-      const headP = mob ? 1 : Math.max(0, Math.min(1, (0.32 - p)/0.18));   // Headline faded p≈0.14→0.32 (weg, bevor die Overline kommt)
+      const headP = mob ? 1 : Math.max(0, Math.min(1, (0.18 - p)/0.10));   // Headline faded SCHNELL p≈0.08→0.18 — komplett weg, BEVOR der MacBook aufklappt (kein Überlappen)
       const hsmooth = headP*headP*(3-2*headP);
       mbHead.style.opacity = hsmooth.toFixed(3);
       mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
@@ -1624,14 +1629,14 @@ if (sec && canvas && stage && screenEl) {
       downShift = mob ? 0 : hsmooth * (innerHeight * 0.10 + Math.max(0, 800 - innerHeight) * 0.42);
     }
     // Overline über dem Laptop: blendet ein, sobald die Headline weg ist (Präsentation)
-    if(mbOver){ const op=Math.max(0,Math.min(1,(p-0.35)/0.13)); mbOver.style.opacity=(mob?0:op*op*(3-2*op)).toFixed(3); }   // Overline kommt ERST, wenn die Headline weg ist (sauberer Wechsel)
+    if(mbOver){ const op=Math.max(0,Math.min(1,(p-0.30)/0.12)); mbOver.style.opacity=(mob?0:op*op*(3-2*op)).toFixed(3); }   // Overline kommt ERST in der Präsentation (Headline längst weg)
     const tf = downShift ? ('translateY('+downShift.toFixed(1)+'px)') : '';
     if(canvas) canvas.style.transform = tf;
     if(css3dHost) css3dHost.style.transform = tf;
     if(mbCaps) mbCaps.style.transform = 'translateY(-50%)';
     // Captions/Feature-Tour laufen schon WÄHREND der Bewegung 1.→2. Position nebenher (früher Start)
-    const s2=0.12, e2=1.0, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));   // 5 Punkte = gleiche Fünftel von 0.12 bis Ende (kein toter Schwanz)
-    const fi=(!mob && p<0.09) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
+    const s2=0.30, e2=1.0, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));   // Tiles laufen erst in der Präsentation (ab p=0.30, nach Header-Fade + Aufklappen) → kein Überlappen
+    const fi=(!mob && p<s2) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
     setFeat(fi);
     // Scroll steuert die ECHTE App im Display: der Screen schaltet sofort auf die passende View um (Crossfade in der Textur)
     const VIEWS=['overview','map','backup','dupes','search'];
