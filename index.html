@@ -1377,7 +1377,7 @@ if (sec && canvas && stage && screenEl) {
  let _mbStarted=false;
  async function startMB(){
   if(_mbStarted) return; _mbStarted=true;
-  setTimeout(()=>{ var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }, 7000);   // Sicherheitsnetz: Poster spätestens nach 7s weg (falls iframe-App nie lädt) → echtes 3D wird sichtbar
+  setTimeout(()=>{ var _pp=document.getElementById('mbPoster'); if(_pp && model) _pp.classList.add('gone'); }, 7000);   // Sicherheitsnetz: Poster nach 7s weg — ABER nur wenn das 3D-Modell geladen ist (sonst bleibt das Poster als Fallback stehen, nie leere Bühne)
   const THREE = await import('three');
   const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
   const { CSS3DRenderer, CSS3DObject } = await import('three/addons/renderers/CSS3DRenderer.js');
