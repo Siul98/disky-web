@@ -412,11 +412,16 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .hero-h .wi.grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* Overline über dem Laptop — ZENTRIERT, blendet in der Präsentation ein (Opacity via JS) */
 .mb-over{position:absolute;top:clamp(52px,7.5vh,100px);left:0;right:0;text-align:center;z-index:6;pointer-events:none;opacity:0;will-change:opacity}
-.mb-over-eb{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:800;letter-spacing:.28em;color:#9db6ff;text-transform:uppercase;margin-bottom:15px;padding:6px 15px;border-radius:999px;border:1px solid rgba(122,162,255,.22);background:rgba(91,140,255,.08);backdrop-filter:blur(6px)}
-.mb-over-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px rgba(91,140,255,.9);animation:mbOverDot 2.4s ease-in-out infinite}
-@keyframes mbOverDot{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
-.mb-over-h{font-family:var(--fdisp);font-weight:800;font-size:clamp(23px,2.8vw,38px);letter-spacing:-.03em;margin:0 auto;max-width:min(90vw,780px);line-height:1.1;color:#c8d4e6;text-shadow:0 2px 26px rgba(0,0,0,.55)}
-.mb-over-h b{font-weight:800;background:linear-gradient(100deg,#fff,#c4d8ff 52%,#7aa2ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 14px rgba(91,140,255,.4))}
+/* Titel-Alternative: Divider-Kicker (kein Pill) + voll-gradient Headline mit Akzentlinie */
+.mb-over-eb{display:inline-flex;align-items:center;gap:14px;font-size:11px;font-weight:700;letter-spacing:.34em;color:#9db6ff;text-transform:uppercase;margin-bottom:16px;padding:0;border:0;background:none;backdrop-filter:none}
+.mb-over-eb::before,.mb-over-eb::after{content:"";width:38px;height:1px;background:linear-gradient(90deg,transparent,rgba(122,162,255,.6))}
+.mb-over-eb::after{background:linear-gradient(90deg,rgba(122,162,255,.6),transparent)}
+.mb-over-dot{display:none}
+.mb-over-h{font-family:var(--fdisp);font-weight:800;font-size:clamp(27px,3.3vw,46px);letter-spacing:-.035em;margin:0 auto;max-width:min(92vw,860px);line-height:1.04;
+  background:linear-gradient(100deg,#ffffff 0%,#d7e4fb 48%,#8fb2ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 30px rgba(70,120,230,.28))}
+.mb-over-h b{font-weight:800;color:inherit;background:none;-webkit-text-fill-color:#ffffff}
+.mb-over-h::after{content:"";display:block;width:58px;height:2px;margin:18px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,#5b8cff,transparent);box-shadow:0 0 14px rgba(91,140,255,.7)}
 /* Platinen-Hintergrund füllt die Hero-Sticky, hinter Headline (z3) + Laptop (z4) */
 .mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden}
 .mb-stage{position:absolute;inset:0;width:100%;height:100%;z-index:5;
@@ -451,11 +456,11 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 .mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
 /* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
-.mb-caps{position:absolute;left:max(4vw,30px);top:50%;width:min(540px,44vw);height:0;z-index:6;pointer-events:none}
+.mb-caps{position:absolute;left:max(4vw,34px);top:50%;width:min(640px,49vw);height:0;z-index:6;pointer-events:none}
 /* Feature-Panels (mit Charts) als MILCHGLAS-STAPEL: aktive scharf & zentriert, gezeigte wandern hoch + unscharf (JS setzt transform/filter/opacity) */
 .mb-eb{display:block;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#9db6ff;margin-bottom:8px}
 .mb-cap.on .mb-eb{color:#bcd3ff;text-shadow:0 0 14px rgba(91,140,255,.55)}
-.mb-cap{position:absolute;left:0;right:0;top:0;display:flex;gap:15px;align-items:center;padding:17px 19px;border-radius:20px;isolation:isolate;
+.mb-cap{position:absolute;left:0;right:0;top:0;display:flex;gap:18px;align-items:center;padding:21px 24px;border-radius:22px;isolation:isolate;
   background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02) 60%);border:1px solid rgba(255,255,255,.10);
   backdrop-filter:blur(13px) saturate(150%);-webkit-backdrop-filter:blur(13px) saturate(150%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 16px 46px rgba(0,0,0,.42);
@@ -467,12 +472,12 @@ footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;paddin
 html.lite .mb-cap{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.05)}
 html.lite .mb-cap.on{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(255,255,255,.03))}
 .cap-tx{flex:1;min-width:0}
-.cap-vis{flex:0 0 auto;width:clamp(104px,12vw,142px);display:flex;align-items:center;justify-content:center}
-.cap-vis svg{width:100%;height:auto;max-height:118px;display:block;overflow:visible}
-.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(17px,1.85vw,23px);letter-spacing:-.02em;margin:0;line-height:1.12;
+.cap-vis{flex:0 0 auto;width:clamp(128px,15vw,176px);display:flex;align-items:center;justify-content:center}
+.cap-vis svg{width:100%;height:auto;max-height:144px;display:block;overflow:visible}
+.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(20px,2.15vw,28px);letter-spacing:-.02em;margin:0;line-height:1.1;
   background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent}
 .mb-cap.on h3{background:linear-gradient(105deg,#fff,#d6e4ff 52%,#9db6ff);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 16px rgba(91,140,255,.22))}
-.cap-p{margin:7px 0 0;color:#c2cddc;font-size:13px;line-height:1.42;max-width:34ch}
+.cap-p{margin:9px 0 0;color:#c6d1e0;font-size:14.5px;line-height:1.45;max-width:40ch}
 /* Chart-Animationen (laufen, wenn Panel aktiv) */
 .scd-check,.scdup-eq,.scdup-badge,.scai-plays>path{transform-box:fill-box;transform-origin:center}
 .mb-cap.on .scd-check{animation:scPop .8s ease both}
@@ -1079,7 +1084,7 @@ const I18N={
  mb_f3_d:{de:`Dieselbe Datei doppelt? Disky findet sie — auf den Gigabyte genau.`,en:`The same file twice? Disky finds it — to the gigabyte.`},
  mb_f4_t:{de:`Finde jedes Projekt`,en:`Find any project`},
  mb_f4_d:{de:`Tippe einen Namen und sieh, auf welcher Platte es liegt — auch offline.`,en:`Type a name and see which drive it's on — even offline.`},
- mb_over_eb:{de:`SCROLL DICH DURCH`,en:`SCROLL TO EXPLORE`},
+ mb_over_eb:{de:`Disky in Aktion`,en:`Disky in action`},
  mb_over_h:{de:`Sieh <b>alles</b>. Finde <b>jedes</b>. Verlier <b>nichts</b>.`,en:`See <b>everything</b>. Find <b>anything</b>. Lose <b>nothing</b>.`},
  m_ov:{de:`Übersicht`,en:`Overview`},
  m_drives:{de:`Festplatten`,en:`Drives`},
@@ -1361,8 +1366,8 @@ function setFeat(i){
     const d=k-i; c.classList.toggle('on',d===0);
     let tf,bl,op,z;
     if(d===0){ tf='translateY(-50%) scale(1)'; bl=0; op=1; z=30; }
-    else if(d<0){ const a=-d; tf='translateY(calc(-50% - '+(a*118)+'px)) scale('+Math.max(0.72,1-a*0.075).toFixed(3)+')'; bl=Math.min(11,a*3.6); op=Math.max(0,0.52-(a-1)*0.24); z=30-a; }
-    else { tf='translateY(calc(-50% + 72px)) scale(0.94)'; bl=2; op=0; z=1; }
+    else if(d<0){ const a=-d; tf='translateY(calc(-50% - '+(a*140)+'px)) scale('+Math.max(0.72,1-a*0.075).toFixed(3)+')'; bl=Math.min(11,a*3.6); op=Math.max(0,0.52-(a-1)*0.24); z=30-a; }
+    else { tf='translateY(calc(-50% + 86px)) scale(0.94)'; bl=2; op=0; z=1; }
     c.style.transform=tf; c.style.filter=bl?('blur('+bl.toFixed(1)+'px)'):'none'; c.style.opacity=op; c.style.zIndex=z;
   });
   dots.forEach((f,k)=>f.classList.toggle('on',k===i));
