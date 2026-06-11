@@ -1210,7 +1210,7 @@ function setFeat(i){
   });
   dots.forEach((f,k)=>f.classList.toggle('on',k===i));
 }
-setFeat(0);
+setFeat(-1);   // Tiles initial VERSTECKT (Scroll-0-Zustand) → kein Aufblitzen von Karte 0 während der Poster-Phase, bevor das 3D + apply() laufen
 
 if (sec && canvas && stage && screenEl) {
  let _mbStarted=false;
