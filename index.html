@@ -1302,6 +1302,7 @@ if (sec && canvas && stage && screenEl) {
   // statische Screenshot identisch aus — aber das Scrollen/Rendern läuft butterweich. (Auf true → wieder Live-Screen.)
   const LIVE_SCREEN = false;
   let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null, appHost = null, appGlare = null;
+  let appleEls=null;
   let setScreenView = null, screenBusy = null;   // Steuerung der echten App-Views auf dem Screen-Display
   // Display-Spiegelung an die aktuelle Drehung koppeln: mehr Drehung → Reflexion sichtbarer, Glanzstreifen wandert mit
   function updateGlare(roty){ if(!appGlare) return; const a=Math.min(1, Math.abs(roty)/0.42);
@@ -1451,6 +1452,38 @@ if (sec && canvas && stage && screenEl) {
           renderer.render(scene,cam); css.render(scene,cam); },
         info:()=>({sz:sz.toArray().map(v=>+v.toFixed(1)), normalAxis, pos:cssObj.position.toArray().map(v=>+v.toFixed(1)), rot:[cssObj.rotation.x,cssObj.rotation.y,cssObj.rotation.z].map(v=>+v.toFixed(3)), scale:cssObj.scale.toArray().map(v=>+v.toFixed(4))}) };
       }   // Ende if(LIVE_SCREEN)
+      // ── Apple-Logo am Deckel-RÜCKEN: leuchtet beim Scroll-Start auf + Light-Rays nach oben (additiv, an den Deckel gekoppelt) ──
+      const _atex=(()=>{ const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d'); x.fillStyle='#fff';
+        x.beginPath(); x.moveTo(128,96);
+        x.bezierCurveTo(150,62,210,66,205,122); x.bezierCurveTo(214,172,174,216,150,216); x.bezierCurveTo(140,216,138,210,128,210);
+        x.bezierCurveTo(118,210,116,216,106,216); x.bezierCurveTo(82,216,42,172,51,122); x.bezierCurveTo(46,66,106,62,128,96);
+        x.closePath(); x.fill();
+        x.globalCompositeOperation='destination-out'; x.beginPath(); x.arc(214,118,30,0,7); x.fill(); x.globalCompositeOperation='source-over';
+        x.beginPath(); x.moveTo(130,90); x.bezierCurveTo(134,60,160,48,180,54); x.bezierCurveTo(174,82,150,96,130,90); x.closePath(); x.fill();
+        const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();
+      const _gtex=(()=>{ const c=document.createElement('canvas'); c.width=c.height=128; const g=c.getContext('2d'); const rg=g.createRadialGradient(64,64,0,64,64,64); rg.addColorStop(0,'rgba(190,222,255,1)'); rg.addColorStop(.42,'rgba(120,180,255,.45)'); rg.addColorStop(1,'rgba(120,180,255,0)'); g.fillStyle=rg; g.fillRect(0,0,128,128); const t=new THREE.CanvasTexture(c); return t; })();
+      const _rtex=(()=>{ const c=document.createElement('canvas'); c.width=160;c.height=256; const g=c.getContext('2d'); for(let i=0;i<9;i++){ const cx=80+(i-4)*16; const lg=g.createLinearGradient(0,256,0,0); const a=0.5-Math.abs(i-4)*0.06; lg.addColorStop(0,'rgba(195,224,255,'+a.toFixed(2)+')'); lg.addColorStop(1,'rgba(195,224,255,0)'); g.fillStyle=lg; const w=1.5+(i%2); g.fillRect(cx-w/2,0,w,256);} const t=new THREE.CanvasTexture(c); return t; })();
+      const _amat=new THREE.MeshBasicMaterial({map:_atex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0,color:0xbfe0ff}); _amat.userData.isApple=true;
+      const _hmat=new THREE.MeshBasicMaterial({map:_gtex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0}); _hmat.userData.isApple=true;
+      const _rmat=new THREE.MeshBasicMaterial({map:_rtex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0}); _rmat.userData.isApple=true;
+      const _aS=Math.max(sz.x,sz.y,sz.z)*0.15;
+      const _grp=new THREE.Group();
+      const _halo=new THREE.Mesh(new THREE.PlaneGeometry(_aS*3.4,_aS*3.4),_hmat);
+      const _apple=new THREE.Mesh(new THREE.PlaneGeometry(_aS,_aS),_amat);
+      const _rays=new THREE.Mesh(new THREE.PlaneGeometry(_aS*2.4,_aS*4.6),_rmat); _rays.position.y=_aS*2.7;
+      _grp.add(_halo,_rays,_apple);
+      const _bs=(typeof window.__appleSign==='number'?window.__appleSign:1);
+      const _offF=(typeof window.__appleOff==='number'?window.__appleOff:0.5);
+      const _place=()=>{ _grp.position.copy(ctr); _grp.position[normalAxis]+=_bs*_aS*_offF;
+        _grp.rotation.set(0,0,0);
+        if(normalAxis==='z'){ _grp.rotation.y=_bs>0?0:Math.PI; }
+        else if(normalAxis==='y'){ _grp.rotation.x=_bs>0?-Math.PI/2:Math.PI/2; }
+        else if(normalAxis==='x'){ _grp.rotation.y=_bs>0?Math.PI/2:-Math.PI/2; }
+        if(typeof window.__appleRot==='number') _grp.rotation[window.__appleRotAxis||'z']=window.__appleRot; };
+      _place(); screenMesh.add(_grp);
+      appleEls={a:_amat,h:_hmat,r:_rmat,grp:_grp,place:_place};
+      window.__apple={ set:(o)=>{ if(o.sign!=null)window.__appleSign=o.sign; if(o.off!=null)window.__appleOff=o.off; if(o.rot!=null){window.__appleRot=o.rot;window.__appleRotAxis=o.rotAxis||'z';} _place(); if(o.glow!=null){_amat.opacity=o.glow;_hmat.opacity=o.glow*.8;_rmat.opacity=o.glow*.75;} renderer.render(scene,cam); },
+        info:()=>({pos:_grp.position.toArray().map(v=>+v.toFixed(1)),rot:[_grp.rotation.x,_grp.rotation.y,_grp.rotation.z].map(v=>+v.toFixed(2)),normalAxis,aS:+_aS.toFixed(1)}) };
     }
     // Kontaktschatten EXAKT an der Laptop-Basis (statt geraten) — eng, weich, realistisch
     const _mbb=new THREE.Box3().setFromObject(model), _mc=_mbb.getCenter(new THREE.Vector3());
@@ -1464,20 +1497,20 @@ if (sec && canvas && stage && screenEl) {
     // MacBook geladen: smooth einblenden statt hartem Pop-in
     macRoot.traverse(o=>{ if(o.isMesh && o.material){
       const mats=Array.isArray(o.material)?o.material:[o.material];
-      mats.forEach(m=>{ m.transparent=true; m.opacity=0; m.needsUpdate=true; });
+      mats.forEach(m=>{ if(m.userData.isApple) return; m.transparent=true; m.opacity=0; m.needsUpdate=true; });
     }});
     let _fadeT=0; const _fadeStep=()=>{
       _fadeT=Math.min(1,_fadeT+0.04);
       const eas=_fadeT*_fadeT*(3-2*_fadeT); // smoothstep
       macRoot.traverse(o=>{ if(o.isMesh&&o.material){
         const mats=Array.isArray(o.material)?o.material:[o.material];
-        mats.forEach(m=>{ if(m.transparent) m.opacity=eas; });
+        mats.forEach(m=>{ if(m.userData.isApple) return; if(m.transparent) m.opacity=eas; });
       }});
       needsRender=true;
       if(_fadeT<1) requestAnimationFrame(_fadeStep);
       else { macRoot.traverse(o=>{ if(o.isMesh&&o.material){
         const mats=Array.isArray(o.material)?o.material:[o.material];
-        mats.forEach(m=>{ m.transparent=false; m.opacity=1; m.needsUpdate=true; });
+        mats.forEach(m=>{ if(m.userData.isApple) return; m.transparent=false; m.opacity=1; m.needsUpdate=true; });
       }});
         var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }   // MacBook steht → Sofort-Poster sanft ausblenden (greift auch ohne Live-iframe)
     };
@@ -1522,6 +1555,11 @@ if (sec && canvas && stage && screenEl) {
     // Aufklappen: an den REINEN Scroll-Fortschritt p gekoppelt → bei Scroll 0 ist der Deckel zu (man sieht den Deckel), öffnet sich erst beim Scrollen, voll offen ab p≈0.42
     const op = reduce ? 1 : Math.min(1, Math.max(0, (p-0.16))/0.30);   // öffnet ERST ab p=0.16 (wenn die Headline schon weg ist) → kein Überlappen mit dem Titel
     const e = easeOut(op);
+    // Apple-Logo-Glow: zündet beim Scroll-Start auf (p 0→0.05), blendet aus, während der Deckel aufklappt (p 0.12→0.20)
+    if(appleEls){ const ig=Math.min(1,Math.max(0,(p-0.004)/0.045)), fo=1-Math.min(1,Math.max(0,(p-0.12)/0.08)); const ag=ig*fo, ae=ag*ag*(3-2*ag);
+      appleEls.a.opacity=Math.min(1,ae*1.2); appleEls.h.opacity=ae*0.8; appleEls.r.opacity=ae*0.75;
+      if(ae>0.01){ try{ appleEls.grp.updateWorldMatrix(true,false); appleEls.grp.lookAt(cam.position); }catch(_){} }  // zur Kamera ausrichten → Logo + Strahlen immer sichtbar, Strahlen nach (Welt-)oben
+      needsRender=true; }
     if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // fast zu → weit offen
     macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
     // CHOREOGRAFIE: INTRO (frontal + zentriert, hebt sich & verdeckt die Jarvis-Headline) → PRÄSENTATION (nach rechts + nach AUSSEN gedreht) → ZOOM in den Screen
