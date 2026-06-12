@@ -234,6 +234,67 @@ a{color:inherit;text-decoration:none}
 @media(prefers-reduced-motion:reduce){.rev{opacity:1;transform:none;transition:none}.hs-q::after{animation:none}}
 
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:6px}
+
+/* ===== Cinematic scroll hero (isolated hf- module) ===== */
+.hfhero{position:relative;display:block;margin:0;padding:0}
+.hf-rail{position:relative;height:300vh}
+.hf-sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
+#hf-stars{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%);mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%)}
+.hf-grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;background-image:linear-gradient(to right,rgba(244,247,251,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(244,247,251,.05) 1px,transparent 1px);-webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%)}
+.hf-glow{position:absolute;left:50%;top:50%;width:1000px;height:680px;transform:translate(-50%,-50%);z-index:0;pointer-events:none;background:radial-gradient(closest-side,rgba(45,98,200,.2),transparent 72%)}
+.hf-floor{position:absolute;left:50%;bottom:-40px;width:min(1040px,94vw);height:250px;transform:translateX(-50%);z-index:1;pointer-events:none;background:radial-gradient(ellipse 46% 50% at 50% 60%,rgba(0,0,0,.72),rgba(0,0,0,.34) 45%,transparent 72%);filter:blur(26px)}
+.hf-head{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px 250px;will-change:transform,filter,opacity}
+.hf-eb{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:22px;opacity:0;animation:hf-ebIn 1.2s .15s ease both}
+.hf-head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(50px,8.2vw,98px)}
+.hf-t3d{display:block;color:var(--ink);text-shadow:0 10px 30px rgba(244,247,251,.16),0 2px 4px rgba(244,247,251,.1);opacity:0;animation:hf-txtReveal 1.7s .25s cubic-bezier(.16,1,.3,1) both}
+.hf-silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);-webkit-background-clip:text;background-clip:text;transform:translateZ(0);filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));clip-path:inset(0 100% 0 0);animation:hf-txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
+.hf-sub{margin:28px auto 0;max-width:600px;font-size:clamp(16px,1.7vw,19px);line-height:1.5;color:var(--mut);opacity:0;animation:hf-ebIn 1.2s .9s ease both}
+.hf-cta{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:32px;opacity:0;animation:hf-ebIn 1.2s 1.05s ease both}
+.hf-tl{margin-top:18px;font-size:12.5px;color:var(--mut2);opacity:0;animation:hf-ebIn 1.2s 1.2s ease both}
+@keyframes hf-ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes hf-txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.hf-beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+.hf-stage{position:absolute;inset:0;z-index:2}
+.hf-fan{position:absolute;left:50%;bottom:-118px;width:0;height:0;transform:scale(var(--hffs,1));transform-origin:50% 100%}
+.hf-fcard{position:absolute;left:50%;bottom:0;height:280px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
+.hf-fan.hf-resting .hf-fcard{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
+.hf-fcard .hf-drv{height:100%;width:auto;display:block;filter:drop-shadow(0 30px 44px rgba(0,0,0,.7))}
+.hf-t9{position:absolute;left:50%;top:50%;width:520px;z-index:11;pointer-events:none;will-change:transform}
+.hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
+.hf-t9 .hf-dimg{display:block;width:100%;height:auto}
+.hf-t9 .hf-front{filter:drop-shadow(0 34px 56px rgba(0,0,0,.7));will-change:mask}
+.hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
+.hf-scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
+.hf-scanline.hf-on{opacity:1}
+.hf-scanline .hf-bm{position:absolute;top:-30%;bottom:-30%;left:-1.4px;width:2.8px;border-radius:3px;background:linear-gradient(180deg,transparent 0%,rgba(205,238,255,.5) 16%,#cdeeff 40%,#37cfe0 50%,#cdeeff 60%,rgba(205,238,255,.5) 84%,transparent 100%);box-shadow:0 0 30px 10px rgba(74,158,255,.72)}
+.hf-scanline .hf-bm::before{content:"";position:absolute;top:0;bottom:0;left:-34px;width:68px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.22),transparent);-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%)}
+.hf-scanline .hf-warp{position:absolute;top:-16%;bottom:-16%;left:50%;width:70px;transform:translateX(-50%);pointer-events:none;mix-blend-mode:screen;background:linear-gradient(90deg,transparent,rgba(120,180,255,.16) 42%,rgba(150,235,255,.34) 50%,rgba(120,180,255,.16) 58%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)}
+.hf-scanline.hf-appear .hf-bm{animation:hf-bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
+@keyframes hf-bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
+.hf-bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
+.hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;border:3px solid rgba(190,224,255,.95);box-shadow:0 0 60px rgba(110,180,255,.7),inset 0 0 50px rgba(74,158,255,.35)}
+.hf-appwin{position:absolute;left:50%;top:37%;transform:translateX(-50%);z-index:4;width:min(900px,94vw);height:min(470px,55vh);opacity:0;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
+.hf-awbar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+.hf-awbar .hf-tl{width:11px;height:11px;border-radius:50%}
+.hf-tl.r{background:#ff5f57}.hf-tl.y{background:#febc2e}.hf-tl.g{background:#28c840}
+.hf-awtitle{margin-left:8px;font-size:12.5px;font-weight:650;color:#cdd6e4;letter-spacing:.02em}
+.hf-awbody{display:flex;height:calc(100% - 38px)}
+.hf-awside{width:198px;flex:0 0 auto;border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:3px;background:rgba(255,255,255,.015)}
+.hf-awnav{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;font-size:12.5px;color:var(--mut);font-weight:550}
+.hf-awnav svg{width:15px;height:15px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.7}
+.hf-awnav.act{background:linear-gradient(135deg,rgba(74,158,255,.22),rgba(74,158,255,.08));color:#dceafd;box-shadow:inset 0 0 0 1px rgba(74,158,255,.25)}
+.hf-awmain{position:relative;flex:1 1 auto;padding:15px 20px;overflow:hidden}
+.hf-awhead{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
+.hf-files{position:absolute;inset:0;z-index:12;pointer-events:none}
+.hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:14px 14px}
+.hf-fitem .hf-ic{width:27px;height:33px;flex:0 0 auto;filter:drop-shadow(0 3px 7px rgba(0,0,0,.55))}
+.hf-fitem .hf-nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
+.hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
+.hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
+.hf-scrollhint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:30;color:var(--mut2);font-size:12px;pointer-events:none;animation:hf-bob 1.8s ease-in-out infinite;transition:opacity .3s}
+@keyframes hf-bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
+@media(prefers-reduced-motion:reduce){.hf-t3d,.hf-silver,.hf-eb,.hf-sub,.hf-cta,.hf-tl{animation:none!important;opacity:1!important;clip-path:none!important}}
 </style>
 </head>
 <body>
@@ -251,39 +312,56 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 <main id="top">
 
-<!-- HERO -->
-<header class="hero"><div class="hero-in">
-  <span class="eyebrow" data-t="hero_eb">Drive catalog for Mac</span>
-  <h1><span class="l1" data-t="hero_l1">See inside</span><span class="l2" data-t="hero_l2">sealed drives.</span></h1>
-  <p class="sub" data-t="hero_sub">Index each external drive once. From then on you search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer.</p>
-  <div class="hero-cta">
-    <a class="btn btn-primary" href="#features" data-t="cta_how">See it find a file in seconds ›</a>
-    <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
-  </div>
-  <p class="trustline" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
-  <p class="heroproof" data-t="heroproof">Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.</p>
-
-  <div class="xray" aria-hidden="true">
-    <div class="xray-drive">
-      <div class="xr-surface"><span class="xr-label">SSD · 4 TB</span><span class="xr-led"></span></div>
-      <div class="xray-inside">
-        <div class="xr-folders">
-          <div class="xr-folder"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Hochzeit Tegernsee</div>
-          <div class="xr-folder"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Doku Nordsee</div>
-          <div class="xr-folder"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Reise Island</div>
-          <div class="xr-folder"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Werbespot Hamburg</div>
+<!-- HERO (cinematic scroll — isolated hf- module) -->
+<header class="hfhero" id="hf-top">
+  <div class="hf-rail" id="hf-rail">
+    <div class="hf-sticky">
+      <canvas id="hf-stars"></canvas>
+      <span class="hf-glow"></span><div class="hf-grid"></div>
+      <div class="hf-floor" id="hf-floor"></div>
+      <div class="hf-head" id="hf-head">
+        <span class="hf-eb" data-t="hero_eb">Drive catalog for Mac</span>
+        <h1><span class="hf-t3d" data-t="hero_l1">Five tries.</span><span class="hf-silver" data-t="hero_l2">Or five seconds.</span></h1>
+        <p class="hf-sub" data-t="hero_sub">Disky remembers every drive you own — search by name or what's inside, reclaim space, catch duplicates, see everywhere you've shot. All on your Mac, nothing plugged in.</p>
+        <div class="hf-cta">
+          <a class="btn btn-primary" href="#features" data-t="cta_how">See it find a file in seconds ›</a>
+          <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
         </div>
-        <div class="xr-grid">
-          <span class="xr-tile film"></span><span class="xr-tile"></span><span class="xr-tile film"></span><span class="xr-tile"></span>
-          <span class="xr-tile"></span><span class="xr-tile film"></span><span class="xr-tile"></span><span class="xr-tile film"></span>
-          <span class="xr-tile film"></span><span class="xr-tile"></span><span class="xr-tile film"></span><span class="xr-tile"></span>
+        <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
+      </div>
+      <div class="hf-stage" id="hf-stage"><div class="hf-fan" id="hf-fan">
+        <div class="hf-fcard" data-i="-2"><img class="hf-drv" src="assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async"></div>
+        <div class="hf-fcard" data-i="-1"><img class="hf-drv" src="assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async"></div>
+        <div class="hf-fcard" data-i="1"><img class="hf-drv" src="assets/drives/t5.webp" alt="Samsung T5" decoding="async"></div>
+        <div class="hf-fcard" data-i="2"><img class="hf-drv" src="assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async"></div>
+      </div></div>
+      <div class="hf-bloom" id="hf-bloom"></div>
+      <div class="hf-shock" id="hf-shock"></div>
+      <div class="hf-appwin" id="hf-appwin">
+        <div class="hf-awbar"><span class="hf-tl r"></span><span class="hf-tl y"></span><span class="hf-tl g"></span><span class="hf-awtitle">Disky</span></div>
+        <div class="hf-awbody">
+          <div class="hf-awside">
+            <div class="hf-awnav"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</div>
+            <div class="hf-awnav"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg>Deep Search</div>
+            <div class="hf-awnav"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12V3M12 12l7 4"/></svg>Storage Map</div>
+            <div class="hf-awnav act"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Project Manager</div>
+            <div class="hf-awnav"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Duplicate Finder</div>
+          </div>
+          <div class="hf-awmain" id="hf-awmain"><div class="hf-awhead">Projects · 3</div></div>
         </div>
       </div>
-      <div class="xray-beam"></div>
+      <div class="hf-t9" id="hf-t9">
+        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
+        <img class="hf-dimg hf-xray" src="assets/drives/t9xray-land.webp" alt="" decoding="async">
+        <div class="hf-scanline" id="hf-scanline"><i class="hf-bm"></i><div class="hf-warp"></div></div>
+      </div>
+      <div class="hf-files" id="hf-files"></div>
+      <div class="hf-beatcap" id="hf-cap1" data-t="hero_cap1">Scan once.</div>
+      <div class="hf-beatcap" id="hf-cap2" data-t="hero_cap2">Remembered forever.</div>
+      <div class="hf-scrollhint" id="hf-hint" data-t="hero_scroll">Scroll to watch it scan ↓</div>
     </div>
-    <div class="xray-cap" data-t="xray_cap">Reading every project and file inside — while the drive stays in the drawer.</div>
   </div>
-</div></header>
+</header>
 
 <!-- TRUST -->
 <section class="trust"><div class="wrap">
@@ -386,8 +464,8 @@ const I18N={
   meta_title:"Disky — See inside sealed drives.",
   meta_desc:"Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.",
   nav_features:"Features",nav_privacy:"Privacy",nav_pricing:"Pricing",nav_dl:"Download",
-  hero_eb:"Drive catalog for Mac",hero_l1:"See inside",hero_l2:"sealed drives.",
-  hero_sub:"Index each external drive once. From then on you search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer.",
+  hero_eb:"Drive catalog for Mac",hero_l1:"Five tries.",hero_l2:"Or five seconds.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once.",hero_cap2:"Remembered forever.",
+  hero_sub:"Disky remembers every drive you own — search by name or what's inside, reclaim space, catch duplicates, see everywhere you've shot. All on your Mac, nothing plugged in.",
   cta_dl:"Download for Mac — free to start",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
   trustline:"Free to start · macOS, Apple Silicon · 100% local · Read-only",
@@ -427,8 +505,8 @@ const I18N={
   meta_title:"Disky — Schau in versiegelte Platten.",
   meta_desc:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt. Native Mac-App. 100% lokal.",
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_pricing:"Preise",nav_dl:"Laden",
-  hero_eb:"Platten-Katalog für Mac",hero_l1:"Schau in",hero_l2:"versiegelte Platten.",
-  hero_sub:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt.",
+  hero_eb:"Platten-Katalog für Mac",hero_l1:"Fünf Versuche.",hero_l2:"Oder fünf Sekunden.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen.",hero_cap2:"Für immer gemerkt.",
+  hero_sub:"Disky merkt sich jede Platte, die du besitzt — suche nach Name oder Inhalt, gib Speicher frei, finde Duplikate, sieh wo du überall gedreht hast. Alles auf deinem Mac, nichts angesteckt.",
   cta_dl:"Für Mac laden — kostenlos starten",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
   trustline:"Kostenlos starten · macOS, Apple Silicon · 100% lokal · Nur-Lesen",
@@ -585,6 +663,189 @@ function onScroll(){ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
 }); }
 addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
+</script>
+<script>
+/* ===== Cinematic scroll hero (isolated) ===== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const rail=$('hf-rail'); if(!rail) return;
+  const cards=[...document.querySelectorAll('.hf-fcard')], head=$('hf-head'), hint=$('hf-hint');
+  const fan=$('hf-fan'), floor=$('hf-floor'), hero=$('hf-t9');
+  const xray=hero.querySelector('.hf-xray'), front=hero.querySelector('.hf-front'), scanline=$('hf-scanline');
+  const bloom=$('hf-bloom'), shock=$('hf-shock');
+  const appwin=$('hf-appwin'), awmain=$('hf-awmain'), filesWrap=$('hf-files');
+  const cap1=$('hf-cap1'), cap2=$('hf-cap2');
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const ease=t=>1-Math.pow(1-t,3);
+  const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const DE=(typeof LANG!=='undefined'&&LANG==='de'), FW=DE?'Dateien':'files';
+
+  function fileSVG(label,color){return `<svg class="hf-ic" viewBox="0 0 36 44"><path d="M5 2.5h17l9 9v28a2.5 2.5 0 0 1-2.5 2.5h-23A2.5 2.5 0 0 1 3 39.5V5A2.5 2.5 0 0 1 5.5 2.5z" fill="#fcfdff"/><path d="M22 2.5l9 9h-7a2 2 0 0 1-2-2z" fill="#ccd3e0"/><rect x="3" y="27" width="23" height="12" rx="2.4" fill="${color}"/><text x="14.5" y="36" font-size="7.3" font-weight="800" fill="#fff" text-anchor="middle" font-family="-apple-system,Helvetica,sans-serif">${label}</text></svg>`;}
+  function folderSVG(){return `<svg class="hf-ic" viewBox="0 0 44 38"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h11.7a2.5 2.5 0 0 1 1.8.75L21 9h17.5A2.5 2.5 0 0 1 41 11.5V14H3z" fill="#4ea3ef"/><path d="M3 13h38v19.5A2.5 2.5 0 0 1 38.5 35h-33A2.5 2.5 0 0 1 3 32.5z" fill="#73bdf7"/><path d="M3 13h38v2.4H3z" fill="#9fd2fb" opacity=".6"/></svg>`;}
+  const ICON={folder:folderSVG,pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('PPT','#f0922b'),ai:()=>fileSVG('AI','#e8a33d'),
+   mp4:()=>fileSVG('MP4','#7d6cf0'),mov:()=>fileSVG('MOV','#7d6cf0'),wav:()=>fileSVG('WAV','#ef5fa0'),psd:()=>fileSVG('PSD','#2f9be8')};
+  const FILES=[
+   {name:'Client_A_2024_Rebrand',type:'folder',head:1,sz:'12 '+FW,cx:19,cy:17,r:-6},
+   {name:'brand_guide_v3.pdf',type:'pdf',sz:'15.2 MB',cx:79,cy:13,r:5},
+   {name:'presentation_final.pptx',type:'pptx',sz:'32.1 MB',cx:12,cy:37,r:-8},
+   {name:'logo_master.ai',type:'ai',sz:'4.7 MB',cx:87,cy:33,r:7},
+   {name:'Documentary_Project',type:'folder',head:1,sz:'9 '+FW,cx:25,cy:61,r:5},
+   {name:'final_master.mp4',type:'mp4',sz:'4.72 GB',cx:81,cy:58,r:-7},
+   {name:'color_grade_v1.mov',type:'mov',sz:'2.16 GB',cx:41,cy:10,r:-4},
+   {name:'rough_cut_v2.mov',type:'mov',sz:'2.45 GB',cx:62,cy:9,r:5},
+   {name:'interview_A.wav',type:'wav',sz:'847 MB',cx:10,cy:53,r:-6},
+   {name:'Personal_Work',type:'folder',head:1,sz:'6 '+FW,cx:89,cy:51,r:8},
+   {name:'landscape_01.psd',type:'psd',sz:'85.3 MB',cx:34,cy:70,r:-5},
+   {name:'sketchbook_2024.pdf',type:'pdf',sz:'120 MB',cx:67,cy:69,r:6}
+  ];
+  const N=FILES.length;
+  filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="hf-nm">${f.name}</span><span class="hf-sz">${f.sz}</span></div>`).join('');
+  const fitems=[...filesWrap.querySelectorAll('.hf-fitem')];
+  const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
+  const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);
+
+  /* Sterne (3D, pures Canvas) — pausiert wenn der Hero aus dem Viewport ist */
+  const starCv=$('hf-stars'), starCtx=starCv.getContext('2d');
+  let stars3=[],rotY=0,rotX=0,FOCAL=800,starsOn=true,running=false;
+  function sizeStars(){ starCv.width=innerWidth; starCv.height=innerHeight; FOCAL=Math.max(640,innerHeight*0.92);
+    const n=Math.min(2000,Math.round(innerWidth*innerHeight/1150)); stars3=[];
+    for(let i=0;i<n;i++) stars3.push({x:(Math.random()-0.5)*2000,y:(Math.random()-0.5)*2000,z:(Math.random()-0.5)*2000}); }
+  function frame(){ if(!starsOn){running=false;return;}
+    rotY+=0.0001; rotX+=0.00005;
+    const cyA=Math.cos(rotY),syA=Math.sin(rotY),cxA=Math.cos(rotX),sxA=Math.sin(rotX);
+    const w=starCv.width,h=starCv.height,ox=w/2,oy=h/2;
+    starCtx.clearRect(0,0,w,h); starCtx.fillStyle='#eef4ff';
+    for(let i=0;i<stars3.length;i++){ const s=stars3[i];
+      const x1=s.x*cyA - s.z*syA, z1=s.x*syA + s.z*cyA;
+      const y1=s.y*cxA - z1*sxA,  z2=s.y*sxA + z1*cxA;
+      if(z2<60) continue;
+      const k=FOCAL/z2, px=ox+x1*k, py=oy+y1*k;
+      if(px<0||px>w||py<0||py>h) continue;
+      let r=k*0.9; if(r<0.4) continue; if(r>2.6) r=2.6;
+      starCtx.globalAlpha=Math.min(1,0.12+k); starCtx.fillRect(px-r*0.5,py-r*0.5,r,r);
+    }
+    starCtx.globalAlpha=1; requestAnimationFrame(frame);
+  }
+  function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
+  sizeStars();
+  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);
+  startStars();
+
+  /* Fächer-Layout */
+  const DRV={'-2':{h:300,ar:0.631},'-1':{h:424,ar:0.666},'0':{h:318,ar:0.683},'1':{h:238,ar:0.766},'2':{h:378,ar:0.710}};
+  const REFW=1120, HEROW=520, REST_VIS=318, FAN_BOTTOM=-118;
+  let fanScale=1, heroTyRest=0, heroScRest=0.5, heroScLift=1, ORDER=[];
+  function fanParts(i){ return {tx:i*126, ty:Math.abs(i)*-12, rot:i*8.5}; }
+  function cardT(i,dy,sc){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx.toFixed(1)}px), ${(f.ty+(dy||0)).toFixed(1)}px) rotate(${f.rot}deg) scale(${(sc||1).toFixed(3)})`; }
+  function baseZ(i){ return 10-Math.abs(i); }
+  function heroGeom(lift){ return { ty:lerp(heroTyRest,-26,lift), rot:lerp(-90,0,lift), scl:lerp(heroScRest,heroScLift,lift) }; }
+  function heroT(g,dy,sc){ return `translate(-50%,-50%) translateY(${(g.ty+(dy||0)).toFixed(1)}px) rotate(${g.rot.toFixed(2)}deg) scale(${(g.scl*(sc||1)).toFixed(4)})`; }
+  function layout(){
+    fanScale=Math.min(1,innerWidth/REFW);
+    fan.style.setProperty('--hffs',fanScale.toFixed(3));
+    cards.forEach(c=>{ c.style.height=DRV[c.dataset.i].h+'px'; });
+    heroScLift=Math.min(1,innerWidth*0.9/HEROW);
+    heroScRest=(REST_VIS*fanScale)/HEROW;
+    const restCenterY=(innerHeight-FAN_BOTTOM)-(REST_VIS/2)*fanScale;
+    heroTyRest=restCenterY-innerHeight/2;
+    const r=awmain.getBoundingClientRect();
+    const rowH=Math.min(31,(r.height-40)/(N+2)), indent=24, padX=20;
+    let cy=r.top+38; ORDER=[];
+    FILES.forEach((f,i)=>{ if(f.head&&i>0) cy+=9; ORDER.push({x:r.left+padX+(f.head?0:indent), y:cy, w:r.width-padX*2-(f.head?0:indent)}); cy+=rowH; });
+  }
+
+  function apply(p){
+    const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);
+    const lift=easeIO(clamp(p1/0.46));
+    const scan=clamp((p1-0.5)/0.4);
+    const spread=easeIO(clamp(p1/0.5));
+    const done=clamp((scan-0.74)/0.26);
+    const flash=Math.sin(clamp(done)*Math.PI);
+    const pull=clamp(p2/0.82), pullE=pull*pull;
+    const resting=p<0.03;
+    cards.forEach(c=>{
+      const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.58*spread;
+      if(p2>0){ scl*=(1-0.7*pullE); op*=(1-Math.min(1,pullE*1.6)); ty-=40*pullE; }
+      c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.04,scl).toFixed(3)})`;
+      c.style.opacity=Math.max(0,op).toFixed(3);
+      c.style.zIndex = p2>0.05 ? 1 : baseZ(i);
+    });
+    fan.classList.toggle('hf-resting',resting);
+    floor.style.opacity=((1-0.7*spread)*(1-pullE)).toFixed(3);
+    const g=heroGeom(lift); let hSc=1, hDy=0, hOp=1;
+    if(p2>0){ const ex=clamp(p2/0.3); hSc*=(1-0.85*ex); hDy-=400*ex; hOp=1-ex; }
+    hero.style.transform=heroT(g,hDy,hSc);
+    hero.style.opacity=Math.max(0,hOp).toFixed(3);
+    hero.style.filter = flash>0.01 ? `brightness(${(1+0.9*flash).toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))` : 'none';
+    hero.style.zIndex = 11;
+    hero.classList.toggle('hf-resting',resting);
+    const bx=scan*100, ft=6;
+    if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('hf-on','hf-appear'); }
+    else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('hf-on','hf-appear'); }
+    else {
+      xray.style.opacity=1; front.style.opacity=1;
+      xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-ft).toFixed(2)}%,transparent ${(bx+ft).toFixed(2)}%)`;
+      front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-ft).toFixed(2)}%,#000 ${(bx+ft).toFixed(2)}%)`;
+      scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('hf-on');
+      if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
+    }
+    bloom.style.opacity=clamp(0.12*lift*(1-pullE) + 1.15*flash).toFixed(3);
+    bloom.style.transform=`translate(-50%,-50%) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
+    shock.style.opacity=(flash*0.95*(1-pullE)).toFixed(3);
+    shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
+    head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
+    head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
+    head.style.opacity=(1-0.82*spread).toFixed(3);
+    appwin.style.opacity=clamp((p2-0.1)/0.32).toFixed(3);
+    const W=innerWidth,H=innerHeight;
+    fitems.forEach((el,i)=>{ const f=FILES[i], o=ORDER[i]||{x:W/2,y:H*0.7,w:300};
+      const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
+      const settle=easeIO(clamp((p2-i/N*0.05-0.03)/0.5));
+      const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
+      const x=lerp(chX,o.x,settle), y=lerp(chY,o.y,settle), rot=lerp(f.r,0,settle);
+      el.style.width=o.w+'px';
+      el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg)`;
+      el.style.opacity=clamp(Math.max(appear,p2*5)).toFixed(3);
+      el.lastElementChild.style.opacity=clamp((settle-0.5)*2).toFixed(2);
+    });
+    const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
+    const cap2Op=clamp((p2-0.2)/0.26);
+    cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(16*(1-cap1Op)).toFixed(0)}px)`;
+    cap2.style.opacity=cap2Op.toFixed(3); cap2.style.transform=`translateX(-50%) translateY(${(16*(1-cap2Op)).toFixed(0)}px)`;
+    if(hint) hint.style.opacity=p>0.05?0:1;
+  }
+  function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
+    const g=heroGeom(0); hero.style.transform=heroT(g,0,1); hero.style.zIndex=11; hero.style.filter=''; }
+
+  /* Hover: nur über dem Stapel, dezent */
+  const DOCK_SIG=110, DOCK_AMP=0.07, DOCK_LIFT=7;
+  function clusterBox(){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+    for(const c of cards){ const r=c.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom; }
+    const r=hero.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom;
+    return {x0,y0,x1,y1}; }
+  let docked=false;
+  function dock(e){
+    if(curP>=0.03){ if(docked) docked=false; return; }
+    const mx=e.clientX,my=e.clientY, b=clusterBox(), m=18;
+    if(mx<b.x0-m||mx>b.x1+m||my<b.y0-m||my>b.y1+m){ if(docked){ setRest(); docked=false; } return; }
+    docked=true;
+    cards.forEach(c=>{ const r=c.getBoundingClientRect(); const d=mx-(r.left+r.width/2); const fct=Math.exp(-(d*d)/(2*DOCK_SIG*DOCK_SIG));
+      c.style.zIndex=12+Math.round(fct*14); c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });
+    const r=hero.getBoundingClientRect(); const dH=mx-(r.left+r.width/2); const fH=Math.exp(-(dH*dH)/(2*DOCK_SIG*DOCK_SIG));
+    const g=heroGeom(0); hero.style.zIndex=12+Math.round(fH*16); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
+  }
+  addEventListener('mousemove',dock,{passive:true});
+  document.addEventListener('mouseleave',()=>{ if(curP<0.03&&docked){ setRest(); docked=false; } },{passive:true});
+
+  layout(); setRest();
+  let targetP=0,curP=0,looping=false;
+  function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
+  function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.1; apply(curP); requestAnimationFrame(tick); }
+  addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
+  addEventListener('resize',()=>{ sizeStars(); layout(); readTarget(); apply(curP); },{passive:true});
+  layout(); readTarget(); curP=targetP; apply(curP);
+})();
 </script>
 </body>
 </html>
