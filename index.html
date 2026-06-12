@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#08090c">
 <meta name="color-scheme" content="dark">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Disky","operatingSystem":"macOS","applicationCategory":"UtilitiesApplication","description":"Index every external drive once, then search all of them offline — by name, project, or what's inside the footage — without plugging a drive in. 100% local, read-only, no subscription.","url":"https://disky.app/","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Disky","operatingSystem":"macOS","applicationCategory":"UtilitiesApplication","description":"Index every external drive once, then search all of them offline — by name, project, or what's inside the footage — without plugging a drive in. 100% local, read-only, no subscription.","url":"https://disky.app/"}</script>
 <style>
 :root{
   --bg:#08090c; --bg2:#0c0f15; --panel:#0f131a;
@@ -97,7 +97,7 @@ a{color:inherit;text-decoration:none}
 .xray-inside::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(74,158,255,.045) 0 1px,transparent 1px 4px)}
 .xr-folders{display:flex;flex-direction:column;gap:11px}
 .xr-folder{display:flex;align-items:center;gap:9px;font-size:12.5px;color:#a6d4ff;white-space:nowrap}
-.xr-folder svg{width:16px;height:16px;flex:0 0 auto;stroke:#4a9eff;fill:none;stroke-width:1.6;filter:drop-shadow(0 0 4px rgba(74,158,255,.55))}
+.xr-folder svg{width:16px;height:16px;flex:0 0 auto;stroke:#4a9eff;fill:none;stroke-width:1.6}
 .xr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .xr-tile{aspect-ratio:4/3;border:1px solid rgba(74,158,255,.5);border-radius:5px;background:rgba(74,158,255,.07);box-shadow:inset 0 0 9px rgba(74,158,255,.22);position:relative}
 .xr-tile.film::before{content:"";position:absolute;inset:3px;border-left:2px dashed rgba(74,158,255,.55);border-right:2px dashed rgba(74,158,255,.55)}
@@ -107,7 +107,10 @@ a{color:inherit;text-decoration:none}
 .xray-cap{margin-top:15px;text-align:center;font-size:12.5px;color:var(--mut2);font-family:var(--fmono);letter-spacing:.02em}
 @keyframes xrReveal{0%{clip-path:inset(0 100% 0 0);opacity:1}30%{clip-path:inset(0 0 0 0);opacity:1}80%{clip-path:inset(0 0 0 0);opacity:1}92%{clip-path:inset(0 0 0 0);opacity:0}93%,100%{clip-path:inset(0 100% 0 0);opacity:0}}
 @keyframes xrBeam{0%{left:0;opacity:0}5%{opacity:1}30%{left:100%;opacity:1}37%{left:100%;opacity:0}100%{left:100%;opacity:0}}
+.xray.paused .xray-inside,.xray.paused .xray-beam,.xray.paused .xr-led{animation-play-state:paused}  /* stop the hero loop once scrolled past */
 @media(prefers-reduced-motion:reduce){.xray-inside{clip-path:inset(0 0 0 0);animation:none;opacity:1}.xray-beam{display:none}.xr-led{animation:none}}
+.heroproof{margin-top:14px;font-size:12.5px;color:var(--mut);font-family:var(--fmono);letter-spacing:.01em;opacity:0;animation:fadeUp .9s .72s both}
+.heroproof b{color:var(--ink);font-weight:600}
 
 /* ── Trust strip ── */
 .trust{border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:18px 0;margin-top:84px}
@@ -249,7 +252,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 <!-- HERO -->
 <header class="hero"><div class="hero-in">
-  <span class="eyebrow" data-t="hero_eb">Disky for Mac</span>
+  <span class="eyebrow" data-t="hero_eb">Drive catalog for Mac</span>
   <h1><span class="l1" data-t="hero_l1">See inside</span><span class="l2" data-t="hero_l2">sealed drives.</span></h1>
   <p class="sub" data-t="hero_sub">Index each external drive once. From then on you search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer.</p>
   <div class="hero-cta">
@@ -257,6 +260,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
   </div>
   <p class="trustline" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
+  <p class="heroproof" data-t="heroproof">Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.</p>
 
   <div class="xray" aria-hidden="true">
     <div class="xray-drive">
@@ -336,7 +340,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 <section class="sec pricing" id="pricing"><div class="wrap rev">
   <div>
     <h2 data-t="pr_h">Free to start. Yours to keep.</h2>
-    <p class="ptri" data-t="pr_sub">A one-time Mac app — not a subscription, not a cloud login. Catalog your first drives free; own it for good.</p>
+    <p class="ptri" data-t="pr_sub">A one-time Mac app — not a subscription, no cloud lock-in. Catalog your first drives free, then own it for good. Pricing is announced at launch — early users keep the launch price.</p>
     <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
   </div>
   <div class="specs">
@@ -381,11 +385,12 @@ const I18N={
   meta_title:"Disky — See inside sealed drives.",
   meta_desc:"Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.",
   nav_features:"Features",nav_privacy:"Privacy",nav_pricing:"Pricing",nav_dl:"Download",
-  hero_eb:"Disky for Mac",hero_l1:"See inside",hero_l2:"sealed drives.",
+  hero_eb:"Drive catalog for Mac",hero_l1:"See inside",hero_l2:"sealed drives.",
   hero_sub:"Index each external drive once. From then on you search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer.",
   cta_dl:"Download for Mac — free to start",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
   trustline:"Free to start · macOS, Apple Silicon · 100% local · Read-only",
+  heroproof:"Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.",
   hs_q:"wedding tegernsee",hs_tag:"in the drawer",
   t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"Works offline",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
@@ -399,7 +404,7 @@ const I18N={
   ],
   pv_h:"Your work never leaves your Mac.",pv_sub:"No cloud, no upload, no lock-in. The content-search AI runs on-device, and Disky only ever reads your drives — it never moves, renames, or deletes a thing.",
   pm1_t:"On-device",pm1_d:"The AI runs locally — nothing uploaded.",pm2_t:"Read-only",pm2_d:"Never moves, renames, or deletes a file.",pm3_t:"No subscription",pm3_d:"One-time license — no cloud lock-in, no recurring bill.",
-  pr_h:"Free to start. Yours to keep.",pr_sub:"A one-time Mac app — not a subscription, not a cloud login. Catalog your first drives free; own it for good.",
+  pr_h:"Free to start. Yours to keep.",pr_sub:"A one-time Mac app — not a subscription, no cloud lock-in. Catalog your first drives free, then own it for good. Pricing is announced at launch — early users keep the launch price.",
   sp1:"Platform",sp2:"Intelligence",sp2v:"On-device",sp3:"License",sp3v:"One-time",sp4:"Network",sp4v:"Works offline",
   faq_h:"Questions, answered.",
   end_h:"Stop digging through the drawer.",end_sub:"Index your drives once. Find anything across all of them in seconds — unplugged, on your Mac, yours alone.",
@@ -411,18 +416,21 @@ const I18N={
    ["How does the content search actually work?","Disky reads what's in your clips and photos, so you can search by what the footage shows — type “underwater” and it surfaces every clip with water, across all drives, even ones unplugged and misnamed. The model runs on-device."],
    ["How does it find duplicates if files are renamed?","By checksum, not filename. Disky compares files byte-for-byte, so identical footage is caught even after it's renamed or moved between drives — then shows the exact space you'd reclaim (80.4 GB across 5 groups in the example)."],
    ["Is it a subscription?","No. Disky is free to start and a one-time Mac app — yours to keep. No subscription, no recurring bill, no cloud lock-in."],
-   ["How many drives can it handle?","It's built for walls of drives — 10 to 22 and beyond. Over a million files across multiple drives stays searchable in seconds."]
+   ["How many drives can it handle?","It's built for walls of drives — 10 to 22 and beyond. Over a million files across multiple drives stays searchable in seconds."],
+   ["Is it safe to run on my drives?","Completely. Disky is strictly read-only — it catalogs and maps your drives but never moves, renames, or deletes a single file. It physically can't change your footage. The only thing it ever writes is its own catalog, on your Mac."],
+   ["Why isn't it in the Mac App Store?","Disky runs outside the App Store sandbox on purpose — that's the only way it can see every external drive you own. It's a direct download for Apple Silicon Macs, launching soon."]
   ]
  },
  de:{
   meta_title:"Disky — Schau in versiegelte Platten.",
   meta_desc:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt. Native Mac-App. 100% lokal.",
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_pricing:"Preise",nav_dl:"Laden",
-  hero_eb:"Disky für Mac",hero_l1:"Schau in",hero_l2:"versiegelte Platten.",
+  hero_eb:"Platten-Katalog für Mac",hero_l1:"Schau in",hero_l2:"versiegelte Platten.",
   hero_sub:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt.",
   cta_dl:"Für Mac laden — kostenlos starten",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
   trustline:"Kostenlos starten · macOS, Apple Silicon · 100% lokal · Nur-Lesen",
+  heroproof:"1 Mio.+ Dateien über 22+ Platten in Sekunden durchsuchen — jede Disk in der Schublade.",
   hs_q:"hochzeit tegernsee",hs_tag:"im Schrank",
   t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Offline-fähig",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
@@ -436,7 +444,7 @@ const I18N={
   ],
   pv_h:"Deine Arbeit verlässt nie deinen Mac.",pv_sub:"Keine Cloud, kein Konto, kein Upload. Die Inhalts-KI läuft on-device, und Disky liest deine Platten nur — es verschiebt, benennt oder löscht nie etwas.",
   pm1_t:"On-device",pm1_d:"Die KI läuft lokal — nichts wird hochgeladen.",pm2_t:"Nur-Lesen",pm2_d:"Verschiebt, benennt, löscht nie eine Datei.",pm3_t:"Kein Abo",pm3_d:"Einmal-Lizenz — kein Cloud-Zwang, keine Abo-Rechnung.",
-  pr_h:"Kostenlos starten. Dir gehörend.",pr_sub:"Eine einmalige Mac-App — kein Abo, kein Cloud-Login. Katalogisiere deine ersten Platten gratis; behalte sie für immer.",
+  pr_h:"Kostenlos starten. Dir gehörend.",pr_sub:"Eine einmalige Mac-App — kein Abo, kein Cloud-Zwang. Katalogisiere deine ersten Platten gratis, dann gehört sie für immer dir. Den Preis nennen wir zum Launch — Early-User behalten den Launch-Preis.",
   sp1:"Plattform",sp2:"Intelligenz",sp2v:"On-device",sp3:"Lizenz",sp3v:"Einmalig",sp4:"Netzwerk",sp4v:"Offline-fähig",
   faq_h:"Fragen, beantwortet.",
   end_h:"Hör auf, die Schublade zu durchwühlen.",end_sub:"Deine Platten einmal indexieren. Alles über alle hinweg in Sekunden finden — ungesteckt, auf deinem Mac, dir allein.",
@@ -448,7 +456,9 @@ const I18N={
    ["Wie funktioniert die Inhalts-Suche eigentlich?","Disky liest, was in deinen Clips und Fotos ist — du suchst nach dem, was das Material zeigt. Tippe „unter Wasser“ und es findet jeden Clip mit Wasser, über alle Platten, selbst ungesteckte und falsch benannte. Das Modell läuft on-device."],
    ["Wie findet es Duplikate, wenn Dateien umbenannt sind?","Per Prüfsumme, nicht per Name. Disky vergleicht Dateien Byte für Byte — identisches Material wird erkannt, selbst nach Umbenennen oder Verschieben zwischen Platten — und zeigt dann den genauen Platz, den du zurückbekommst (im Beispiel 80,4 GB über 5 Gruppen)."],
    ["Ist es ein Abo?","Nein. Disky ist kostenlos zum Starten und eine einmalige Mac-App — dir gehörend. Kein Abo, keine wiederkehrende Rechnung, kein Cloud-Zwang."],
-   ["Wie viele Platten verkraftet es?","Es ist für Regale voller Platten gebaut — 10 bis 22 und mehr. Über eine Million Dateien über mehrere Platten bleiben in Sekunden durchsuchbar."]
+   ["Wie viele Platten verkraftet es?","Es ist für Regale voller Platten gebaut — 10 bis 22 und mehr. Über eine Million Dateien über mehrere Platten bleiben in Sekunden durchsuchbar."],
+   ["Ist es sicher auf meinen Platten?","Komplett. Disky ist strikt nur-lesend — es katalogisiert und kartiert deine Platten, verschiebt, benennt oder löscht aber nie eine einzige Datei. Es kann dein Material gar nicht verändern. Das Einzige, was es je schreibt, ist sein eigener Katalog, auf deinem Mac."],
+   ["Warum ist es nicht im Mac App Store?","Disky läuft bewusst außerhalb der App-Store-Sandbox — nur so sieht es jede externe Platte, die du besitzt. Es ist ein Direkt-Download für Apple-Silicon-Macs, bald verfügbar."]
   ]
  }
 };
@@ -480,6 +490,10 @@ addEventListener('scroll',navState,{passive:true}); navState();
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.12});
 document.querySelectorAll('.rev').forEach(e=>io.observe(e));
 
+/* pause the hero X-ray loop once it's scrolled out of view (saves continuous paint) */
+(function(){const xr=document.querySelector('.xray');if(!xr)return;
+  new IntersectionObserver(es=>es.forEach(e=>xr.classList.toggle('paused',!e.isIntersecting)),{rootMargin:'80px'}).observe(xr);})();
+
 /* hero search resolve */
 
 /* ─────────── smooth scroll (Lenis) ─────────── */
@@ -492,7 +506,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
 (function loadLenis(){
   if(reduced) return;
   const s=document.createElement('script');
-  s.src='https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';
+  s.src='lenis.min.js';   // self-hosted (no third-party CDN — fits the "100% local" promise)
   s.onload=()=>{ try{
     lenisInst=new Lenis({lerp:0.085,wheelMultiplier:1,smoothWheel:true});
     function raf(t){lenisInst.raf(t);requestAnimationFrame(raf);} requestAnimationFrame(raf);
@@ -550,7 +564,7 @@ function setAppActive(on){ try{ if(APPW) APPW._animActive=on; }catch(e){} }
 
 // load the iframe only when the showcase approaches (keeps initial paint light & smooth)
 const railSec=document.getElementById('features');
-const preIO=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting && !frame.src){ frame.src='/app/index.html'; frame.addEventListener('load',seedAndStart,{once:true}); preIO.disconnect(); } }); },{rootMargin:'600px 0px'});
+const preIO=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting && !frame.src){ frame.src='/app/index.html'; frame.addEventListener('load',seedAndStart,{once:true}); preIO.disconnect(); } }); },{rootMargin:'220px 0px'});
 preIO.observe(railSec);
 
 // in-view tracking for the sticky stage

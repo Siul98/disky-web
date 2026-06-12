@@ -1,0 +1,220 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disky · Hero-Konzepte</title>
+<style>
+:root{--bg:#08090c;--bg2:#0c0f15;--ink:#f4f7fb;--mut:rgba(244,247,251,.6);--mut2:rgba(244,247,251,.4);
+ --acc:#4a9eff;--acc2:#37cfe0;--line:rgba(255,255,255,.09);--mono:"SF Mono",ui-monospace,Menlo,monospace;
+ --disp:-apple-system,"SF Pro Display","Helvetica Neue",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);padding:40px 24px 80px}
+.head{max-width:1200px;margin:0 auto 36px}
+.head .eb{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:600}
+.head h1{font-size:34px;letter-spacing:-.03em;margin:8px 0 6px}
+.head p{color:var(--mut);font-size:15px;margin:0;max-width:70ch}
+.grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01))}
+.card .top{padding:18px 20px 14px;display:flex;align-items:baseline;gap:10px}
+.card .num{font-family:var(--mono);font-size:12px;color:var(--mut2)}
+.card .nm{font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--acc2)}
+.card .tag{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--mut2);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.card h2{font-size:26px;letter-spacing:-.03em;margin:0 20px 2px;background:linear-gradient(180deg,#fff,#bcd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card .de{margin:0 20px 14px;font-size:13px;color:var(--mut2)}
+.stage{position:relative;height:300px;margin:0 16px;border-radius:14px;overflow:hidden;background:radial-gradient(120% 100% at 50% 0%,#0e131b,#070a0e);border:1px solid var(--line)}
+.card .why{padding:14px 20px 20px;font-size:13px;color:var(--mut);line-height:1.5}
+
+/* ── reusable drive shape ── */
+.drv{position:relative;border-radius:8px;background:linear-gradient(150deg,#1b2331,#0d121b 60%,#10151e);
+ border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06)}
+.drv .led{position:absolute;right:7px;top:7px;width:5px;height:5px;border-radius:50%;background:#2c3543}
+.drv.on{border-color:rgba(74,158,255,.7);box-shadow:0 0 22px rgba(74,158,255,.4),inset 0 1px 0 rgba(255,255,255,.1)}
+.drv.on .led{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.lbl{font-family:var(--mono);font-size:11px;color:#a6d4ff}
+
+/* ════ 1 · SONAR ════ */
+.sonar .field{position:absolute;inset:0;background:
+ radial-gradient(circle at 50% 52%,transparent 0,transparent 38px,rgba(74,158,255,.06) 39px,transparent 41px),
+ radial-gradient(circle at 50% 52%,transparent 0,transparent 70px,rgba(74,158,255,.05) 71px,transparent 73px),
+ radial-gradient(circle at 50% 52%,transparent 0,transparent 104px,rgba(74,158,255,.04) 105px,transparent 107px)}
+.sonar .core{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:74px;height:50px}
+.sonar .ring{position:absolute;left:50%;top:52%;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--acc);
+ transform:translate(-50%,-50%) scale(.3);opacity:0;animation:sonar 4.2s ease-out infinite}
+.sonar .ring.r2{animation-delay:.7s;border-color:var(--acc2)}
+@keyframes sonar{0%{transform:translate(-50%,-50%) scale(.25);opacity:.85}70%{opacity:.25}100%{transform:translate(-50%,-50%) scale(13);opacity:0}}
+.son-c{position:absolute;display:flex;align-items:center;gap:6px;opacity:0;animation:sonc 4.2s ease-out infinite}
+.son-c b{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 9px var(--acc);flex:0 0 auto}
+.son-c span{font-family:var(--mono);font-size:10.5px;color:#bcd9ff;white-space:nowrap}
+@keyframes sonc{0%,12%{opacity:0}18%{opacity:1}74%{opacity:1}88%,100%{opacity:0}}
+.son-c.a{left:18%;top:24%;animation-delay:.5s}.son-c.b{right:16%;top:30%;animation-delay:.75s;flex-direction:row-reverse}
+.son-c.c{left:14%;bottom:26%;animation-delay:1s}.son-c.d{right:14%;bottom:22%;animation-delay:1.25s;flex-direction:row-reverse}
+.son-c.e{left:40%;top:14%;animation-delay:.9s}.son-c.f{right:30%;bottom:12%;animation-delay:1.4s;flex-direction:row-reverse}
+
+/* ════ 2 · HANDWRITTEN LABEL ════ */
+.hand .drv{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:240px;height:188px}
+.hand .sticker{position:absolute;left:24px;right:24px;top:34px;bottom:30px;border-radius:6px;
+ background:repeating-linear-gradient(0deg,transparent 0 27px,rgba(255,255,255,.06) 27px 28px);
+ border:1px dashed rgba(255,255,255,.14);padding:8px 14px}
+.hand .stik-h{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--mut2);margin-bottom:7px}
+.hand .ln{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:20px;color:#9fd2ff;line-height:28px;white-space:nowrap;
+ clip-path:inset(0 100% 0 0);animation:write 7s ease-in-out infinite}
+.hand .ln.l2{animation-delay:1.5s}.hand .ln.l3{animation-delay:3s}.hand .ln.l4{animation-delay:4.5s}
+@keyframes write{0%,2%{clip-path:inset(0 100% 0 0)}18%{clip-path:inset(0 0 0 0)}86%{clip-path:inset(0 0 0 0)}93%,100%{clip-path:inset(0 100% 0 0)}}
+.hand .nib{position:absolute;width:3px;height:3px;border-radius:50%;background:#cfe9ff;box-shadow:0 0 7px var(--acc);opacity:0}
+
+/* ════ 3 · ANSWERING DRIVE ════ */
+.answer .pill{position:absolute;left:50%;top:30px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;
+ background:#0f131a;border:1px solid var(--line);border-radius:11px;padding:9px 14px;box-shadow:0 12px 30px rgba(0,0,0,.5);min-width:230px}
+.answer .pill svg{width:14px;height:14px;stroke:var(--acc);fill:none;flex:0 0 auto}
+.answer .pill .q{font-size:13px;color:var(--ink);overflow:hidden;white-space:nowrap;border-right:1.4px solid var(--acc);
+ width:0;animation:type 6s steps(22) infinite}
+@keyframes type{0%{width:0}22%{width:14.5ch}82%{width:14.5ch}90%,100%{width:0}}
+.answer .row{position:absolute;left:0;right:0;bottom:42px;display:flex;justify-content:center;gap:13px}
+.answer .row .drv{width:48px;height:64px;opacity:.42;animation:dim 6s ease-in-out infinite}
+.answer .row .drv .led{left:50%;transform:translateX(-50%);right:auto}
+.answer .row .drv.hit{animation:hit 6s ease-in-out infinite}
+@keyframes dim{0%,30%{opacity:.7}45%{opacity:.4}80%{opacity:.4}100%{opacity:.7}}
+@keyframes hit{0%,38%{opacity:.7;border-color:rgba(255,255,255,.1);box-shadow:0 8px 22px rgba(0,0,0,.5)}
+ 50%{opacity:1;border-color:rgba(74,158,255,.8);box-shadow:0 0 26px rgba(74,158,255,.5)}82%{opacity:1;border-color:rgba(74,158,255,.8);box-shadow:0 0 26px rgba(74,158,255,.5)}100%{opacity:.7;border-color:rgba(255,255,255,.1)}}
+.answer .hit .led{background:var(--acc)!important;box-shadow:0 0 9px var(--acc)!important;animation:none}
+.answer .ans{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;color:#bcd9ff;opacity:0;animation:ansin 6s ease-in-out infinite}
+@keyframes ansin{0%,45%{opacity:0}55%{opacity:1}82%{opacity:1}90%,100%{opacity:0}}
+
+/* ════ 4 · SHOEBOX → INDEX ════ */
+.shoe .drv{position:absolute;width:42px;height:56px;left:calc(var(--sx));top:calc(var(--sy));transform:rotate(var(--sr));
+ animation:tidy 8s ease-in-out infinite}
+.shoe .drv .led{left:50%;transform:translateX(-50%);right:auto}
+@keyframes tidy{0%,8%{left:var(--sx);top:var(--sy);transform:rotate(var(--sr))}
+ 30%{left:var(--ex);top:var(--ey);transform:rotate(0deg)}82%{left:var(--ex);top:var(--ey);transform:rotate(0deg)}
+ 96%,100%{left:var(--sx);top:var(--sy);transform:rotate(var(--sr))}}
+.shoe .cap{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;color:var(--mut2);opacity:0;animation:capin 8s ease-in-out infinite}
+@keyframes capin{0%,32%{opacity:0}42%{opacity:1}82%{opacity:1}92%,100%{opacity:0}}
+
+/* ════ 5 · SPOTLIGHT ════ */
+.spot .grid2{position:absolute;inset:18px;display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:1fr;gap:5px}
+.spot .grid2 i{border-radius:3px;background:rgba(122,166,230,.1)}
+.spot .beam{position:absolute;width:150px;height:150px;border-radius:50%;pointer-events:none;
+ background:radial-gradient(circle,rgba(74,158,255,.22),transparent 62%);mix-blend-mode:plus-lighter;
+ left:0;top:50%;transform:translate(-50%,-50%);animation:spotmove 6.5s ease-in-out infinite}
+@keyframes spotmove{0%{left:8%;top:40%}55%{left:52%;top:52%}70%{left:52%;top:52%}100%{left:52%;top:52%;opacity:0}}
+.spot .hit{position:absolute;left:calc(52% - 9px);top:calc(52% - 7px);width:20px;height:15px;border-radius:3px;background:var(--acc);
+ box-shadow:0 0 16px var(--acc);opacity:0;animation:spothit 6.5s ease-in-out infinite}
+@keyframes spothit{0%,52%{opacity:0;transform:scale(.9)}60%{opacity:1;transform:scale(1.18)}86%{opacity:1;transform:scale(1.12)}94%,100%{opacity:0}}
+.spot .callout{position:absolute;left:52%;top:30%;font-family:var(--mono);font-size:10px;color:#bcd9ff;opacity:0;animation:spothit 6.5s ease-in-out infinite}
+
+/* ════ 6 · CORE SAMPLE ════ */
+.core .col{position:absolute;left:50%;top:24px;bottom:24px;width:120px;transform:translateX(-50%);display:flex;flex-direction:column;gap:2px}
+.core .st{flex:1;border-radius:2px;position:relative;background:linear-gradient(180deg,#141a24,#0e131b);border:1px solid rgba(255,255,255,.05)}
+.core .st .sl{position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:9px;color:var(--mut2);white-space:nowrap}
+.core .st.hit{animation:strata 9s ease-in-out infinite}
+.core .st.h1{animation-delay:0s}.core .st.h2{animation-delay:.15s}.core .st.h3{animation-delay:.3s}
+@keyframes strata{0%,40%{background:linear-gradient(180deg,#141a24,#0e131b);border-color:rgba(255,255,255,.05)}
+ 52%{background:linear-gradient(180deg,#16314a,#10283c);border-color:rgba(55,207,224,.8);box-shadow:0 0 16px rgba(74,158,255,.4)}
+ 84%{background:linear-gradient(180deg,#16314a,#10283c);border-color:rgba(55,207,224,.8);box-shadow:0 0 16px rgba(74,158,255,.4)}100%{background:linear-gradient(180deg,#141a24,#0e131b);border-color:rgba(255,255,255,.05)}}
+.core .st.hit .sl{color:#bcd9ff}
+.core .beam{position:absolute;left:50%;top:24px;width:1.5px;height:0;transform:translateX(-50%);
+ background:linear-gradient(180deg,transparent,#9fd2ff,#37cfe0);box-shadow:0 0 12px rgba(74,158,255,.7);animation:drill 9s ease-in-out infinite}
+@keyframes drill{0%,10%{height:0;opacity:0}12%{opacity:1}36%{height:calc(100% - 48px);opacity:1}44%{opacity:0}100%{opacity:0;height:calc(100% - 48px)}}
+.core .qbar{position:absolute;left:50%;top:6px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;color:var(--acc)}
+</style></head>
+<body>
+<div class="head">
+  <div class="eb">Disky · Hero-Konzepte</div>
+  <h1>6 grafische Startseiten-Ideen</h1>
+  <p>Jedes Konzept ist eine eigene Animation + passende Headline (EN/DE). Alle laufen live in Endlosschleife, CSS/SVG-leicht. Sag mir, welche(s) wir für die Startseite ausbauen — oder mischen.</p>
+</div>
+<div class="grid">
+
+  <!-- 1 SONAR -->
+  <div class="card"><div class="top"><span class="num">01</span><span class="nm">Sonar Ping</span><span class="tag">css · low</span></div>
+    <h2>Find what you forgot you own.</h2><div class="de">„Finde wieder, was du längst vergessen hast."</div>
+    <div class="stage sonar">
+      <div class="field"></div>
+      <div class="ring"></div><div class="ring r2"></div>
+      <div class="drv core"><span class="led"></span></div>
+      <span class="son-c a"><b></b><span>Berlin_Rooftop.mov</span></span>
+      <span class="son-c b"><b></b><span>Wedding_2019</span></span>
+      <span class="son-c c"><b></b><span>Drone/Iceland</span></span>
+      <span class="son-c d"><b></b><span>O-Ton_47.wav</span></span>
+      <span class="son-c e"><b></b><span>Nike_v3.mov</span></span>
+      <span class="son-c f"><b></b><span>Color_LUTs</span></span>
+    </div>
+    <div class="why">Ein „Ping" erreicht jede Platte in der Schublade — Namen tauchen auf, nichts wird angesteckt. Trifft den emotionalsten Schmerz (vergessenes Material), Metapher die niemand sonst nutzt.</div>
+  </div>
+
+  <!-- 2 HANDWRITTEN -->
+  <div class="card"><div class="top"><span class="num">02</span><span class="nm">Handwritten Label</span><span class="tag">css+svg · low</span></div>
+    <h2>The drive finally has a label.</h2><div class="de">„Endlich ein Etikett auf der Platte."</div>
+    <div class="stage hand">
+      <div class="drv">
+        <div class="sticker">
+          <div class="stik-h">DISKY · INDEX</div>
+          <div class="ln l1">Wedding_Amalfi</div>
+          <div class="ln l2">Drone_Iceland</div>
+          <div class="ln l3">Doku_Nordsee</div>
+          <div class="ln l4">Nike_Spot_4K</div>
+        </div>
+      </div>
+    </div>
+    <div class="why">Ein blauer Stift schreibt die Projektnamen aufs Etikett, das die Platte nie hatte. Genau deine Idee — taktil, warm, hochwertig; ein Gegenpol zu den kühlen Scans.</div>
+  </div>
+
+  <!-- 3 ANSWERING DRIVE -->
+  <div class="card"><div class="top"><span class="num">03</span><span class="nm">The Answering Drive</span><span class="tag">css · low</span></div>
+    <h2>Ask. The right drive answers.</h2><div class="de">„Frag — die richtige Platte antwortet."</div>
+    <div class="stage answer">
+      <div class="pill"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg><span class="q">Tokyo rooftop</span></div>
+      <div class="row">
+        <div class="drv"><span class="led"></span></div><div class="drv"><span class="led"></span></div>
+        <div class="drv hit"><span class="led"></span></div><div class="drv"><span class="led"></span></div>
+        <div class="drv"><span class="led"></span></div><div class="drv"><span class="led"></span></div>
+      </div>
+      <div class="ans">Studio RAID · /Reise/Japan/Tokyo_Rooftop.mov</div>
+    </div>
+    <div class="why">Die ganze Schublade auf einmal durchsucht — eine Platte leuchtet auf, der Rest dimmt. DIE Kernverkaufs-Szene: suchen über alle, ohne irgendwas anzustecken.</div>
+  </div>
+
+  <!-- 4 SHOEBOX -->
+  <div class="card"><div class="top"><span class="num">04</span><span class="nm">Shoebox → Catalog</span><span class="tag">css · low</span></div>
+    <h2>Turn the shoebox into a catalog.</h2><div class="de">„Aus der Schuhkiste wird ein Katalog."</div>
+    <div class="stage shoe" id="shoe"></div>
+    <div class="why">Ein Haufen unbeschrifteter Platten ordnet sich zu einer sauberen, leuchtenden Reihe. Chaos→Ordnung braucht null Erklärung — die gelebte Realität deiner Zielgruppe.</div>
+  </div>
+
+  <!-- 5 SPOTLIGHT -->
+  <div class="card"><div class="top"><span class="num">05</span><span class="nm">Spotlight</span><span class="tag">css · low-med</span></div>
+    <h2>Find the one clip among a million.</h2><div class="de">„Finde den einen Clip unter Millionen."</div>
+    <div class="stage spot"><div class="grid2" id="spotGrid"></div><div class="beam"></div><div class="hit"></div><div class="callout">PORTABLE-T7 · /Weddings/2019/Ceremony_4K.mov</div></div>
+    <div class="why">Der Heuhaufen aus 1 Mio.+ Dateien — ein Spotlight findet die EINE Kachel + zeigt Platte & Pfad. Macht die Skala ehrlich sichtbar, „echtes Ergebnis statt Marketing".</div>
+  </div>
+
+  <!-- 6 CORE SAMPLE -->
+  <div class="card"><div class="top"><span class="num">06</span><span class="nm">Core Sample · Wildcard</span><span class="tag">css · med</span></div>
+    <h2>Years of footage, read as one core.</h2><div class="de">„Jahre an Material — gelesen wie ein Bohrkern."</div>
+    <div class="stage core">
+      <div class="qbar">⌕ „travel"</div>
+      <div class="col">
+        <div class="st"><span class="sl">2024_NIKE</span></div>
+        <div class="st hit h1"><span class="sl">2023_TRAVEL · 38</span></div>
+        <div class="st"><span class="sl">2022_WED</span></div>
+        <div class="st hit h2"><span class="sl">2021_TRAVEL · 21</span></div>
+        <div class="st"><span class="sl">2020_DOKU</span></div>
+        <div class="st"><span class="sl">2019_SPOT</span></div>
+        <div class="st hit h3"><span class="sl">2018_TRAVEL · 12</span></div>
+        <div class="st"><span class="sl">2017_RAW</span></div>
+      </div>
+      <div class="beam"></div>
+    </div>
+    <div class="why">Das Archiv als geologischer Bohrkern — eine Suche bohrt durch alle Jahres-Schichten, nur die passenden leuchten. Wildcard: niemand im Storage-Markt macht das, sehr cinematisch.</div>
+  </div>
+
+</div>
+<script>
+// 4 · shoebox: place 7 drives jumbled → ordered row (set CSS vars)
+(function(){const st=document.getElementById('shoe');if(!st)return;const N=7,W=300,slotW=36;
+ const startX=[20,90,150,40,200,120,230],startY=[40,150,60,200,120,30,170],rot=[-12,8,-6,11,-9,6,-3];
+ const totW=N*slotW+(N-1)*8, ox=(W-totW)/2;
+ let h='';for(let i=0;i<N;i++){const ex=ox+i*(slotW+8);h+=`<div class="drv" style="--sx:${startX[i]}px;--sy:${startY[i]}px;--sr:${rot[i]}deg;--ex:${ex}px;--ey:118px;animation-delay:${(i*0.09).toFixed(2)}s"><span class="led"></span></div>`;}
+ h+='<div class="cap">22 Platten · 1.048.505 Dateien · indexiert</div>';st.innerHTML=h;})();
+// 5 · spotlight grid tiles
+(function(){const g=document.getElementById('spotGrid');if(!g)return;let h='';for(let i=0;i<96;i++)h+='<i></i>';g.innerHTML=h;})();
+</script>
+</body></html>
