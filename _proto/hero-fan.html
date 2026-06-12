@@ -13,7 +13,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .sticky{position:sticky;top:0;height:100vh;overflow:hidden}
 .sticky::before{content:"";position:absolute;left:50%;top:48%;width:1000px;height:700px;transform:translateX(-50%);
  background:radial-gradient(closest-side,rgba(45,98,200,.22),transparent 72%);pointer-events:none}
-.head{position:absolute;left:0;right:0;top:0;z-index:3;text-align:center;padding-top:12vh;will-change:transform,opacity}
+.head{position:absolute;left:0;right:0;top:0;z-index:3;text-align:center;padding-top:9vh;will-change:transform,opacity}
 .head .eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:18px}
 .head h1{font-size:clamp(48px,8.2vw,96px);letter-spacing:-.045em;margin:0;line-height:.97}
 .head h1 .l1{display:block;color:#eef3fa}
@@ -119,7 +119,7 @@ function apply(p){
   cards.forEach(c=>{
     const i=+c.dataset.i;
     if(i===0){
-      const ty=-168*lift, sc=1+0.18*lift;          // fährt nur in den Leerraum hoch, dezent größer
+      const ty=-205*lift, sc=1+0.42*lift;          // fährt in den Leerraum hoch + wird zum großen Hero-Drive
       c.style.transform=`rotate(0deg) translateY(${ty}px) scale(${sc})`;
       c.style.opacity=1;
       c.style.zIndex = lift>0.05 ? 12 : 2;          // mittig im Stapel · vorn sobald sie hochfährt
@@ -138,7 +138,7 @@ function apply(p){
     front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-f).toFixed(2)}%,#000 ${(bx+f).toFixed(2)}%)`;
     scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
   }
-  head.style.opacity=(1-0.28*spread).toFixed(3);   // Titel bleibt sichtbar (T9 geht in den Leerraum darunter)
+  head.style.opacity=(1-0.32*spread).toFixed(3);   // Titel bleibt sichtbar (T9 geht in den Leerraum darunter)
   hint.style.opacity=p>0.05?0:1;
 }
 function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
