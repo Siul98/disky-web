@@ -223,6 +223,7 @@ a{color:inherit;text-decoration:none}
 .foot .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
 .foot a:not(.brand){color:var(--mut)}.foot a:not(.brand):hover{color:var(--ink)}
 .foot .sp{margin-left:auto}
+.foot .tm{margin:18px 0 0;font-size:11.5px;line-height:1.55;color:var(--mut2);max-width:760px;opacity:.8}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .lang button{background:none;border:0;color:var(--mut);font-size:12px;font-weight:600;padding:6px 11px;cursor:pointer;font-family:inherit}
 .lang button.on{background:rgba(74,158,255,.16);color:var(--ink)}
@@ -375,7 +376,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <a href="rechtliches.html" data-t="foot_legal">Legal</a>
   <span class="sp"></span>
   <div class="lang"><button data-lang="en" class="on">EN</button><button data-lang="de">DE</button></div>
-</div></footer>
+</div><div class="wrap"><p class="tm" data-t="foot_tm"></p></div></footer>
 
 <script src="_demoseed.js"></script>
 <script>
@@ -409,6 +410,7 @@ const I18N={
   faq_h:"Questions, answered.",
   end_h:"Stop digging through the drawer.",end_sub:"Index your drives once. Find anything across all of them in seconds — unplugged, on your Mac, yours alone.",
   foot_legal:"Legal",foot_contact:"Contact",
+  foot_tm:"Drive names, designs and logos are trademarks of their respective owners. Disky is independent and is not affiliated with, endorsed by, or sponsored by Samsung, LaCie, SanDisk/Western Digital, or any other manufacturer shown.",
   faq:[
    ["Do I have to plug in my drives to search?","No — that's the whole point. You index each drive once. After that, every filename, folder, and project lives in Disky and stays searchable while the disk sits unplugged in the drawer. Disky names the exact drive and the exact path without mounting anything."],
    ["Is my footage uploaded anywhere?","Never. Disky runs 100% on your Mac. The content-search AI is on-device — nothing is uploaded, nothing leaves the machine. The drives themselves are read-only."],
@@ -449,6 +451,7 @@ const I18N={
   faq_h:"Fragen, beantwortet.",
   end_h:"Hör auf, die Schublade zu durchwühlen.",end_sub:"Deine Platten einmal indexieren. Alles über alle hinweg in Sekunden finden — ungesteckt, auf deinem Mac, dir allein.",
   foot_legal:"Rechtliches",foot_contact:"Kontakt",
+  foot_tm:"Plattennamen, Designs und Logos sind Marken der jeweiligen Inhaber. Disky ist unabhängig und steht in keiner Verbindung zu Samsung, LaCie, SanDisk/Western Digital oder einem anderen gezeigten Hersteller und wird von diesen nicht unterstützt oder gesponsert.",
   faq:[
    ["Muss ich meine Platten anstecken, um zu suchen?","Nein — genau das ist der Punkt. Du katalogisierst jede Platte einmal. Danach liegt jeder Dateiname, Ordner und jedes Projekt in Disky und bleibt durchsuchbar, während die Disk ungesteckt in der Schublade liegt. Disky nennt dir die exakte Platte und den exakten Pfad, ohne etwas zu mounten."],
    ["Wird mein Material irgendwo hochgeladen?","Nie. Disky läuft zu 100% auf deinem Mac. Die Inhalts-KI ist on-device — nichts wird hochgeladen, nichts verlässt die Maschine, und es gibt kein Konto anzulegen."],
