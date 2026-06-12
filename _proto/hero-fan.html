@@ -178,14 +178,28 @@ const chipWrap=document.getElementById('chips');
 chipWrap.innerHTML=CHIP.map(c=>`<span class="chip ${c.c}" style="left:${c.x}%;top:${c.y}%"><i class="d"></i><span class="mono">${c.t}</span><span class="lbl">${c.l}</span></span>`).join('');
 const chips=[...chipWrap.querySelectorAll('.chip')];
 
-/* ---------- Sterne (leichter Canvas, ~50) ---------- */
-const starCv=document.getElementById('stars'), starCtx=starCv.getContext('2d'); let stars=[];
-function sizeStars(){ starCv.width=innerWidth; starCv.height=innerHeight; const n=Math.round(innerWidth*innerHeight/26000); stars=[];
-  for(let i=0;i<n;i++) stars.push({x:Math.random()*starCv.width,y:Math.random()*starCv.height,r:Math.random()*1.3+0.25,p:Math.random()*6.28,s:0.5+Math.random()*1.4}); }
-function frame(t){
-  starCtx.clearRect(0,0,starCv.width,starCv.height);
-  for(const s of stars){ const a=0.22+0.5*(0.5+0.5*Math.sin(t*0.0011*s.s+s.p));
-    starCtx.globalAlpha=a; starCtx.fillStyle='#bcd4ff'; starCtx.beginPath(); starCtx.arc(s.x,s.y,s.r,0,6.2832); starCtx.fill(); }
+/* ---------- 3D-Sternenfeld (Weltall, langsam driftend) — pures Canvas, KEIN Three.js ---------- */
+// Sterne in einem 3D-Würfel, Perspektiv-Projektion (nahe = größer/heller), langsames Yaw+Pitch wie im Original
+const starCv=document.getElementById('stars'), starCtx=starCv.getContext('2d');
+let stars3=[], rotY=0, rotX=0, FOCAL=800;
+function sizeStars(){ starCv.width=innerWidth; starCv.height=innerHeight; FOCAL=Math.max(640,innerHeight*0.92);
+  const n=Math.min(2000,Math.round(innerWidth*innerHeight/1150)); stars3=[];
+  for(let i=0;i<n;i++) stars3.push({x:(Math.random()-0.5)*2000,y:(Math.random()-0.5)*2000,z:(Math.random()-0.5)*2000}); }
+function frame(){
+  rotY+=0.0001; rotX+=0.00005;                         // gleiche Drift-Geschwindigkeit wie die 21st.dev-Vorlage
+  const cyA=Math.cos(rotY),syA=Math.sin(rotY),cxA=Math.cos(rotX),sxA=Math.sin(rotX);
+  const w=starCv.width,h=starCv.height,ox=w/2,oy=h/2;
+  starCtx.clearRect(0,0,w,h); starCtx.fillStyle='#eef4ff';
+  for(let i=0;i<stars3.length;i++){ const s=stars3[i];
+    const x1=s.x*cyA - s.z*syA, z1=s.x*syA + s.z*cyA;   // Rotation Y
+    const y1=s.y*cxA - z1*sxA,  z2=s.y*sxA + z1*cxA;    // Rotation X
+    if(z2<60) continue;                                 // hinter der Kamera → weg
+    const k=FOCAL/z2, px=ox+x1*k, py=oy+y1*k;
+    if(px<0||px>w||py<0||py>h) continue;
+    let r=k*0.9; if(r<0.4) continue; if(r>2.6) r=2.6;
+    starCtx.globalAlpha=Math.min(1,0.12+k);
+    starCtx.fillRect(px-r*0.5,py-r*0.5,r,r);
+  }
   starCtx.globalAlpha=1; requestAnimationFrame(frame);
 }
 sizeStars(); requestAnimationFrame(frame);
