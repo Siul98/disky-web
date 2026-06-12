@@ -1,5 +1,5 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disky · Hero — Scan → Datensog → App</title>
+<title>Disky · Hero — Scan → Unordnung → Ordnung</title>
 <style>
 :root{--bg:#08090c;--ink:#f4f7fb;--mut:rgba(244,247,251,.6);--mut2:rgba(244,247,251,.42);
  --acc:#4a9eff;--acc2:#37cfe0;--line:rgba(255,255,255,.09);--mono:"SF Mono",ui-monospace,Menlo,monospace;
@@ -9,7 +9,7 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 .note{position:fixed;left:14px;top:12px;z-index:80;font-family:var(--mono);font-size:11px;color:var(--mut2);background:rgba(8,9,12,.6);padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
 .note b{color:var(--acc)}
-.rail{position:relative;height:280vh}
+.rail{position:relative;height:300vh}
 .sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
 #stars{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%);mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%)}
 .bggrid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;
@@ -34,9 +34,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 @keyframes ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-/* Erzähl-Klammer: „Scan once." (Scan) → „Remembered forever." (in der App) */
-.beatcap{position:absolute;left:50%;top:22%;transform:translateX(-50%);z-index:13;pointer-events:none;text-align:center;white-space:nowrap;
- font-weight:700;letter-spacing:-.03em;font-size:clamp(32px,4.6vw,54px);opacity:0;will-change:opacity,transform;
+/* Erzähl-Klammer */
+.beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;
+ font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;
  -webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;
  filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
 
@@ -60,59 +60,46 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
  box-shadow:0 0 30px 10px rgba(74,158,255,.72)}
 .scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-34px;width:68px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.22),transparent);
  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%)}
-/* Energie-Band: nur Gradient (kein teures backdrop-filter) */
 .scanline .warp{position:absolute;top:-16%;bottom:-16%;left:50%;width:70px;transform:translateX(-50%);pointer-events:none;mix-blend-mode:screen;
  background:linear-gradient(90deg,transparent,rgba(120,180,255,.16) 42%,rgba(150,235,255,.34) 50%,rgba(120,180,255,.16) 58%,transparent);
  -webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)}
 .scanline.appear .bm{animation:bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
 @keyframes bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
-
-/* epische Beleuchtung hinter der gescannten Platte */
 .bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;
  background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
 .shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;
  border:3px solid rgba(190,224,255,.95);box-shadow:0 0 60px rgba(110,180,255,.7),inset 0 0 50px rgba(74,158,255,.35)}
-/* sanfter „Datensog"-Funnel über dem MacBook (statt Partikel-Trails) */
-.funnel{position:absolute;left:50%;bottom:1%;width:min(440px,62vw);height:48vh;transform:translateX(-50%);z-index:9;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity;
- background:radial-gradient(ellipse 48% 66% at 50% 100%,rgba(95,170,255,.3),rgba(74,158,255,.1) 45%,transparent 72%);
- -webkit-mask-image:linear-gradient(180deg,transparent,#000 58%);mask-image:linear-gradient(180deg,transparent,#000 58%)}
-
 .scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 .cap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;font-family:var(--mono);font-size:11px;color:var(--mut2)}
 
-/* Datenpunkte (kein backdrop-filter → günstig in Bewegung) */
-.chips{position:absolute;inset:0;z-index:12;pointer-events:none}
-.chip{position:absolute;display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:12px;white-space:nowrap;color:#e6f0ff;
- background:linear-gradient(135deg,rgba(28,36,52,.86),rgba(16,22,34,.82));
- box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 16px 34px -14px rgba(0,0,0,.8),0 0 20px -10px rgba(74,158,255,.5);opacity:0;will-change:transform,opacity}
-.chip::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
- background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.05) 45%,rgba(74,158,255,.42));
- -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.chip .d{width:7px;height:7px;border-radius:2px;flex:0 0 auto}
-.chip .mono{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:-.02em}
-.chip .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut2);font-weight:700}
-.chip.proj .d{background:#4a9eff;box-shadow:0 0 9px #4a9eff}
-.chip.file .d{background:#37cfe0;box-shadow:0 0 9px #37cfe0}
-.chip.geo  .d{background:#43d98a;box-shadow:0 0 9px #43d98a}
-.chip.time .d{background:#f2b134;box-shadow:0 0 9px #f2b134}
-.chip.size .d{background:#b39dff;box-shadow:0 0 9px #b39dff}
+/* Disky-App-Fenster (Listen-/Projekt-View) — Ziel der Ordnung */
+.appwin{position:absolute;left:50%;top:37%;transform:translateX(-50%);z-index:4;width:min(900px,94vw);height:min(470px,55vh);opacity:0;
+ border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);
+ box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
+.aw-bar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+.aw-bar .tl{width:11px;height:11px;border-radius:50%}
+.tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
+.aw-title{margin-left:8px;font-size:12.5px;font-weight:650;color:#cdd6e4;letter-spacing:.02em}
+.aw-body{display:flex;height:calc(100% - 38px)}
+.aw-side{width:198px;flex:0 0 auto;border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:3px;background:rgba(255,255,255,.015)}
+.aw-nav{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;font-size:12.5px;color:var(--mut);font-weight:550}
+.aw-nav svg{width:15px;height:15px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.7}
+.aw-nav.act{background:linear-gradient(135deg,rgba(74,158,255,.22),rgba(74,158,255,.08));color:#dceafd;box-shadow:inset 0 0 0 1px rgba(74,158,255,.25)}
+.aw-main{position:relative;flex:1 1 auto;padding:15px 20px;overflow:hidden}
+.aw-head{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 
-/* MacBook — App = Ziel des Datensogs */
-.macbook{position:absolute;left:50%;bottom:1%;transform:translateX(-50%);z-index:4;width:min(720px,84vw);opacity:0;will-change:transform,opacity}
-.mb-screen{position:relative;border-radius:16px;padding:10px;background:linear-gradient(160deg,#181a1f,#0a0b0e);box-shadow:0 0 0 1px rgba(255,255,255,.06),0 50px 110px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.08)}
-.mb-screen::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:14px;background:#000;border-radius:0 0 9px 9px;z-index:3}
-.mb-app{position:relative;border-radius:8px;overflow:hidden;background:#06080c}
-.mb-app img{display:block;width:100%}
-.mb-app .ingest{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;background:radial-gradient(ellipse 60% 50% at 50% 42%,rgba(120,190,255,.5),transparent 70%)}
-.mb-app .glare{position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,.08),transparent 42%);pointer-events:none;z-index:2}
-.mb-body{position:absolute;left:50%;top:calc(100% - 2px);transform:translateX(-50%);width:116%;height:120px;
- background:linear-gradient(180deg,#14161b,#0a0b0e 60%,#08090c);clip-path:polygon(7% 0,93% 0,99% 55%,50% 100%,1% 55%);
- -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 80%);mask-image:linear-gradient(180deg,#000 0%,transparent 80%)}
+/* Datei-/Ordner-Items: schwirren beim Scan (Unordnung) → gleiten in die Liste (Ordnung) */
+.files{position:absolute;inset:0;z-index:12;pointer-events:none}
+.fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:14px 14px}
+.fitem .ic{width:27px;height:33px;flex:0 0 auto;filter:drop-shadow(0 3px 7px rgba(0,0,0,.55))}
+.fitem .nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
+.fitem.folder .nm{font-weight:700;color:#fff}
+.fitem .sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--mono)}
 @media(prefers-reduced-motion:reduce){.t3d,.silver,.eb,.sub{animation:none!important;opacity:1!important;clip-path:none!important}}
 </style></head>
 <body>
-<div class="note">PROTOTYP · Scan extrahiert Daten · sanfter Sog in die App · <b>scrollen</b></div>
+<div class="note">PROTOTYP · Scan → Dateien schwirren → geordnet in der App · <b>scrollen</b></div>
 
 <div class="rail" id="rail">
   <div class="sticky">
@@ -134,7 +121,21 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 
     <div class="bloom" id="bloom"></div>
     <div class="shock" id="shock"></div>
-    <div class="funnel" id="funnel"></div>
+
+    <!-- Disky-App-Fenster (Listen-/Projekt-View) -->
+    <div class="appwin" id="appwin">
+      <div class="aw-bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="aw-title">Disky</span></div>
+      <div class="aw-body">
+        <div class="aw-side">
+          <div class="aw-nav"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</div>
+          <div class="aw-nav"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg>Deep Search</div>
+          <div class="aw-nav"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12V3M12 12l7 4"/></svg>Storage Map</div>
+          <div class="aw-nav act"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Project Manager</div>
+          <div class="aw-nav"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Duplicate Finder</div>
+        </div>
+        <div class="aw-main" id="awmain"><div class="aw-head">Projects · 3</div></div>
+      </div>
+    </div>
 
     <!-- DIE T9 — ein Element, dreht Hoch→Quer, X-ray-Scan -->
     <div class="hero" id="hero">
@@ -143,67 +144,71 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
       <div class="scanline" id="scanline"><i class="bm"></i><div class="warp"></div></div>
     </div>
 
-    <!-- Datenpunkte (per JS gefüllt) -->
-    <div class="chips" id="chips"></div>
+    <!-- Datei-/Ordner-Items (per JS gefüllt) -->
+    <div class="files" id="files"></div>
 
     <!-- Erzähl-Klammer -->
     <div class="beatcap" id="cap1">Scan once.</div>
     <div class="beatcap" id="cap2">Remembered forever.</div>
-
-    <!-- MacBook: App = Ziel des Datensogs -->
-    <div class="macbook" id="macbook">
-      <div class="mb-screen"><div class="mb-app"><img src="../assets/screen-overview.webp" alt="Disky" loading="lazy"><span class="ingest" id="ingest"></span><span class="glare"></span></div></div>
-      <div class="mb-body"></div>
-    </div>
   </div>
 </div>
 <div class="scrollhint" id="hint">↓ scrollen</div>
-<div class="cap">Scan → Datenextraktion → sanfter Sog → App</div>
+<div class="cap">Scan → Unordnung → Ordnung (Listen-/Projekt-View)</div>
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
 const fan=document.getElementById('fan'), floor=document.getElementById('floor'), hero=document.getElementById('hero');
 const xray=hero.querySelector('.xray'), front=hero.querySelector('.front'), scanline=document.getElementById('scanline');
-const bloom=document.getElementById('bloom'), shock=document.getElementById('shock'), funnel=document.getElementById('funnel'), macbook=document.getElementById('macbook'), ingest=document.getElementById('ingest');
+const bloom=document.getElementById('bloom'), shock=document.getElementById('shock');
+const appwin=document.getElementById('appwin'), awmain=document.getElementById('awmain'), filesWrap=document.getElementById('files');
 const cap1=document.getElementById('cap1'), cap2=document.getElementById('cap2');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const ease=t=>1-Math.pow(1-t,3);
 const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 
-/* ---------- Datenpunkte ---------- */
-const CHIP=[
- {t:"Client_A_2024_Rebrand",l:"Projekt",c:"proj",x:20,y:19},
- {t:"final_master.mp4",l:"Datei",c:"file",x:77,y:14},
- {t:"47.81°N, 11.75°E",l:"GPS",c:"geo",x:13,y:40},
- {t:"2024-08-12 14:32",l:"Zeit",c:"time",x:85,y:36},
- {t:"drone_4k_0423.mov",l:"Datei",c:"file",x:23,y:63},
- {t:"Documentary_Project",l:"Projekt",c:"proj",x:79,y:60},
- {t:"Tegernsee, DE",l:"GPS",c:"geo",x:40,y:11},
- {t:"interview_A.wav",l:"Datei",c:"file",x:61,y:10},
- {t:"color_grade_v1.mov",l:"Datei",c:"file",x:11,y:55},
- {t:"2.16 GB · 847 Dateien",l:"Größe",c:"size",x:88,y:53},
- {t:"vor 3 Jahren",l:"Zeit",c:"time",x:50,y:72}
-];
-const chipWrap=document.getElementById('chips');
-chipWrap.innerHTML=CHIP.map(c=>`<span class="chip ${c.c}" style="left:${c.x}%;top:${c.y}%"><i class="d"></i><span class="mono">${c.t}</span><span class="lbl">${c.l}</span></span>`).join('');
-const chips=[...chipWrap.querySelectorAll('.chip')];
+/* ---------- Apple-artige Datei-/Ordner-Icons ---------- */
+function fileSVG(label,color){return `<svg class="ic" viewBox="0 0 36 44"><path d="M5 2.5h17l9 9v28a2.5 2.5 0 0 1-2.5 2.5h-23A2.5 2.5 0 0 1 3 39.5V5A2.5 2.5 0 0 1 5.5 2.5z" fill="#fcfdff"/><path d="M22 2.5l9 9h-7a2 2 0 0 1-2-2z" fill="#ccd3e0"/><rect x="3" y="27" width="23" height="12" rx="2.4" fill="${color}"/><text x="14.5" y="36" font-size="7.3" font-weight="800" fill="#fff" text-anchor="middle" font-family="-apple-system,Helvetica,sans-serif">${label}</text></svg>`;}
+function folderSVG(){return `<svg class="ic" viewBox="0 0 44 38"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h11.7a2.5 2.5 0 0 1 1.8.75L21 9h17.5A2.5 2.5 0 0 1 41 11.5V14H3z" fill="#4ea3ef"/><path d="M3 13h38v19.5A2.5 2.5 0 0 1 38.5 35h-33A2.5 2.5 0 0 1 3 32.5z" fill="#73bdf7"/><path d="M3 13h38v2.4H3z" fill="#9fd2fb" opacity=".6"/></svg>`;}
+const ICON={folder:folderSVG,pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('PPT','#f0922b'),ai:()=>fileSVG('AI','#e8a33d'),
+ mp4:()=>fileSVG('MP4','#7d6cf0'),mov:()=>fileSVG('MOV','#7d6cf0'),wav:()=>fileSVG('WAV','#ef5fa0'),psd:()=>fileSVG('PSD','#2f9be8')};
 
-/* ---------- 3D-Sternenfeld (Weltall, langsam driftend) — pures Canvas, KEIN Three.js ---------- */
-// Sterne in einem 3D-Würfel, Perspektiv-Projektion (nahe = größer/heller), langsames Yaw+Pitch wie im Original
+/* ---------- Dateien (matchen den X-ray-Ordnerbaum) ---------- */
+const FILES=[
+ {name:'Client_A_2024_Rebrand',type:'folder',head:1,sz:'12 Dateien',cx:19,cy:17,r:-6},
+ {name:'brand_guide_v3.pdf',type:'pdf',sz:'15.2 MB',cx:79,cy:13,r:5},
+ {name:'presentation_final.pptx',type:'pptx',sz:'32.1 MB',cx:12,cy:37,r:-8},
+ {name:'logo_master.ai',type:'ai',sz:'4.7 MB',cx:87,cy:33,r:7},
+ {name:'Documentary_Project',type:'folder',head:1,sz:'9 Dateien',cx:25,cy:61,r:5},
+ {name:'final_master.mp4',type:'mp4',sz:'4.72 GB',cx:81,cy:58,r:-7},
+ {name:'color_grade_v1.mov',type:'mov',sz:'2.16 GB',cx:41,cy:10,r:-4},
+ {name:'rough_cut_v2.mov',type:'mov',sz:'2.45 GB',cx:62,cy:9,r:5},
+ {name:'interview_A.wav',type:'wav',sz:'847 MB',cx:10,cy:53,r:-6},
+ {name:'Personal_Work',type:'folder',head:1,sz:'6 Dateien',cx:89,cy:51,r:8},
+ {name:'landscape_01.psd',type:'psd',sz:'85.3 MB',cx:34,cy:70,r:-5},
+ {name:'sketchbook_2024.pdf',type:'pdf',sz:'120 MB',cx:67,cy:69,r:6}
+];
+const N=FILES.length;
+filesWrap.innerHTML=FILES.map(f=>`<div class="fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="nm">${f.name}</span><span class="sz">${f.sz}</span></div>`).join('');
+const fitems=[...filesWrap.querySelectorAll('.fitem')];
+// Reihenfolge-Index, in dem die Items beim Scan vom Strahl „freigelegt" werden (links→rechts)
+const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
+const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);
+
+/* ---------- 3D-Sternenfeld (Weltall, pures Canvas) ---------- */
 const starCv=document.getElementById('stars'), starCtx=starCv.getContext('2d');
 let stars3=[], rotY=0, rotX=0, FOCAL=800;
 function sizeStars(){ starCv.width=innerWidth; starCv.height=innerHeight; FOCAL=Math.max(640,innerHeight*0.92);
   const n=Math.min(2000,Math.round(innerWidth*innerHeight/1150)); stars3=[];
   for(let i=0;i<n;i++) stars3.push({x:(Math.random()-0.5)*2000,y:(Math.random()-0.5)*2000,z:(Math.random()-0.5)*2000}); }
 function frame(){
-  rotY+=0.0001; rotX+=0.00005;                         // gleiche Drift-Geschwindigkeit wie die 21st.dev-Vorlage
+  rotY+=0.0001; rotX+=0.00005;
   const cyA=Math.cos(rotY),syA=Math.sin(rotY),cxA=Math.cos(rotX),sxA=Math.sin(rotX);
   const w=starCv.width,h=starCv.height,ox=w/2,oy=h/2;
   starCtx.clearRect(0,0,w,h); starCtx.fillStyle='#eef4ff';
   for(let i=0;i<stars3.length;i++){ const s=stars3[i];
-    const x1=s.x*cyA - s.z*syA, z1=s.x*syA + s.z*cyA;   // Rotation Y
-    const y1=s.y*cxA - z1*sxA,  z2=s.y*sxA + z1*cxA;    // Rotation X
-    if(z2<60) continue;                                 // hinter der Kamera → weg
+    const x1=s.x*cyA - s.z*syA, z1=s.x*syA + s.z*cyA;
+    const y1=s.y*cxA - z1*sxA,  z2=s.y*sxA + z1*cxA;
+    if(z2<60) continue;
     const k=FOCAL/z2, px=ox+x1*k, py=oy+y1*k;
     if(px<0||px>w||py<0||py>h) continue;
     let r=k*0.9; if(r<0.4) continue; if(r>2.6) r=2.6;
@@ -217,10 +222,12 @@ sizeStars(); requestAnimationFrame(frame);
 /* ---------- Fächer-Layout ---------- */
 const DRV={'-2':{h:300,ar:0.631},'-1':{h:424,ar:0.666},'0':{h:318,ar:0.683},'1':{h:238,ar:0.766},'2':{h:378,ar:0.710}};
 const REFW=1120, HEROW=520, REST_VIS=318, FAN_BOTTOM=-118;
-let fanScale=1, heroTyRest=0, heroScRest=0.5, heroScLift=1;
+let fanScale=1, heroTyRest=0, heroScRest=0.5, heroScLift=1, ORDER=[];
 function fanParts(i){ return {tx:i*126, ty:Math.abs(i)*-12, rot:i*8.5}; }
 function cardT(i,dy,sc){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx.toFixed(1)}px), ${(f.ty+(dy||0)).toFixed(1)}px) rotate(${f.rot}deg) scale(${(sc||1).toFixed(3)})`; }
 function baseZ(i){ return 10-Math.abs(i); }
+function heroGeom(lift){ return { ty:lerp(heroTyRest,-26,lift), rot:lerp(-90,0,lift), scl:lerp(heroScRest,heroScLift,lift) }; }
+function heroT(g,dy,sc){ return `translate(-50%,-50%) translateY(${(g.ty+(dy||0)).toFixed(1)}px) rotate(${g.rot.toFixed(2)}deg) scale(${(g.scl*(sc||1)).toFixed(4)})`; }
 function layout(){
   fanScale=Math.min(1,innerWidth/REFW);
   fan.style.setProperty('--fs',fanScale.toFixed(3));
@@ -229,9 +236,12 @@ function layout(){
   heroScRest=(REST_VIS*fanScale)/HEROW;
   const restCenterY=(innerHeight-FAN_BOTTOM)-(REST_VIS/2)*fanScale;
   heroTyRest=restCenterY-innerHeight/2;
+  // Ordnungs-Positionen aus dem App-Fenster ableiten (geordnete Listen-Rows)
+  const r=awmain.getBoundingClientRect();
+  const rowH=Math.min(31,(r.height-40)/(N+2)), indent=24, padX=20;
+  let cy=r.top+38; ORDER=[];
+  FILES.forEach((f,i)=>{ if(f.head&&i>0) cy+=9; ORDER.push({x:r.left+padX+(f.head?0:indent), y:cy, w:r.width-padX*2-(f.head?0:indent)}); cy+=rowH; });
 }
-function heroGeom(lift){ return { ty:lerp(heroTyRest,-26,lift), rot:lerp(-90,0,lift), scl:lerp(heroScRest,heroScLift,lift) }; }
-function heroT(g,dy,sc){ return `translate(-50%,-50%) translateY(${(g.ty+(dy||0)).toFixed(1)}px) rotate(${g.rot.toFixed(2)}deg) scale(${(g.scl*(sc||1)).toFixed(4)})`; }
 
 /* ---------- Haupt-Animation ---------- */
 function apply(p){
@@ -245,20 +255,22 @@ function apply(p){
   const resting=p<0.03;
   cards.forEach(c=>{
     const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.58*spread;
-    if(p2>0){ tx*=(1-pullE); ty=ty*(1-pullE)+(-30)*pullE; rot*=(1-pullE); scl*=(1-0.93*pullE); op*=(1-Math.min(1,pullE*1.25)); }
+    if(p2>0){ scl*=(1-0.7*pullE); op*=(1-Math.min(1,pullE*1.6)); ty-=40*pullE; }
     c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.04,scl).toFixed(3)})`;
     c.style.opacity=Math.max(0,op).toFixed(3);
-    c.style.zIndex = p2>0.05 ? 3 : baseZ(i);
+    c.style.zIndex = p2>0.05 ? 1 : baseZ(i);
   });
   fan.classList.toggle('resting',resting);
   floor.style.opacity=((1-0.7*spread)*(1-pullE)).toFixed(3);
+  // T9: schrumpft + zieht sich nach oben zurück + faded, während die Dateien rauskommen
   const g=heroGeom(lift); let hSc=1, hDy=0, hOp=1;
-  if(p2>0){ hSc*=(1-0.92*pullE); hDy+=160*pullE; hOp=1-clamp((pullE-0.92)/0.08); }   // schrumpft sichtbar in den Screen, voll opak bis kurz vor Schluss
+  if(p2>0){ const ex=clamp(p2/0.3); hSc*=(1-0.85*ex); hDy-=400*ex; hOp=1-ex; }   // eigener schneller Exit: hoch raus + weg, bevor das Fenster prominent wird
   hero.style.transform=heroT(g,hDy,hSc);
-  hero.style.opacity=hOp.toFixed(3);
+  hero.style.opacity=Math.max(0,hOp).toFixed(3);
   hero.style.filter = flash>0.01 ? `brightness(${(1+0.9*flash).toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))` : 'none';
-  hero.style.zIndex = 11;   // bleibt vor dem Screen, schrumpft hinein (kein abruptes Verschwinden)
+  hero.style.zIndex = 11;
   hero.classList.toggle('resting',resting);
+  // X-ray
   const bx=scan*100, ft=6;
   if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on','appear'); }
   else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on','appear'); }
@@ -276,26 +288,23 @@ function apply(p){
   head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
   head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
   head.style.opacity=(1-0.82*spread).toFixed(3);
-  // Datenpunkte: erscheinen mit dem Scan, gleiten dann sauber in die App (kein Partikel-Trail)
-  const tgx=innerWidth/2, tgy=innerHeight*0.72;
-  chips.forEach((el,i)=>{
-    const c=CHIP[i], sx=c.x/100*innerWidth, sy=c.y/100*innerHeight, ord=i/chips.length;
-    const appear=ease(clamp((scan-0.18-ord*0.5)/0.2));
-    const fl=clamp((p2-ord*0.16)/0.5), flMag=fl*fl;
-    const dx=(tgx-sx)*flMag, dy=(tgy-sy)*flMag;
-    const sc=(0.84+0.16*appear)*(1-0.82*flMag);
-    const op=appear*(1-clamp((flMag-0.62)/0.38));
-    el.style.opacity=op.toFixed(3);
-    el.style.transform=`translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px)) scale(${Math.max(.1,sc).toFixed(3)})`;
+  // App-Fenster blendet auf, während die Dateien sich ordnen
+  appwin.style.opacity=clamp((p2-0.1)/0.32).toFixed(3);
+  // Dateien: erscheinen beim Scan (Unordnung, gekippt) → gleiten geordnet in die Liste-Rows
+  const W=innerWidth,H=innerHeight;
+  fitems.forEach((el,i)=>{ const f=FILES[i], o=ORDER[i]||{x:W/2,y:H*0.7,w:300};
+    const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
+    const settle=easeIO(clamp((p2-i/N*0.05-0.03)/0.5));
+    const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
+    const x=lerp(chX,o.x,settle), y=lerp(chY,o.y,settle), rot=lerp(f.r,0,settle);
+    el.style.width=o.w+'px';
+    el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg)`;
+    el.style.opacity=clamp(Math.max(appear,p2*5)).toFixed(3);
+    el.lastElementChild.style.opacity=clamp((settle-0.5)*2).toFixed(2);   // Größe erst in der Liste
   });
-  funnel.style.opacity=(clamp((pullE-0.05)/0.4)*0.85).toFixed(3);
-  const mb=ease(clamp((p2-0.06)/0.46));
-  macbook.style.opacity=clamp(mb/0.12).toFixed(3);                                    // voll opak — der Fade passiert komplett unter dem Fold
-  macbook.style.transform=`translateX(-50%) translateY(${((1-mb)*innerHeight*0.72).toFixed(0)}px)`;  // fährt voll opak von unten hoch
-  ingest.style.opacity=(clamp((pullE-0.25)/0.5)*0.9).toFixed(3);
-  // Erzähl-Klammer: „Scan once." beim Scan → „Remembered forever." wenn es in die App geht
+  // Erzähl-Klammer
   const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
-  const cap2Op=clamp((p2-0.18)/0.26);
+  const cap2Op=clamp((p2-0.2)/0.26);
   cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(16*(1-cap1Op)).toFixed(0)}px)`;
   cap2.style.opacity=cap2Op.toFixed(3); cap2.style.transform=`translateX(-50%) translateY(${(16*(1-cap2Op)).toFixed(0)}px)`;
   hint.style.opacity=p>0.05?0:1;
@@ -303,7 +312,7 @@ function apply(p){
 function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
   const g=heroGeom(0); hero.style.transform=heroT(g,0,1); hero.style.zIndex=11; hero.style.filter=''; }
 
-/* ---------- Hover: NUR wenn der Cursor wirklich über dem Platten-Stapel ist, dezent (20%) ---------- */
+/* ---------- Hover: nur über dem Platten-Stapel, dezent (20%) ---------- */
 const DOCK_SIG=110, DOCK_AMP=0.07, DOCK_LIFT=7;
 function clusterBox(){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   for(const c of cards){ const r=c.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom; }
@@ -316,8 +325,7 @@ function dock(e){
   if(mx<b.x0-m||mx>b.x1+m||my<b.y0-m||my>b.y1+m){ if(docked){ setRest(); docked=false; } return; }
   docked=true;
   cards.forEach(c=>{ const r=c.getBoundingClientRect(); const d=mx-(r.left+r.width/2); const fct=Math.exp(-(d*d)/(2*DOCK_SIG*DOCK_SIG));
-    c.style.zIndex=12+Math.round(fct*14);
-    c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });
+    c.style.zIndex=12+Math.round(fct*14); c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });
   const r=hero.getBoundingClientRect(); const dH=mx-(r.left+r.width/2); const fH=Math.exp(-(dH*dH)/(2*DOCK_SIG*DOCK_SIG));
   const g=heroGeom(0); hero.style.zIndex=12+Math.round(fH*16); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
 }
@@ -331,6 +339,6 @@ function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.off
 function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.085; apply(curP); requestAnimationFrame(tick); }
 addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
 addEventListener('resize',()=>{ sizeStars(); layout(); readTarget(); apply(curP); },{passive:true});
-readTarget(); curP=targetP; apply(curP);
+layout(); readTarget(); curP=targetP; apply(curP);
 </script>
 </body></html>
