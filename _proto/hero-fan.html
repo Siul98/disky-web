@@ -69,7 +69,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;
  background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
 .shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;
- border:3px solid rgba(190,224,255,.95);box-shadow:0 0 60px rgba(110,180,255,.7),inset 0 0 50px rgba(74,158,255,.35)}
+ border:1.5px solid rgba(175,210,255,.5);box-shadow:0 0 36px rgba(110,180,255,.32),inset 0 0 34px rgba(74,158,255,.16)}
 .scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 .cap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;font-family:var(--mono);font-size:11px;color:var(--mut2)}
@@ -178,18 +178,13 @@ const ICON={folder:folderSVG,pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('
 
 /* ---------- Dateien (matchen den X-ray-Ordnerbaum) ---------- */
 const FILES=[
- {name:'Hochzeit_Tegernsee',type:'folder',head:1,sz:'24 Dateien',cx:19,cy:17,r:-6},
- {name:'Hochzeit_Trailer_FINAL.mp4',type:'mp4',sz:'2.1 GB',cx:79,cy:13,r:5},
- {name:'Ceremony_4K_master.mov',type:'mov',sz:'18.6 GB',cx:12,cy:37,r:-8},
- {name:'Werbespot_Hamburg',type:'folder',head:1,sz:'31 Dateien',cx:87,cy:33,r:7},
- {name:'Spot_30s_FINAL.mov',type:'mov',sz:'3.4 GB',cx:25,cy:61,r:5},
- {name:'Spot_Master_4K.mp4',type:'mp4',sz:'6.2 GB',cx:81,cy:58,r:-7},
- {name:'Doku_Nordsee',type:'folder',head:1,sz:'47 Dateien',cx:41,cy:10,r:-4},
- {name:'Doku_Master_ProRes.mov',type:'mov',sz:'46 GB',cx:62,cy:9,r:5},
- {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:10,cy:53,r:-6},
- {name:'Reise_Island',type:'folder',head:1,sz:'19 Dateien',cx:89,cy:51,r:8},
- {name:'Aurora_FINAL.mp4',type:'mp4',sz:'4.7 GB',cx:34,cy:70,r:-5},
- {name:'O-Ton_Recorder.wav',type:'wav',sz:'847 MB',cx:67,cy:69,r:6}
+ {name:'Hochzeit_Tegernsee',type:'folder',head:1,sz:'24 Dateien',cx:22,cy:18,r:-6},
+ {name:'Hochzeit_Trailer_FINAL.mp4',type:'mp4',sz:'2.1 GB',cx:78,cy:15,r:5},
+ {name:'Werbespot_Hamburg',type:'folder',head:1,sz:'31 Dateien',cx:50,cy:10,r:-4},
+ {name:'Spot_Master_4K.mp4',type:'mp4',sz:'6.2 GB',cx:13,cy:42,r:-7},
+ {name:'Doku_Nordsee',type:'folder',head:1,sz:'47 Dateien',cx:87,cy:40,r:6},
+ {name:'Doku_Master_ProRes.mov',type:'mov',sz:'46 GB',cx:24,cy:66,r:-5},
+ {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:80,cy:64,r:5}
 ];
 const N=FILES.length;
 filesWrap.innerHTML=FILES.map(f=>`<div class="fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="nm">${f.name}</span><span class="sz">${f.sz}</span></div>`).join('');
@@ -285,9 +280,9 @@ function apply(p){
     scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
     if(!scanline.classList.contains('appear')) scanline.classList.add('appear');
   }
-  bloom.style.opacity=clamp(0.12*lift*(1-pullE) + 1.15*flash).toFixed(3);
+  bloom.style.opacity=clamp(0.1*lift*(1-pullE) + 0.8*flash).toFixed(3);
   bloom.style.transform=`translate(-50%,-50%) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
-  shock.style.opacity=(flash*0.95*(1-pullE)).toFixed(3);
+  shock.style.opacity=(flash*0.42*(1-pullE)).toFixed(3);
   shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
   head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
   head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;

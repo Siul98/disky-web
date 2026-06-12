@@ -274,7 +274,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-scanline.hf-appear .hf-bm{animation:hf-bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
 @keyframes hf-bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
 .hf-bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
-.hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;border:3px solid rgba(190,224,255,.95);box-shadow:0 0 60px rgba(110,180,255,.7),inset 0 0 50px rgba(74,158,255,.35)}
+.hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;border:1.5px solid rgba(175,210,255,.5);box-shadow:0 0 36px rgba(110,180,255,.32),inset 0 0 34px rgba(74,158,255,.16)}
 .hf-appwin{position:absolute;left:50%;top:37%;transform:translateX(-50%);z-index:4;width:min(900px,94vw);height:min(470px,55vh);opacity:0;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
 .hf-awbar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
 .hf-awbar .hf-tl{width:11px;height:11px;border-radius:50%}
@@ -691,18 +691,13 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   const ICON={folder:folderSVG,pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('PPT','#f0922b'),ai:()=>fileSVG('AI','#e8a33d'),
    mp4:()=>fileSVG('MP4','#7d6cf0'),mov:()=>fileSVG('MOV','#7d6cf0'),wav:()=>fileSVG('WAV','#ef5fa0'),psd:()=>fileSVG('PSD','#2f9be8')};
   const FILES=[
-   {name:'Hochzeit_Tegernsee',type:'folder',head:1,sz:'24 '+FW,cx:19,cy:17,r:-6},
-   {name:'Hochzeit_Trailer_FINAL.mp4',type:'mp4',sz:'2.1 GB',cx:79,cy:13,r:5},
-   {name:'Ceremony_4K_master.mov',type:'mov',sz:'18.6 GB',cx:12,cy:37,r:-8},
-   {name:'Werbespot_Hamburg',type:'folder',head:1,sz:'31 '+FW,cx:87,cy:33,r:7},
-   {name:'Spot_30s_FINAL.mov',type:'mov',sz:'3.4 GB',cx:25,cy:61,r:5},
-   {name:'Spot_Master_4K.mp4',type:'mp4',sz:'6.2 GB',cx:81,cy:58,r:-7},
-   {name:'Doku_Nordsee',type:'folder',head:1,sz:'47 '+FW,cx:41,cy:10,r:-4},
-   {name:'Doku_Master_ProRes.mov',type:'mov',sz:'46 GB',cx:62,cy:9,r:5},
-   {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:10,cy:53,r:-6},
-   {name:'Reise_Island',type:'folder',head:1,sz:'19 '+FW,cx:89,cy:51,r:8},
-   {name:'Aurora_FINAL.mp4',type:'mp4',sz:'4.7 GB',cx:34,cy:70,r:-5},
-   {name:'O-Ton_Recorder.wav',type:'wav',sz:'847 MB',cx:67,cy:69,r:6}
+   {name:'Hochzeit_Tegernsee',type:'folder',head:1,sz:'24 '+FW,cx:22,cy:18,r:-6},
+   {name:'Hochzeit_Trailer_FINAL.mp4',type:'mp4',sz:'2.1 GB',cx:78,cy:15,r:5},
+   {name:'Werbespot_Hamburg',type:'folder',head:1,sz:'31 '+FW,cx:50,cy:10,r:-4},
+   {name:'Spot_Master_4K.mp4',type:'mp4',sz:'6.2 GB',cx:13,cy:42,r:-7},
+   {name:'Doku_Nordsee',type:'folder',head:1,sz:'47 '+FW,cx:87,cy:40,r:6},
+   {name:'Doku_Master_ProRes.mov',type:'mov',sz:'46 GB',cx:24,cy:66,r:-5},
+   {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:80,cy:64,r:5}
   ];
   const N=FILES.length;
   filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="hf-nm">${f.name}</span><span class="hf-sz">${f.sz}</span></div>`).join('');
@@ -795,9 +790,9 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
       scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('hf-on');
       if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
     }
-    bloom.style.opacity=clamp(0.12*lift*(1-pullE) + 1.15*flash).toFixed(3);
+    bloom.style.opacity=clamp(0.1*lift*(1-pullE) + 0.8*flash).toFixed(3);
     bloom.style.transform=`translate(-50%,-50%) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
-    shock.style.opacity=(flash*0.95*(1-pullE)).toFixed(3);
+    shock.style.opacity=(flash*0.42*(1-pullE)).toFixed(3);
     shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
     head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
