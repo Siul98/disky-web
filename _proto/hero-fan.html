@@ -34,6 +34,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 @keyframes ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+/* Erzähl-Klammer: „Scan once." (Scan) → „Remembered forever." (in der App) */
+.beatcap{position:absolute;left:50%;top:22%;transform:translateX(-50%);z-index:13;pointer-events:none;text-align:center;white-space:nowrap;
+ font-weight:700;letter-spacing:-.03em;font-size:clamp(32px,4.6vw,54px);opacity:0;will-change:opacity,transform;
+ -webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;
+ filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
 
 /* Fächer — GROSS, ragt unten aus dem Bild */
 .stage{position:absolute;inset:0;z-index:2}
@@ -141,6 +146,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
     <!-- Datenpunkte (per JS gefüllt) -->
     <div class="chips" id="chips"></div>
 
+    <!-- Erzähl-Klammer -->
+    <div class="beatcap" id="cap1">Scan once.</div>
+    <div class="beatcap" id="cap2">Remembered forever.</div>
+
     <!-- MacBook: App = Ziel des Datensogs -->
     <div class="macbook" id="macbook">
       <div class="mb-screen"><div class="mb-app"><img src="../assets/screen-overview.webp" alt="Disky" loading="lazy"><span class="ingest" id="ingest"></span><span class="glare"></span></div></div>
@@ -155,6 +164,7 @@ const rail=document.getElementById('rail'), cards=[...document.querySelectorAll(
 const fan=document.getElementById('fan'), floor=document.getElementById('floor'), hero=document.getElementById('hero');
 const xray=hero.querySelector('.xray'), front=hero.querySelector('.front'), scanline=document.getElementById('scanline');
 const bloom=document.getElementById('bloom'), shock=document.getElementById('shock'), funnel=document.getElementById('funnel'), macbook=document.getElementById('macbook'), ingest=document.getElementById('ingest');
+const cap1=document.getElementById('cap1'), cap2=document.getElementById('cap2');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const ease=t=>1-Math.pow(1-t,3);
@@ -283,6 +293,11 @@ function apply(p){
   macbook.style.opacity=clamp(mb/0.12).toFixed(3);                                    // voll opak — der Fade passiert komplett unter dem Fold
   macbook.style.transform=`translateX(-50%) translateY(${((1-mb)*innerHeight*0.72).toFixed(0)}px)`;  // fährt voll opak von unten hoch
   ingest.style.opacity=(clamp((pullE-0.25)/0.5)*0.9).toFixed(3);
+  // Erzähl-Klammer: „Scan once." beim Scan → „Remembered forever." wenn es in die App geht
+  const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
+  const cap2Op=clamp((p2-0.18)/0.26);
+  cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(16*(1-cap1Op)).toFixed(0)}px)`;
+  cap2.style.opacity=cap2Op.toFixed(3); cap2.style.transform=`translateX(-50%) translateY(${(16*(1-cap2Op)).toFixed(0)}px)`;
   hint.style.opacity=p>0.05?0:1;
 }
 function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
