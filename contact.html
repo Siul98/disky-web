@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disky — Contact & Feedback</title>
+<meta name="description" content="Questions, feedback, wishes or bugs? Write to the Disky team — we read every message and reply fast. hallo@disky.app">
+<link rel="icon" href="favicon.svg">
+<meta name="theme-color" content="#08090c">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index,follow">
+<style>
+:root{
+  --bg:#08090c; --bg2:#0c0f15; --panel:#0f131a;
+  --ink:#f4f7fb; --mut:rgba(244,247,251,.62); --mut2:rgba(244,247,251,.42);
+  --acc:#4a9eff; --acc2:#37cfe0; --good:#4ade80;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.055);
+  --fdisp:-apple-system,"SF Pro Display","Helvetica Neue",system-ui,sans-serif;
+  --fmono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,monospace;
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fdisp);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;overflow-x:hidden;min-height:100vh}
+h1,h2,h3{font-weight:680;letter-spacing:-.035em;line-height:1.04;margin:0}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;
+  background:rgba(8,9,12,.7);backdrop-filter:saturate(170%) blur(18px);-webkit-backdrop-filter:saturate(170%) blur(18px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;width:100%}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em}
+.brand svg{width:25px;height:25px}
+.navlinks{margin-left:auto;display:flex;align-items:center;gap:30px;font-size:14.5px;color:var(--mut)}
+.navlinks a:not(.soon){transition:color .2s}.navlinks a:not(.soon):hover{color:var(--ink)}
+.soon{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14px;border-radius:980px;padding:9px 17px;
+  color:var(--mut);border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:default;white-space:nowrap}
+.soon i{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px rgba(74,158,255,.9);animation:soonPulse 2.4s ease-in-out infinite}
+@keyframes soonPulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
+@media(max-width:680px){.navlinks .hide-sm{display:none}}
+
+/* page background: subtle dot grid + glows (Aceternity-style) */
+.bgfx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bgfx .grid{position:absolute;inset:0;background-image:radial-gradient(rgba(122,166,230,.06) 1px,transparent 1.4px);background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 50%,transparent 100%);mask-image:radial-gradient(120% 90% at 50% 0%,#000 50%,transparent 100%)}
+.bgfx .glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5}
+.bgfx .g1{width:620px;height:620px;left:-140px;top:-120px;background:radial-gradient(circle,rgba(31,92,255,.5),transparent 70%)}
+.bgfx .g2{width:560px;height:560px;right:-120px;top:120px;background:radial-gradient(circle,rgba(22,184,200,.4),transparent 70%)}
+
+/* layout */
+main{position:relative;z-index:2;padding:118px 0 70px}
+.chead{text-align:center;max-width:680px;margin:0 auto 52px}
+.chead .eyebrow{display:block;margin-bottom:16px}
+.chead h1{font-size:clamp(38px,5.6vw,62px);letter-spacing:-.04em}
+.chead h1 .g{background:linear-gradient(180deg,#fff,#bcd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.chead p{font-size:clamp(16px,1.9vw,19px);color:var(--mut);margin-top:18px}
+
+.cgrid{display:grid;grid-template-columns:1fr 1.05fr;gap:30px;align-items:stretch}
+@media(max-width:880px){.cgrid{grid-template-columns:1fr;gap:22px}}
+
+/* card base */
+.card{position:relative;border-radius:24px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+
+/* left: info + map */
+.info{padding:34px 32px 0;display:flex;flex-direction:column}
+.info h2{font-size:24px;margin-bottom:12px}
+.info .lead{font-size:15px;color:var(--mut);max-width:42ch}
+.cmethods{margin:24px 0 6px;display:flex;flex-direction:column;gap:12px}
+.cmeth{display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.02);transition:border-color .2s,background .2s}
+.cmeth:hover{border-color:rgba(74,158,255,.35);background:rgba(74,158,255,.05)}
+.cmeth .ic{width:38px;height:38px;flex:0 0 auto;border-radius:11px;display:grid;place-items:center;background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.22)}
+.cmeth .ic svg{width:18px;height:18px;stroke:var(--acc);fill:none}
+.cmeth .m{flex:1;min-width:0}
+.cmeth .k{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut2)}
+.cmeth .v{font-size:15px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px}
+.cmeth .copy{font-size:11px;color:var(--acc);border:1px solid rgba(74,158,255,.3);border-radius:7px;padding:2px 8px;cursor:pointer;background:none;font-family:inherit}
+.cmeth .copy:hover{background:rgba(74,158,255,.12)}
+.here{margin-top:22px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut2)}
+.mapwrap{position:relative;margin:14px -32px 0;flex:1;min-height:200px}
+.mapwrap svg.world{display:block;width:100%;height:100%}
+.mapwrap .dots circle{fill:#3a5a86}
+.wm-pin{transform-box:fill-box}
+.wm-ping{transform-origin:center;animation:ping 2.8s cubic-bezier(.2,.6,.4,1) infinite}
+.wm-ping.p2{animation-delay:1.4s}
+@keyframes ping{0%{transform:scale(.4);opacity:.85}75%{opacity:0}100%{transform:scale(2.4);opacity:0}}
+.mapwrap .fade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 60%,rgba(12,15,21,.85) 100%)}
+.madein{position:absolute;left:32px;bottom:18px;font-size:12.5px;color:var(--mut);display:flex;align-items:center;gap:8px}
+.madein b{color:var(--ink);font-weight:600}
+
+/* right: form */
+.formcard{padding:32px}
+.seg{display:flex;gap:8px;margin-bottom:20px;background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:13px;padding:5px}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;border:0;background:none;color:var(--mut);font:inherit;font-size:14px;font-weight:600;
+  padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .2s,color .2s}
+.seg button .em{font-size:14px}
+.seg button.on{background:rgba(74,158,255,.16);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(74,158,255,.3)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin-bottom:7px}
+.field input,.field textarea{width:100%;background:rgba(8,11,16,.6);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  font:inherit;font-size:15px;padding:13px 15px;transition:border-color .2s,box-shadow .2s}
+.field textarea{min-height:130px;resize:vertical;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--mut2)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(74,158,255,.16)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.frow{grid-template-columns:1fr}}
+.send{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:600;font-size:15.5px;border:0;border-radius:13px;
+  padding:15px 22px;cursor:pointer;color:#04101f;background:linear-gradient(180deg,#5aa8ff,#3f86ef);font-family:inherit;
+  box-shadow:0 10px 30px rgba(74,158,255,.34),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .2s,box-shadow .2s,background .2s}
+.send:hover{background:linear-gradient(180deg,#6fb4ff,#4a90f5);box-shadow:0 14px 38px rgba(74,158,255,.44)}
+.send:active{transform:scale(.99)}
+.send svg{width:17px;height:17px}
+.foralt{margin-top:14px;text-align:center;font-size:13px;color:var(--mut2)}
+.foralt b{color:var(--mut);font-weight:600;cursor:pointer;border-bottom:1px dashed var(--mut2)}
+.privacy-note{margin-top:8px;text-align:center;font-size:12px;color:var(--mut2)}
+
+/* footer */
+.foot{position:relative;z-index:2;border-top:1px solid var(--line2);padding:34px 0;margin-top:60px;font-size:13px;color:var(--mut2)}
+.foot .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.foot a:not(.brand){color:var(--mut)}.foot a:not(.brand):hover{color:var(--ink)}
+.foot .sp{margin-left:auto}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lang button{background:none;border:0;color:var(--mut);font-size:12px;font-weight:600;padding:6px 11px;cursor:pointer;font-family:inherit}
+.lang button.on{background:rgba(74,158,255,.16);color:var(--ink)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);z-index:200;background:#11151c;border:1px solid var(--line);
+  border-radius:12px;padding:12px 18px;font-size:14px;color:var(--ink);box-shadow:0 16px 50px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.rev{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rev.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rev{opacity:1;transform:none;transition:none}.wm-ping{animation:none}.soon i{animation:none}}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="bgfx"><span class="glow g1"></span><span class="glow g2"></span><span class="grid"></span></div>
+
+<!-- NAV -->
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#37cfe0"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#37cfe0"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>Disky</a>
+  <div class="navlinks">
+    <a class="hide-sm" href="index.html#features" data-t="nav_features">Features</a>
+    <a class="hide-sm" href="index.html#privacy" data-t="nav_privacy">Privacy</a>
+    <a class="hide-sm" href="index.html#pricing" data-t="nav_pricing">Pricing</a>
+    <span class="soon"><i aria-hidden="true"></i><span data-t="soon_short">Coming soon</span></span>
+  </div>
+</div></nav>
+
+<main><div class="wrap">
+  <header class="chead rev">
+    <span class="eyebrow" data-t="eb">Contact &amp; Feedback</span>
+    <h1 data-t="h1">Tell us what you think.</h1>
+    <p data-t="sub">Questions, feature wishes, or a bug to report? We read every message and reply fast — usually within a day.</p>
+  </header>
+
+  <div class="cgrid">
+    <!-- LEFT: info + world map -->
+    <aside class="card info rev">
+      <h2 data-t="i_h">Talk to the people who built it.</h2>
+      <p class="lead" data-t="i_lead">No ticket queue, no bot. Your message reaches the small team behind Disky directly.</p>
+      <div class="cmethods">
+        <div class="cmeth">
+          <span class="ic"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></span>
+          <div class="m"><div class="k" data-t="i_email_k">Email</div><div class="v">hallo@disky.app <button class="copy" id="copyMail" data-t="i_copy">Copy</button></div></div>
+        </div>
+        <div class="cmeth">
+          <span class="ic"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div class="m"><div class="k" data-t="i_reply_k">Reply time</div><div class="v" data-t="i_reply_v">Usually within a day</div></div>
+        </div>
+        <div class="cmeth">
+          <span class="ic"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <div class="m"><div class="k" data-t="i_priv_k">Private</div><div class="v" data-t="i_priv_v">We never share your address</div></div>
+        </div>
+      </div>
+      <div class="here" data-t="i_here">Where we are</div>
+      <div class="mapwrap">
+        <svg class="world" viewBox="0 0 760 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <g class="dots"><circle cx="202.7" cy="24.0" r="1.15"/><circle cx="215.3" cy="24.0" r="1.15"/><circle cx="228.0" cy="24.0" r="1.15"/><circle cx="240.7" cy="24.0" r="1.15"/><circle cx="253.3" cy="24.0" r="1.15"/><circle cx="266.0" cy="24.0" r="1.15"/><circle cx="278.7" cy="24.0" r="1.15"/><circle cx="291.3" cy="24.0" r="1.15"/><circle cx="304.0" cy="24.0" r="1.15"/><circle cx="316.7" cy="24.0" r="1.15"/><circle cx="329.3" cy="24.0" r="1.15"/><circle cx="418.0" cy="24.0" r="1.15"/><circle cx="139.3" cy="36.0" r="1.15"/><circle cx="190.0" cy="36.0" r="1.15"/><circle cx="202.7" cy="36.0" r="1.15"/><circle cx="215.3" cy="36.0" r="1.15"/><circle cx="266.0" cy="36.0" r="1.15"/><circle cx="278.7" cy="36.0" r="1.15"/><circle cx="291.3" cy="36.0" r="1.15"/><circle cx="304.0" cy="36.0" r="1.15"/><circle cx="316.7" cy="36.0" r="1.15"/><circle cx="329.3" cy="36.0" r="1.15"/><circle cx="494.0" cy="36.0" r="1.15"/><circle cx="532.0" cy="36.0" r="1.15"/><circle cx="544.7" cy="36.0" r="1.15"/><circle cx="557.3" cy="36.0" r="1.15"/><circle cx="570.0" cy="36.0" r="1.15"/><circle cx="582.7" cy="36.0" r="1.15"/><circle cx="595.3" cy="36.0" r="1.15"/><circle cx="608.0" cy="36.0" r="1.15"/><circle cx="620.7" cy="36.0" r="1.15"/><circle cx="633.3" cy="36.0" r="1.15"/><circle cx="646.0" cy="36.0" r="1.15"/><circle cx="684.0" cy="36.0" r="1.15"/><circle cx="12.7" cy="48.0" r="1.15"/><circle cx="38.0" cy="48.0" r="1.15"/><circle cx="50.7" cy="48.0" r="1.15"/><circle cx="63.3" cy="48.0" r="1.15"/><circle cx="76.0" cy="48.0" r="1.15"/><circle cx="88.7" cy="48.0" r="1.15"/><circle cx="101.3" cy="48.0" r="1.15"/><circle cx="114.0" cy="48.0" r="1.15"/><circle cx="126.7" cy="48.0" r="1.15"/><circle cx="139.3" cy="48.0" r="1.15"/><circle cx="152.0" cy="48.0" r="1.15"/><circle cx="164.7" cy="48.0" r="1.15"/><circle cx="177.3" cy="48.0" r="1.15"/><circle cx="190.0" cy="48.0" r="1.15"/><circle cx="228.0" cy="48.0" r="1.15"/><circle cx="240.7" cy="48.0" r="1.15"/><circle cx="278.7" cy="48.0" r="1.15"/><circle cx="291.3" cy="48.0" r="1.15"/><circle cx="342.0" cy="48.0" r="1.15"/><circle cx="418.0" cy="48.0" r="1.15"/><circle cx="430.7" cy="48.0" r="1.15"/><circle cx="443.3" cy="48.0" r="1.15"/><circle cx="468.7" cy="48.0" r="1.15"/><circle cx="481.3" cy="48.0" r="1.15"/><circle cx="494.0" cy="48.0" r="1.15"/><circle cx="506.7" cy="48.0" r="1.15"/><circle cx="519.3" cy="48.0" r="1.15"/><circle cx="532.0" cy="48.0" r="1.15"/><circle cx="544.7" cy="48.0" r="1.15"/><circle cx="557.3" cy="48.0" r="1.15"/><circle cx="570.0" cy="48.0" r="1.15"/><circle cx="582.7" cy="48.0" r="1.15"/><circle cx="595.3" cy="48.0" r="1.15"/><circle cx="608.0" cy="48.0" r="1.15"/><circle cx="620.7" cy="48.0" r="1.15"/><circle cx="633.3" cy="48.0" r="1.15"/><circle cx="646.0" cy="48.0" r="1.15"/><circle cx="658.7" cy="48.0" r="1.15"/><circle cx="671.3" cy="48.0" r="1.15"/><circle cx="684.0" cy="48.0" r="1.15"/><circle cx="696.7" cy="48.0" r="1.15"/><circle cx="709.3" cy="48.0" r="1.15"/><circle cx="722.0" cy="48.0" r="1.15"/><circle cx="734.7" cy="48.0" r="1.15"/><circle cx="747.3" cy="48.0" r="1.15"/><circle cx="760.0" cy="48.0" r="1.15"/><circle cx="38.0" cy="60.0" r="1.15"/><circle cx="50.7" cy="60.0" r="1.15"/><circle cx="63.3" cy="60.0" r="1.15"/><circle cx="88.7" cy="60.0" r="1.15"/><circle cx="101.3" cy="60.0" r="1.15"/><circle cx="114.0" cy="60.0" r="1.15"/><circle cx="126.7" cy="60.0" r="1.15"/><circle cx="139.3" cy="60.0" r="1.15"/><circle cx="152.0" cy="60.0" r="1.15"/><circle cx="164.7" cy="60.0" r="1.15"/><circle cx="177.3" cy="60.0" r="1.15"/><circle cx="228.0" cy="60.0" r="1.15"/><circle cx="392.7" cy="60.0" r="1.15"/><circle cx="405.3" cy="60.0" r="1.15"/><circle cx="418.0" cy="60.0" r="1.15"/><circle cx="430.7" cy="60.0" r="1.15"/><circle cx="443.3" cy="60.0" r="1.15"/><circle cx="456.0" cy="60.0" r="1.15"/><circle cx="468.7" cy="60.0" r="1.15"/><circle cx="481.3" cy="60.0" r="1.15"/><circle cx="494.0" cy="60.0" r="1.15"/><circle cx="506.7" cy="60.0" r="1.15"/><circle cx="519.3" cy="60.0" r="1.15"/><circle cx="532.0" cy="60.0" r="1.15"/><circle cx="544.7" cy="60.0" r="1.15"/><circle cx="557.3" cy="60.0" r="1.15"/><circle cx="570.0" cy="60.0" r="1.15"/><circle cx="582.7" cy="60.0" r="1.15"/><circle cx="595.3" cy="60.0" r="1.15"/><circle cx="608.0" cy="60.0" r="1.15"/><circle cx="620.7" cy="60.0" r="1.15"/><circle cx="633.3" cy="60.0" r="1.15"/><circle cx="646.0" cy="60.0" r="1.15"/><circle cx="658.7" cy="60.0" r="1.15"/><circle cx="671.3" cy="60.0" r="1.15"/><circle cx="684.0" cy="60.0" r="1.15"/><circle cx="696.7" cy="60.0" r="1.15"/><circle cx="722.0" cy="60.0" r="1.15"/><circle cx="101.3" cy="72.0" r="1.15"/><circle cx="114.0" cy="72.0" r="1.15"/><circle cx="126.7" cy="72.0" r="1.15"/><circle cx="139.3" cy="72.0" r="1.15"/><circle cx="152.0" cy="72.0" r="1.15"/><circle cx="164.7" cy="72.0" r="1.15"/><circle cx="177.3" cy="72.0" r="1.15"/><circle cx="190.0" cy="72.0" r="1.15"/><circle cx="202.7" cy="72.0" r="1.15"/><circle cx="215.3" cy="72.0" r="1.15"/><circle cx="228.0" cy="72.0" r="1.15"/><circle cx="240.7" cy="72.0" r="1.15"/><circle cx="253.3" cy="72.0" r="1.15"/><circle cx="405.3" cy="72.0" r="1.15"/><circle cx="418.0" cy="72.0" r="1.15"/><circle cx="430.7" cy="72.0" r="1.15"/><circle cx="443.3" cy="72.0" r="1.15"/><circle cx="456.0" cy="72.0" r="1.15"/><circle cx="468.7" cy="72.0" r="1.15"/><circle cx="481.3" cy="72.0" r="1.15"/><circle cx="494.0" cy="72.0" r="1.15"/><circle cx="506.7" cy="72.0" r="1.15"/><circle cx="519.3" cy="72.0" r="1.15"/><circle cx="532.0" cy="72.0" r="1.15"/><circle cx="544.7" cy="72.0" r="1.15"/><circle cx="557.3" cy="72.0" r="1.15"/><circle cx="570.0" cy="72.0" r="1.15"/><circle cx="582.7" cy="72.0" r="1.15"/><circle cx="595.3" cy="72.0" r="1.15"/><circle cx="608.0" cy="72.0" r="1.15"/><circle cx="620.7" cy="72.0" r="1.15"/><circle cx="633.3" cy="72.0" r="1.15"/><circle cx="646.0" cy="72.0" r="1.15"/><circle cx="658.7" cy="72.0" r="1.15"/><circle cx="709.3" cy="72.0" r="1.15"/><circle cx="126.7" cy="84.0" r="1.15"/><circle cx="139.3" cy="84.0" r="1.15"/><circle cx="152.0" cy="84.0" r="1.15"/><circle cx="164.7" cy="84.0" r="1.15"/><circle cx="177.3" cy="84.0" r="1.15"/><circle cx="190.0" cy="84.0" r="1.15"/><circle cx="202.7" cy="84.0" r="1.15"/><circle cx="215.3" cy="84.0" r="1.15"/><circle cx="228.0" cy="84.0" r="1.15"/><circle cx="240.7" cy="84.0" r="1.15"/><circle cx="266.0" cy="84.0" r="1.15"/><circle cx="380.0" cy="84.0" r="1.15"/><circle cx="392.7" cy="84.0" r="1.15"/><circle cx="405.3" cy="84.0" r="1.15"/><circle cx="418.0" cy="84.0" r="1.15"/><circle cx="430.7" cy="84.0" r="1.15"/><circle cx="443.3" cy="84.0" r="1.15"/><circle cx="456.0" cy="84.0" r="1.15"/><circle cx="468.7" cy="84.0" r="1.15"/><circle cx="481.3" cy="84.0" r="1.15"/><circle cx="494.0" cy="84.0" r="1.15"/><circle cx="506.7" cy="84.0" r="1.15"/><circle cx="519.3" cy="84.0" r="1.15"/><circle cx="532.0" cy="84.0" r="1.15"/><circle cx="544.7" cy="84.0" r="1.15"/><circle cx="557.3" cy="84.0" r="1.15"/><circle cx="570.0" cy="84.0" r="1.15"/><circle cx="582.7" cy="84.0" r="1.15"/><circle cx="595.3" cy="84.0" r="1.15"/><circle cx="608.0" cy="84.0" r="1.15"/><circle cx="620.7" cy="84.0" r="1.15"/><circle cx="633.3" cy="84.0" r="1.15"/><circle cx="646.0" cy="84.0" r="1.15"/><circle cx="658.7" cy="84.0" r="1.15"/><circle cx="671.3" cy="84.0" r="1.15"/><circle cx="126.7" cy="96.0" r="1.15"/><circle cx="139.3" cy="96.0" r="1.15"/><circle cx="152.0" cy="96.0" r="1.15"/><circle cx="164.7" cy="96.0" r="1.15"/><circle cx="177.3" cy="96.0" r="1.15"/><circle cx="190.0" cy="96.0" r="1.15"/><circle cx="202.7" cy="96.0" r="1.15"/><circle cx="215.3" cy="96.0" r="1.15"/><circle cx="228.0" cy="96.0" r="1.15"/><circle cx="367.3" cy="96.0" r="1.15"/><circle cx="380.0" cy="96.0" r="1.15"/><circle cx="405.3" cy="96.0" r="1.15"/><circle cx="430.7" cy="96.0" r="1.15"/><circle cx="468.7" cy="96.0" r="1.15"/><circle cx="481.3" cy="96.0" r="1.15"/><circle cx="494.0" cy="96.0" r="1.15"/><circle cx="506.7" cy="96.0" r="1.15"/><circle cx="519.3" cy="96.0" r="1.15"/><circle cx="532.0" cy="96.0" r="1.15"/><circle cx="544.7" cy="96.0" r="1.15"/><circle cx="557.3" cy="96.0" r="1.15"/><circle cx="570.0" cy="96.0" r="1.15"/><circle cx="582.7" cy="96.0" r="1.15"/><circle cx="595.3" cy="96.0" r="1.15"/><circle cx="608.0" cy="96.0" r="1.15"/><circle cx="620.7" cy="96.0" r="1.15"/><circle cx="633.3" cy="96.0" r="1.15"/><circle cx="646.0" cy="96.0" r="1.15"/><circle cx="126.7" cy="108.0" r="1.15"/><circle cx="139.3" cy="108.0" r="1.15"/><circle cx="152.0" cy="108.0" r="1.15"/><circle cx="164.7" cy="108.0" r="1.15"/><circle cx="177.3" cy="108.0" r="1.15"/><circle cx="190.0" cy="108.0" r="1.15"/><circle cx="202.7" cy="108.0" r="1.15"/><circle cx="215.3" cy="108.0" r="1.15"/><circle cx="392.7" cy="108.0" r="1.15"/><circle cx="468.7" cy="108.0" r="1.15"/><circle cx="481.3" cy="108.0" r="1.15"/><circle cx="494.0" cy="108.0" r="1.15"/><circle cx="506.7" cy="108.0" r="1.15"/><circle cx="519.3" cy="108.0" r="1.15"/><circle cx="532.0" cy="108.0" r="1.15"/><circle cx="544.7" cy="108.0" r="1.15"/><circle cx="557.3" cy="108.0" r="1.15"/><circle cx="570.0" cy="108.0" r="1.15"/><circle cx="582.7" cy="108.0" r="1.15"/><circle cx="595.3" cy="108.0" r="1.15"/><circle cx="608.0" cy="108.0" r="1.15"/><circle cx="620.7" cy="108.0" r="1.15"/><circle cx="633.3" cy="108.0" r="1.15"/><circle cx="671.3" cy="108.0" r="1.15"/><circle cx="152.0" cy="120.0" r="1.15"/><circle cx="164.7" cy="120.0" r="1.15"/><circle cx="177.3" cy="120.0" r="1.15"/><circle cx="190.0" cy="120.0" r="1.15"/><circle cx="367.3" cy="120.0" r="1.15"/><circle cx="380.0" cy="120.0" r="1.15"/><circle cx="392.7" cy="120.0" r="1.15"/><circle cx="405.3" cy="120.0" r="1.15"/><circle cx="418.0" cy="120.0" r="1.15"/><circle cx="430.7" cy="120.0" r="1.15"/><circle cx="443.3" cy="120.0" r="1.15"/><circle cx="456.0" cy="120.0" r="1.15"/><circle cx="468.7" cy="120.0" r="1.15"/><circle cx="481.3" cy="120.0" r="1.15"/><circle cx="494.0" cy="120.0" r="1.15"/><circle cx="506.7" cy="120.0" r="1.15"/><circle cx="519.3" cy="120.0" r="1.15"/><circle cx="532.0" cy="120.0" r="1.15"/><circle cx="544.7" cy="120.0" r="1.15"/><circle cx="557.3" cy="120.0" r="1.15"/><circle cx="570.0" cy="120.0" r="1.15"/><circle cx="582.7" cy="120.0" r="1.15"/><circle cx="595.3" cy="120.0" r="1.15"/><circle cx="608.0" cy="120.0" r="1.15"/><circle cx="620.7" cy="120.0" r="1.15"/><circle cx="633.3" cy="120.0" r="1.15"/><circle cx="164.7" cy="132.0" r="1.15"/><circle cx="354.7" cy="132.0" r="1.15"/><circle cx="367.3" cy="132.0" r="1.15"/><circle cx="380.0" cy="132.0" r="1.15"/><circle cx="392.7" cy="132.0" r="1.15"/><circle cx="405.3" cy="132.0" r="1.15"/><circle cx="418.0" cy="132.0" r="1.15"/><circle cx="430.7" cy="132.0" r="1.15"/><circle cx="443.3" cy="132.0" r="1.15"/><circle cx="468.7" cy="132.0" r="1.15"/><circle cx="481.3" cy="132.0" r="1.15"/><circle cx="494.0" cy="132.0" r="1.15"/><circle cx="532.0" cy="132.0" r="1.15"/><circle cx="544.7" cy="132.0" r="1.15"/><circle cx="557.3" cy="132.0" r="1.15"/><circle cx="570.0" cy="132.0" r="1.15"/><circle cx="582.7" cy="132.0" r="1.15"/><circle cx="595.3" cy="132.0" r="1.15"/><circle cx="608.0" cy="132.0" r="1.15"/><circle cx="620.7" cy="132.0" r="1.15"/><circle cx="164.7" cy="144.0" r="1.15"/><circle cx="177.3" cy="144.0" r="1.15"/><circle cx="190.0" cy="144.0" r="1.15"/><circle cx="240.7" cy="144.0" r="1.15"/><circle cx="354.7" cy="144.0" r="1.15"/><circle cx="367.3" cy="144.0" r="1.15"/><circle cx="380.0" cy="144.0" r="1.15"/><circle cx="392.7" cy="144.0" r="1.15"/><circle cx="405.3" cy="144.0" r="1.15"/><circle cx="418.0" cy="144.0" r="1.15"/><circle cx="430.7" cy="144.0" r="1.15"/><circle cx="443.3" cy="144.0" r="1.15"/><circle cx="456.0" cy="144.0" r="1.15"/><circle cx="468.7" cy="144.0" r="1.15"/><circle cx="481.3" cy="144.0" r="1.15"/><circle cx="494.0" cy="144.0" r="1.15"/><circle cx="544.7" cy="144.0" r="1.15"/><circle cx="582.7" cy="144.0" r="1.15"/><circle cx="595.3" cy="144.0" r="1.15"/><circle cx="202.7" cy="156.0" r="1.15"/><circle cx="228.0" cy="156.0" r="1.15"/><circle cx="354.7" cy="156.0" r="1.15"/><circle cx="367.3" cy="156.0" r="1.15"/><circle cx="380.0" cy="156.0" r="1.15"/><circle cx="392.7" cy="156.0" r="1.15"/><circle cx="405.3" cy="156.0" r="1.15"/><circle cx="418.0" cy="156.0" r="1.15"/><circle cx="430.7" cy="156.0" r="1.15"/><circle cx="443.3" cy="156.0" r="1.15"/><circle cx="456.0" cy="156.0" r="1.15"/><circle cx="468.7" cy="156.0" r="1.15"/><circle cx="544.7" cy="156.0" r="1.15"/><circle cx="608.0" cy="156.0" r="1.15"/><circle cx="228.0" cy="168.0" r="1.15"/><circle cx="240.7" cy="168.0" r="1.15"/><circle cx="253.3" cy="168.0" r="1.15"/><circle cx="367.3" cy="168.0" r="1.15"/><circle cx="380.0" cy="168.0" r="1.15"/><circle cx="392.7" cy="168.0" r="1.15"/><circle cx="405.3" cy="168.0" r="1.15"/><circle cx="418.0" cy="168.0" r="1.15"/><circle cx="430.7" cy="168.0" r="1.15"/><circle cx="443.3" cy="168.0" r="1.15"/><circle cx="456.0" cy="168.0" r="1.15"/><circle cx="468.7" cy="168.0" r="1.15"/><circle cx="481.3" cy="168.0" r="1.15"/><circle cx="595.3" cy="168.0" r="1.15"/><circle cx="215.3" cy="180.0" r="1.15"/><circle cx="228.0" cy="180.0" r="1.15"/><circle cx="240.7" cy="180.0" r="1.15"/><circle cx="253.3" cy="180.0" r="1.15"/><circle cx="266.0" cy="180.0" r="1.15"/><circle cx="405.3" cy="180.0" r="1.15"/><circle cx="418.0" cy="180.0" r="1.15"/><circle cx="430.7" cy="180.0" r="1.15"/><circle cx="443.3" cy="180.0" r="1.15"/><circle cx="456.0" cy="180.0" r="1.15"/><circle cx="468.7" cy="180.0" r="1.15"/><circle cx="595.3" cy="180.0" r="1.15"/><circle cx="620.7" cy="180.0" r="1.15"/><circle cx="633.3" cy="180.0" r="1.15"/><circle cx="215.3" cy="192.0" r="1.15"/><circle cx="228.0" cy="192.0" r="1.15"/><circle cx="240.7" cy="192.0" r="1.15"/><circle cx="253.3" cy="192.0" r="1.15"/><circle cx="266.0" cy="192.0" r="1.15"/><circle cx="278.7" cy="192.0" r="1.15"/><circle cx="291.3" cy="192.0" r="1.15"/><circle cx="304.0" cy="192.0" r="1.15"/><circle cx="418.0" cy="192.0" r="1.15"/><circle cx="430.7" cy="192.0" r="1.15"/><circle cx="443.3" cy="192.0" r="1.15"/><circle cx="456.0" cy="192.0" r="1.15"/><circle cx="684.0" cy="192.0" r="1.15"/><circle cx="696.7" cy="192.0" r="1.15"/><circle cx="228.0" cy="204.0" r="1.15"/><circle cx="240.7" cy="204.0" r="1.15"/><circle cx="253.3" cy="204.0" r="1.15"/><circle cx="266.0" cy="204.0" r="1.15"/><circle cx="278.7" cy="204.0" r="1.15"/><circle cx="291.3" cy="204.0" r="1.15"/><circle cx="418.0" cy="204.0" r="1.15"/><circle cx="430.7" cy="204.0" r="1.15"/><circle cx="443.3" cy="204.0" r="1.15"/><circle cx="456.0" cy="204.0" r="1.15"/><circle cx="240.7" cy="216.0" r="1.15"/><circle cx="253.3" cy="216.0" r="1.15"/><circle cx="266.0" cy="216.0" r="1.15"/><circle cx="278.7" cy="216.0" r="1.15"/><circle cx="291.3" cy="216.0" r="1.15"/><circle cx="405.3" cy="216.0" r="1.15"/><circle cx="418.0" cy="216.0" r="1.15"/><circle cx="430.7" cy="216.0" r="1.15"/><circle cx="443.3" cy="216.0" r="1.15"/><circle cx="456.0" cy="216.0" r="1.15"/><circle cx="481.3" cy="216.0" r="1.15"/><circle cx="646.0" cy="216.0" r="1.15"/><circle cx="658.7" cy="216.0" r="1.15"/><circle cx="671.3" cy="216.0" r="1.15"/><circle cx="684.0" cy="216.0" r="1.15"/><circle cx="240.7" cy="228.0" r="1.15"/><circle cx="253.3" cy="228.0" r="1.15"/><circle cx="266.0" cy="228.0" r="1.15"/><circle cx="278.7" cy="228.0" r="1.15"/><circle cx="418.0" cy="228.0" r="1.15"/><circle cx="430.7" cy="228.0" r="1.15"/><circle cx="443.3" cy="228.0" r="1.15"/><circle cx="620.7" cy="228.0" r="1.15"/><circle cx="633.3" cy="228.0" r="1.15"/><circle cx="646.0" cy="228.0" r="1.15"/><circle cx="658.7" cy="228.0" r="1.15"/><circle cx="671.3" cy="228.0" r="1.15"/><circle cx="684.0" cy="228.0" r="1.15"/><circle cx="696.7" cy="228.0" r="1.15"/><circle cx="240.7" cy="240.0" r="1.15"/><circle cx="253.3" cy="240.0" r="1.15"/><circle cx="266.0" cy="240.0" r="1.15"/><circle cx="418.0" cy="240.0" r="1.15"/><circle cx="430.7" cy="240.0" r="1.15"/><circle cx="443.3" cy="240.0" r="1.15"/><circle cx="633.3" cy="240.0" r="1.15"/><circle cx="646.0" cy="240.0" r="1.15"/><circle cx="658.7" cy="240.0" r="1.15"/><circle cx="671.3" cy="240.0" r="1.15"/><circle cx="684.0" cy="240.0" r="1.15"/><circle cx="696.7" cy="240.0" r="1.15"/><circle cx="228.0" cy="252.0" r="1.15"/><circle cx="240.7" cy="252.0" r="1.15"/><circle cx="253.3" cy="252.0" r="1.15"/><circle cx="684.0" cy="252.0" r="1.15"/><circle cx="696.7" cy="252.0" r="1.15"/><circle cx="747.3" cy="252.0" r="1.15"/><circle cx="228.0" cy="264.0" r="1.15"/><circle cx="240.7" cy="264.0" r="1.15"/><circle cx="747.3" cy="264.0" r="1.15"/><circle cx="228.0" cy="276.0" r="1.15"/><circle cx="240.7" cy="276.0" r="1.15"/><circle cx="228.0" cy="288.0" r="1.15"/></g>
+          <g class="wm-pin" transform="translate(401.1,77.6)">
+            <circle class="wm-ping" r="7" fill="none" stroke="#4a9eff" stroke-width="2"/>
+            <circle class="wm-ping p2" r="7" fill="none" stroke="#4a9eff" stroke-width="2"/>
+            <circle r="3.2" fill="#4a9eff" style="filter:drop-shadow(0 0 6px rgba(74,158,255,.9))"/>
+          </g>
+        </svg>
+        <div class="fade"></div>
+        <div class="madein"><span style="font-size:15px">🇩🇪</span><span data-t="i_madein">Built in Germany</span></div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: form -->
+    <section class="card formcard rev">
+      <div class="seg" id="seg">
+        <button type="button" data-ft="bug" class="on"><span class="em">🐞</span><span data-t="t_bug">Bug</span></button>
+        <button type="button" data-ft="wish"><span class="em">✨</span><span data-t="t_wish">Wish</span></button>
+        <button type="button" data-ft="praise"><span class="em">💬</span><span data-t="t_praise">Feedback</span></button>
+      </div>
+      <form id="cform" novalidate>
+        <div class="frow">
+          <div class="field"><label for="fName" data-t="f_name">Name</label><input id="fName" type="text" autocomplete="name" data-t-ph="f_name_ph" placeholder="Your name"></div>
+          <div class="field"><label for="fEmail" data-t="f_email">Email</label><input id="fEmail" type="email" autocomplete="email" data-t-ph="f_email_ph" placeholder="you@studio.com"></div>
+        </div>
+        <div class="field"><label for="fMsg" data-t="f_msg">Message</label><textarea id="fMsg" data-t-ph="f_msg_ph" placeholder="What's on your mind?"></textarea></div>
+        <button class="send" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg><span data-t="f_send">Send message</span></button>
+        <p class="foralt" data-t-html="f_or">Opens your mail app · or write to <b id="orMail">hallo@disky.app</b></p>
+        <p class="privacy-note" data-t="f_note">100% local app · we only use your email to reply.</p>
+      </form>
+    </section>
+  </div>
+</div></main>
+
+<!-- FOOTER -->
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="index.html" style="font-size:16px"><svg viewBox="0 0 100 100" style="width:20px;height:20px" aria-hidden="true"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#37cfe0"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#37cfe0"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>Disky</a>
+  <span>© 2026 Disky</span>
+  <a href="rechtliches.html" data-t="foot_legal">Legal</a>
+  <span class="sp"></span>
+  <div class="lang"><button data-lang="en" class="on">EN</button><button data-lang="de">DE</button></div>
+</div></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const I18N={
+ en:{
+  nav_features:"Features",nav_privacy:"Privacy",nav_pricing:"Pricing",soon_short:"Coming soon",foot_legal:"Legal",
+  eb:"Contact & Feedback",h1:"Tell us what you think.",
+  sub:"Questions, feature wishes, or a bug to report? We read every message and reply fast — usually within a day.",
+  i_h:"Talk to the people who built it.",i_lead:"No ticket queue, no bot. Your message reaches the small team behind Disky directly.",
+  i_email_k:"Email",i_copy:"Copy",i_reply_k:"Reply time",i_reply_v:"Usually within a day",i_priv_k:"Private",i_priv_v:"We never share your address",
+  i_here:"Where we are",i_madein:"Built in Germany",
+  t_bug:"Bug",t_wish:"Wish",t_praise:"Feedback",
+  f_name:"Name",f_name_ph:"Your name",f_email:"Email",f_email_ph:"you@studio.com",
+  f_msg:"Message",f_msg_ph:"What's on your mind?",f_send:"Send message",
+  f_or:'Opens your mail app · or write to <b id="orMail">hallo@disky.app</b>',
+  f_note:"100% local app · we only use your email to reply.",
+  toast_copied:"Email copied to clipboard",toast_need:"Please write a short message first.",toast_open:"Opening your mail app…"
+ },
+ de:{
+  nav_features:"Features",nav_privacy:"Privatsphäre",nav_pricing:"Preise",soon_short:"Bald verfügbar",foot_legal:"Rechtliches",
+  eb:"Kontakt & Feedback",h1:"Sag uns, was du denkst.",
+  sub:"Fragen, Feature-Wünsche oder ein Bug? Wir lesen jede Nachricht und antworten schnell — meist innerhalb eines Tages.",
+  i_h:"Sprich mit denen, die's gebaut haben.",i_lead:"Keine Ticket-Schlange, kein Bot. Deine Nachricht erreicht direkt das kleine Team hinter Disky.",
+  i_email_k:"E-Mail",i_copy:"Kopieren",i_reply_k:"Antwortzeit",i_reply_v:"Meist innerhalb eines Tages",i_priv_k:"Privat",i_priv_v:"Wir geben deine Adresse nie weiter",
+  i_here:"Wo wir sind",i_madein:"Gebaut in Deutschland",
+  t_bug:"Bug",t_wish:"Wunsch",t_praise:"Feedback",
+  f_name:"Name",f_name_ph:"Dein Name",f_email:"E-Mail",f_email_ph:"du@studio.de",
+  f_msg:"Nachricht",f_msg_ph:"Was beschäftigt dich?",f_send:"Nachricht senden",
+  f_or:'Öffnet deine Mail-App · oder schreib an <b id="orMail">hallo@disky.app</b>',
+  f_note:"100% lokale App · deine E-Mail nutzen wir nur zum Antworten.",
+  toast_copied:"E-Mail in die Zwischenablage kopiert",toast_need:"Bitte schreib zuerst eine kurze Nachricht.",toast_open:"Mail-App wird geöffnet…"
+ }
+};
+const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+let LANG=(store.get('diskyLang')||(navigator.language||'en').slice(0,2)); if(LANG!=='de')LANG='en';
+function tt(k){return (I18N[LANG]&&I18N[LANG][k])!=null?I18N[LANG][k]:(I18N.en[k]||k);}
+function applyLang(l){
+  if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-t]').forEach(e=>{e.textContent=tt(e.getAttribute('data-t'));});
+  document.querySelectorAll('[data-t-ph]').forEach(e=>{e.setAttribute('placeholder',tt(e.getAttribute('data-t-ph')));});
+  document.querySelectorAll('[data-t-html]').forEach(e=>{e.innerHTML=tt(e.getAttribute('data-t-html'));});
+  document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
+}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
+applyLang();
+
+// reveal
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.1});
+document.querySelectorAll('.rev').forEach(e=>io.observe(e));
+
+// toast
+let _tt=0;
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2600); }
+
+// copy email
+function copyMail(){ try{ navigator.clipboard.writeText('hallo@disky.app'); toast(tt('toast_copied')); }catch(e){ toast('hallo@disky.app'); } }
+document.getElementById('copyMail').onclick=copyMail;
+document.addEventListener('click',e=>{ if(e.target&&e.target.id==='orMail') copyMail(); });
+
+// type segmented control
+let TYPE='bug';
+document.getElementById('seg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+  TYPE=b.dataset.ft; document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b)); });
+
+// submit → mailto (no backend; matches the in-app feedback flow)
+document.getElementById('cform').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=document.getElementById('fName').value.trim();
+  const email=document.getElementById('fEmail').value.trim();
+  const msg=document.getElementById('fMsg').value.trim();
+  if(!msg){ document.getElementById('fMsg').focus(); toast(tt('toast_need')); return; }
+  const typeLabel={bug:'Bug',wish:'Wish',praise:'Feedback'}[TYPE];
+  const subject=`Disky ${typeLabel}${name?' — '+name:''}`;
+  const body=`${msg}\n\n— ${name||'(no name)'}${email?' · '+email:''}\nLang: ${LANG.toUpperCase()}`;
+  toast(tt('toast_open'));
+  window.location.href=`mailto:hallo@disky.app?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
+</script>
+</body>
+</html>
