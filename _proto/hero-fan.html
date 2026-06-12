@@ -149,7 +149,8 @@ const ease=t=>1-Math.pow(1-t,3);
 const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;   // sanftes Beschleunigen + Abbremsen
 // Hochformat-Lineup: echte Proportionen (T5 kleinste, 2.5"-Platten am größten), gleiche Abstände, alle aufrecht
 const fan=document.getElementById('fan');
-const DRV={'-2':{h:149,ar:0.631},'-1':{h:224,ar:0.666},'0':{h:168,ar:0.683},'1':{h:123,ar:0.766},'2':{h:197,ar:0.710}};
+// Höhen optisch kalibriert (nicht stur nach Datei-Maß): 2.5"-Platten groß (gdrive/lacie), SSD-Trio kompakt (t9≈rugged), T5 klar am kleinsten
+const DRV={'-2':{h:155,ar:0.631},'-1':{h:220,ar:0.666},'0':{h:160,ar:0.683},'1':{h:120,ar:0.766},'2':{h:194,ar:0.710}};
 const ORD=['-2','-1','0','1','2'], GAP=26, REFW=860;
 let CEN={}, fanScale=1;
 function layout(){
