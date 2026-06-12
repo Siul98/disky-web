@@ -150,15 +150,15 @@ function apply(p){
   const lift=easeIO(clamp(p1/0.62));
   const scan=clamp((p1-0.42)/0.5);
   const spread=easeIO(clamp(p1/0.55));
-  const pull=clamp(p2/0.85), pullE=pull*pull;          // magnetisch: beschleunigt in den Screen
+  const pull=clamp(p2/0.82), pullE=pull*pull;          // magnetisch: beschleunigt gleichmäßig in den Screen
   cards.forEach(c=>{
     const i=+c.dataset.i; let tx,ty,rot,scl=1,op=1;
     if(i===0){ tx=0; ty=-250*lift; rot=0; scl=1+0.36*lift; }
     else { const f=fanParts(i); tx=f.tx; ty=f.ty; rot=f.rot; op=1-0.5*spread; }
-    if(p2>0){ ty+=470*pullE; scl*=(1-0.86*pullE); op*=(1-pullE); rot*=(1-pullE); }
-    c.style.transform=`translate(calc(-50% + ${tx}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.05,scl).toFixed(3)})`;
+    if(p2>0){ tx*=(1-pullE); ty=ty*(1-pullE)+(-30)*pullE; scl*=(1-0.93*pullE); op*=(1-Math.min(1,pullE*1.25)); rot*=(1-pullE); }  // alle in EINEN Punkt (Mitte) → in den Screen
+    c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.04,scl).toFixed(3)})`;
     c.style.opacity=Math.max(0,op).toFixed(3);
-    c.style.zIndex = p2>0.14 ? 3 : (i===0 ? (lift>0.05?12:2) : (Math.abs(i)===1?3:1));   // im Sog hinter den Screen (z<macbook)
+    c.style.zIndex = p2>0.05 ? 3 : (i===0 ? (lift>0.05?12:2) : (Math.abs(i)===1?3:1));   // im Sog hinter den Screen (z<macbook)
   });
   // X-ray am Scan-Strich (weiche Maske) + Glow-Partikel
   const bx=scan*100, f=6;
@@ -176,13 +176,13 @@ function apply(p){
   head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
   head.style.opacity=(1-0.8*spread).toFixed(3);
   // Mehrwert-Stichworte: erscheinen wenn Scan fertig, verschwinden sobald der Sog (Beat 2) startet
-  const kwShow=ease(clamp((scan-0.55)/0.45))*(1-clamp(p2/0.22));
+  const kwShow=ease(clamp((scan-0.55)/0.45))*(1-clamp(p2/0.10));
   kws.forEach((k,j)=>{ const d=clamp(kwShow*1.35 - j*0.1), dx=+k.dataset.dx, dy=+k.dataset.dy;
     k.style.opacity=d.toFixed(3); k.style.transform=`translate(${(dx*(1-d)).toFixed(1)}px,${(dy*(1-d)).toFixed(1)}px)`; });
   // MacBook-Screen kommt in Beat 2 hoch (App im Screen), Platten werden reingezogen
-  const mb=ease(clamp(p2/0.55));
+  const mb=ease(clamp((p2-0.08)/0.5));   // leicht verzögert: erst räumt der Fächer, dann steigt der Screen
   macbook.style.opacity=mb.toFixed(3);
-  macbook.style.transform=`translateX(-50%) translateY(${(70*(1-mb)).toFixed(0)}px) scale(${(0.92+0.08*mb).toFixed(3)})`;
+  macbook.style.transform=`translateX(-50%) translateY(${(60*(1-mb)).toFixed(0)}px) scale(${(0.93+0.07*mb).toFixed(3)})`;
   hint.style.opacity=p>0.05?0:1;
 }
 function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
@@ -194,6 +194,7 @@ let targetP=0,curP=0,looping=false;
 function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
 function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.085; apply(curP); requestAnimationFrame(tick); }
 addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
+addEventListener('resize',()=>{ readTarget(); apply(curP); },{passive:true});
 readTarget(); curP=targetP; apply(curP);
 </script>
 </body></html>
