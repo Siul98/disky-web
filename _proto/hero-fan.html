@@ -1,5 +1,5 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disky · Hero — Cinematic Fächer → Scan</title>
+<title>Disky · Hero — Fächer → Scan</title>
 <style>
 :root{--bg:#08090c;--ink:#f4f7fb;--mut:rgba(244,247,251,.6);--mut2:rgba(244,247,251,.42);
  --acc:#4a9eff;--acc2:#37cfe0;--line:rgba(255,255,255,.09);--mono:"SF Mono",ui-monospace,Menlo,monospace;
@@ -9,64 +9,67 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 .note{position:fixed;left:14px;top:12px;z-index:80;font-family:var(--mono);font-size:11px;color:var(--mut2);background:rgba(8,9,12,.6);padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
 .note b{color:var(--acc)}
-.rail{position:relative;height:250vh}                  /* 2 Beats: Scan+Stichworte, dann magnetisch in den MacBook-Screen */
+.rail{position:relative;height:250vh}
 .sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
-/* cinematic environment */
-.filmgrain{position:absolute;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
- background:url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>')}
 .bggrid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;
  background-image:linear-gradient(to right,rgba(244,247,251,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(244,247,251,.05) 1px,transparent 1px);
  -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%)}
 .glow{position:absolute;left:50%;top:50%;width:1000px;height:680px;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
  background:radial-gradient(closest-side,rgba(45,98,200,.2),transparent 72%)}
 
-/* CENTERED cinematic headline */
-.head{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px 132px;will-change:transform,filter,opacity}
+/* zentrale Headline */
+.head{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px 138px;will-change:transform,filter,opacity}
 .head .eb{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:22px;opacity:0;animation:ebIn 1.2s .15s ease both}
-.head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(52px,8.6vw,104px)}
+.head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(50px,8.2vw,98px)}
 .t3d{display:block;color:var(--ink);text-shadow:0 10px 30px rgba(244,247,251,.16),0 2px 4px rgba(244,247,251,.1);
  opacity:0;animation:txtReveal 1.7s .25s cubic-bezier(.16,1,.3,1) both}
 .silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);
  -webkit-background-clip:text;background-clip:text;transform:translateZ(0);
  filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));
  clip-path:inset(0 100% 0 0);animation:txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
-.head .sub{margin:30px auto 0;max-width:560px;font-size:18px;color:var(--mut);opacity:0;animation:ebIn 1.2s .9s ease both}
+.head .sub{margin:28px auto 0;max-width:560px;font-size:18px;color:var(--mut);opacity:0;animation:ebIn 1.2s .9s ease both}
 @keyframes ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 
-/* fan of drives (hand of cards) */
+/* Fächer (Kartendeck) */
 .stage{position:absolute;inset:0;z-index:2}
-.fan{position:absolute;left:50%;bottom:138px;width:0;height:0;transform:scale(var(--fs,1));transform-origin:50% 100%}
-.fcard{position:absolute;left:50%;bottom:0;height:180px;transform-origin:50% 72%;will-change:transform,opacity}  /* Höhe = echte Proportion (JS); alle Hochformat, gleiche Abstände */
+.fan{position:absolute;left:50%;bottom:128px;width:0;height:0;transform:scale(var(--fs,1));transform-origin:50% 100%}
+.fcard{position:absolute;left:50%;bottom:0;height:180px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
+.fan.resting .fcard{transition:transform .34s cubic-bezier(.2,.8,.3,1),filter .34s ease}
 .fcard .drv{height:100%;width:auto;display:block;filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
-.t9c{z-index:2}
-.dimg.front{height:100%;width:auto;display:block;filter:drop-shadow(0 26px 50px rgba(0,0,0,.65));will-change:mask}
-.dimg.xray{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
+
+/* Scan-Stage: die herausgezogene T9 — QUER, rotiert beim Rausholen in Position */
+.scanstage{position:absolute;left:50%;top:50%;z-index:9;width:min(460px,54vw);opacity:0;pointer-events:none;will-change:transform,opacity,filter}
+.scanstage .dimg{display:block;width:100%;height:auto}
+.scanstage .front{filter:drop-shadow(0 30px 60px rgba(0,0,0,.7));will-change:mask}
+.scanstage .xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .scanline.on{opacity:1}
-/* Beam reicht WEIT über die Platte hinaus → läuft oben/unten weich aus, wird nirgends abgeschnitten */
 .scanline .bm{position:absolute;top:-32%;bottom:-32%;left:-1px;width:2px;border-radius:2px;
  background:linear-gradient(180deg,transparent 0%,rgba(205,238,255,.5) 16%,#cdeeff 40%,#37cfe0 50%,#cdeeff 60%,rgba(205,238,255,.5) 84%,transparent 100%);
  box-shadow:0 0 26px 9px rgba(74,158,255,.7)}
 .scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-30px;width:60px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.20),transparent);
  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%)}
-/* Beam baut sich auf (wächst aus der Mitte + Glow-Flash) statt ruckartig da zu sein */
 .scanline.appear .bm{animation:bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
 @keyframes bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
-.px-scatter{position:absolute;top:0;bottom:0;left:0;width:0}
-.px-scatter span{position:absolute;border-radius:1px;background:#cdeeff;box-shadow:0 0 7px 1.5px rgba(130,200,255,.95);opacity:0;animation:flick .85s steps(2,end) infinite}
-@keyframes flick{0%,100%{opacity:0}45%{opacity:1}}
-/* Pixel-Burst: Glow-Pixel fliegen beim Erscheinen zum Strahl zusammen */
 .px-burst{position:absolute;top:-30%;bottom:-30%;left:0;width:0}
 .px-burst span{position:absolute;left:0;width:3px;height:3px;margin-left:-1.5px;border-radius:1px;background:#e6f5ff;box-shadow:0 0 9px 2px rgba(140,205,255,.95);opacity:0}
 .scanline.appear .px-burst span{animation:pxPop .66s cubic-bezier(.2,.8,.3,1) both}
 @keyframes pxPop{0%{opacity:0;transform:translate(var(--dx,12px),var(--dy,0)) scale(.3)}35%{opacity:1}100%{opacity:0;transform:translate(0,0) scale(1)}}
+
+/* epische Beleuchtung (Bloom) hinter der gescannten Platte */
+.bloom{position:absolute;left:50%;top:48%;width:1100px;height:1100px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;
+ background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
+.shock{position:absolute;left:50%;top:48%;width:480px;height:480px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;
+ border:3px solid rgba(190,224,255,.95);box-shadow:0 0 60px rgba(110,180,255,.7),inset 0 0 50px rgba(74,158,255,.35)}
+
 .scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 .cap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;font-family:var(--mono);font-size:11px;color:var(--mut2)}
-/* Mehrwert-Stichworte um die gescannte Platte (Glas-Badges) */
-.keywords{position:absolute;inset:0;z-index:8;pointer-events:none}
+
+/* Mehrwert-Badges (Glas) — eng um die Platte */
+.keywords{position:absolute;inset:0;z-index:12;pointer-events:none}
 .kw{position:absolute;display:inline-flex;align-items:center;gap:11px;padding:10px 18px 10px 11px;border-radius:15px;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;color:#eaf2ff;
  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.035));backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 24px 55px -14px rgba(0,0,0,.75),0 0 34px -10px rgba(74,158,255,.45);opacity:0;will-change:transform,opacity}
@@ -77,6 +80,15 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
  background:linear-gradient(140deg,rgba(74,158,255,.32),rgba(55,207,224,.14));
  box-shadow:inset 0 0 0 1px rgba(140,200,255,.4),0 0 18px -5px rgba(74,158,255,.7)}
 .kw .ic svg{width:17px;height:17px;display:block}
+/* Re-Puls: nach abgeschlossenem Scan leuchten alle Badges nochmal auf */
+.keywords.lit .kw{animation:kwPulse .9s ease both}
+.keywords.lit .kw:nth-of-type(1){animation-delay:0s}
+.keywords.lit .kw:nth-of-type(2){animation-delay:.05s}
+.keywords.lit .kw:nth-of-type(3){animation-delay:.1s}
+.keywords.lit .kw:nth-of-type(4){animation-delay:.15s}
+.keywords.lit .kw:nth-of-type(5){animation-delay:.2s}
+@keyframes kwPulse{0%{filter:brightness(1)}24%{filter:brightness(1.65) drop-shadow(0 0 16px rgba(125,195,255,.95))}100%{filter:brightness(1)}}
+
 /* MacBook — nur Screen, Body fadet in Schwarz, App im Screen */
 .macbook{position:absolute;left:50%;bottom:1%;transform:translateX(-50%);z-index:4;width:min(720px,84vw);opacity:0;will-change:transform,opacity}
 .mb-screen{position:relative;border-radius:16px;padding:10px;background:linear-gradient(160deg,#181a1f,#0a0b0e);box-shadow:0 0 0 1px rgba(255,255,255,.06),0 50px 110px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.08)}
@@ -90,15 +102,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 @media(prefers-reduced-motion:reduce){.t3d,.silver,.eb,.sub{animation:none!important;opacity:1!important;clip-path:none!important}}
 </style></head>
 <body>
-<div class="note">PROTOTYP · zentraler Titel · T9 schiebt über die Headline (blur) · <b>scrollen</b></div>
-
-<svg width="0" height="0" style="position:absolute"><defs>
-  <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
-  <linearGradient id="lrG" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#f7a046"/><stop offset=".5" stop-color="#ea7820"/><stop offset="1" stop-color="#bf560e"/></linearGradient>
-  <linearGradient id="sdG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2d33"/><stop offset="1" stop-color="#141619"/></linearGradient>
-  <linearGradient id="t7G" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7c8693"/><stop offset=".5" stop-color="#525b67"/><stop offset="1" stop-color="#363d47"/></linearGradient>
-  <linearGradient id="lsG" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".5" stop-color="#c3cad2"/><stop offset="1" stop-color="#9aa2ad"/></linearGradient>
-</defs></svg>
+<div class="note">PROTOTYP · Fächer + Hover · T9 dreht quer beim Scan · <b>scrollen</b></div>
 
 <div class="rail" id="rail">
   <div class="sticky">
@@ -108,25 +112,35 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
       <h1><span class="t3d">Five drives.</span><span class="silver">Or five seconds.</span></h1>
       <p class="sub">Jede Platte einmal indexieren — dann findest du alles, ohne eine einzige anzustecken.</p>
     </div>
+
     <div class="stage"><div class="fan" id="fan">
-      <div class="fcard" data-i="-2" style="height:204px"><img class="drv" src="../assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async"></div>
-      <div class="fcard" data-i="-1" style="height:202px"><img class="drv" src="../assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async"></div>
-      <div class="fcard t9c" data-i="0">
-        <img class="dimg front" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async">
-        <img class="dimg xray" src="../assets/drives/t9-xray.webp" alt="" decoding="async">
-        <div class="scanline" id="scanline"><i class="bm"></i><div class="px-scatter" id="pxscatter"></div><div class="px-burst" id="pxburst"></div></div>
-      </div>
-      <div class="fcard" data-i="1" style="height:180px"><img class="drv" src="../assets/drives/t5.webp" alt="Samsung T5" decoding="async"></div>
-      <div class="fcard" data-i="2" style="height:198px"><img class="drv" src="../assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async"></div>
+      <div class="fcard" data-i="-2"><img class="drv" src="../assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async"></div>
+      <div class="fcard" data-i="-1"><img class="drv" src="../assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async"></div>
+      <div class="fcard t9c" data-i="0"><img class="drv" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async"></div>
+      <div class="fcard" data-i="1"><img class="drv" src="../assets/drives/t5.webp" alt="Samsung T5" decoding="async"></div>
+      <div class="fcard" data-i="2"><img class="drv" src="../assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async"></div>
     </div></div>
-    <!-- Mehrwert-Stichworte um die gescannte Platte -->
-    <div class="keywords" id="keywords">
-      <span class="kw" style="top:23%;left:12%" data-dx="-34" data-dy="-18"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg></span>Offline durchsuchbar</span>
-      <span class="kw" style="top:20%;right:11%" data-dx="34" data-dy="-20"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg></span>Jede Datei indexiert</span>
-      <span class="kw" style="top:49%;left:5.5%" data-dx="-44" data-dy="0"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.6 3 7.6 7 9 4-1.4 7-4.4 7-9V6l-7-3Z"/><path d="m9.3 12 1.9 1.9 3.6-3.7"/></svg></span>Read-only · sicher</span>
-      <span class="kw" style="top:52%;right:5.5%" data-dx="44" data-dy="4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span>In Sekunden gefunden</span>
-      <span class="kw" style="top:72%;left:50%" data-bx="-50" data-dx="0" data-dy="30"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>Drehort-GPS</span>
+
+    <!-- epischer Bloom + Schockwelle hinter der gescannten Platte -->
+    <div class="bloom" id="bloom"></div>
+    <div class="shock" id="shock"></div>
+
+    <!-- herausgezogene, quer rotierte T9 + X-ray-Scan -->
+    <div class="scanstage" id="scanstage">
+      <img class="dimg front" src="../assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
+      <img class="dimg xray" src="../assets/drives/t9xray-land.webp" alt="" decoding="async">
+      <div class="scanline" id="scanline"><i class="bm"></i><div class="px-burst" id="pxburst"></div></div>
     </div>
+
+    <!-- Mehrwert-Badges, eng um die Platte -->
+    <div class="keywords" id="keywords">
+      <span class="kw" style="top:24%;left:18%" data-dx="-34" data-dy="-16"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg></span>Offline durchsuchbar</span>
+      <span class="kw" style="top:22%;right:16%" data-dx="34" data-dy="-18"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg></span>Jede Datei indexiert</span>
+      <span class="kw" style="top:53%;left:13%" data-dx="-44" data-dy="0"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.6 3 7.6 7 9 4-1.4 7-4.4 7-9V6l-7-3Z"/><path d="m9.3 12 1.9 1.9 3.6-3.7"/></svg></span>Read-only · sicher</span>
+      <span class="kw" style="top:51%;right:14%" data-dx="44" data-dy="4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span>In Sekunden gefunden</span>
+      <span class="kw" style="top:74%;left:50%" data-bx="-50" data-dx="0" data-dy="28"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>Drehort-GPS</span>
+    </div>
+
     <!-- MacBook: nur Screen, Body fadet in Schwarz, App im Screen -->
     <div class="macbook" id="macbook">
       <div class="mb-screen"><div class="mb-app"><img src="../assets/screen-overview.webp" alt="Disky" loading="lazy"><span class="glare"></span></div></div>
@@ -135,80 +149,110 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
   </div>
 </div>
 <div class="scrollhint" id="hint">↓ scrollen</div>
-<div class="cap">Cinematic · T9 schiebt über die Headline · X-ray</div>
+<div class="cap">Fächer · Hover · T9 quer + X-ray · Sog in den Mac</div>
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
-const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.front'), scanline=document.getElementById('scanline');
-(function(){const sc=document.getElementById('pxscatter'),bu=document.getElementById('pxburst');
-  let h='';for(let i=0;i<22;i++){const y=(Math.random()*100).toFixed(1),x=(-15+Math.random()*30).toFixed(0),d=(Math.random()*0.85).toFixed(2),s=(1.4+Math.random()*2.2).toFixed(1);
-    h+=`<span style="top:${y}%;left:${x}px;width:${s}px;height:${s}px;animation-delay:${d}s"></span>`;} sc.innerHTML=h;
-  let bb='';for(let i=0;i<15;i++){const y=(i/14*100).toFixed(1),dx=((Math.random()<.5?-1:1)*(14+Math.random()*30)).toFixed(0),dy=((-12+Math.random()*24)).toFixed(0),dl=(Math.random()*0.2).toFixed(2);
+const fan=document.getElementById('fan'), scanstage=document.getElementById('scanstage');
+const xray=scanstage.querySelector('.xray'), front=scanstage.querySelector('.front'), scanline=document.getElementById('scanline');
+const bloom=document.getElementById('bloom'), shock=document.getElementById('shock'), keywords=document.getElementById('keywords'), kws=[...document.querySelectorAll('#keywords .kw')], macbook=document.getElementById('macbook');
+// Pixel-Burst am Strahl
+(function(){const bu=document.getElementById('pxburst');let bb='';
+  for(let i=0;i<15;i++){const y=(i/14*100).toFixed(1),dx=((i%2?1:-1)*(14+(i*7%30))).toFixed(0),dy=((-12+(i*9%24))).toFixed(0),dl=((i%5)*0.04).toFixed(2);
     bb+=`<span style="top:${y}%;--dx:${dx}px;--dy:${dy}px;animation-delay:${dl}s"></span>`;} bu.innerHTML=bb;})();
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
-const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;   // sanftes Beschleunigen + Abbremsen
-// Hochformat-Lineup: echte Proportionen (T5 kleinste, 2.5"-Platten am größten), gleiche Abstände, alle aufrecht
-const fan=document.getElementById('fan');
-// Höhen optisch kalibriert (nicht stur nach Datei-Maß): 2.5"-Platten groß (gdrive/lacie), SSD-Trio kompakt (t9≈rugged), T5 klar am kleinsten
+const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+// Höhen optisch kalibriert: 2.5"-Platten groß, SSD-Trio kompakt (t9≈rugged), T5 am kleinsten
 const DRV={'-2':{h:155,ar:0.631},'-1':{h:220,ar:0.666},'0':{h:160,ar:0.683},'1':{h:120,ar:0.766},'2':{h:194,ar:0.710}};
-const ORD=['-2','-1','0','1','2'], GAP=26, REFW=860;
-let CEN={}, fanScale=1;
+const REFW=900;
+let fanScale=1;
+// Karten-Fächer: horizontaler Versatz + Rotation, leichter Bogen — alle Hochformat
+function fanParts(i){ return {tx:i*78, ty:Math.abs(i)*-7, rot:i*8.5}; }
+function fanT(i){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx.toFixed(1)}px), ${f.ty.toFixed(1)}px) rotate(${f.rot}deg)`; }
+function baseZ(i){ return 10-Math.abs(i); }
 function layout(){
   fanScale=Math.min(1,innerWidth/REFW);
   fan.style.setProperty('--fs',fanScale.toFixed(3));
   cards.forEach(c=>{ c.style.height=DRV[c.dataset.i].h+'px'; });
-  const ws=ORD.map(k=>DRV[k].h*DRV[k].ar);
-  const total=ws.reduce((a,b)=>a+b,0)+GAP*(ORD.length-1);
-  let cx=-total/2; ORD.forEach((k,idx)=>{ CEN[k]=cx+ws[idx]/2; cx+=ws[idx]+GAP; });   // gleiche Kanten-Abstände, Gruppe zentriert
 }
-function fanT(i){ return `translate(calc(-50% + ${CEN[i].toFixed(1)}px), 0px)`; }
-const keywords=document.getElementById('keywords'), kws=[...document.querySelectorAll('#keywords .kw')], macbook=document.getElementById('macbook');
 function apply(p){
-  const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);        // Beat 1 (Scan), Beat 2 (Sog in den Screen)
-  const lift=easeIO(clamp(p1/0.62));
-  const scan=clamp((p1-0.42)/0.5);
-  const spread=easeIO(clamp(p1/0.55));
-  const pull=clamp(p2/0.82), pullE=pull*pull;          // magnetisch: beschleunigt gleichmäßig in den Screen
+  const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);
+  const lift=easeIO(clamp(p1/0.46));                    // T9 raus + Stage hoch/dreht
+  const scan=clamp((p1-0.5)/0.4);                       // X-ray-Strahl quert die Platte
+  const spread=easeIO(clamp(p1/0.5));                   // Headline-Blur + übrige dimmen
+  const done=clamp((scan-0.74)/0.26);                   // Scan abgeschlossen?
+  const flash=Math.sin(clamp(done)*Math.PI);           // epischer Licht-Puls beim Abschluss
+  const pull=clamp(p2/0.82), pullE=pull*pull;
+  // Fächer
   cards.forEach(c=>{
-    const k=c.dataset.i, i=+k; let tx,ty,scl=1,op=1;
-    if(i===0){ tx=CEN['0']*(1-lift); ty=-258*lift; scl=1+0.42*lift; }            // Hero steigt aus der Mitte, größer für Impact
-    else { tx=CEN[k]; ty=0; op=1-0.62*spread; }                                   // übrige bleiben im Lineup, dimmen stärker → Fokus Hero
-    if(p2>0){ tx*=(1-pullE); ty=ty*(1-pullE)+(-30)*pullE; scl*=(1-0.93*pullE); op*=(1-Math.min(1,pullE*1.25)); }  // magnetisch in EINEN Punkt → Screen
-    c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) scale(${Math.max(.04,scl).toFixed(3)})`;
+    const i=+c.dataset.i; let tx,ty,rot,scl=1,op=1; const f=fanParts(i);
+    if(i===0){ tx=f.tx*(1-lift); ty=f.ty-150*lift; rot=f.rot-20*lift; scl=1+0.12*lift; op=1-clamp(lift*1.7); }  // Hero raus + dreht + faded
+    else { tx=f.tx; ty=f.ty; rot=f.rot; op=1-0.62*spread; }
+    if(p2>0){ tx*=(1-pullE); ty=ty*(1-pullE)+(-30)*pullE; rot*=(1-pullE); scl*=(1-0.93*pullE); op*=(1-Math.min(1,pullE*1.25)); }
+    c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.04,scl).toFixed(3)})`;
     c.style.opacity=Math.max(0,op).toFixed(3);
-    c.style.zIndex = p2>0.05 ? 3 : (i===0 ? (lift>0.05?12:2) : (Math.abs(i)===1?3:1));   // im Sog hinter den Screen (z<macbook)
+    c.style.zIndex = p2>0.05 ? 3 : (i===0 ? (lift>0.05?6:baseZ(i)) : baseZ(i));
   });
-  // X-ray am Scan-Strich (weiche Maske) + Glow-Partikel
-  const bx=scan*100, f=6;
+  // Scan-Stage: steigt + rotiert von Hochformat (70°) auf Querformat (0°), wächst
+  const em=lift;
+  let stTy=(1-em)*120-22, stRot=(1-em)*70, stScl=0.6+0.4*em, stOp=clamp(em*1.7-0.2), stBr=1+1.0*flash;
+  if(p2>0){ stScl*=(1-0.92*pullE); stOp*=(1-Math.min(1,pullE*1.3)); stTy+=70*pullE; }
+  scanstage.style.transform=`translate(-50%,-50%) translateY(${stTy.toFixed(1)}px) rotate(${stRot.toFixed(1)}deg) scale(${stScl.toFixed(3)})`;
+  scanstage.style.opacity=Math.max(0,stOp).toFixed(3);
+  scanstage.style.filter=`brightness(${stBr.toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))`;
+  scanstage.style.zIndex = p2>0.05 ? 3 : 9;
+  // X-ray am Scan-Strich (weiche Maske) — nur wenn Stage steht
+  const bx=scan*100, ft=6;
   if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on','appear'); }
   else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on','appear'); }
   else {
     xray.style.opacity=1; front.style.opacity=1;
-    xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-f).toFixed(2)}%,transparent ${(bx+f).toFixed(2)}%)`;
-    front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-f).toFixed(2)}%,#000 ${(bx+f).toFixed(2)}%)`;
+    xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-ft).toFixed(2)}%,transparent ${(bx+ft).toFixed(2)}%)`;
+    front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-ft).toFixed(2)}%,#000 ${(bx+ft).toFixed(2)}%)`;
     scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
     if(!scanline.classList.contains('appear')) scanline.classList.add('appear');
   }
+  // epischer Bloom: sanftes Feld solange Platte da + großer Flash bei Scan-Abschluss
+  const bloomOp=clamp(0.12*em*(1-pullE) + 1.15*flash);
+  bloom.style.opacity=bloomOp.toFixed(3);
+  bloom.style.transform=`translate(-50%,-50%) scale(${(0.68+0.12*em+0.55*flash).toFixed(3)})`;
+  // Schockwelle: dehnt sich schnell aus (sichtbar über die Platte hinaus) und blitzt auf
+  shock.style.opacity=(flash*0.95*(1-pullE)).toFixed(3);
+  shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
   // Headline cinematisch unscharf, skaliert + abblendend
   head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
   head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
-  head.style.opacity=(1-0.8*spread).toFixed(3);
-  // Mehrwert-Stichworte: erscheinen wenn Scan fertig, verschwinden sobald der Sog (Beat 2) startet
-  const kwShow=ease(clamp((scan-0.55)/0.45))*(1-clamp(p2/0.10));
-  kws.forEach((k,j)=>{ const d=clamp(kwShow*1.35 - j*0.1), dx=+k.dataset.dx, dy=+k.dataset.dy, bx=+(k.dataset.bx||0);
+  head.style.opacity=(1-0.82*spread).toFixed(3);
+  // Badges: erscheinen mit dem Scan, verschwinden beim Sog
+  const kwShow=ease(clamp((scan-0.4)/0.5))*(1-clamp(p2/0.10));
+  kws.forEach((k,j)=>{ const d=clamp(kwShow*1.35 - j*0.08), dx=+k.dataset.dx, dy=+k.dataset.dy, bx2=+(k.dataset.bx||0);
     k.style.opacity=d.toFixed(3);
-    k.style.transform=`translate(calc(${bx}% + ${(dx*(1-d)).toFixed(1)}px), ${(dy*(1-d)).toFixed(1)}px) scale(${(0.9+0.1*d).toFixed(3)})`; });
-  // MacBook-Screen kommt in Beat 2 hoch (App im Screen), Platten werden reingezogen
-  const mb=ease(clamp((p2-0.08)/0.5));   // leicht verzögert: erst räumt der Fächer, dann steigt der Screen
+    k.style.transform=`translate(calc(${bx2}% + ${(dx*(1-d)).toFixed(1)}px), ${(dy*(1-d)).toFixed(1)}px) scale(${(0.9+0.1*d).toFixed(3)})`; });
+  // Re-Puls der Badges beim Scan-Abschluss (mit Hysterese, damit Scrubbing sauber neu triggert)
+  if(done>0.55 && !litState){ keywords.classList.remove('lit'); void keywords.offsetWidth; keywords.classList.add('lit'); litState=true; }
+  else if(done<0.32 && litState){ keywords.classList.remove('lit'); litState=false; }
+  // MacBook-Screen in Beat 2
+  const mb=ease(clamp((p2-0.08)/0.5));
   macbook.style.opacity=mb.toFixed(3);
   macbook.style.transform=`translateX(-50%) translateY(${(60*(1-mb)).toFixed(0)}px) scale(${(0.93+0.07*mb).toFixed(3)})`;
   hint.style.opacity=p>0.05?0:1;
+  // Hover nur im Ruhezustand erlauben
+  fan.classList.toggle('resting',p<0.03);
 }
-function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
-  c.style.zIndex = i===0 ? 2 : (Math.abs(i)===1 ? 3 : 1);
-  c.style.transform = fanT(c.dataset.i);}); }
+let litState=false;
+function setRest(){ cards.forEach(c=>{ const i=+c.dataset.i; c.style.zIndex=baseZ(i); c.style.transform=fanT(i); }); }
+// Hover: Platte hebt sich + wird größer (nur im Ruhezustand)
+let hoverK=null;
+cards.forEach(c=>{
+  c.addEventListener('mouseenter',()=>{ if(curP>=0.03) return; hoverK=c.dataset.i; const f=fanParts(+c.dataset.i);
+    c.style.zIndex=20;
+    c.style.transform=`translate(calc(-50% + ${f.tx.toFixed(1)}px), ${(f.ty-26).toFixed(1)}px) rotate(${f.rot}deg) scale(1.09)`;
+    c.style.filter='drop-shadow(0 34px 56px rgba(0,0,0,.7)) brightness(1.07)'; });
+  c.addEventListener('mouseleave',()=>{ if(hoverK!==c.dataset.i) return; hoverK=null; const i=+c.dataset.i;
+    c.style.zIndex=baseZ(i); c.style.transform=fanT(i); c.style.filter=''; });
+});
 layout(); setRest();
-// Lerp-Glättung: die Animation GLEITET zur Scroll-Position (eased), statt sie hart zu tracken
+// Lerp-Glättung
 let targetP=0,curP=0,looping=false;
 function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
 function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.085; apply(curP); requestAnimationFrame(tick); }
