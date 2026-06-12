@@ -50,7 +50,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .scanline .bm{position:absolute;top:-32%;bottom:-32%;left:-1px;width:2px;border-radius:2px;
  background:linear-gradient(180deg,transparent 0%,rgba(205,238,255,.5) 16%,#cdeeff 40%,#37cfe0 50%,#cdeeff 60%,rgba(205,238,255,.5) 84%,transparent 100%);
  box-shadow:0 0 26px 9px rgba(74,158,255,.7)}
-.scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-30px;width:60px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.20),transparent)}
+.scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-30px;width:60px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.20),transparent);
+ -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%)}
 .scanline span{position:absolute;border-radius:1px;background:#cdeeff;box-shadow:0 0 7px 1.5px rgba(130,200,255,.95);opacity:0;animation:flick .85s steps(2,end) infinite}
 @keyframes flick{0%,100%{opacity:0}45%{opacity:1}}
 .scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
