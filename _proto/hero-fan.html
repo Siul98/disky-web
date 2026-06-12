@@ -38,12 +38,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 /* fan of drives (hand of cards) */
 .stage{position:absolute;inset:0;z-index:2}
 .fan{position:absolute;left:50%;bottom:150px;width:0;height:0}
-.fcard{position:absolute;left:0;bottom:0;width:268px;height:180px;margin-left:-134px;transform-origin:50% 72%;will-change:transform,opacity}
-.fcard.ph svg{display:block;width:100%;height:100%;filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
+.fcard{position:absolute;left:50%;bottom:0;height:188px;transform-origin:50% 72%;will-change:transform,opacity}  /* Breite = echtes Drive-Seitenverhältnis; via JS translate(-50%) zentriert */
+.fcard .drv{height:100%;width:auto;display:block;filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
 .t9c{z-index:2}
-.dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.dimg.front{filter:drop-shadow(0 26px 50px rgba(0,0,0,.65));will-change:mask}
-.dimg.xray{mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
+.dimg.front{height:100%;width:auto;display:block;filter:drop-shadow(0 26px 50px rgba(0,0,0,.65));will-change:mask}
+.dimg.xray{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .scanline.on{opacity:1}
 /* Beam reicht WEIT über die Platte hinaus → läuft oben/unten weich aus, wird nirgends abgeschnitten */
@@ -104,32 +103,15 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
       <p class="sub">Jede Platte einmal indexieren — dann findest du alles, ohne eine einzige anzustecken.</p>
     </div>
     <div class="stage"><div class="fan" id="fan">
-      <div class="fcard ph" data-i="-2"><svg viewBox="0 0 272 182">
-        <rect x="6" y="6" width="260" height="170" rx="20" fill="url(#lrG)"/>
-        <g stroke="#fff" stroke-opacity=".10" stroke-width="2.4"><line x1="30" y1="60" x2="244" y2="36"/><line x1="30" y1="100" x2="244" y2="76"/><line x1="30" y1="140" x2="244" y2="116"/></g>
-        <circle cx="136" cy="91" r="26" fill="none" stroke="#16120c" stroke-opacity=".5" stroke-width="6"/><circle cx="136" cy="91" r="8" fill="#16120c" fill-opacity=".4"/>
-        <rect x="6" y="6" width="260" height="170" rx="20" fill="url(#sheen)"/></svg></div>
-      <div class="fcard ph" data-i="-1"><svg viewBox="0 0 272 182">
-        <rect x="6" y="6" width="260" height="170" rx="18" fill="url(#sdG)"/>
-        <path d="M6 26 a20 20 0 0 1 20-20 h44 l-30 26 v126 a20 20 0 0 1-20 20 h-14 a20 20 0 0 1-20-20 z" fill="#ef5a23" opacity=".92"/>
-        <circle cx="236" cy="30" r="12" fill="none" stroke="#0c0e11" stroke-width="6"/>
-        <text x="150" y="150" text-anchor="middle" font-family="Arial" font-weight="800" font-size="17" fill="#fff" fill-opacity=".8">SanDisk</text>
-        <rect x="6" y="6" width="260" height="170" rx="18" fill="url(#sheen)"/></svg></div>
+      <div class="fcard" data-i="-2" style="height:204px"><img class="drv" src="../assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async"></div>
+      <div class="fcard" data-i="-1" style="height:202px"><img class="drv" src="../assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async"></div>
       <div class="fcard t9c" data-i="0">
         <img class="dimg front" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async">
         <img class="dimg xray" src="../assets/drives/t9-xray.webp" alt="" decoding="async">
         <div class="scanline" id="scanline"><i class="bm"></i><div class="px-scatter" id="pxscatter"></div><div class="px-burst" id="pxburst"></div></div>
       </div>
-      <div class="fcard ph" data-i="1"><svg viewBox="0 0 272 182">
-        <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#t7G)"/>
-        <rect x="10" y="14" width="252" height="154" rx="18" fill="none" stroke="#fff" stroke-opacity=".14"/>
-        <text x="150" y="150" text-anchor="middle" font-family="Arial" font-weight="800" font-size="14" fill="#fff" fill-opacity=".5" letter-spacing="2">SAMSUNG</text>
-        <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#sheen)"/></svg></div>
-      <div class="fcard ph" data-i="2"><svg viewBox="0 0 272 182">
-        <rect x="8" y="8" width="256" height="166" rx="12" fill="url(#lsG)"/>
-        <g opacity=".6"><path d="M8 8 L136 78 L264 8 Z" fill="#fff" opacity=".4"/><path d="M8 174 L136 104 L264 174 Z" fill="#7e858f" opacity=".3"/></g>
-        <circle cx="136" cy="91" r="14" fill="none" stroke="#5b626c" stroke-opacity=".5" stroke-width="3"/>
-        <rect x="8" y="8" width="256" height="166" rx="12" fill="url(#sheen)"/></svg></div>
+      <div class="fcard" data-i="1" style="height:180px"><img class="drv" src="../assets/drives/t5.webp" alt="Samsung T5" decoding="async"></div>
+      <div class="fcard" data-i="2" style="height:198px"><img class="drv" src="../assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async"></div>
     </div></div>
     <!-- Mehrwert-Stichworte um die gescannte Platte -->
     <div class="keywords" id="keywords">
@@ -160,8 +142,8 @@ const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
 const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;   // sanftes Beschleunigen + Abbremsen
 // sauberer Karten-Fächer: jede Karte horizontal versetzt + leicht gedreht, in einem Bogen
-function fanParts(i){ return {tx:i*112, ty:Math.abs(i)*30, rot:i*9}; }
-function fanT(i){ const f=fanParts(i); return `translateX(${f.tx}px) translateY(${f.ty}px) rotate(${f.rot}deg)`; }
+function fanParts(i){ return {tx:i*152, ty:Math.abs(i)*22, rot:i*8}; }
+function fanT(i){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx}px), ${f.ty}px) rotate(${f.rot}deg)`; }
 const keywords=document.getElementById('keywords'), kws=[...document.querySelectorAll('#keywords .kw')], macbook=document.getElementById('macbook');
 function apply(p){
   const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);        // Beat 1 (Scan), Beat 2 (Sog in den Screen)
@@ -174,7 +156,7 @@ function apply(p){
     if(i===0){ tx=0; ty=-250*lift; rot=0; scl=1+0.36*lift; }
     else { const f=fanParts(i); tx=f.tx; ty=f.ty; rot=f.rot; op=1-0.5*spread; }
     if(p2>0){ ty+=470*pullE; scl*=(1-0.86*pullE); op*=(1-pullE); rot*=(1-pullE); }
-    c.style.transform=`translateX(${tx}px) translateY(${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.05,scl).toFixed(3)})`;
+    c.style.transform=`translate(calc(-50% + ${tx}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.05,scl).toFixed(3)})`;
     c.style.opacity=Math.max(0,op).toFixed(3);
     c.style.zIndex = p2>0.14 ? 3 : (i===0 ? (lift>0.05?12:2) : (Math.abs(i)===1?3:1));   // im Sog hinter den Screen (z<macbook)
   });
