@@ -4,6 +4,9 @@
 window.diskySeedDemo = async function(win){
   win = win || window;
   const GB=1073741824, MB=1048576, TB=1099511627776, now=Date.now(), DAY=86400000;
+  // idempotent: if this demo is already seeded (e.g. a second live embed on the page), don't re-seed
+  const _pre=await new Promise((res)=>{ try{ const t=win.tx(['drives'],'readonly'); const r=t.objectStore('drives').getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>res([]); }catch(e){ res([]); } });
+  if(_pre.some(d=>d.label==='Samsung T9')) return { drives:_pre.length, files:-1 };
   // wipe any prior demo data first — IndexedDB persists across loads, so without this
   // every page view would ADD another full set (5 → 10 → 15 … drives accumulating).
   await new Promise((res)=>{ try{ const t=win.tx(['drives','files'],'readwrite');

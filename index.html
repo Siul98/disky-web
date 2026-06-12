@@ -255,7 +255,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes hf-txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 .hf-beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
-#hf-cap1{top:74%}#hf-cap2{top:10%}
+#hf-cap1{top:74%}#hf-cap2{top:5%}
 .hf-stage{position:absolute;inset:0;z-index:2}
 .hf-fan{position:absolute;left:50%;bottom:-118px;width:0;height:0;transform:scale(var(--hffs,1));transform-origin:50% 100%}
 .hf-fcard{position:absolute;left:50%;bottom:0;height:280px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
@@ -275,11 +275,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @keyframes hf-bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
 .hf-bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
 .hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;border:1.5px solid rgba(175,210,255,.5);box-shadow:0 0 36px rgba(110,180,255,.32),inset 0 0 34px rgba(74,158,255,.16)}
-.hf-appwin{position:absolute;left:50%;top:37%;transform:translateX(-50%);z-index:4;width:min(900px,94vw);height:min(470px,55vh);opacity:0;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
+.hf-appwin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:min(920px,93vw);height:min(680px,82vh);opacity:0;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
 .hf-awbar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
 .hf-awbar .hf-tl{width:11px;height:11px;border-radius:50%}
 .hf-tl.r{background:#ff5f57}.hf-tl.y{background:#febc2e}.hf-tl.g{background:#28c840}
 .hf-awtitle{margin-left:8px;font-size:12.5px;font-weight:650;color:#cdd6e4;letter-spacing:.02em}
+.hf-awlive{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#9fd0ff}
+.hf-awlive i{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80}
+.hf-awscreen{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#06080c}
+#hf-appframe{position:absolute;top:0;left:0;width:1320px;height:900px;border:0;transform-origin:top left;background:#06080c}
+.hf-awscrim{position:absolute;inset:0;background:#0a0d15;transition:opacity .6s ease;pointer-events:none}
+.hf-awscrim.gone{opacity:0}
 .hf-awbody{display:flex;height:calc(100% - 38px)}
 .hf-awside{width:198px;flex:0 0 auto;border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:3px;background:rgba(255,255,255,.015)}
 .hf-awnav{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;font-size:12.5px;color:var(--mut);font-weight:550}
@@ -349,23 +355,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="hf-bloom" id="hf-bloom"></div>
       <div class="hf-shock" id="hf-shock"></div>
       <div class="hf-appwin" id="hf-appwin">
-        <div class="hf-awbar"><span class="hf-tl r"></span><span class="hf-tl y"></span><span class="hf-tl g"></span><span class="hf-awtitle">Disky</span></div>
-        <div class="hf-awbody">
-          <div class="hf-awside">
-            <div class="hf-awnav"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</div>
-            <div class="hf-awnav"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg>Deep Search</div>
-            <div class="hf-awnav act"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12V3M12 12l7 4"/></svg>Storage Map</div>
-            <div class="hf-awnav"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Project Manager</div>
-            <div class="hf-awnav"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Duplicate Finder</div>
-          </div>
-          <div class="hf-awcontent">
-            <div class="hf-awtop"><div class="hf-awhead2">Storage Map</div><div class="hf-awdrive">Samsung T9 · 1.62 TB of 2 TB</div></div>
-            <div class="hf-awsplit">
-              <div class="hf-sun" id="hf-sun"></div>
-              <div class="hf-awmain" id="hf-awmain"><div class="hf-awhead">Contents</div></div>
-            </div>
-          </div>
-        </div>
+        <div class="hf-awbar"><span class="hf-tl r"></span><span class="hf-tl y"></span><span class="hf-tl g"></span><span class="hf-awtitle">Disky</span><span class="hf-awlive"><i></i>Live</span></div>
+        <div class="hf-awscreen"><iframe id="hf-appframe" title="Disky — Storage Map" tabindex="-1" scrolling="no"></iframe><div class="hf-awscrim" id="hf-awscrim"></div></div>
       </div>
       <div class="hf-t9" id="hf-t9">
         <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
@@ -694,7 +685,7 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     ('requestIdleCallback' in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,1600);
     addEventListener('scroll',go,{once:true,passive:true}); })();
   const bloom=$('hf-bloom'), shock=$('hf-shock');
-  const appwin=$('hf-appwin'), awmain=$('hf-awmain'), filesWrap=$('hf-files'), sun=$('hf-sun');
+  const appwin=$('hf-appwin'), filesWrap=$('hf-files'), appframe=$('hf-appframe'), awscrim=$('hf-awscrim');
   const cap1=$('hf-cap1'), cap2=$('hf-cap2');
   const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
   const lerp=(a,b,t)=>a+(b-a)*t;
@@ -721,14 +712,23 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
   const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);
 
-  // Storage-Map-Sunburst der T9 (Projekt-Ringe + Unterordner)
-  (function(){
-    const SEG=[{f:.38,c:'#4a9eff'},{f:.27,c:'#37cfe0'},{f:.22,c:'#5b8def'},{f:.13,c:'#79d0e0'}];
-    const ring=(r,w,segs,op)=>{ const C=2*Math.PI*r; let off=0,h=''; for(const s of segs){ const len=s.f*C;
-      h+=`<circle r="${r}" fill="none" stroke="${s.c}" stroke-width="${w}" stroke-dasharray="${(len-3).toFixed(1)} ${(C-len+3).toFixed(1)}" stroke-dashoffset="${(-off).toFixed(1)}" stroke-opacity="${op}"/>`; off+=len; } return h; };
-    const subs=[]; SEG.forEach(s=>[.45,.32,.23].forEach(pf=>subs.push({f:s.f*pf,c:s.c})));
-    sun.innerHTML=`<svg viewBox="-118 -118 236 236" style="transform:rotate(-90deg)"><g>${ring(101,8,subs,.45)}${ring(78,22,SEG,1)}</g><circle r="44" fill="rgba(11,15,23,.92)" stroke="rgba(255,255,255,.08)" stroke-width="1"/></svg><div class="hf-sun-c"><b>Samsung T9</b><span>1.62 TB</span></div>`;
-  })();
+  // ECHTE Disky-App ins Hero-Fenster (Live-iframe) → zeigt die Storage Map der gescannten T9
+  let APPW=null, appReady=false, appActive=false;
+  function fitApp(){ try{ const s=appwin.querySelector('.hf-awscreen'); const sc=s.clientWidth/1320; appframe.style.transform='scale('+sc+')'; appframe.style.height=(s.clientHeight/sc)+'px'; }catch(e){} }
+  async function startApp(){
+    APPW=appframe.contentWindow; const t0=Date.now();
+    while((typeof APPW.addDrive!=='function' || !(()=>{try{APPW.tx(['drives'],'readonly');return true;}catch(e){return false;}})()) && Date.now()-t0<15000){ await new Promise(r=>setTimeout(r,60)); }
+    try{ if(window.diskySeedDemo) await window.diskySeedDemo(APPW); }catch(e){}
+    try{ APPW.document.body.classList.remove('booting'); const a=APPW.document.getElementById('app'); if(a)a.classList.remove('boot-in'); }catch(e){}
+    appReady=true; fitApp(); setAppActive(appActive);
+    try{ APPW.setView && APPW.setView('map'); }catch(e){}
+    // den Samsung-T9-Tab in der Storage Map wählen (Klick triggert die echte App-Logik)
+    setTimeout(()=>{ try{ const btns=[...APPW.document.querySelectorAll('.mapdrive[data-md]')]; const t9=btns.find(b=>/Samsung T9/i.test(b.textContent)); if(t9)t9.click(); }catch(e){} },300);
+    setTimeout(()=>awscrim.classList.add('gone'),520);
+  }
+  function setAppActive(on){ appActive=on; try{ if(APPW) APPW._animActive=on; }catch(e){} }
+  let appLoadStarted=false;
+  function loadApp(){ if(appLoadStarted) return; appLoadStarted=true; appframe.addEventListener('load',startApp,{once:true}); appframe.src='/app/index.html'; }
 
   /* Sterne (3D, pures Canvas) — pausiert wenn der Hero aus dem Viewport ist */
   const starCv=$('hf-stars'), starCtx=starCv.getContext('2d');
@@ -754,7 +754,7 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   }
   function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
   sizeStars();
-  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);
+  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); else setAppActive(false); }),{threshold:0.01}).observe(rail);
   startStars();
 
   /* Fächer-Layout */
@@ -774,10 +774,7 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     heroScRest=(REST_VIS*fanScale)/HEROW;
     const restCenterY=(innerHeight-FAN_BOTTOM)-(REST_VIS/2)*fanScale;
     heroTyRest=restCenterY-innerHeight/2;
-    const r=awmain.getBoundingClientRect();
-    const rowH=Math.min(31,(r.height-40)/(N+2)), indent=24, padX=20;
-    let cy=r.top+38; ORDER=[];
-    FILES.forEach((f,i)=>{ if(f.head&&i>0) cy+=9; ORDER.push({x:r.left+padX+(f.head?0:indent), y:cy, w:r.width-padX*2-(f.head?0:indent)}); cy+=rowH; });
+    fitApp();
   }
 
   function apply(p){
@@ -822,20 +819,18 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
     head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
     head.style.opacity=(1-0.82*spread).toFixed(3);
-    appwin.style.opacity=clamp((p2-0.1)/0.32).toFixed(3);
-    const sunRev=easeIO(clamp((p2-0.16)/0.42));   // Sunburst windet sich rein, während die Dateien sich ordnen
-    sun.style.opacity=sunRev.toFixed(3);
-    sun.style.transform=`scale(${(0.72+0.28*sunRev).toFixed(3)}) rotate(${((1-sunRev)*-26).toFixed(1)}deg)`;
-    const W=innerWidth,H=innerHeight;
-    fitems.forEach((el,i)=>{ const f=FILES[i], o=ORDER[i]||{x:W/2,y:H*0.7,w:300};
+    appwin.style.opacity=clamp((p2-0.08)/0.3).toFixed(3);
+    if(p>0.12) loadApp();                 // echte App rechtzeitig vorladen
+    setAppActive(p>0.45 && p<0.999);      // nur aktiv (Starfield-rAF) wenn der Screen sichtbar ist
+    // Dateien strömen in die echte App + verblassen beim Eintauchen
+    const aw=appwin.getBoundingClientRect(), tgx=aw.left+aw.width/2, tgy=aw.top+aw.height*0.42, W=innerWidth,H=innerHeight;
+    fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
-      const settle=easeIO(clamp((p2-i/N*0.05-0.03)/0.5));
+      const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.4)), fm=flow*flow;
       const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
-      const x=lerp(chX,o.x,settle), y=lerp(chY,o.y,settle), rot=lerp(f.r,0,settle);
-      el.style.width=o.w+'px';
-      el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg)`;
-      el.style.opacity=clamp(Math.max(appear,p2*5)).toFixed(3);
-      el.lastElementChild.style.opacity=clamp((settle-0.5)*2).toFixed(2);
+      const x=lerp(chX,tgx,fm), y=lerp(chY,tgy,fm), rot=lerp(f.r,0,flow), sc=1-0.55*fm;
+      el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+      el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.5)/0.42))).toFixed(3);
     });
     const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
     const cap2Op=clamp((p2-0.2)/0.26);
