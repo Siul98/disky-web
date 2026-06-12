@@ -1,36 +1,49 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disky · Hero — Fächer → Scan (echte T9)</title>
+<title>Disky · Hero — Cinematic Fächer → Scan</title>
 <style>
-:root{--bg:#08090c;--ink:#f4f7fb;--mut:rgba(244,247,251,.62);--mut2:rgba(244,247,251,.42);
+:root{--bg:#08090c;--ink:#f4f7fb;--mut:rgba(244,247,251,.6);--mut2:rgba(244,247,251,.42);
  --acc:#4a9eff;--acc2:#37cfe0;--line:rgba(255,255,255,.09);--mono:"SF Mono",ui-monospace,Menlo,monospace;
  --disp:-apple-system,"SF Pro Display","Helvetica Neue",sans-serif}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);overflow-x:hidden}
-.note{position:fixed;left:14px;top:12px;z-index:50;font-family:var(--mono);font-size:11px;color:var(--mut2);background:rgba(8,9,12,.6);padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.note{position:fixed;left:14px;top:12px;z-index:80;font-family:var(--mono);font-size:11px;color:var(--mut2);background:rgba(8,9,12,.6);padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
 .note b{color:var(--acc)}
-.rail{position:relative;height:165vh}   /* kurze Scroll-Distanz: nur in den Leerraum hoch */
-.sticky{position:sticky;top:0;height:100vh;overflow:hidden}
-.sticky::before{content:"";position:absolute;left:50%;top:48%;width:1000px;height:700px;transform:translateX(-50%);
- background:radial-gradient(closest-side,rgba(45,98,200,.22),transparent 72%);pointer-events:none}
-.head{position:absolute;left:0;right:0;top:0;z-index:3;text-align:center;padding-top:9vh;will-change:transform,opacity}
-.head .eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:18px}
-.head h1{font-size:clamp(48px,8.2vw,96px);letter-spacing:-.045em;margin:0;line-height:.97}
-.head h1 .l1{display:block;color:#eef3fa}
-.head h1 .l2{display:block;background:linear-gradient(180deg,#fff,#bcd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.head .sub{margin:26px auto 0;max-width:560px;font-size:18px;color:var(--mut)}
-/* fan (landscape cards) */
+.rail{position:relative;height:118vh}                  /* ~1/5 Scrollweite: kurze, schnelle Sequenz */
+.sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
+/* cinematic environment */
+.filmgrain{position:absolute;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+ background:url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>')}
+.bggrid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;
+ background-image:linear-gradient(to right,rgba(244,247,251,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(244,247,251,.05) 1px,transparent 1px);
+ -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%)}
+.glow{position:absolute;left:50%;top:50%;width:1000px;height:680px;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+ background:radial-gradient(closest-side,rgba(45,98,200,.2),transparent 72%)}
+
+/* CENTERED cinematic headline */
+.head{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px;will-change:transform,filter,opacity}
+.head .eb{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:22px;opacity:0;animation:ebIn 1.2s .15s ease both}
+.head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(52px,8.6vw,104px)}
+.t3d{display:block;color:var(--ink);text-shadow:0 10px 30px rgba(244,247,251,.16),0 2px 4px rgba(244,247,251,.1);
+ opacity:0;animation:txtReveal 1.7s .25s cubic-bezier(.16,1,.3,1) both}
+.silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);
+ -webkit-background-clip:text;background-clip:text;transform:translateZ(0);
+ filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));
+ clip-path:inset(0 100% 0 0);animation:txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
+.head .sub{margin:30px auto 0;max-width:560px;font-size:18px;color:var(--mut);opacity:0;animation:ebIn 1.2s .9s ease both}
+@keyframes ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+
+/* fan of drives (hand of cards) */
 .stage{position:absolute;inset:0;z-index:2}
-.fan{position:absolute;left:50%;bottom:54px;width:0;height:0}
-.fcard{position:absolute;left:0;bottom:0;width:272px;height:182px;margin-left:-136px;
- transform-origin:50% 100%;will-change:transform,opacity}   /* gemeinsamer Drehpunkt unten = Kartenblatt, alle übereinander */
-.fcard.ph{border-radius:18px;filter:drop-shadow(0 24px 44px rgba(0,0,0,.6))}
-.fcard.ph svg{display:block;width:100%;height:100%}
-.t9c{z-index:2}   /* steckt im Fächer · kommt erst beim Hochfahren nach vorn (JS) */
+.fan{position:absolute;left:50%;bottom:46px;width:0;height:0}
+.fcard{position:absolute;left:0;bottom:0;width:272px;height:182px;margin-left:-136px;transform-origin:50% 100%;will-change:transform,opacity}
+.fcard.ph svg{display:block;width:100%;height:100%;filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
+.t9c{z-index:2}
 .dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.dimg.front{filter:drop-shadow(0 24px 44px rgba(0,0,0,.6));will-change:mask}
-.dimg.xray{mix-blend-mode:screen;opacity:0;will-change:mask,opacity}  /* schwarzer BG verschwindet · weiche Masken-Kante folgt dem Scan */
-/* Scan-Linie + Glow-Partikel an der Kante */
+.dimg.front{filter:drop-shadow(0 26px 50px rgba(0,0,0,.65));will-change:mask}
+.dimg.xray{mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .scanline.on{opacity:1}
 .scanline .bm{position:absolute;top:-3%;bottom:-3%;left:-1px;width:2px;border-radius:2px;
@@ -38,12 +51,13 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-28px;width:56px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.22),transparent)}
 .scanline span{position:absolute;border-radius:1px;background:#cdeeff;box-shadow:0 0 7px 1.5px rgba(130,200,255,.95);opacity:0;animation:flick .85s steps(2,end) infinite}
 @keyframes flick{0%,100%{opacity:0}45%{opacity:1}}
-.scrollhint{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);z-index:40;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
+.scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
-.cap{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;font-family:var(--mono);font-size:11px;color:var(--mut2)}
+.cap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;font-family:var(--mono);font-size:11px;color:var(--mut2)}
+@media(prefers-reduced-motion:reduce){.t3d,.silver,.eb,.sub{animation:none!important;opacity:1!important;clip-path:none!important}}
 </style></head>
 <body>
-<div class="note">PROTOTYP · <b>echte T9</b> (Produkt + X-ray) · andere 4 = Platzhalter · <b>scrollen</b></div>
+<div class="note">PROTOTYP · zentraler Titel · T9 schiebt über die Headline (blur) · <b>scrollen</b></div>
 
 <svg width="0" height="0" style="position:absolute"><defs>
   <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
@@ -55,80 +69,69 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 
 <div class="rail" id="rail">
   <div class="sticky">
+    <span class="glow"></span><div class="bggrid"></div>
     <div class="head" id="head">
       <div class="eb">Drive catalog for Mac</div>
-      <h1><span class="l1">Five drives.</span><span class="l2">Or five seconds.</span></h1>
-      <div class="sub">Jede Platte einmal indexieren — dann findest du alles, ohne eine einzige anzustecken.</div>
+      <h1><span class="t3d">Five drives.</span><span class="silver">Or five seconds.</span></h1>
+      <p class="sub">Jede Platte einmal indexieren — dann findest du alles, ohne eine einzige anzustecken.</p>
     </div>
     <div class="stage"><div class="fan" id="fan">
-
-      <!-- LaCie Rugged (placeholder, landscape) -->
       <div class="fcard ph" data-i="-2"><svg viewBox="0 0 272 182">
         <rect x="6" y="6" width="260" height="170" rx="20" fill="url(#lrG)"/>
         <g stroke="#fff" stroke-opacity=".10" stroke-width="2.4"><line x1="30" y1="60" x2="244" y2="36"/><line x1="30" y1="100" x2="244" y2="76"/><line x1="30" y1="140" x2="244" y2="116"/></g>
         <circle cx="136" cy="91" r="26" fill="none" stroke="#16120c" stroke-opacity=".5" stroke-width="6"/><circle cx="136" cy="91" r="8" fill="#16120c" fill-opacity=".4"/>
         <rect x="6" y="6" width="260" height="170" rx="20" fill="url(#sheen)"/></svg></div>
-
-      <!-- SanDisk Extreme (placeholder) -->
       <div class="fcard ph" data-i="-1"><svg viewBox="0 0 272 182">
         <rect x="6" y="6" width="260" height="170" rx="18" fill="url(#sdG)"/>
         <path d="M6 26 a20 20 0 0 1 20-20 h44 l-30 26 v126 a20 20 0 0 1-20 20 h-14 a20 20 0 0 1-20-20 z" fill="#ef5a23" opacity=".92"/>
         <circle cx="236" cy="30" r="12" fill="none" stroke="#0c0e11" stroke-width="6"/>
         <text x="150" y="150" text-anchor="middle" font-family="Arial" font-weight="800" font-size="17" fill="#fff" fill-opacity=".8">SanDisk</text>
         <rect x="6" y="6" width="260" height="170" rx="18" fill="url(#sheen)"/></svg></div>
-
-      <!-- Samsung T9 — REAL images -->
       <div class="fcard t9c" data-i="0">
         <img class="dimg front" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async">
         <img class="dimg xray" src="../assets/drives/t9-xray.webp" alt="" decoding="async">
         <div class="scanline" id="scanline"><i class="bm"></i></div>
       </div>
-
-      <!-- Samsung T7 (placeholder) -->
       <div class="fcard ph" data-i="1"><svg viewBox="0 0 272 182">
         <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#t7G)"/>
         <rect x="10" y="14" width="252" height="154" rx="18" fill="none" stroke="#fff" stroke-opacity=".14"/>
         <text x="150" y="150" text-anchor="middle" font-family="Arial" font-weight="800" font-size="14" fill="#fff" fill-opacity=".5" letter-spacing="2">SAMSUNG</text>
         <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#sheen)"/></svg></div>
-
-      <!-- LaCie Mobile silver (placeholder) -->
       <div class="fcard ph" data-i="2"><svg viewBox="0 0 272 182">
         <rect x="8" y="8" width="256" height="166" rx="12" fill="url(#lsG)"/>
         <g opacity=".6"><path d="M8 8 L136 78 L264 8 Z" fill="#fff" opacity=".4"/><path d="M8 174 L136 104 L264 174 Z" fill="#7e858f" opacity=".3"/></g>
         <circle cx="136" cy="91" r="14" fill="none" stroke="#5b626c" stroke-opacity=".5" stroke-width="3"/>
         <rect x="8" y="8" width="256" height="166" rx="12" fill="url(#sheen)"/></svg></div>
-
     </div></div>
   </div>
 </div>
 <div class="scrollhint" id="hint">↓ scrollen</div>
-<div class="cap">Fächer · T9 fährt hoch · X-ray-Scan</div>
+<div class="cap">Cinematic · T9 schiebt über die Headline · X-ray</div>
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
 const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.front'), scanline=document.getElementById('scanline');
-// Glow-Partikel an der Scan-Kante
 (function(){let h='';for(let i=0;i<22;i++){const y=(Math.random()*100).toFixed(1),x=(-15+Math.random()*30).toFixed(0),d=(Math.random()*0.85).toFixed(2),s=(1.4+Math.random()*2.2).toFixed(1);
   h+=`<span style="top:${y}%;left:${x}px;width:${s}px;height:${s}px;animation-delay:${d}s"></span>`;} scanline.insertAdjacentHTML('beforeend',h);})();
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
 const FAN=13;
 function apply(p){
-  const lift=ease(clamp(p/0.55));
-  const scan=clamp((p-0.5)/0.42);
-  const spread=ease(clamp(p/0.5));
+  const lift=ease(clamp(p/0.62));        // T9 fährt hoch in die Mitte
+  const scan=clamp((p-0.42)/0.5);        // Scan + X-ray
+  const spread=ease(clamp(p/0.55));
   cards.forEach(c=>{
     const i=+c.dataset.i;
     if(i===0){
-      const ty=-205*lift, sc=1+0.42*lift;          // fährt in den Leerraum hoch + wird zum großen Hero-Drive
+      const ty=-270*lift, sc=1+0.36*lift;            // bis in die Bildmitte, ÜBER die Headline
       c.style.transform=`rotate(0deg) translateY(${ty}px) scale(${sc})`;
       c.style.opacity=1;
-      c.style.zIndex = lift>0.05 ? 12 : 2;          // mittig im Stapel · vorn sobald sie hochfährt
+      c.style.zIndex = lift>0.05 ? 12 : 2;            // schiebt sich über die Headline (z>head)
     } else {
-      c.style.transform=`rotate(${i*FAN}deg)`;       // Haufen bleibt liegen (T9 schiebt sich nur raus)
-      c.style.opacity=(1-0.34*spread).toFixed(3);    // leicht abdimmen, damit die T9 heraussticht
+      c.style.transform=`rotate(${i*FAN}deg)`;
+      c.style.opacity=(1-0.55*spread).toFixed(3);
     }
   });
-  // X-ray entsteht DORT, wo der Scan-Strich ist — weiche Masken-Kante (kein harter Schnitt, kein globaler Fade)
+  // X-ray entsteht am Scan-Strich (weiche Maske) + Glow-Partikel
   const bx=scan*100, f=6;
   if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on'); }
   else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on'); }
@@ -138,11 +141,14 @@ function apply(p){
     front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-f).toFixed(2)}%,#000 ${(bx+f).toFixed(2)}%)`;
     scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
   }
-  head.style.opacity=(1-0.32*spread).toFixed(3);   // Titel bleibt sichtbar (T9 geht in den Leerraum darunter)
+  // Headline wird cinematisch unscharf, skaliert & blendet ab (wie 21st.dev), während die T9 drüberschiebt
+  head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
+  head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
+  head.style.opacity=(1-0.8*spread).toFixed(3);
   hint.style.opacity=p>0.05?0:1;
 }
 function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
-  c.style.zIndex = i===0 ? 2 : (Math.abs(i)===1 ? 3 : 1);   // direkte Nachbarn liegen ÜBER der T9 → sie steckt mittig im Fächer
+  c.style.zIndex = i===0 ? 2 : (Math.abs(i)===1 ? 3 : 1);
   c.style.transform = `rotate(${i*FAN}deg)`;}); }
 setRest();
 let raf=0;
