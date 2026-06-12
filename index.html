@@ -1,1688 +1,573 @@
-<!DOCTYPE html>
-<html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disky — alle deine Festplatten. Ein Katalog.</title>
-<meta name="description" content="Disky katalogisiert deine Festplatten & SSDs: finde jede Datei offline wieder, sieh deinen Speicher als interaktives Rad und entdecke Duplikate über alle Laufwerke. Native Mac-App — lokal & offline.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="theme-color" content="#0a0c10">
-<meta property="og:title" content="Disky — alle deine Festplatten. Ein Katalog.">
-<meta property="og:description" content="Finde jede Datei wieder — auch wenn die Platte im Schrank liegt. Lokal, offline, privat.">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disky — See inside sealed drives.</title>
+<meta name="description" content="Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.">
+<link rel="icon" href="favicon.svg">
+<link rel="canonical" href="https://disky.app/">
+<meta property="og:title" content="Disky — See inside sealed drives.">
+<meta property="og:description" content="Index each drive once. Search all of them — by name, project, or what's inside the footage — every disk unplugged in the drawer. 100% local, read-only, no account.">
+<meta property="og:image" content="https://disky.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://disky.app/">
+<meta property="og:site_name" content="Disky">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://disky.app">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#08090c">
+<meta name="color-scheme" content="dark">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Disky","operatingSystem":"macOS","applicationCategory":"UtilitiesApplication","description":"Index every external drive once, then search all of them offline — by name, project, or what's inside the footage — without plugging a drive in. 100% local, read-only, no account.","url":"https://disky.app/","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
 <style>
-/* CI-Display-Schrift: General Sans (lokal) — Logo & Headlines. UI/Fließtext bleibt SF. */
-@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-500.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-600.woff2') format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'General Sans';src:url('fonts/GeneralSans-700.woff2') format('woff2');font-weight:700;font-display:swap}
 :root{
-  --bg:#0a0c10; --bg2:#0f131a; --txt:#eef1f6; --mut:#9aa4b4; --line:#222a35;
-  --acc:#4a9eff; --acc2:#6a5cff; --mp4:#4a9eff; --mov:#7b61ff; --wav:#2dd4bf;
-  --fdisp:'General Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --bg:#08090c; --bg2:#0c0f15; --panel:#0f131a;
+  --ink:#f4f7fb; --mut:rgba(244,247,251,.62); --mut2:rgba(244,247,251,.40);
+  --acc:#4a9eff; --acc2:#37cfe0; --good:#4ade80;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.055);
+  --fdisp:-apple-system,"SF Pro Display","Helvetica Neue",system-ui,sans-serif;
+  --fmono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,monospace;
+  --maxw:1200px;
 }
-.brand,h1,h2.sec,.ag-brand b,.lk .wm,.ag-hello{font-family:var(--fdisp)}
 *{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--bg);color:var(--txt);
-  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden}
-/* Funkelnde Sterne im Hintergrund (wie in der App) */
-#stars{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fdisp);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;overflow-x:hidden}
+h1,h2,h3{font-weight:680;letter-spacing:-.035em;line-height:1.02;margin:0}
+p{margin:0}
 a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
 
-/* Nav */
-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;
-  gap:26px;padding:18px 32px;backdrop-filter:blur(14px);
-  background:linear-gradient(#0a0c10cc,#0a0c1000);}
-.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px;letter-spacing:-.02em}
-.brand svg{width:30px;height:30px}
-.navlinks{margin-left:auto;display:flex;align-items:center;gap:26px;color:var(--mut);font-size:14px}
-.navlinks a:hover{color:var(--txt)}
-/* feste Breite, damit der Sprachumschalter beim Wechsel nicht verspringt (DE-Texte sind länger) */
-#account{display:inline-flex;align-items:center;justify-content:flex-end;gap:22px;min-width:252px;margin-left:6px}
-.btn{display:inline-block;padding:10px 18px;border-radius:11px;font-weight:600;font-size:14px;
-  background:var(--acc);color:#fff;transition:transform .15s,background .15s}
-.btn:hover{background:#3a8af0;transform:translateY(-1px)}
-.btn.ghost{background:#161b22;border:1px solid var(--line);color:var(--txt)}
-.btn.big{padding:16px 30px;font-size:16px;border-radius:13px;box-shadow:0 18px 44px -22px rgba(74,158,255,.95)}
-/* Download-Sektion */
-.dlbox{display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center}
-.dlmeta{color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}
-.dlnote{color:#6b7787;font-size:12.5px;max-width:430px;margin:2px auto 0;line-height:1.5}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;border-radius:980px;padding:14px 24px;cursor:pointer;
+  border:1px solid transparent;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .25s,border-color .25s,box-shadow .25s;white-space:nowrap}
+.btn:active{transform:scale(.975)}
+.btn svg{width:17px;height:17px}
+.btn-primary{background:linear-gradient(180deg,#5aa8ff,#3f86ef);color:#04101f;box-shadow:0 10px 30px rgba(74,158,255,.34),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-primary:hover{background:linear-gradient(180deg,#6fb4ff,#4a90f5);box-shadow:0 14px 38px rgba(74,158,255,.44),inset 0 1px 0 rgba(255,255,255,.55)}
+.btn-ghost{color:var(--ink);border-color:var(--line);background:rgba(255,255,255,.025)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+/* coming-soon badge (non-interactive, until notarization) */
+.soon{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;border-radius:980px;padding:14px 24px;
+  color:var(--mut);border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:default;white-space:nowrap}
+.soon i{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px rgba(74,158,255,.9);animation:soonPulse 2.4s ease-in-out infinite}
+.nav .soon{padding:9px 17px;font-size:14px}
+@keyframes soonPulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
 
-h1{position:relative;z-index:2;font-size:clamp(40px,7vw,82px);line-height:1.02;margin:0 0 22px;
-  letter-spacing:-.035em;font-weight:800;max-width:14ch;
-  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-h1 .grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-.cta .btn{padding:14px 26px;font-size:15px}
-/* Feature-Strip */
-.section{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:40px 24px 90px;scroll-margin-top:78px}
-.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
-.feat{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:24px}
-.feat .ic{width:42px;height:42px;border-radius:11px;background:#16202e;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
-.feat h3{margin:0 0 6px;font-size:17px}
-.feat p{margin:0;color:var(--mut);font-size:14px}
-h2.sec{text-align:center;font-size:clamp(30px,4.8vw,52px);letter-spacing:-.03em;line-height:1.04;margin:0 0 14px;
-  background:linear-gradient(105deg,#ffffff 0%,#eef2f7 42%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;width:100%}
-.sec-sub{text-align:center;color:var(--mut);margin:0 auto 44px;font-size:clamp(16px,1.5vw,18.5px);line-height:1.55;max-width:58ch}
-/* ── Front-page Elevation: großzügige safe spaces + premium Editorial-Rhythmus ── */
-.section{padding:clamp(72px,9vh,128px) 24px}
-.sec-eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;
-  color:#9db6ff;margin:0 0 18px;padding:7px 16px;border:1px solid rgba(122,162,255,.24);border-radius:999px;background:rgba(91,140,255,.07);backdrop-filter:blur(6px)}
-.sec-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 11px rgba(74,158,255,.95);animation:ebpulse 2.4s ease-in-out infinite}
-@keyframes ebpulse{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
-.sec-c{text-align:center}
-/* sanfter Section-Glow für Tiefe */
-.glow-sec{position:relative}
-.glow-sec::before{content:"";position:absolute;left:50%;top:6%;width:min(900px,90%);height:60%;transform:translateX(-50%);pointer-events:none;z-index:-1;
-  background:radial-gradient(60% 60% at 50% 30%,rgba(74,158,255,.10),transparent 70%);filter:blur(20px)}
-/* ── Stat/Proof-Band: konkrete Zahlen direkt nach dem Hero ── */
-.proof{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:clamp(40px,6vh,72px) 24px}
-.proof-inner{position:relative;border:1px solid var(--line);border-radius:26px;overflow:hidden;
-  background:linear-gradient(180deg,rgba(20,28,42,.55),rgba(12,16,22,.6));
-  box-shadow:0 40px 90px -50px rgba(74,158,255,.55),inset 0 1px 0 rgba(255,255,255,.05)}
-.proof-inner::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
-  background:linear-gradient(120deg,rgba(132,200,255,.55),rgba(55,207,224,.18) 38%,transparent 60%,rgba(106,92,255,.4));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.proof-top{text-align:center;padding:34px 24px 8px}
-.proof-top .pt-eb{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#9db6ff;margin-bottom:14px}
-.proof-top .pt-eb .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 11px rgba(74,222,128,.9)}
-.proof-top h3{font-family:var(--fdisp);font-size:clamp(22px,3vw,34px);letter-spacing:-.025em;margin:0;line-height:1.12;
-  background:linear-gradient(105deg,#fff,#cfe0f5 55%,#9db6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.proof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:26px 12px 34px}
-.proof-stat{text-align:center;padding:10px 16px;position:relative}
-.proof-stat+.proof-stat::before{content:"";position:absolute;left:0;top:18%;height:64%;width:1px;background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.12),rgba(255,255,255,0))}
-.proof-stat .num{font-family:var(--fdisp);font-weight:700;font-size:clamp(28px,3.6vw,46px);letter-spacing:-.02em;line-height:1;
-  background:linear-gradient(120deg,#9fc6ff,#37cfe0);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
-.proof-stat .lbl{margin-top:9px;font-size:12.5px;color:var(--mut);letter-spacing:.02em}
-@media(max-width:720px){.proof-stats{grid-template-columns:repeat(2,1fr);gap:18px 0}.proof-stat:nth-child(2)::before,.proof-stat:nth-child(4)::before{display:none}}
-/* ── Trust-Band: lokal/privat-Versprechen ── */
-.trustband{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:0 24px clamp(20px,4vh,40px)}
-.trustband-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.trustpill{display:flex;flex-direction:column;align-items:center;text-align:center;gap:11px;padding:26px 18px;border:1px solid var(--line);border-radius:18px;
-  background:linear-gradient(180deg,rgba(18,24,34,.5),rgba(12,16,22,.5));transition:border-color .2s,transform .2s,box-shadow .2s}
-.trustpill:hover{transform:translateY(-3px);border-color:rgba(74,158,255,.4);box-shadow:0 18px 44px -28px rgba(74,158,255,.8)}
-.trustpill .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:#bfe0ff;
-  background:linear-gradient(155deg,rgba(74,158,255,.26),rgba(55,207,224,.1));box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
-.trustpill .ic svg{width:20px;height:20px}
-.trustpill b{font-size:14.5px;color:#eaf1fb;font-weight:700;letter-spacing:-.01em}
-.trustpill span{font-size:12.5px;color:var(--mut);line-height:1.4}
-@media(max-width:760px){.trustband-grid{grid-template-columns:repeat(2,1fr)}}
-/* ── How it works ── */
-.how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
-.howcard{background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:34px 26px;text-align:center;
-  transition:transform .25s ease,border-color .5s ease,box-shadow .5s ease}
-.howcard:hover{transform:translateY(-4px)}
-.howcard.hot,.howcard:hover{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset,0 0 50px -14px rgba(74,158,255,.5)}
-.howcard .hicon{width:56px;height:56px;margin:4px auto 24px;color:#cfd6e0;transition:color .5s ease}
-.howcard.hot .hicon,.howcard:hover .hicon{color:var(--acc)}
-.howcard .hicon svg{width:100%;height:100%}
-.howcard h3{font-size:21px;margin:0 0 16px;letter-spacing:-.015em;transition:color .5s ease}
-.howcard.hot h3,.howcard:hover h3{color:var(--acc)}
-.howcard p{color:var(--mut);font-size:14.5px;line-height:1.6;margin:0}
-.step{display:inline-block;font-size:12px;font-weight:700;color:var(--mut);letter-spacing:.1em;margin-bottom:4px}
-.howcard .step{transition:color .5s ease}
-.howcard.hot .step,.howcard:hover .step{color:var(--acc)}
-@media(max-width:800px){.how{grid-template-columns:1fr}}
+/* ── Nav ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;
+  border-bottom:1px solid transparent;transition:background .4s ease,border-color .4s ease,backdrop-filter .4s ease}
+.nav.scrolled{background:rgba(8,9,12,.7);backdrop-filter:saturate(170%) blur(18px);-webkit-backdrop-filter:saturate(170%) blur(18px);border-bottom-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;width:100%}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em}
+.brand svg{width:25px;height:25px}
+.navlinks{margin-left:auto;display:flex;align-items:center;gap:30px;font-size:14.5px;color:var(--mut)}
+.navlinks a:not(.btn){transition:color .2s}.navlinks a:not(.btn):hover{color:var(--ink)}
+.nav .btn{padding:9px 18px;font-size:14px}
+@media(max-width:740px){.navlinks .hide-sm{display:none}}
 
-/* Pricing */
-.prices{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-.price{flex:1;min-width:230px;max-width:300px;background:var(--bg2);border:1px solid var(--line);
-  border-radius:20px;padding:26px}
-.price.best{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
-.price .pt{color:var(--mut);font-weight:600}
-.price .pp{font-size:34px;font-weight:800;margin:8px 0 14px}
-.price .pp span{font-size:14px;color:var(--mut);font-weight:500}
-.price ul{list-style:none;padding:0;margin:0 0 18px}
-.price li{padding:5px 0 5px 24px;position:relative;font-size:14px}
-.price li:before{content:"✓";position:absolute;left:0;color:#4ade80;font-weight:700}
-.price .btn{display:block;text-align:center}
-/* Konto oben rechts */
-.link{cursor:pointer;color:var(--mut);font-size:14px}
-.link:hover{color:var(--txt)}
-.prochip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:30px;
-  background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.45);color:#4ade80;font-size:13px;font-weight:600}
-.prochip .pdot{width:7px;height:7px;border-radius:50%;background:#4ade80}
-/* Trust */
-.trust{text-align:center;color:var(--mut);font-size:13.5px;margin-top:22px}
-.trust a{color:var(--acc)}
-/* FAQ */
-.faq{max-width:760px;margin:0 auto}
-.qa{border:1px solid var(--line);border-radius:14px;background:var(--bg2);margin-bottom:12px;overflow:hidden}
-.qa summary{cursor:pointer;padding:18px 20px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+/* ── Hero ── */
+.hero{padding:160px 0 70px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;left:50%;top:2%;width:900px;height:620px;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(45,98,200,.22),transparent 72%);pointer-events:none;filter:blur(8px)}
+.hero-in{position:relative;z-index:2;max-width:920px;margin:0 auto}
+.hero .eyebrow{margin-bottom:22px;display:block;opacity:0;animation:fadeUp .8s .05s both}
+.hero h1{font-size:clamp(46px,8.4vw,98px);letter-spacing:-.045em;margin:0 auto}
+.hero h1 .l1{display:block;color:#eef3fa;opacity:0;animation:fadeUp .9s .12s both}
+.hero h1 .l2{display:block;background:linear-gradient(180deg,#ffffff,#bcd6ff);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:0;animation:fadeUp .9s .26s both}
+.hero .sub{font-size:clamp(17px,2vw,20px);color:var(--mut);max-width:600px;margin:30px auto 0;letter-spacing:-.01em;opacity:0;animation:fadeUp .9s .42s both}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px;opacity:0;animation:fadeUp .9s .54s both}
+.hero .trustline{margin-top:22px;font-size:12.5px;color:var(--mut2);letter-spacing:.01em;opacity:0;animation:fadeUp .9s .66s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.hero *{animation:none!important;opacity:1!important}}
+
+/* hero live search → result card */
+.hsearch{max-width:540px;margin:54px auto 0;opacity:0;animation:fadeUp 1s .8s both}
+.hs-field{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:15px;
+  padding:15px 18px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:left}
+.hs-field svg{width:18px;height:18px;stroke:var(--acc);flex:0 0 auto}
+.hs-q{font-size:16px;color:var(--ink)}
+.hs-q::after{content:"";display:inline-block;width:1.5px;height:17px;background:var(--acc);margin-left:2px;vertical-align:-3px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hs-res{display:flex;align-items:center;gap:14px;background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.28);border-radius:14px;
+  padding:14px 17px;margin-top:11px;text-align:left;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
+.hs-res.in{opacity:1;transform:none}
+.hs-disk{width:34px;height:26px;border-radius:5px;background:linear-gradient(160deg,#2a3340,#1a212c);flex:0 0 auto;position:relative}
+.hs-disk::after{content:"";position:absolute;left:6px;top:6px;width:11px;height:3px;border-radius:2px;background:rgba(255,255,255,.18)}
+.hs-meta{flex:1;min-width:0}
+.hs-meta b{font-size:14px;font-weight:600}
+.hs-meta .path{font-size:12px;color:var(--mut);margin-top:1px}
+.hs-tag{font-size:10.5px;color:var(--mut2);border:1px solid var(--line);border-radius:6px;padding:3px 8px;white-space:nowrap}
+.hs-check{width:20px;height:20px;flex:0 0 auto}
+
+/* ── Trust strip ── */
+.trust{border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:18px 0;margin-top:84px}
+.trust .wrap{display:flex;justify-content:center;gap:14px 30px;flex-wrap:wrap;font-size:13.5px;color:var(--mut)}
+.trust .dot{color:var(--mut2)}
+.trust b{color:var(--ink);font-weight:600}
+
+/* ── LIVE SHOWCASE ── */
+.show{position:relative}
+.show-rail{position:relative;height:580vh}   /* tall scroll track: ~80vh per step → the sticky stage stays pinned while views advance */
+.show-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.show-sticky::before{content:"";position:absolute;left:50%;top:50%;width:1100px;height:700px;transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side,rgba(40,90,190,.14),transparent 70%);pointer-events:none}
+.stage{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 28px;
+  display:grid;grid-template-columns:1.42fr 1fr;gap:54px;align-items:center}
+/* app display */
+.display{position:relative;border-radius:16px;overflow:hidden;background:#0a0c10;
+  border:1px solid var(--line);box-shadow:0 50px 120px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.4);
+  transition:box-shadow .4s}
+.display-bar{height:34px;display:flex;align-items:center;gap:8px;padding:0 14px;background:linear-gradient(180deg,#11151c,#0c0f15);border-bottom:1px solid var(--line2)}
+.tl{width:11px;height:11px;border-radius:50%;background:#2c3543}
+.tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
+.display-bar .dlabel{margin-left:8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.display-bar .live{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--acc);
+  border:1px solid rgba(74,158,255,.3);border-radius:980px;padding:4px 11px;cursor:pointer;transition:background .2s,color .2s}
+.display-bar .live:hover{background:rgba(74,158,255,.1)}
+.display-bar .live i{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc);animation:soonPulse 2s ease-in-out infinite}
+.display.interactive .display-bar .live{background:var(--acc);color:#04101f;border-color:var(--acc)}
+.display.interactive .display-bar .live i{background:#04101f;box-shadow:none}
+.display-screen{position:relative;width:100%;aspect-ratio:1320/812;overflow:hidden}
+.display-screen iframe{position:absolute;top:0;left:0;width:1320px;height:812px;border:0;transform-origin:top left;pointer-events:none}
+.display.interactive .display-screen iframe{pointer-events:auto}
+.display-screen .scrim{position:absolute;inset:0;z-index:3;background:#0a0c10;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease;pointer-events:none}
+.display-screen .scrim.gone{opacity:0}
+.display-screen .scrim .spin{width:30px;height:30px;border-radius:50%;border:2.5px solid rgba(255,255,255,.12);border-top-color:var(--acc);animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.display .hint{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:10px 14px;font-size:12px;color:var(--mut);
+  background:linear-gradient(0deg,rgba(8,9,12,.92),transparent);text-align:center;opacity:0;transition:opacity .3s;pointer-events:none}
+.display.interactive .hint{opacity:1}
+
+/* captions */
+.caps{position:relative;min-height:360px}
+.cap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.cap.on{opacity:1;transform:none;pointer-events:auto}
+.cap .eyebrow{margin-bottom:16px}
+.cap h2{font-size:clamp(27px,3vw,38px);margin-bottom:16px}
+.cap p{font-size:17px;color:var(--mut);letter-spacing:-.01em;max-width:440px}
+.cap .proof{margin-top:20px;display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--mut2);line-height:1.5;max-width:430px}
+.cap .proof::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:7px;box-shadow:0 0 10px rgba(74,158,255,.8)}
+/* progress dots */
+.show-dots{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:5;display:flex;gap:11px}
+.show-dots button{width:7px;height:7px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.2);cursor:pointer;transition:all .3s}
+.show-dots button.on{background:var(--acc);width:22px;border-radius:4px;box-shadow:0 0 12px rgba(74,158,255,.7)}
+@media(max-width:880px){
+  .show-rail{height:auto}
+  .show-sticky{height:auto;position:static;padding:70px 0}
+  .stage{grid-template-columns:1fr;gap:26px}
+  .caps{min-height:0}
+  .cap{position:static;opacity:1;transform:none;margin-bottom:38px}
+  .cap.on{}
+  .show-dots{display:none}
+  .display-bar .live{display:none}
+}
+
+/* ── Section heads ── */
+.sec{padding:clamp(90px,12vh,150px) 0;position:relative}
+.sec.bord{border-top:1px solid var(--line2)}
+
+/* privacy */
+.privacy{text-align:center}
+.privacy h2{font-size:clamp(30px,4vw,48px);margin-bottom:20px}
+.privacy .sub{font-size:18px;color:var(--mut);max-width:620px;margin:0 auto 44px}
+.marks{display:flex;justify-content:center;gap:46px;flex-wrap:wrap}
+.pmark{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:190px}
+.pmark svg{width:26px;height:26px;stroke:var(--acc)}
+.pmark b{font-size:15px;font-weight:600}
+.pmark span{font-size:13px;color:var(--mut2)}
+
+/* pricing */
+.pricing .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;
+  background:var(--bg2);border:1px solid var(--line);border-radius:26px;padding:clamp(34px,5vw,56px)}
+.pricing h2{font-size:clamp(26px,3vw,38px);margin-bottom:14px}
+.pricing .ptri{font-size:16px;color:var(--mut);margin-bottom:26px}
+.specs{font-family:var(--fmono);font-size:13px;color:var(--mut);border-left:1px solid var(--line);padding-left:30px}
+.specs div{padding:8px 0;display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line2)}
+.specs div:last-child{border-bottom:0}
+.specs .k{color:var(--mut2)}.specs .v{color:var(--ink)}
+@media(max-width:760px){.pricing .wrap{grid-template-columns:1fr;gap:28px}.specs{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:22px}}
+
+/* faq */
+.faq h2{font-size:clamp(28px,3.4vw,40px);text-align:center;margin-bottom:46px}
+.faqlist{max-width:760px;margin:0 auto}
+.qa{border-top:1px solid var(--line);padding:4px 0}
+.qa:last-child{border-bottom:1px solid var(--line)}
+.qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  font-size:17px;font-weight:600;padding:20px 2px;color:var(--ink)}
 .qa summary::-webkit-details-marker{display:none}
-.qa summary:after{content:"+";color:var(--mut);font-size:20px}
-.qa[open] summary:after{content:"–"}
-.qa .a{padding:0 20px 18px;color:var(--mut);font-size:14.5px}
-/* Footer */
-footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px;padding:44px 32px 30px}
-.fcols{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px}
-.fcols a{color:var(--mut);line-height:2}.fcols a:hover{color:var(--txt)}
-.fcols b{color:var(--txt)}
-.fbottom{text-align:center;margin-top:30px;color:#5b6675}
-/* Login Modal */
-.overlay{position:fixed;inset:0;z-index:100;background:rgba(5,7,10,.72);backdrop-filter:blur(8px);
-  display:flex;align-items:center;justify-content:center;padding:20px}
-.lmodal{position:relative;width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--line);
-  border-radius:22px;padding:30px}
-.lmodal .x{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--mut);font-size:18px;cursor:pointer}
-.lbrand{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:6px}
-.lhint{color:var(--mut);font-size:13.5px;margin:0 0 18px}
-.llbl{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px}
-.linput{width:100%;padding:12px 14px;border-radius:11px;border:1px solid var(--line);background:var(--bg);
-  color:var(--txt);font-size:14px}
-.linput:focus{outline:none;border-color:var(--acc)}
-.lfull{display:block;width:100%;text-align:center;margin-top:18px;padding:13px;border:none;cursor:pointer}
-.lmsg{min-height:20px;margin-top:10px;font-size:13.5px}
-.lalt{margin-top:14px;color:var(--mut);font-size:13px;text-align:center}
-.lalt a{color:var(--acc)}
-/* ag-window: Layout des statischen Hero-Fallback-Screens (.mb-ov) */
-.ag-window{width:1180px;min-height:560px;display:flex;border-radius:16px;overflow:hidden;
-  border:1px solid #2a3340;background:#0a0c10;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03)}
-.ag-side{width:230px;flex:0 0 230px;border-right:1px solid #1b2530;background:rgba(12,15,21,.6);padding:16px 12px;display:flex;flex-direction:column;gap:3px}
-.ag-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px}
-.ag-brand .l{width:26px;height:26px}.ag-brand b{font-size:17px;letter-spacing:-.02em}
-.ag-nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;color:var(--mut);font-size:13.5px;font-weight:600}
-.ag-nav .i{width:16px;height:16px;flex:0 0 auto;color:currentColor}
-.ag-nav.on{background:#172230;color:#eef1f6}.ag-nav.on .i{color:var(--acc)}
-.ag-scan{margin:12px 4px 4px;padding:10px;border-radius:10px;background:var(--acc);color:#fff;font-size:13.5px;font-weight:700;text-align:center}
-.ag-sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#5b6675;font-weight:700;margin:14px 8px 6px}
-.ag-dr{position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;color:var(--mut)}
-.ag-dr .agfill{position:absolute;left:0;top:0;bottom:0;width:var(--p,0);border-radius:8px;z-index:0;
-  background:linear-gradient(90deg,rgba(108,178,255,.34),rgba(47,127,240,.12));box-shadow:inset -1px 0 0 rgba(122,184,255,.45)}
-.ag-dr .dd{position:relative;z-index:1;width:8px;height:8px;border-radius:2px;flex:0 0 auto}
-.ag-dr .dn{position:relative;z-index:1;font-size:12.5px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#cdd5e0}
-.ag-dr .ds{position:relative;z-index:1;font-size:11px;color:#5b6675}
-.ag-main{flex:1;min-width:0;display:flex;flex-direction:column}
-.ag-bar{padding:13px 26px;border-bottom:1px solid #1b2530;font-size:14px;font-weight:700;color:#cdd5e0}
-.ag-body{padding:22px 30px;flex:1}
-.ag-hello{font-size:26px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
-.ag-stat{display:flex;flex-wrap:wrap;gap:16px;margin:8px 0 14px;color:var(--mut);font-size:13px}
-.ag-stat b{color:#eef1f6;font-weight:700}.ag-stat .d{color:#39424f}
-.ag-const{position:relative;width:100%;aspect-ratio:16/9;border:1px solid #1b2530;border-radius:18px;overflow:hidden;
-  background:radial-gradient(120% 100% at 50% 42%,rgba(74,158,255,.10),transparent 60%),#0c0f15}
-.ag-const .csvg{position:absolute;inset:0;width:100%;height:100%}
-.ag-cline{stroke:url(#agln);stroke-width:.35;fill:none;opacity:.5}
-.ag-hub{position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:3}
-.ag-hub .ring{position:absolute;left:50%;top:28px;transform:translate(-50%,-50%);width:118px;height:118px;border-radius:50%;
-  background:radial-gradient(circle,rgba(74,158,255,.26),transparent 68%)}
-.ag-hub .core{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(160deg,#1b2230,#11151c);
-  border:1px solid #2c3a4f;box-shadow:0 10px 30px rgba(0,0,0,.5),0 0 30px rgba(74,158,255,.22)}
-.ag-hub .core svg{width:33px;height:33px}
-.ag-hub .ht{font-weight:800;font-size:12.5px}.ag-hub .hs{font-size:10px;color:var(--mut);margin-top:-4px}
-.ag-node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;z-index:2;width:110px}
-.ag-node .disc{position:relative;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;
-  background:conic-gradient(var(--rc) calc(var(--ring)*1%),rgba(255,255,255,.07) 0)}
-@property --ring{syntax:"<number>";inherits:true;initial-value:0}
-@keyframes ringIn{from{--ring:0}}
-@keyframes agGrow{from{width:0}}
-.ag-node .disc::before{content:"";position:absolute;inset:4px;border-radius:50%;background:#0e1218;border:1px solid #1b2530}
-.ag-node .disc .g{position:relative;width:26px;height:18px;border-radius:3px}
-.ag-node .nn{font-size:11.5px;font-weight:700;color:#dde4ee}.ag-node .ns{font-size:10px;color:var(--mut);margin-top:-3px}
-.ag-node .pin{position:absolute;top:-2px;right:18px;width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;border:1.5px solid #0c0f15}
-@media(max-width:760px){.ag-window{width:980px}}
-/* ── Ohne / Mit Disky (Conversion) ── */
-.cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
-@media(max-width:760px){.cmp{grid-template-columns:1fr}}
-.cmpcol{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:24px 26px}
-.cmpcol--good{border-color:rgba(74,158,255,.42);box-shadow:0 0 0 1px rgba(74,158,255,.2) inset,0 0 70px -30px rgba(74,158,255,.75)}
-.cmphd{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em;margin-bottom:6px}
-.cmpdot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
-.cmpdot.bad{background:#ff6b6b;box-shadow:0 0 10px rgba(255,107,107,.55)}
-.cmpdot.good{background:#4ade80;box-shadow:0 0 10px rgba(74,222,128,.55)}
-.cmpcol ul{list-style:none;padding:0;margin:0}
-.cmpcol li{position:relative;padding:11px 0 11px 30px;font-size:15px;line-height:1.5;color:var(--mut);border-top:1px solid rgba(255,255,255,.05)}
-.cmpcol li:first-child{border-top:none}
-.cmpcol--bad li:before{content:"✕";position:absolute;left:2px;top:11px;color:#ff6b6b;font-weight:700;font-size:13px}
-.cmpcol--good li{color:#d3dae5}
-.cmpcol--good li:before{content:"✓";position:absolute;left:1px;top:11px;color:#4ade80;font-weight:700}
-/* ── Wert-Banner (ROI) ── */
-.valuebar{max-width:1080px;margin:0 auto;padding:0 24px}
-.valuebox{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center;text-align:center;
-  background:radial-gradient(120% 160% at 50% 0,rgba(74,222,128,.10),transparent 60%),var(--bg2);
-  border:1px solid var(--line);border-radius:22px;padding:26px 30px}
-.valuebox .vlead{font-size:clamp(17px,2.2vw,21px);font-weight:700;letter-spacing:-.01em;color:#eef1f6;max-width:60ch}
-.valuebox .vsub{color:var(--mut);font-size:14.5px;max-width:62ch;margin:0}
-/* ── Abschluss-CTA ── */
-.endcta-box{max-width:820px;margin:0 auto;text-align:center;position:relative;overflow:hidden;
-  background:radial-gradient(120% 130% at 50% 0,rgba(74,158,255,.16),transparent 62%),linear-gradient(180deg,rgba(20,28,42,.6),var(--bg2));
-  border:1px solid var(--line);border-radius:28px;padding:clamp(48px,7vh,72px) 28px;
-  box-shadow:0 50px 110px -60px rgba(74,158,255,.7)}
-.endcta-box .sec{margin-top:0}
-.endcta-rea{margin:18px 0 0;color:var(--mut);font-size:13px;letter-spacing:.02em}
-/* ── MacBook (echtes WebGL-3D · Three.js) — klappt auf & dreht beim Scrollen ── */
-.mb-scroll{position:relative;height:470vh}
-.mb-head{text-align:center;position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2vh 24px 20vh;z-index:3;width:100%}
-.hero-sub{margin:18px auto 0;max-width:48ch;color:#aeb9ca;font-size:clamp(15px,1.5vw,20px);line-height:1.45;font-weight:450}
-.hero-sub b{color:#dbe7f5;font-weight:600}
-/* Merged Hero: Jarvis-Headline + CTAs im Kopf der MacBook-Sektion */
-.mb-head{will-change:opacity,transform}
-/* Größer & cooler — tighter Tracking, knappe Zeilenhöhe; der untere Rand taucht hinter dem Laptop ab (z5 > z3) */
-/* Schriftgröße zusätzlich durch die Viewport-HÖHE begrenzt → 2 Zeilen passen auf kurzen Fenstern immer komplett über den Laptop, nie oben angeschnitten */
-.mb-head .hero-h{margin:0 auto 18px;max-width:16ch;font-size:min(clamp(38px,6.2vw,82px), 9.5vh);letter-spacing:-.035em;line-height:1.02}
-.mb-head .hint{position:relative;z-index:2;color:var(--mut);font-size:13px;margin-top:14px}
-/* Aura: lebendiges Leuchten + Light-Rays + Staubpartikel HINTER dem Laptop */
-.mb-aura{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-/* Maskierte Headline — Wörter steigen aus dem Boden (Apple-Style), Wort für Wort */
-.hero-h .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.32em 0 .3em;margin:-.32em 0 -.3em}
-.hero-h .wi{display:inline-block;transform:translateY(118%);background:linear-gradient(105deg,#ffffff 0%,#eef2f7 40%,#9aa6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-h.rise .wi{animation:wordRise .95s cubic-bezier(.16,1,.3,1) both}
-@keyframes wordRise{0%{transform:translateY(118%)}100%{transform:translateY(0)}}
-.hero-h .wi.grad{background:linear-gradient(120deg,#7fb8ff,#6a5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
-/* Overline über dem Laptop — ZENTRIERT, blendet in der Präsentation ein (Opacity via JS) */
-.mb-over{position:absolute;top:clamp(52px,7.5vh,100px);left:0;right:0;text-align:center;z-index:6;pointer-events:none;opacity:0;will-change:opacity}
-/* Titel-Alternative: Divider-Kicker (kein Pill) + voll-gradient Headline mit Akzentlinie */
-.mb-over-eb{display:inline-flex;align-items:center;gap:14px;font-size:11px;font-weight:700;letter-spacing:.34em;color:#9db6ff;text-transform:uppercase;margin-bottom:16px;padding:0;border:0;background:none;backdrop-filter:none}
-.mb-over-eb::before,.mb-over-eb::after{content:"";width:38px;height:1px;background:linear-gradient(90deg,transparent,rgba(122,162,255,.6))}
-.mb-over-eb::after{background:linear-gradient(90deg,rgba(122,162,255,.6),transparent)}
-.mb-over-dot{display:none}
-.mb-over-h{font-family:var(--fdisp);font-weight:800;font-size:clamp(27px,3.3vw,46px);letter-spacing:-.035em;margin:0 auto;max-width:min(92vw,860px);line-height:1.04;
-  background:linear-gradient(100deg,#ffffff 0%,#d7e4fb 48%,#8fb2ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 2px 30px rgba(70,120,230,.28))}
-.mb-over-h b{font-weight:800;color:inherit;background:none;-webkit-text-fill-color:#ffffff}
-.mb-over-h::after{content:"";display:block;width:58px;height:2px;margin:18px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,#5b8cff,transparent);box-shadow:0 0 14px rgba(91,140,255,.7)}
-/* Platinen-Hintergrund füllt die Hero-Sticky, hinter Headline (z3) + Laptop (z4) */
-.mb-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden}
-.mb-stage{position:absolute;inset:0;width:100%;height:100%;z-index:5;
-  /* Feather: Laptop-Kanten laufen weich in den Sternenhintergrund aus statt hart abzuschneiden (Komposition + Sicherheitsnetz auf jeder Auflösung) */
-  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 93%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 3%,#000 94%,transparent 100%);
-  -webkit-mask-composite:source-in;
-  mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 93%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 3%,#000 94%,transparent 100%);
-  mask-composite:intersect}
-/* Sofort-Poster: statisches (transparentes) MacBook-Standbild, sichtbar bevor Three.js+GLB laden → Hero ist auf jedem Gerät SOFORT da. Blendet weich weg, sobald die echte 3D-App im Screen steht. */
-.mb-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;z-index:6;opacity:1;transition:opacity .8s ease;pointer-events:none}
-.mb-poster.gone{opacity:0}
-.mb-gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;will-change:transform}
-.mb-css3d{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4;will-change:transform}
-/* #mbScreens = Bildschirm-Inhalt (feste Design-Pixel, von CSS3D ins 3D-Modell platziert) */
-.mb-screens{display:none}
-/* Feature-Ebenen im Screen */
-.mb-feat{position:absolute;inset:0;opacity:0;transition:opacity .35s ease;display:flex;flex-direction:column;
-  padding:5% 6%;background:radial-gradient(120% 100% at 50% 0,rgba(74,158,255,.12),transparent 60%),#0b0e13}
-.mb-feat.on{opacity:1}
-.mb-feat .mf-bar{display:flex;align-items:center;gap:5px;margin-bottom:6%}
-.mb-feat .mf-bar i{width:7px;height:7px;border-radius:50%;background:#2b333f;display:block}
-.mb-feat .mf-vis{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
-.mb-feat .mf-vis svg{max-width:86%;max-height:100%;height:auto}
-/* Übersicht-Seite (echte App-UI) im Screen — auf Screenbreite skaliert */
-.mb-ov{position:absolute;inset:0;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0a0c10}
-.mb-ov .ag-window{flex:0 0 auto;transform:none;transform-origin:center;border:none!important;border-radius:0;box-shadow:none}
-.mb-feat.on .ag-node .disc{animation:ringIn 1.3s cubic-bezier(.22,1,.36,1) both}
-.mb-feat.on .ag-dr .agfill{animation:agGrow 1.2s cubic-bezier(.22,1,.36,1) both}
-@keyframes mfFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2.5%) scale(1.02)}}
-.mb-feat.on .mf-vis{animation:mfFloat 6s ease-in-out infinite}
-@keyframes mfBlink{0%,100%{opacity:.5}50%{opacity:1}}
-.mb-feat.on .mf-blink{animation:mfBlink 2.4s ease-in-out infinite}
-@media(prefers-reduced-motion:reduce){.mb-feat.on .mf-vis{animation:none}}
-/* Talking-Points LINKS: bauen sich nacheinander auf (wie die Benefits) — vergangene gedimmt, aktiver hell + Beschreibung */
-.mb-caps{position:absolute;left:max(4vw,34px);top:50%;width:min(640px,49vw);height:0;z-index:6;pointer-events:none}
-/* Feature-Panels (mit Charts) als MILCHGLAS-STAPEL: aktive scharf & zentriert, gezeigte wandern hoch + unscharf (JS setzt transform/filter/opacity) */
-.mb-eb{display:block;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#9db6ff;margin-bottom:8px}
-.mb-cap.on .mb-eb{color:#bcd3ff;text-shadow:0 0 14px rgba(91,140,255,.55)}
-.mb-cap{position:absolute;left:0;right:0;top:0;display:flex;gap:18px;align-items:center;padding:21px 24px;border-radius:22px;isolation:isolate;
-  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02) 60%);border:1px solid rgba(255,255,255,.10);
-  backdrop-filter:blur(13px) saturate(150%);-webkit-backdrop-filter:blur(13px) saturate(150%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 16px 46px rgba(0,0,0,.42);
-  opacity:0;transform:translateY(-50%);will-change:transform,filter,opacity;
-  transition:transform .6s cubic-bezier(.22,1,.36,1),filter .55s ease,opacity .5s ease,border-color .5s ease,background .5s ease,box-shadow .5s ease}
-.mb-cap::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 42%);mix-blend-mode:screen;opacity:.7}
-.mb-cap.on{border-color:rgba(122,162,255,.45);background:linear-gradient(135deg,rgba(91,140,255,.16),rgba(255,255,255,.03) 65%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 0 0 1px rgba(122,162,255,.16),0 18px 54px rgba(40,80,200,.32)}
-html.lite .mb-cap{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.05)}
-html.lite .mb-cap.on{background:linear-gradient(135deg,rgba(91,140,255,.18),rgba(255,255,255,.03))}
-.cap-tx{flex:1;min-width:0}
-.cap-vis{flex:0 0 auto;width:clamp(128px,15vw,176px);display:flex;align-items:center;justify-content:center}
-.cap-vis svg{width:100%;height:auto;max-height:144px;display:block;overflow:visible}
-.mb-cap h3{font-family:var(--fdisp);font-weight:700;font-size:clamp(20px,2.15vw,28px);letter-spacing:-.02em;margin:0;line-height:1.1;
-  background:linear-gradient(105deg,#fff,#eef2f7 45%,#9aa6b8);-webkit-background-clip:text;background-clip:text;color:transparent}
-.mb-cap.on h3{background:linear-gradient(105deg,#fff,#d6e4ff 52%,#9db6ff);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 16px rgba(91,140,255,.22))}
-.cap-p{margin:9px 0 0;color:#c6d1e0;font-size:14.5px;line-height:1.45;max-width:40ch}
-/* Chart-Animationen (laufen, wenn Panel aktiv) */
-.scd-check,.scdup-eq,.scdup-badge,.scai-plays>path{transform-box:fill-box;transform-origin:center}
-.mb-cap.on .scd-check{animation:scPop .8s ease both}
-.scai-thumbs{transform-box:fill-box;transform-origin:center;transition:transform .5s}.mb-cap.on .scai-thumbs{transform:scale(1.03)}
-.mb-cap.on .scai-plays>path{animation:scPulse 1.4s ease-in-out infinite}
-.mb-cap.on .scai-plays>path:nth-child(2){animation-delay:.18s}.mb-cap.on .scai-plays>path:nth-child(3){animation-delay:.36s}.mb-cap.on .scai-plays>path:nth-child(4){animation-delay:.54s}
-.scsm-spin{transform-box:view-box;transform-origin:60px 60px}.mb-cap.on .scsm-spin{animation:ringSettle 1s cubic-bezier(.2,.85,.25,1) both}
-.scsm-hog{transform-box:view-box;transform-origin:60px 60px}.mb-cap.on .scsm-hog{animation:hogPulse 1.6s ease-in-out 1s infinite}
-.scdup-r{transform-box:fill-box}.mb-cap.on .scdup-r{animation:scNudge 2.2s ease-in-out infinite}
-.mb-cap.on .scdup-eq{animation:scPulse 1.6s ease-in-out infinite}.mb-cap.on .scdup-badge{animation:scPop .7s ease both}
-.scpriv-check{stroke-dasharray:62}.mb-cap.on .scpriv-check{animation:scDraw .7s ease both}
-.sca-spark{transform-box:fill-box;transform-origin:center}.mb-cap.on .sca-spark{animation:scPulse 1.6s ease-in-out infinite}
-.sca-tip{transform-box:fill-box}.mb-cap.on .sca-tip{animation:scaIn .5s ease both}
-@keyframes scPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
-@keyframes scPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-@keyframes scNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
-@keyframes scDraw{from{stroke-dashoffset:62}to{stroke-dashoffset:0}}
-@keyframes ringSettle{0%{transform:rotate(-44deg)}100%{transform:rotate(0deg)}}
-@keyframes hogPulse{0%,100%{stroke:#ff6b6b;filter:drop-shadow(0 0 4px rgba(255,107,107,.5))}50%{stroke:#ff4d4d;filter:drop-shadow(0 0 9px rgba(255,80,80,.95))}}
-@keyframes scaIn{0%{opacity:0;transform:translateX(16px)}100%{opacity:1;transform:translateX(0)}}
-.mb-dots{display:none}
-/* schmale Screens: Punkte mittig unter den Mac */
-@media(max-width:1080px){
-  .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(640px,92vw);margin:16px auto 0;gap:8px}
-  .mb-cap p{max-width:52ch}
-}
-@media(max-width:820px){
-  .mb-scroll{height:auto}
-  .mb-sticky{position:static;height:auto;padding:20px 0 32px}
-  /* Desktop macht .mb-head/.mb-stage absolut (Vollfenster-Bühne) — mobil zurück in den normalen Fluss, sonst kollabiert die statische Sticky */
-  .mb-head{position:static;top:auto;left:auto;right:auto}
-  .mb-head .hero-h{font-size:clamp(38px,11vw,64px)}
-  .mb-stage{position:relative;inset:auto;height:58vh;width:100%}
-  /* Mobil: alle Talking-Points als saubere Liste unter dem Mac, Beschreibungen sichtbar */
-  .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(560px,92vw);margin:20px auto 0;display:flex;flex-direction:column;gap:16px}
-  .mb-cap{position:relative!important;top:auto!important;opacity:1!important;transform:none!important;filter:none!important;flex-direction:column;align-items:flex-start}
-  .cap-vis{width:100%;max-width:220px;margin-top:12px}
-  .cap-p{max-width:none}
-}
-/* ── LITE-Modus (schwach/sparsam/mobil/reduced-motion): statisches Poster-Hero ohne Scroll-Pinning + ohne teure Effekte ── */
-html.lite .mb-scroll{height:auto}
-html.lite .mb-sticky{position:static;height:auto;padding:20px 0 36px}
-html.lite .mb-head{position:static;top:auto;left:auto;right:auto;padding:clamp(78px,10vh,118px) 24px 0}
-html.lite .mb-stage{position:relative;inset:auto;height:min(74vh,660px);width:100%;margin-top:-2vh}
-html.lite .mb-over{display:none}
-html.lite .mb-poster{object-fit:contain}
-html.lite .mb-caps{position:static;transform:none;left:auto;top:auto;width:min(640px,92vw);margin:18px auto 0;display:flex;flex-direction:column;gap:14px}
-html.lite .mb-cap{position:relative!important;top:auto!important;opacity:1!important;transform:none!important;filter:none!important;flex-direction:column;align-items:flex-start}
-html.lite .cap-vis{width:100%;max-width:240px;margin-top:12px}
-html.lite .cap-p{max-width:none}
-html.lite nav{backdrop-filter:none;background:#0b0e13f2}
-html.lite .mb-aura{display:none}
+.qa .plus{flex:0 0 auto;width:20px;height:20px;position:relative;transition:transform .3s ease}
+.qa .plus::before,.qa .plus::after{content:"";position:absolute;background:var(--mut);border-radius:2px}
+.qa .plus::before{left:0;top:9px;width:20px;height:2px}
+.qa .plus::after{left:9px;top:0;width:2px;height:20px;transition:opacity .3s ease}
+.qa[open] .plus{transform:rotate(180deg)}.qa[open] .plus::after{opacity:0}
+.qa .a{font-size:15.5px;color:var(--mut);line-height:1.6;padding:0 2px 22px;max-width:680px}
+
+/* closing */
+.endcta{text-align:center;position:relative;overflow:hidden;border-top:1px solid var(--line2);padding:clamp(100px,14vh,170px) 0}
+.endcta::before{content:"";position:absolute;left:50%;bottom:-32%;width:780px;height:560px;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(45,98,200,.2),transparent 72%);pointer-events:none}
+.endcta-in{position:relative;z-index:2}
+.endcta h2{font-size:clamp(34px,5.2vw,64px);margin-bottom:20px;letter-spacing:-.04em}
+.endcta .sub{font-size:18px;color:var(--mut);max-width:560px;margin:0 auto 36px}
+.endcta .trustline{margin-top:20px;font-size:12.5px;color:var(--mut2)}
+
+/* footer */
+.foot{border-top:1px solid var(--line2);padding:38px 0;font-size:13px;color:var(--mut2)}
+.foot .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.foot a:not(.brand){color:var(--mut)}.foot a:not(.brand):hover{color:var(--ink)}
+.foot .sp{margin-left:auto}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lang button{background:none;border:0;color:var(--mut);font-size:12px;font-weight:600;padding:6px 11px;cursor:pointer;font-family:inherit}
+.lang button.on{background:rgba(74,158,255,.16);color:var(--ink)}
+
+/* reveal */
+.rev{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.rev.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rev{opacity:1;transform:none;transition:none}.hs-q::after{animation:none}}
+
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:6px}
 </style>
-<script type="importmap">
-{"imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-}}
-</script>
-<!-- Kritische Fonts früh laden (Headline = 700) → kein spätes Umspringen des Texts -->
-<link rel="preload" as="font" type="font/woff2" href="fonts/GeneralSans-700.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="fonts/GeneralSans-600.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="fonts/GeneralSans-500.woff2" crossorigin>
-<!-- Hero-Poster = das erste große Bild → mit hoher Priorität vorladen -->
-<link rel="preload" as="image" href="assets/hero-poster-de.webp" fetchpriority="high">
-<script>
-/* Geräte-Gate: NUR echte Handys / Save-Data / wirklich schwache Geräte bekommen das leichte Poster statt 3D.
-   WICHTIG: prefers-reduced-motion zählt NICHT mehr rein — solche Desktops bekommen weiter das volle 3D (nur ohne Auto-„Atmen"),
-   sonst landen normale Macs mit „Bewegung reduzieren" in der hässlichen Mini-Version. */
-window.__LITE=(function(){try{
-  if(matchMedia('(max-width:820px)').matches) return true;                                  // echtes Handy
-  var c=navigator.connection||navigator.webkitConnection; if(c&&(c.saveData||/(^|[^g])2g/.test(c.effectiveType||''))) return true;  // Datensparmodus / 2G
-  if((navigator.deviceMemory||8)<3) return true;                                            // ≤2 GB RAM = wirklich schwach
-  if((navigator.hardwareConcurrency||8)<3) return true;                                     // ≤2 Kerne = wirklich schwach
-  return false;
-}catch(e){return false;}})();
-try{ if(window.__LITE) document.documentElement.classList.add('lite'); }catch(e){}
-// Three.js NUR auf fähigen Geräten früh anstoßen (Preconnect + Modulepreload). LITE-Geräte laden es nie → sparen ~600 KB.
-try{ if(!window.__LITE){
-  var hd=document.head;
-  var pc=document.createElement('link'); pc.rel='preconnect'; pc.href='https://cdn.jsdelivr.net'; pc.crossOrigin=''; hd.appendChild(pc);
-  var mp=document.createElement('link'); mp.rel='modulepreload'; mp.href='https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'; hd.appendChild(mp);
-} }catch(e){}
-</script>
 </head>
 <body>
-<canvas id="stars" aria-hidden="true"></canvas>
-<nav>
-  <a class="brand" href="index.html" title="Zur Startseite">
-    <svg viewBox="0 0 100 100">      <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>
-    Disky
-  </a>
+
+<!-- NAV -->
+<nav class="nav" id="nav"><div class="wrap">
+  <a class="brand" href="#top"><svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#37cfe0"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#37cfe0"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>Disky</a>
   <div class="navlinks">
-    <a href="#features" data-t="nav_features">Funktionen</a>
-    <a href="#preise" data-t="nav_pricing">Preise</a>
-    <a href="#faq" data-t="nav_faq">FAQ</a>
-    <span id="langtoggle" class="navlang"></span>
-    <span id="account"></span>
+    <a class="hide-sm" href="#features" data-t="nav_features">Features</a>
+    <a class="hide-sm" href="#privacy" data-t="nav_privacy">Privacy</a>
+    <a class="hide-sm" href="#pricing" data-t="nav_pricing">Pricing</a>
+    <span class="soon"><i aria-hidden="true"></i><span data-t="soon_short">Coming soon</span></span>
   </div>
-</nav>
+</div></nav>
 
-<section class="mb-scroll" id="inaction">
-  <div class="mb-sticky">
-    <canvas class="mb-aura" aria-hidden="true"></canvas>
-    <div class="mb-head">
-      <h1 class="hero-h" data-th="hero_h1">Jarvis für dein<br><span class="grad">Datenmanagement.</span></h1>
-      <p class="hero-sub" data-th="hero_lead"></p>
+<main id="top">
+
+<!-- HERO -->
+<header class="hero"><div class="hero-in">
+  <span class="eyebrow" data-t="hero_eb">Disky for Mac</span>
+  <h1><span class="l1" data-t="hero_l1">See inside</span><span class="l2" data-t="hero_l2">sealed drives.</span></h1>
+  <p class="sub" data-t="hero_sub">Index each external drive once. From then on you search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer.</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#features" data-t="cta_how">See it find a file in seconds ›</a>
+    <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
+  </div>
+  <p class="trustline" data-t="trustline">Free to start · macOS, Apple Silicon · No account · 100% local · Read-only</p>
+
+  <div class="hsearch" aria-hidden="true">
+    <div class="hs-field"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg><span class="hs-q" data-t="hs_q">wedding tegernsee</span></div>
+    <div class="hs-res" id="hsRes">
+      <div class="hs-disk"></div>
+      <div class="hs-meta"><b>Studio RAID</b><div class="path">/Projekte/Hochzeit Tegernsee · 248 GB</div></div>
+      <span class="hs-tag" data-t="hs_tag">in the drawer</span>
+      <svg class="hs-check" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
     </div>
-    <div class="mb-over" aria-hidden="true">
-      <span class="mb-over-eb"><span class="mb-over-dot"></span><span data-t="mb_over_eb">SCROLL TO EXPLORE</span></span>
-      <h2 class="mb-over-h" data-th="mb_over_h">See <b>everything</b>. Find <b>anything</b>. Lose <b>nothing</b>.</h2>
-    </div>
-    <div class="mb-stage">
-      <img class="mb-poster" id="mbPoster" src="assets/hero-poster-de.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
-      <canvas class="mb-gl"></canvas>
-      <div class="mb-css3d" aria-hidden="true"></div>
-      <div class="mb-screens" id="mbScreens">
-        <!-- 1 · Übersicht (echte App-UI, animiert) -->
-        <div class="mb-feat on" data-i="0"><div class="mb-ov">
-          <div class="ag-window">
-            <aside class="ag-side">
-              <div class="ag-brand"><span class="l"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg></span><b>Disky</b></div>
-              <div class="ag-nav on"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span data-t="m_ov">Übersicht</span></div>
-              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="5" rx="1.5"/><rect x="3" y="14" width="18" height="5" rx="1.5"/></svg></span><span data-t="m_drives">Festplatten</span></div>
-              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span><span data-t="m_proj">Projekte</span></div>
-              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span><span data-t="m_dupes">Duplikate</span></div>
-              <div class="ag-nav"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></span><span data-t="m_search">KI-SuperSearch</span></div>
-              <div class="ag-scan" data-t="m_scan">＋ Platte scannen</div>
-              <div class="ag-sec" data-t="m_mydrives">Meine Platten</div>
-              <div class="ag-dr" style="--p:64%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">T9</span><span class="ds">2.3 TB</span></div>
-              <div class="ag-dr" style="--p:93%"><span class="agfill"></span><span class="dd" style="background:#f3701f"></span><span class="dn">LaCie Rugged</span><span class="ds">4.2 TB</span></div>
-              <div class="ag-dr" style="--p:38%"><span class="agfill"></span><span class="dd" style="background:#cfd3d9"></span><span class="dn">Studio RAID</span><span class="ds">10.9 TB</span></div>
-              <div class="ag-dr" style="--p:96%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn" data-t="m_archive">Archiv 2023</span><span class="ds">7.0 TB</span></div>
-              <div class="ag-dr" style="--p:80%"><span class="agfill"></span><span class="dd" style="background:#2b313c"></span><span class="dn">Sony A7S</span><span class="ds">381 GB</span></div>
-            </aside>
-            <div class="ag-main">
-              <div class="ag-bar" data-t="m_ov">Übersicht</div>
-              <div class="ag-body">
-                <div class="ag-hello" data-t="m_hello">Willkommen zurück.</div>
-                <div class="ag-stat" data-th="m_stat"><span><b>5</b> Platten</span><span class="d">·</span><span><b>112.594</b> Dateien</span><span class="d">·</span><span><b>24,8 TB</b> katalogisiert</span><span class="d">·</span><span><b>0</b> Duplikate</span></div>
-                <div class="ag-const">
-                  <svg class="csvg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs><linearGradient id="agln2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a9eff"/><stop offset="1" stop-color="#2c3a4f"/></linearGradient></defs>
-                    <path class="ag-cline" d="M50 17 L50 51"/><path class="ag-cline" d="M86 40 L50 51"/>
-                    <path class="ag-cline" d="M72 79 L50 51"/><path class="ag-cline" d="M28 79 L50 51"/><path class="ag-cline" d="M14 40 L50 51"/>
-                  </svg>
-                  <div class="ag-hub"><div class="ring"></div>
-                    <div class="core"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg></div>
-                    <div class="ht">Disky</div><div class="hs" data-t="m_hubsub">5 Platten · ein Katalog</div></div>
-                  <div class="ag-node" style="left:50%;top:17%;--ring:63;--rc:#4a9eff"><span class="pin"></span><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">T9</span><span class="ns">2.3 / 3.6 TB</span></div>
-                  <div class="ag-node" style="left:86%;top:40%;--ring:92;--rc:#ff6b6b"><span class="pin"></span><span class="disc"><span class="g" style="background:#f3701f"></span></span><span class="nn">LaCie Rugged</span><span class="ns">4.2 / 4.5 TB</span></div>
-                  <div class="ag-node" style="left:72%;top:79%;--ring:38;--rc:#4a9eff"><span class="disc"><span class="g" style="background:#cfd3d9"></span></span><span class="nn">Studio RAID</span><span class="ns">10.9 / 29.1 TB</span></div>
-                  <div class="ag-node" style="left:28%;top:79%;--ring:96;--rc:#ff6b6b"><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn" data-t="m_archive">Archiv 2023</span><span class="ns">7.0 / 7.3 TB</span></div>
-                  <div class="ag-node" style="left:14%;top:40%;--ring:80;--rc:#ffb454"><span class="disc"><span class="g" style="background:#2b313c"></span></span><span class="nn">Sony A7S</span><span class="ns">381 / 476 GB</span></div>
-                </div>
-              </div>
-            </div>
+  </div>
+</div></header>
+
+<!-- TRUST -->
+<section class="trust"><div class="wrap">
+  <span><b data-t="t1">100% local</b></span><span class="dot">·</span>
+  <span><b data-t="t2">Read-only</b></span><span class="dot">·</span>
+  <span><b data-t="t3">On-device AI</b></span><span class="dot">·</span>
+  <span><b data-t="t4">No account</b></span><span class="dot">·</span>
+  <span><b data-t="t5">Works offline</b></span>
+</div></section>
+
+<!-- LIVE SHOWCASE -->
+<section class="show" id="features">
+  <div class="show-rail" id="rail">
+    <div class="show-sticky">
+      <div class="stage">
+        <div class="display" id="display">
+          <div class="display-bar">
+            <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+            <span class="dlabel">Disky</span>
+            <button class="live" id="liveToggle" type="button"><i></i><span data-t="live_off">Live — try it</span></button>
           </div>
-        </div></div>
-        <!-- 2 · Speicher-Karte -->
-        <div class="mb-feat" data-i="1">
-          <div class="mf-bar"><i></i><i></i><i></i></div>
-          <div class="mf-vis"><svg viewBox="0 0 200 190">
-            <g transform="translate(100 95)"><g transform="rotate(-90)" fill="none" stroke-width="20" pathLength="100">
-              <circle r="62" stroke="#4a9eff" stroke-dasharray="20 80"/><circle r="62" stroke="#2dd4bf" stroke-dasharray="9 91" stroke-dashoffset="-22"/>
-              <circle r="62" stroke="#38bdf8" stroke-dasharray="14 86" stroke-dashoffset="-33"/><circle r="62" stroke="#6aa8ff" stroke-dasharray="11 89" stroke-dashoffset="-49"/>
-              <circle r="62" stroke="#22d3ee" stroke-dasharray="8 92" stroke-dashoffset="-62"/><circle r="62" stroke="#5b93ef" stroke-dasharray="13 87" stroke-dashoffset="-72"/>
-              <circle r="62" stroke="#0b0e13" stroke-width="22" pathLength="100" stroke-dasharray="15 85"/><circle r="62" stroke="#ff6b6b" pathLength="100" stroke-dasharray="14 86"/></g></g>
-            <text x="100" y="92" text-anchor="middle" fill="#eef1f6" font-size="22" font-weight="800" font-family="-apple-system,sans-serif" data-t="m_tb">1.4 TB</text>
-            <text x="100" y="110" text-anchor="middle" fill="#8a93a3" font-size="11" font-family="-apple-system,sans-serif" data-t="m_used">used</text>
-          </svg></div>
+          <div class="display-screen">
+            <iframe id="appFrame" title="Disky — live app" loading="lazy"></iframe>
+            <div class="scrim" id="scrim"><div class="spin"></div></div>
+          </div>
+          <div class="hint" data-t="live_hint">You're driving the real app — scroll up to continue the tour.</div>
         </div>
-        <!-- 3 · Project-Manager -->
-        <div class="mb-feat" data-i="2">
-          <div class="mf-bar"><i></i><i></i><i></i></div>
-          <div class="mf-vis"><svg viewBox="0 0 300 180">
-            <g transform="translate(150 40)"><path fill="none" stroke="#4a9eff" stroke-width="3" d="M0 -26l21 9v15c0 13.5-9 22.7-21 26.5C-9 24.7-18 15.5-18 2v-15z"/><path fill="none" stroke="#4ade80" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" d="M-8 1l6 6 11.5-12"/></g>
-            <g font-family="-apple-system,sans-serif">
-              <rect x="34" y="86" width="232" height="34" rx="9" fill="#0b0e13" stroke="#2a3340"/>
-              <text x="48" y="107" fill="#eef1f6" font-size="13" font-weight="600">Doku Nordsee</text>
-              <g transform="translate(214 96)"><rect width="40" height="16" rx="8" fill="rgba(74,222,128,.14)" stroke="rgba(74,222,128,.5)"/><text x="20" y="12" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="700">2×</text></g>
-              <rect x="34" y="128" width="232" height="34" rx="9" fill="#0b0e13" stroke="#2a3340"/>
-              <text x="48" y="149" fill="#eef1f6" font-size="13" font-weight="600">Wedding Mai 2026</text>
-              <g class="mf-blink" transform="translate(206 138)"><rect width="48" height="16" rx="8" fill="rgba(255,180,84,.16)" stroke="rgba(255,180,84,.55)"/><text x="24" y="12" text-anchor="middle" fill="#ffb454" font-size="10" font-weight="700">1× only</text></g>
-            </g>
-          </svg></div>
-        </div>
-        <!-- 4 · Duplikate -->
-        <div class="mb-feat" data-i="3">
-          <div class="mf-bar"><i></i><i></i><i></i></div>
-          <div class="mf-vis"><svg viewBox="0 0 300 180">
-            <g transform="translate(36 36)"><path fill="#4a94ec" d="M2 18 a8 8 0 0 1 8 -8 h22 l8 8 h36 a8 8 0 0 1 8 8 v36 a8 8 0 0 1 -8 8 H10 a8 8 0 0 1 -8 -8 Z"/><path fill="#76b6f8" d="M2 34 h84 v28 a8 8 0 0 1 -8 8 H10 a8 8 0 0 1 -8 -8 Z"/></g>
-            <g transform="translate(178 36)"><path fill="#4a94ec" d="M2 18 a8 8 0 0 1 8 -8 h22 l8 8 h36 a8 8 0 0 1 8 8 v36 a8 8 0 0 1 -8 8 H10 a8 8 0 0 1 -8 -8 Z"/><path fill="#76b6f8" d="M2 34 h84 v28 a8 8 0 0 1 -8 8 H10 a8 8 0 0 1 -8 -8 Z"/></g>
-            <text class="mf-blink" x="150" y="78" text-anchor="middle" fill="#8a93a3" font-size="30" font-family="-apple-system,sans-serif">=</text>
-            <g transform="translate(95 132)"><rect width="110" height="32" rx="16" fill="rgba(74,222,128,.14)" stroke="rgba(74,222,128,.5)"/><text x="55" y="21" text-anchor="middle" fill="#4ade80" font-size="15" font-weight="700" font-family="-apple-system,sans-serif" data-t="m_saves">spart 24 GB</text></g>
-          </svg></div>
-        </div>
-        <!-- 5 · KI-Suche -->
-        <div class="mb-feat" data-i="4">
-          <div class="mf-bar"><i></i><i></i><i></i></div>
-          <div class="mf-vis"><svg viewBox="0 0 300 180">
-            <defs><linearGradient id="mboc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fc8ff"/><stop offset="1" stop-color="#0a4d8c"/></linearGradient><linearGradient id="mboc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd6c6"/><stop offset="1" stop-color="#0c5f72"/></linearGradient></defs>
-            <rect x="6" y="6" width="288" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
-            <circle cx="28" cy="23" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="32.3" y1="27.3" x2="37" y2="32" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
-            <text x="46" y="28" fill="#eef1f6" font-size="14" font-family="-apple-system,sans-serif">underwater</text>
-            <g><rect x="6" y="52" width="138" height="56" rx="10" fill="url(#mboc1)"/><rect x="156" y="52" width="138" height="56" rx="10" fill="url(#mboc2)"/><rect x="6" y="118" width="138" height="56" rx="10" fill="url(#mboc2)"/><rect x="156" y="118" width="138" height="56" rx="10" fill="url(#mboc1)"/></g>
-            <g class="mf-blink" fill="#fff" opacity=".92"><path d="M68 72 v16 l13 -8 Z"/><path d="M218 72 v16 l13 -8 Z"/><path d="M68 138 v16 l13 -8 Z"/><path d="M218 138 v16 l13 -8 Z"/></g>
-          </svg></div>
+        <div class="caps" id="caps">
+          <article class="cap" data-step="0"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
+          <article class="cap" data-step="1"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
+          <article class="cap" data-step="2"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
+          <article class="cap" data-step="3"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
+          <article class="cap" data-step="4"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
+          <article class="cap" data-step="5"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
         </div>
       </div>
-      <div class="mb-caps">
-        <div class="mb-cap on"><div class="cap-tx"><span class="mb-eb" data-t="sc1_eb"></span><h3 data-t="sc1_h3"></h3><p class="cap-p" data-t="mb_f1_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 240 210">
-        <!-- Suchleiste -->
-        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
-        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
-        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif" data-t="m_wedding">Hochzeit Mai</text>
-        <!-- Treffer: gefunden auf einer (offline) Platte -->
-        <g font-family="-apple-system,sans-serif">
-          <g>
-            <rect x="8" y="54" width="224" height="44" rx="11" fill="rgba(74,158,255,.12)" stroke="#4a9eff"/>
-            <rect x="20" y="68" width="22" height="16" rx="3" fill="#f3701f"/><circle cx="31" cy="76" r="3.2" fill="#1a1f27"/>
-            <text x="52" y="73" fill="#eef1f6" font-size="12" font-weight="700">LaCie Rugged</text>
-            <text x="52" y="88" fill="#9aa6b8" font-size="9.5" data-t="m_weddingpath">/Hochzeit Mai · 248 GB</text>
-            <g class="scd-check"><g transform="translate(202,68)"><circle cx="8" cy="8" r="9" fill="#4a9eff"/><path d="M4 8.5 l2.6 2.6 l4.8 -5.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>
-          </g>
-          <g opacity=".5">
-            <rect x="8" y="106" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
-            <rect x="20" y="116" width="22" height="16" rx="3" fill="#2b313c"/>
-            <text x="52" y="129" fill="#cdd5e0" font-size="12" font-weight="600">Studio RAID</text>
-            <g transform="translate(176,116)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
-          </g>
-          <g opacity=".5">
-            <rect x="8" y="152" width="224" height="38" rx="11" fill="#10141b" stroke="#222a35"/>
-            <rect x="20" y="162" width="22" height="16" rx="3" fill="#2b313c"/>
-            <text x="52" y="175" fill="#cdd5e0" font-size="12" font-weight="600" data-t="m_archive">Archiv 2023</text>
-            <g transform="translate(176,162)"><rect x="0" y="0" width="46" height="16" rx="8" fill="#171c24" stroke="#2a3340"/><text x="23" y="11.5" text-anchor="middle" fill="#7c8593" font-size="8.5">offline</text></g>
-          </g>
-        </g>
-      </svg></div></div>
-        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc3_eb"></span><h3 data-t="sc3_h3"></h3><p class="cap-p" data-t="mb_f2_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 120 120">
-        <g class="scsm-spin"><g transform="rotate(-90 60 60)" fill="none" stroke-width="17" pathLength="100">
-          <circle cx="60" cy="60" r="44" stroke="#4a9eff" stroke-dasharray="21 79" stroke-dashoffset="0"/>
-          <circle cx="60" cy="60" r="44" stroke="#2dd4bf" stroke-dasharray="7 93" stroke-dashoffset="-22.3"/>
-          <circle cx="60" cy="60" r="44" stroke="#6aa8ff" stroke-dasharray="13 87" stroke-dashoffset="-30.6"/>
-          <circle cx="60" cy="60" r="44" stroke="#38bdf8" stroke-dasharray="16 84" stroke-dashoffset="-44.9"/>
-          <circle cx="60" cy="60" r="44" stroke="#4f6bf0" stroke-dasharray="5 95" stroke-dashoffset="-62.2"/>
-          <circle cx="60" cy="60" r="44" stroke="#22d3ee" stroke-dasharray="11 89" stroke-dashoffset="-68.5"/>
-          <circle cx="60" cy="60" r="44" stroke="#5b93ef" stroke-dasharray="9 91" stroke-dashoffset="-80.8"/>
-          <circle cx="60" cy="60" r="44" stroke="#14b8a6" stroke-dasharray="7 93" stroke-dashoffset="-91.1"/>
-          <!-- EIN Speicherfresser: bleibt im Ring (kein Rausploppen → keine Lücke), füllt das erste Segment sauber, wird rot + glüht -->
-          <circle class="scsm-hog" cx="60" cy="60" r="44" stroke="#4a9eff" pathLength="100" stroke-dasharray="21 79" stroke-dashoffset="0"/>
-        </g></g>
-        <text x="60" y="57" text-anchor="middle" fill="#eef1f6" font-size="15" font-weight="800" font-family="-apple-system,sans-serif" data-t="m_tb">1,4 TB</text>
-        <text x="60" y="71" text-anchor="middle" fill="#8a93a3" font-size="8" font-family="-apple-system,sans-serif" data-t="m_used">belegt</text>
-      </svg></div></div>
-        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc_asst_eb"></span><h3 data-t="sc_asst_h3"></h3><p class="cap-p" data-t="mb_fpm_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 240 210">
-        <rect x="6" y="16" width="228" height="178" rx="16" fill="#11151c" stroke="#2a3340"/>
-        <circle class="sca-spark" cx="30" cy="40" r="11" fill="rgba(74,158,255,.16)"/>
-        <path class="sca-spark" fill="#4a9eff" d="M30 33 l1.6 4 l4 1.6 l-4 1.6 l-1.6 4 l-1.6 -4 l-4 -1.6 l4 -1.6 Z"/>
-        <rect x="48" y="35" width="92" height="9" rx="4.5" fill="#cdd5e0" opacity=".55"/>
-        <g class="sca-tip"><rect x="20" y="64" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="64" width="3.5" height="34" rx="2" fill="#4ade80"/><rect x="34" y="73" width="150" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="84" width="96" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="85" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
-        <g class="sca-tip sca-d2"><rect x="20" y="106" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="106" width="3.5" height="34" rx="2" fill="#ff6b6b"/><rect x="34" y="115" width="140" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="126" width="80" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="127" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
-        <g class="sca-tip sca-d3"><rect x="20" y="148" width="200" height="34" rx="9" fill="#171c24"/><rect x="20" y="148" width="3.5" height="34" rx="2" fill="#4a9eff"/><rect x="34" y="157" width="120" height="6" rx="3" fill="#cdd5e0" opacity=".75"/><rect x="34" y="168" width="92" height="5" rx="2.5" fill="#7c8593"/><text x="206" y="169" fill="#7c8593" font-size="13" font-family="-apple-system,sans-serif">→</text></g>
-      </svg></div></div>
-        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc4_eb"></span><h3 data-t="sc4_h3"></h3><p class="cap-p" data-t="mb_f3_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 220 150">
-        <g transform="translate(18,20)">
-          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
-          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g>
-        <g class="scdup-r"><g transform="translate(132,20)">
-          <path fill="#4a94ec" d="M2 14 a6 6 0 0 1 6 -6 h16 l6 6 h26 a6 6 0 0 1 6 6 v26 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/>
-          <path fill="#76b6f8" d="M2 26 h62 v20 a6 6 0 0 1 -6 6 H8 a6 6 0 0 1 -6 -6 Z"/></g></g>
-        <text class="scdup-eq" x="110" y="56" text-anchor="middle" fill="#8a93a3" font-size="22" font-family="-apple-system,sans-serif">=</text>
-        <g class="scdup-badge"><g transform="translate(63,108)">
-          <rect x="0" y="0" width="94" height="28" rx="14" fill="rgba(74,222,128,.14)" stroke="rgba(74,222,128,.5)"/>
-          <text x="47" y="19" text-anchor="middle" fill="#4ade80" font-size="14" font-weight="700" font-family="-apple-system,sans-serif" data-t="m_saves">spart 24 GB</text></g></g>
-      </svg></div></div>
-        <div class="mb-cap"><div class="cap-tx"><span class="mb-eb" data-t="sc2_eb"></span><h3 data-t="sc2_h3"></h3><p class="cap-p" data-t="mb_f4_d"></p></div><div class="cap-vis">      <svg viewBox="0 0 240 210">
-        <defs>
-          <linearGradient id="oc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fc8ff"/><stop offset="1" stop-color="#0a4d8c"/></linearGradient>
-          <linearGradient id="oc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd6c6"/><stop offset="1" stop-color="#0c5f72"/></linearGradient>
-        </defs>
-        <rect x="8" y="8" width="224" height="34" rx="12" fill="#0b0e13" stroke="#2a3340"/>
-        <circle cx="30" cy="25" r="6" fill="none" stroke="#4a9eff" stroke-width="2"/><line x1="34.3" y1="29.3" x2="39" y2="34" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"/>
-        <text x="48" y="29.5" fill="#eef1f6" font-size="13" font-family="-apple-system,sans-serif">underwater</text>
-        <g class="scai-thumbs">
-          <rect x="8" y="54" width="108" height="68" rx="11" fill="url(#oc1)"/>
-          <rect x="124" y="54" width="108" height="68" rx="11" fill="url(#oc2)"/>
-          <rect x="8" y="130" width="108" height="68" rx="11" fill="url(#oc2)"/>
-          <rect x="124" y="130" width="108" height="68" rx="11" fill="url(#oc1)"/>
-        </g>
-        <g class="scai-plays" fill="#ffffff" opacity="0.92">
-          <path d="M57 80 v16 l13 -8 Z"/><path d="M173 80 v16 l13 -8 Z"/>
-          <path d="M57 156 v16 l13 -8 Z"/><path d="M173 156 v16 l13 -8 Z"/>
-        </g>
-        <g font-family="-apple-system,sans-serif" font-size="9" font-weight="700">
-          <g><rect x="92" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="69.5" text-anchor="middle" fill="#7fd0ff">94</text></g>
-          <g><rect x="208" y="60" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="69.5" text-anchor="middle" fill="#7fd0ff">88</text></g>
-          <g><rect x="92" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="102" y="145.5" text-anchor="middle" fill="#7fd0ff">85</text></g>
-          <g><rect x="208" y="136" width="20" height="13" rx="4" fill="rgba(10,12,16,.7)"/><text x="218" y="145.5" text-anchor="middle" fill="#7fd0ff">79</text></g>
-        </g>
-      </svg></div></div>
-      </div>
-      <div class="mb-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <div class="show-dots" id="dots"></div>
     </div>
   </div>
 </section>
 
-<!-- Proof-Band: konkrete Zahlen = sofortige Glaubwürdigkeit -->
-<section class="proof">
-  <div class="proof-inner">
-    <div class="proof-top">
-      <span class="pt-eb"><span class="dot"></span><span data-t="proof_eb">EIN KATALOG · ALLES DRIN</span></span>
-      <h3 data-t="proof_h">Ein typisches Setup, das Disky im Griff hat:</h3>
-    </div>
-    <div class="proof-stats">
-      <div class="proof-stat"><div class="num">6</div><div class="lbl" data-t="proof_s1">Platten · ein Katalog</div></div>
-      <div class="proof-stat"><div class="num">121.834</div><div class="lbl" data-t="proof_s2">Dateien durchsuchbar</div></div>
-      <div class="proof-stat"><div class="num">23,1 TB</div><div class="lbl" data-t="proof_s3">offline im Überblick</div></div>
-      <div class="proof-stat"><div class="num">27</div><div class="lbl" data-t="proof_s4">Duplikate gefunden</div></div>
-    </div>
+<!-- PRIVACY -->
+<section class="sec bord privacy" id="privacy"><div class="wrap">
+  <div class="rev">
+    <h2 data-t="pv_h">Your work never leaves your Mac.</h2>
+    <p class="sub" data-t="pv_sub">No cloud, no account, no upload. The content-search AI runs on-device, and Disky only ever reads your drives — it never moves, renames, or deletes a thing.</p>
   </div>
-</section>
-
-
-<section class="section glow-sec" id="features">
-  <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="hiw_eb">In 3 Schritten</span></span></div>
-  <h2 class="sec" data-t="hiw_h2">So funktioniert's</h2>
-  <p class="sec-sub" data-t="hiw_sub">Einmal einrichten. Für immer den Überblick.</p>
-  <div class="how">
-    <div class="howcard hot">
-      <div class="step" data-t="hiw_step1">SCHRITT 1</div>
-      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="8" y="13" width="32" height="19" rx="4"/><line x1="8" y1="20" x2="40" y2="20" stroke-dasharray="2 3" opacity=".55"/>
-        <circle cx="14" cy="26" r="1.5" fill="currentColor" stroke="none"/><line x1="22" y1="26" x2="34" y2="26"/><line x1="16" y1="38" x2="32" y2="38"/></svg></div>
-      <h3 data-t="hiw1_h3">Einmal anstecken</h3>
-      <p data-t="hiw1_p">Steck jede Platte einmal an. Disky liest sie (nur lesend) aus und merkt sich alles — auch wenn sie längst im Schrank liegt.</p>
-    </div>
-    <div class="howcard">
-      <div class="step" data-t="hiw_step2">SCHRITT 2</div>
-      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 6l14 5.5v9.6c0 8.8-6 14.7-14 17.4-8-2.7-14-8.6-14-17.4V11.5z"/>
-        <path d="M17.5 23.5l4.5 4.5 9-10"/></svg></div>
-      <h3 data-t="hiw2_h3">Disky behält den Überblick</h3>
-      <p data-t="hiw2_p">Wie ein stiller Assistent verfolgt Disky im Hintergrund, was gesichert ist, was doppelt liegt, was Platz frisst und was noch aktiv oder schon fertig ist — ganz von selbst.</p>
-    </div>
-    <div class="howcard">
-      <div class="step" data-t="hiw_step3">SCHRITT 3</div>
-      <div class="hicon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 10a8.5 8.5 0 0 0-8.5 8.5c0 7.5-3.3 9.5-3.3 9.5h23.6s-3.3-2-3.3-9.5A8.5 8.5 0 0 0 24 10z"/>
-        <path d="M20.5 34.5a3.5 3.5 0 0 0 7 0"/>
-        <circle cx="34.5" cy="13.5" r="3" fill="currentColor" stroke="none"/></svg></div>
-      <h3 data-t="hiw3_h3">Es meldet sich — und antwortet</h3>
-      <p data-t="hiw3_p">Disky sagt dir von selbst Bescheid, wenn's zählt — „dieses Projekt hat kein Backup", „32 GB freigebbar". Und wann immer du suchst: tippe einen Namen und finde jede Datei in Sekunden über alle Platten.</p>
-    </div>
+  <div class="marks rev">
+    <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><b data-t="pm1_t">On-device</b><span data-t="pm1_d">The AI runs locally — nothing uploaded.</span></div>
+    <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg><b data-t="pm2_t">Read-only</b><span data-t="pm2_d">Never moves, renames, or deletes a file.</span></div>
+    <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-5 8-5s8 1.7 8 5"/></svg><b data-t="pm3_t">No account</b><span data-t="pm3_d">No sign-up, no cloud, no recurring bill.</span></div>
   </div>
-</section>
+</div></section>
 
-<section class="section" id="warum" style="padding-bottom:34px">
-  <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="cmp_eb">Der Unterschied</span></span></div>
-  <h2 class="sec" data-t="cmp_h2">Warum Disky?</h2>
-  <p class="sec-sub" data-t="cmp_sub">Der Unterschied zwischen „liegt irgendwo auf einer Platte" und „in 2 Sekunden gefunden".</p>
-  <div class="cmp">
-    <div class="cmpcol cmpcol--bad">
-      <div class="cmphd"><span class="cmpdot bad"></span><span data-t="cmp_bad_t">Ohne Disky</span></div>
-      <ul data-th="cmp_bad_li">
-        <li>Zehn Platten durchstecken, nur um eine Datei zu finden</li>
-        <li>Keine Ahnung, welches Projekt schon ein Backup hat</li>
-        <li>Neue Platte kaufen, weil die alte „voll" ist</li>
-        <li>Dieselben Clips liegen drei Mal auf drei Platten</li>
-        <li>Stunden mit Suchen statt Schneiden</li>
-      </ul>
-    </div>
-    <div class="cmpcol cmpcol--good">
-      <div class="cmphd"><span class="cmpdot good"></span><span data-t="cmp_good_t">Mit Disky</span></div>
-      <ul data-th="cmp_good_li">
-        <li>Ein Suchfeld findet jede Datei — auch wenn die Platte im Schrank liegt</li>
-        <li>Disky meldet von selbst, was noch kein Backup hat</li>
-        <li>Erst aufräumen: oft ist die halbe Platte nur Cache &amp; Duplikate</li>
-        <li>Duplikate über alle Platten erkannt — auf den Gigabyte genau</li>
-        <li>In Sekunden gefunden, zurück zum Schnitt</li>
-      </ul>
-    </div>
+<!-- PRICING -->
+<section class="sec pricing" id="pricing"><div class="wrap rev">
+  <div>
+    <h2 data-t="pr_h">Free to start. Yours to keep.</h2>
+    <p class="ptri" data-t="pr_sub">A one-time Mac app — not a subscription, not a cloud login. Catalog your first drives free; own it for good.</p>
+    <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
   </div>
-</section>
-
-<section class="valuebar" style="padding:0 0 70px">
-  <div class="valuebox">
-    <div>
-      <div class="vlead" data-th="val_lead">Bevor du die nächste 4-TB-SSD für knapp 500&nbsp;€ kaufst: meistens liegen schon GB an Duplikaten und Cache auf den Platten, die du hast.</div>
-      <p class="vsub" data-t="val_sub">Disky rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst — und du löschst nur, was du selbst freigibst.</p>
-    </div>
+  <div class="specs">
+    <div><span class="k" data-t="sp1">Platform</span><span class="v">macOS · Apple Silicon</span></div>
+    <div><span class="k" data-t="sp2">Intelligence</span><span class="v" data-t="sp2v">On-device</span></div>
+    <div><span class="k" data-t="sp3">License</span><span class="v" data-t="sp3v">One-time</span></div>
+    <div><span class="k" data-t="sp4">Network</span><span class="v" data-t="sp4v">Works offline</span></div>
   </div>
-</section>
+</div></section>
 
+<!-- FAQ -->
+<section class="sec bord faq"><div class="wrap">
+  <h2 data-t="faq_h">Questions, answered.</h2>
+  <div class="faqlist" id="faqlist"></div>
+</div></section>
 
-<!-- Trust-Band: Diskys Killer-Differenzierer — lokal & privat -->
-<section class="section glow-sec" style="padding-bottom:clamp(40px,5vh,64px)">
-  <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="trust_eb">Vertrauen by Design</span></span></div>
-  <h2 class="sec" data-t="trust_h2">Deine Daten verlassen deinen Mac nicht. Punkt.</h2>
-  <p class="sec-sub" data-t="trust_sub">Keine Cloud, kein Konto-Zwang, kein Risiko. Disky ist ein Wächter — kein Sammler.</p>
-  <div class="trustband-grid">
-    <div class="trustpill">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
-      <b data-t="trust1_t">100% lokal</b><span data-t="trust1_p">Alles läuft auf deinem Mac. Kein Upload, keine Cloud.</span>
-    </div>
-    <div class="trustpill">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg></span>
-      <b data-t="trust2_t">Liest nur</b><span data-t="trust2_p">Disky verändert auf deinen Platten niemals etwas.</span>
-    </div>
-    <div class="trustpill">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a7 7 0 0 1 13 0"/></svg></span>
-      <b data-t="trust3_t">Kein Konto nötig</b><span data-t="trust3_p">Laden, scannen, loslegen. Ohne Anmeldung.</span>
-    </div>
-    <div class="trustpill">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M9 17l2 2 4-4"/></svg></span>
-      <b data-t="trust4_t">14 Tage Geld-zurück</b><span data-t="trust4_p">Kein Risiko. Gefällt's nicht, kriegst du dein Geld.</span>
-    </div>
-  </div>
-</section>
+<!-- CLOSING -->
+<section class="endcta" id="download"><div class="endcta-in">
+  <h2 class="rev" data-t="end_h">Stop digging through the drawer.</h2>
+  <p class="sub rev" data-t="end_sub">Index your drives once. Find anything across all of them in seconds — unplugged, on your Mac, yours alone.</p>
+  <div class="rev"><span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span></div>
+  <p class="trustline rev" data-t="trustline">Free to start · macOS, Apple Silicon · No account · 100% local · Read-only</p>
+</div></section>
 
-<section class="section glow-sec" id="preise">
-  <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="pr_eb">Preise</span></span></div>
-  <h2 class="sec" data-t="pr_h2">Fair &amp; einfach</h2>
-  <p class="sec-sub" data-t="pr_sub">Die ersten 2 Platten sind gratis. Danach, wie du willst:</p>
-  <div class="prices">
-    <div class="price">
-      <div class="pt" data-t="pr_free_t">Kostenlos</div>
-      <div class="pp" data-th="pr_free_pp">0€</div>
-      <ul data-th="pr_free_li"><li>Bis zu 2 Platten</li><li>Voller Funktionsumfang</li><li>Für immer gratis</li></ul>
-      <a class="btn ghost" href="#download" data-t="pr_free_btn">Gratis starten</a>
-    </div>
-    <div class="price">
-      <div class="pt" data-t="pr_month_t">Monatlich</div>
-      <div class="pp" data-th="pr_month_pp">€4,99<span>/Monat</span></div>
-      <ul data-th="pr_month_li"><li>Unbegrenzt Platten</li><li>Alle Updates</li><li>Jederzeit kündbar</li></ul>
-      <a class="btn ghost" id="buyMonthly" href="#" data-t="pr_month_btn">Abo wählen</a>
-    </div>
-    <div class="price best">
-      <div class="pt" data-t="pr_year_t">Jährlich</div>
-      <div class="pp" data-th="pr_year_pp">€49,99<span>/Jahr</span></div>
-      <ul data-th="pr_year_li"><li>Unbegrenzt Platten</li><li>Alle Updates</li><li>~2 Monate gespart</li></ul>
-      <a class="btn" id="buyYearly" href="#" data-t="pr_year_btn">Abo wählen</a>
-    </div>
-  </div>
-  <p class="trust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:6px;opacity:.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-th="pr_trust">Sichere Zahlung über Lemon Squeezy · Steuern inklusive · 14 Tage Geld-zurück · schon gekauft? <a href="#" onclick="showLogin();return false">Lizenz aktivieren</a></span></p>
-</section>
+</main>
 
-<section class="section" id="download">
-  <h2 class="sec" data-t="dl_h2">Lade Disky für deinen Mac</h2>
-  <p class="sec-sub" data-t="dl_sub">Ein Download, fertig. Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis.</p>
-  <div class="dlbox">
-    <a class="btn big" id="dlBtn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:-3px;margin-right:9px"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg><span id="dlBtnLbl" data-t="dl_btn_soon">Bald verfügbar – auf die Warteliste</span></a>
-    <div class="dlmeta"><span data-t="dl_req">macOS 12+ · Apple Silicon</span> · v<span id="dlVer">0.1.0</span></div>
-    <p class="dlnote" data-t="dl_note_soon">Wir legen gerade den letzten Schliff an (Notarisierung). Trag dich ein – du bekommst den Download als Erste:r.</p>
-  </div>
-</section>
+<!-- FOOTER -->
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="#top" style="font-size:16px"><svg viewBox="0 0 100 100" style="width:20px;height:20px" aria-hidden="true"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#37cfe0"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#37cfe0"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>Disky</a>
+  <span>© 2026 Disky</span>
+  <a href="rechtliches.html" data-t="foot_legal">Legal</a>
+  <span class="sp"></span>
+  <div class="lang"><button data-lang="en" class="on">EN</button><button data-lang="de">DE</button></div>
+</div></footer>
 
-<section class="section" id="faq">
-  <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="faq_eb">Noch Fragen?</span></span></div>
-  <h2 class="sec" data-t="faq_h2">Häufige Fragen</h2>
-  <div class="faq" id="faqlist"></div>
-</section>
-
-<section class="section endcta glow-sec" style="padding-top:10px">
-  <div class="endcta-box">
-    <div class="sec-c"><span class="sec-eyebrow"><span class="dot"></span><span data-t="end_eb">Bereit?</span></span></div>
-    <h2 class="sec" data-t="end_h2">Behalte dein ganzes Archiv im Griff.</h2>
-    <p class="sec-sub" data-t="end_sub">Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis, nichts wird verändert.</p>
-    <div class="cta" style="justify-content:center;margin-top:6px">
-      <a class="btn big" href="#download" data-t="end_cta">Kostenlos starten</a>
-    </div>
-    <p class="endcta-rea" data-t="end_rea">Kein Konto · 100% lokal · 14 Tage Geld-zurück</p>
-  </div>
-</section>
-
-<footer>
-  <div class="fcols">
-    <div data-th="foot_tag"><b>Disky</b><br>Dein Festplatten-Katalog.<br>Lokal &amp; offline.</div>
-    <div><a href="#features" data-t="nav_features">Funktionen</a><br><a href="#preise" data-t="nav_pricing">Preise</a><br><a href="#faq" data-t="nav_faq">FAQ</a></div>
-    <div><a href="rechtliches.html#impressum" data-t="foot_imprint">Impressum</a><br>
-      <a href="rechtliches.html#datenschutz" data-t="foot_privacy">Datenschutz</a><br>
-      <a href="rechtliches.html#agb" data-t="foot_terms">AGB</a></div>
-    <div data-th="foot_support"><a href="mailto:hallo@disky.app">hallo@disky.app</a><br>Support &amp; Kontakt</div>
-  </div>
-  <div class="fbottom" data-t="foot_bottom">© 2026 Disky · made for Videografen &amp; Fotografen</div>
-  <div style="text-align:center;margin-top:7px;color:#46505f;font-size:11px">3D-MacBook: „Macbook Pro 13"" von <a href="https://sketchfab.com/3d-models/macbook-pro-13-inch-2020-efab224280fd4c3993c808107f7c0b38" target="_blank" rel="noopener" style="color:#5b6675">timblewee</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:#5b6675">CC BY 4.0</a></div>
-</footer>
-
-<!-- Login / Konto Modal -->
-<div class="overlay" id="loginOverlay" style="display:none">
-  <div class="lmodal">
-    <button class="x" onclick="closeLogin()">✕</button>
-    <div class="lbrand">
-      <svg viewBox="0 0 100 100" width="34" height="34">        <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="88" cy="50" r="5" fill="#4a9eff"/><g transform="rotate(58 50 50)"><ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#4a9eff" stroke-width="3.6"/><circle cx="12" cy="50" r="5" fill="#4a9eff"/></g><circle cx="50" cy="50" r="8" fill="#4a9eff"/></svg>
-      <b data-t="lg_title">Bei Disky anmelden</b>
-    </div>
-    <p class="lhint" data-t="lg_hint">Nach dem Kauf bekommst du einen Lizenzschlüssel per E-Mail. Gib ihn hier ein, um Disky Pro auf diesem Gerät freizuschalten.</p>
-    <label class="llbl" data-t="lg_email_lbl">E-Mail (optional)</label>
-    <input class="linput" id="loginEmail" type="email" placeholder="du@beispiel.de" data-tph="lg_email_ph">
-    <label class="llbl" data-t="lg_key_lbl">Lizenzschlüssel</label>
-    <input class="linput" id="loginKey" placeholder="DISKY-XXXX-XXXX-XXXX">
-    <button class="btn lfull" id="loginGo" data-t="lg_go">Anmelden &amp; freischalten</button>
-    <div class="lmsg" id="loginMsg"></div>
-    <div class="lalt" data-th="lg_alt">Noch keine Lizenz? <a href="#preise" onclick="closeLogin()">Pro holen</a> · oder <a href="#download">gratis starten (2 Platten)</a></div>
-  </div>
-</div>
-
+<script src="_demoseed.js"></script>
 <script>
-// (Hero-Scroll-Animation entfernt — statischer Hero)
-
-
-/* ───────── i18n (EN/DE) — Standard Englisch, Auswahl in localStorage ───────── */
+/* ─────────── i18n ─────────── */
 const I18N={
- title:{de:`Disky — alle deine Festplatten. Ein Katalog.`,en:`Disky — all your drives. One catalog.`},
- nav_features:{de:`Funktionen`,en:`Features`},
- nav_pricing:{de:`Preise`,en:`Pricing`},
- nav_faq:{de:`FAQ`,en:`FAQ`},
- hero_h1:{de:`Jarvis für dein<br><span class="grad">Datenmanagement.</span>`,en:`Jarvis for your<br><span class="grad">data management.</span>`},
- hero_lead:{de:`Kennt jede Datei auf jeder Platte. Auch offline.`,en:`Knows every file on every drive. Even offline.`},
- hero_p1:{de:`Findet jedes Projekt — auch im Schrank`,en:`Finds any project — even unplugged`},
- hero_p2:{de:`Warnt, bevor ein Backup fehlt`,en:`Warns before a backup is missing`},
- hero_p3:{de:`Duplikate & Speicherfresser, plattenübergreifend`,en:`Duplicates & space hogs, across drives`},
- hero_cta_start:{de:`Jetzt loslegen`,en:`Get started now`},
- hero_cta_how:{de:`So funktioniert's`,en:`How it works`},
- proof_eb:{de:`EIN KATALOG · ALLES DRIN`,en:`ONE CATALOG · ALL IN`},
- proof_h:{de:`Ein typisches Setup, das Disky im Griff hat:`,en:`A typical setup Disky keeps under control:`},
- proof_s1:{de:`Platten · ein Katalog`,en:`drives · one catalog`},
- proof_s2:{de:`Dateien durchsuchbar`,en:`files searchable`},
- proof_s3:{de:`offline im Überblick`,en:`offline at a glance`},
- proof_s4:{de:`Duplikate gefunden`,en:`duplicates found`},
- hiw_eb:{de:`In 3 Schritten`,en:`In 3 steps`},
- cmp_eb:{de:`Der Unterschied`,en:`The difference`},
- sc_eb:{de:`Was Disky kann`,en:`What Disky does`},
- sc_h2:{de:`Sechs Superkräfte für dein Archiv.`,en:`Six superpowers for your archive.`},
- sc_sub:{de:`Jede einzeln stark. Zusammen unschlagbar.`,en:`Each strong on its own. Unbeatable together.`},
- trust_eb:{de:`Vertrauen by Design`,en:`Trust by design`},
- trust_h2:{de:`Deine Daten verlassen deinen Mac nicht. Punkt.`,en:`Your data never leaves your Mac. Full stop.`},
- trust_sub:{de:`Keine Cloud, kein Konto-Zwang, kein Risiko. Disky ist ein Wächter — kein Sammler.`,en:`No cloud, no forced account, no risk. Disky is a guardian — not a collector.`},
- trust1_t:{de:`100% lokal`,en:`100% local`},
- trust1_p:{de:`Alles läuft auf deinem Mac. Kein Upload, keine Cloud.`,en:`Everything runs on your Mac. No upload, no cloud.`},
- trust2_t:{de:`Liest nur`,en:`Read-only`},
- trust2_p:{de:`Disky verändert auf deinen Platten niemals etwas.`,en:`Disky never changes anything on your drives.`},
- trust3_t:{de:`Kein Konto nötig`,en:`No account needed`},
- trust3_p:{de:`Laden, scannen, loslegen. Ohne Anmeldung.`,en:`Download, scan, go. No sign-up.`},
- trust4_t:{de:`14 Tage Geld-zurück`,en:`14-day money-back`},
- trust4_p:{de:`Kein Risiko. Gefällt's nicht, kriegst du dein Geld.`,en:`No risk. Don't like it, get your money back.`},
- pr_eb:{de:`Preise`,en:`Pricing`},
- faq_eb:{de:`Noch Fragen?`,en:`Still curious?`},
- end_eb:{de:`Bereit?`,en:`Ready?`},
- end_rea:{de:`Kein Konto · 100% lokal · 14 Tage Geld-zurück`,en:`No account · 100% local · 14-day money-back`},
- hiw_h2:{de:`So funktioniert's`,en:`How it works`},
- hiw_sub:{de:`Einmal einrichten — dann passt Disky für dich auf deine Daten auf.`,en:`Set it up once — then Disky watches your data for you.`},
- hiw_step1:{de:`SCHRITT 1`,en:`STEP 1`},
- hiw_step2:{de:`SCHRITT 2`,en:`STEP 2`},
- hiw_step3:{de:`SCHRITT 3`,en:`STEP 3`},
- hiw1_h3:{de:`Einmal anstecken`,en:`Plug in once`},
- hiw1_p:{de:`Steck jede Platte einmal an. Disky liest sie (nur lesend) aus und merkt sich alles — auch wenn sie längst im Schrank liegt.`,en:`Plug in each drive once. Disky reads it (read-only) and remembers everything — even when it's long back in the drawer.`},
- hiw2_h3:{de:`Disky behält den Überblick`,en:`Disky keeps watch`},
- hiw2_p:{de:`Wie ein stiller Assistent verfolgt Disky im Hintergrund, was gesichert ist, was doppelt liegt, was Platz frisst und was noch aktiv oder schon fertig ist — ganz von selbst.`,en:`Like a quiet assistant, Disky tracks in the background what's backed up, what's duplicated, what eats space, and what's still active vs. done — all on its own.`},
- hiw3_h3:{de:`Es meldet sich — und antwortet`,en:`It speaks up — and answers`},
- hiw3_p:{de:`Disky sagt dir von selbst Bescheid, wenn's zählt — „dieses Projekt hat kein Backup", „32 GB freigebbar". Und wann immer du suchst: tippe einen Namen und finde jede Datei in Sekunden über alle Platten.`,en:`Disky tells you on its own when it matters — “this project has no backup”, “32 GB reclaimable”. And whenever you need something, just type a name and find any file across every drive in seconds.`},
- cmp_h2:{de:`Warum Disky?`,en:`Why Disky?`},
- cmp_sub:{de:`Der Unterschied zwischen „liegt irgendwo auf einer Platte" und „in 2 Sekunden gefunden".`,en:`The difference between “somewhere on a drive” and “found in 2 seconds”.`},
- cmp_bad_t:{de:`Ohne Disky`,en:`Without Disky`},
- cmp_good_t:{de:`Mit Disky`,en:`With Disky`},
- cmp_bad_li:{de:`<li>Zehn Platten durchstecken, nur um eine Datei zu finden</li><li>Keine Ahnung, welches Projekt schon ein Backup hat</li><li>Neue Platte kaufen, weil die alte „voll" ist</li><li>Dieselben Clips liegen drei Mal auf drei Platten</li><li>Stunden mit Suchen statt Schneiden</li>`,en:`<li>Digging through ten drives just to find one file</li><li>No idea which project already has a backup</li><li>Buying a new drive because the old one is “full”</li><li>The same clips sitting on three drives at once</li><li>Hours spent searching instead of editing</li>`},
- cmp_good_li:{de:`<li>Ein Suchfeld findet jede Datei — auch wenn die Platte im Schrank liegt</li><li>Disky meldet von selbst, was noch kein Backup hat</li><li>Erst aufräumen: oft ist die halbe Platte nur Cache &amp; Duplikate</li><li>Duplikate über alle Platten erkannt — auf den Gigabyte genau</li><li>In Sekunden gefunden, zurück zum Schnitt</li>`,en:`<li>One search box finds any file — even when the drive is in the drawer</li><li>Disky tells you on its own what still has no backup</li><li>Clean up first: often half the drive is just cache &amp; duplicates</li><li>Duplicates spotted across every drive — to the gigabyte</li><li>Found in seconds, back to editing</li>`},
- val_lead:{de:`Bevor du die nächste 4-TB-SSD für knapp 500&nbsp;€ kaufst: meistens liegen schon GB an Duplikaten und Cache auf den Platten, die du hast.`,en:`Before you buy the next 4&nbsp;TB SSD for nearly €500: usually there are already GBs of duplicates and cache sitting on the drives you own.`},
- val_sub:{de:`Disky rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst — und du löschst nur, was du selbst freigibst.`,en:`Disky calculates to the gigabyte how much you can free up — and you only delete what you release yourself.`},
- end_h2:{de:`Behalte dein ganzes Archiv im Griff.`,en:`Keep your whole archive under control.`},
- end_sub:{de:`Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis, nichts wird verändert.`,en:`Scan your first drive in seconds — the first 2 are free, nothing gets changed.`},
- end_cta:{de:`Kostenlos starten`,en:`Get started free`},
- mb_h2:{de:`Sieh Disky in Aktion.`,en:`See Disky in action.`},
- mb_sub:{de:`Scroll dich durch — jede Funktion direkt auf dem Mac.`,en:`Scroll through — every feature right on your Mac.`},
- mb_f1_t:{de:`Alles auf einen Blick`,en:`Everything at a glance`},
- mb_f1_d:{de:`Dein ganzes Archiv als eine lebendige Karte — jede Platte, ein Bild.`,en:`Your whole archive as one living map — every drive, one picture.`},
- mb_f2_t:{de:`Sieh, was Platz frisst`,en:`See what eats space`},
- mb_f2_d:{de:`Jeder Ordner als Ring — der größte Speicherfresser fällt sofort auf.`,en:`Every folder a ring — the biggest space hog stands out instantly.`},
- mb_fpm_t:{de:`Dein Project-Manager`,en:`Your project manager`},
- mb_fpm_d:{de:`Disky sieht jedes Projekt: gesichert oder nicht, aktiv oder längst fertig — und sagt dir, was von der SSD aufs Archiv gehört.`,en:`Disky sees every project: backed up or not, active or long done — and tells you what to move off the SSD onto an archive drive.`},
- mb_f3_t:{de:`Duplikate, plattenübergreifend`,en:`Duplicates, across drives`},
- mb_f3_d:{de:`Dieselbe Datei doppelt? Disky findet sie — auf den Gigabyte genau.`,en:`The same file twice? Disky finds it — to the gigabyte.`},
- mb_f4_t:{de:`Finde jedes Projekt`,en:`Find any project`},
- mb_f4_d:{de:`Tippe einen Namen und sieh, auf welcher Platte es liegt — auch offline.`,en:`Type a name and see which drive it's on — even offline.`},
- mb_over_eb:{de:`Disky in Aktion`,en:`Disky in action`},
- mb_over_h:{de:`Sieh <b>alles</b>. Finde <b>jedes</b>. Verlier <b>nichts</b>.`,en:`See <b>everything</b>. Find <b>anything</b>. Lose <b>nothing</b>.`},
- m_ov:{de:`Übersicht`,en:`Overview`},
- m_drives:{de:`Festplatten`,en:`Drives`},
- m_proj:{de:`Projekte`,en:`Projects`},
- m_dupes:{de:`Duplikate`,en:`Duplicates`},
- m_search:{de:`KI-SuperSearch`,en:`AI SuperSearch`},
- m_scan:{de:`＋ Platte scannen`,en:`＋ Scan drive`},
- m_mydrives:{de:`Meine Platten`,en:`My drives`},
- m_archive:{de:`Archiv 2023`,en:`Archive 2023`},
- m_hello:{de:`Willkommen zurück.`,en:`Welcome back.`},
- m_stat:{de:`<span><b>5</b> Platten</span><span class="d">·</span><span><b>112.594</b> Dateien</span><span class="d">·</span><span><b>24,8 TB</b> katalogisiert</span><span class="d">·</span><span><b>0</b> Duplikate</span>`,en:`<span><b>5</b> drives</span><span class="d">·</span><span><b>112,594</b> files</span><span class="d">·</span><span><b>24.8 TB</b> cataloged</span><span class="d">·</span><span><b>0</b> duplicates</span>`},
- m_hubsub:{de:`5 Platten · ein Katalog`,en:`5 drives · one catalog`},
- m_wedding:{de:`Hochzeit Mai`,en:`Wedding in May`},
- m_weddingpath:{de:`/Hochzeit Mai · 248 GB`,en:`/Wedding in May · 248 GB`},
- m_tb:{de:`1,4 TB`,en:`1.4 TB`},
- m_used:{de:`belegt`,en:`used`},
- m_saves:{de:`spart 24 GB`,en:`saves 24 GB`},
- sc_asst_eb:{de:`Dein Assistent · im Hintergrund`,en:`Your assistant · in the background`},
- sc_asst_h3:{de:`Disky arbeitet für dich — nicht umgekehrt.`,en:`Disky works for you — not the other way around.`},
- sc_asst_p:{de:`Disky läuft still im Hintergrund und meldet sich nur, wenn's zählt: <b>welches Projekt noch kein Backup hat</b>, wo unnötiger Speicher liegt, was du gefahrlos freiräumen kannst. Kein Mehraufwand — Disky nimmt dir Arbeit ab.`,en:`Disky runs quietly in the background and only speaks up when it matters: <b>which project still has no backup</b>, where space is wasted, what you can safely free up. No extra work — Disky takes work off your hands.`},
- cap1_eb:{de:`Dein Cockpit`,en:`Your cockpit`},
- cap3_eb:{de:`Projekt-Manager`,en:`Project manager`},
- cap3_h:{de:`Gesichert — oder nicht?`,en:`Backed up — or not?`},
- sc1_eb:{de:`Offline-Katalog · der Kern`,en:`Offline catalog · the core`},
- sc1_h3:{de:`Finde dein Projekt — ohne eine einzige Platte anzustecken.`,en:`Find your project — without plugging in a single drive.`},
- sc1_p:{de:`Disky hält <b>jede Festplatte offline einsehbar</b>. Tippe einen Projekt- oder Dateinamen und sieh in Sekunden, <b>auf welcher Platte</b> es liegt — auch wenn alle längst im Schrank liegen. Nie wieder zehn Platten durchstecken, nur um eine Datei zu suchen.`,en:`Disky keeps <b>every drive viewable offline</b>. Type a project or file name and see in seconds <b>which drive</b> it's on — even when they're all back in the drawer. Never dig through ten drives again just to find one file.`},
- sc2_eb:{de:`KI-Suche · 100% lokal`,en:`AI search · 100% local`},
- sc2_h3:{de:`Such nach Inhalt — nicht nach Dateinamen.`,en:`Search by content — not by file name.`},
- sc2_p:{de:`Tippe „underwater" und Disky zeigt dir jeden Clip mit Wasser — über all deine Platten, ohne eine einzige anzustecken. Die KI läuft komplett auf deinem Mac: kein Upload, keine Cloud.`,en:`Type “underwater” and Disky shows you every clip with water — across all your drives, without plugging in a single one. The AI runs entirely on your Mac: no upload, no cloud.`},
- sc3_eb:{de:`Speicher-Karte`,en:`Storage map`},
- sc3_h3:{de:`Sieh sofort, was Platz frisst.`,en:`See instantly what's eating space.`},
- sc3_p:{de:`Die Speicher-Karte zeigt jeden Ordner als Ring. Klick dich rein, bis du die eine Datei findest, die 200 GB blockiert. Ein <b>Aufräum-Assistent</b> markiert sogar automatisch Entbehrliches — After-Effects-/Premiere-Cache, Proxies und Duplikate — und rechnet dir auf den Gigabyte vor, wie viel du freiräumen kannst. Gelöscht wird nur, was du selbst freigibst.`,en:`The storage map shows every folder as a ring. Click your way in until you find the one file blocking 200 GB. A <b>Cleanup Assistant</b> even auto-flags the expendable — After Effects/Premiere cache, proxies and duplicates — and calculates to the gigabyte how much you can free up. Only what you release yourself gets deleted.`},
- sc4_eb:{de:`Duplikate`,en:`Duplicates`},
- sc4_h3:{de:`Doppelt? Nie wieder.`,en:`Duplicates? Never again.`},
- sc4_p:{de:`Disky erkennt gleiche Dateien über alle Platten hinweg — selbst wenn sie anders heißen — und sagt dir auf den Gigabyte genau, wie viel du freiräumen kannst.`,en:`Disky detects identical files across all your drives — even when they're named differently — and tells you to the gigabyte exactly how much you can free up.`},
- sc5_eb:{de:`Privatsphäre`,en:`Privacy`},
- sc5_h3:{de:`Deine Daten bleiben deine.`,en:`Your data stays yours.`},
- sc5_p:{de:`Alles läuft lokal auf deinem Mac. Kein Upload, keine Cloud, kein Konto-Zwang. Disky <b>liest nur</b> — und verändert auf deinen Platten niemals etwas.`,en:`Everything runs locally on your Mac. No upload, no cloud, no forced account. Disky <b>only reads</b> — and never changes anything on your drives.`},
- pr_h2:{de:`Fair & einfach`,en:`Fair & simple`},
- pr_sub:{de:`Die ersten 2 Platten sind gratis. Danach, wie du willst:`,en:`The first 2 drives are free. After that, your choice:`},
- pr_free_t:{de:`Kostenlos`,en:`Free`},
- pr_free_pp:{de:`0€`,en:`€0`},
- pr_free_li:{de:`<li>Bis zu 2 Platten</li><li>Voller Funktionsumfang</li><li>Für immer gratis</li>`,en:`<li>Up to 2 drives</li><li>Full feature set</li><li>Free forever</li>`},
- pr_free_btn:{de:`Gratis starten`,en:`Start free`},
- pr_month_t:{de:`Monatlich`,en:`Monthly`},
- pr_month_pp:{de:`€4,99<span>/Monat</span>`,en:`€4.99<span>/month</span>`},
- pr_month_li:{de:`<li>Unbegrenzt Platten</li><li>Alle Updates</li><li>Jederzeit kündbar</li>`,en:`<li>Unlimited drives</li><li>All updates</li><li>Cancel anytime</li>`},
- pr_month_btn:{de:`Abo wählen`,en:`Choose plan`},
- pr_year_t:{de:`Jährlich`,en:`Yearly`},
- pr_year_pp:{de:`€49,99<span>/Jahr</span>`,en:`€49.99<span>/year</span>`},
- pr_year_li:{de:`<li>Unbegrenzt Platten</li><li>Alle Updates</li><li>~2 Monate gespart</li>`,en:`<li>Unlimited drives</li><li>All updates</li><li>~2 months free</li>`},
- pr_year_btn:{de:`Abo wählen`,en:`Choose plan`},
- pr_trust:{de:`Sichere Zahlung über Lemon Squeezy · Steuern inklusive · 14 Tage Geld-zurück · schon gekauft? <a href="#" onclick="showLogin();return false">Lizenz aktivieren</a>`,en:`Secure payment via Lemon Squeezy · taxes included · 14-day money-back · already bought? <a href="#" onclick="showLogin();return false">Activate license</a>`},
- faq_h2:{de:`Häufige Fragen`,en:`Frequently asked`},
- foot_tag:{de:`<b>Disky</b><br>Dein Festplatten-Katalog.<br>Lokal &amp; offline.`,en:`<b>Disky</b><br>Your hard-drive catalog.<br>Local &amp; offline.`},
- foot_imprint:{de:`Impressum`,en:`Imprint`},
- foot_privacy:{de:`Datenschutz`,en:`Privacy`},
- foot_terms:{de:`AGB`,en:`Terms`},
- foot_support:{de:`<a href="mailto:hallo@disky.app">hallo@disky.app</a><br>Support &amp; Kontakt`,en:`<a href="mailto:hallo@disky.app">hallo@disky.app</a><br>Support &amp; contact`},
- foot_bottom:{de:`© 2026 Disky · made for Videografen & Fotografen`,en:`© 2026 Disky · made for videographers & photographers`},
- lg_title:{de:`Bei Disky anmelden`,en:`Sign in to Disky`},
- lg_hint:{de:`Nach dem Kauf bekommst du einen Lizenzschlüssel per E-Mail. Gib ihn hier ein, um Disky Pro auf diesem Gerät freizuschalten.`,en:`After purchase you'll get a license key by email. Enter it here to unlock Disky Pro on this device.`},
- lg_email_lbl:{de:`E-Mail (optional)`,en:`Email (optional)`},
- lg_email_ph:{de:`du@beispiel.de`,en:`you@example.com`},
- lg_key_lbl:{de:`Lizenzschlüssel`,en:`License key`},
- lg_go:{de:`Anmelden & freischalten`,en:`Sign in & unlock`},
- lg_alt:{de:`Noch keine Lizenz? <a href="#preise" onclick="closeLogin()">Pro holen</a> · oder <a href="#download">gratis starten (2 Platten)</a>`,en:`No license yet? <a href="#preise" onclick="closeLogin()">Get Pro</a> · or <a href="#download">start free (2 drives)</a>`},
- acc_signin:{de:`Anmelden`,en:`Sign in`},
- acc_start:{de:`Kostenlos starten`,en:`Get started free`},
- acc_openapp:{de:`Für Mac laden`,en:`Download for Mac`},
- acc_signout:{de:`Abmelden`,en:`Sign out`},
- dl_h2:{de:`Lade Disky für deinen Mac`,en:`Get Disky for your Mac`},
- dl_sub:{de:`Ein Download, fertig. Scanne deine erste Platte in Sekunden — die ersten 2 sind gratis.`,en:`One download, done. Scan your first drive in seconds — the first 2 are free.`},
- dl_btn:{de:`Für Mac herunterladen`,en:`Download for Mac`},
- dl_btn_soon:{de:`Bald verfügbar – auf die Warteliste`,en:`Coming soon – join the waitlist`},
- dl_req:{de:`macOS 12+ · Apple Silicon`,en:`macOS 12+ · Apple Silicon`},
- dl_note:{de:`Beim ersten Öffnen ggf. Rechtsklick → „Öffnen". Es wird nur gelesen — nichts gelöscht oder hochgeladen.`,en:`On first open, right-click → "Open" if prompted. Read-only — nothing deleted or uploaded.`},
- dl_note_soon:{de:`Wir legen gerade den letzten Schliff an (Notarisierung). Trag dich ein – du bekommst den Download als Erste:r.`,en:`We're putting on the final touches (notarization). Join the list — you'll be first to get the download.`},
- pr_soon:{de:`Bald`,en:`Soon`},
- lg_msg_needkey:{de:`Bitte Lizenzschlüssel eingeben.`,en:`Please enter a license key.`},
- lg_msg_check:{de:`Prüfe Schlüssel…`,en:`Checking key…`},
- lg_msg_ok:{de:`Freigeschaltet — willkommen!`,en:`Unlocked — welcome!`},
- lg_msg_neterr:{de:`Netzwerkfehler — zum Aktivieren bitte online sein.`,en:`Network error — please be online to activate.`},
- lg_err_invalid:{de:`Ungültiger oder abgelaufener Schlüssel`,en:`Invalid or expired key`},
-};
-let LANG=(localStorage.getItem('diskyLang')||'en');
-function tt(k){const e=I18N[k];return e?(e[LANG]!=null?e[LANG]:e.en):k;}
-function updateLangBtn(){const el=document.getElementById('langtoggle');if(!el)return;
-  el.style.display='inline-flex';el.style.gap='2px';el.style.marginLeft='6px';
-  el.innerHTML=['en','de'].map(l=>`<button type="button" data-l="${l}" style="font:inherit;font-size:12px;font-weight:700;letter-spacing:.03em;padding:4px 8px;border-radius:7px;cursor:pointer;border:1px solid ${l===LANG?'rgba(74,158,255,.5)':'transparent'};background:${l===LANG?'rgba(74,158,255,.15)':'transparent'};color:${l===LANG?'#cfe0f5':'var(--mut)'}">${l.toUpperCase()}</button>`).join('');
-  el.querySelectorAll('button').forEach(b=>b.onclick=()=>applyLang(b.getAttribute('data-l')));}
-function applyLang(l){if(l)LANG=l;localStorage.setItem('diskyLang',LANG);
-  document.documentElement.lang=LANG;
-  if(I18N.title)document.title=tt('title');
-  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=tt(el.getAttribute('data-t')));
-  document.querySelectorAll('[data-th]').forEach(el=>el.innerHTML=tt(el.getAttribute('data-th')));
-  document.querySelectorAll('[data-tph]').forEach(el=>el.placeholder=tt(el.getAttribute('data-tph')));
-  var _pp=document.getElementById('mbPoster'); if(_pp){ var _ps='assets/hero-poster-'+LANG+'.webp'; if(_pp.getAttribute('src')!==_ps) _pp.src=_ps; }
-  if(typeof renderFAQ==='function')renderFAQ();
-  if(typeof renderAccount==='function')renderAccount();
-  updateLangBtn();
-  maskHeadline();}
-// Headline maskiert aus dem Boden steigen lassen — Wort für Wort (Apple-Style). Läuft nach jedem applyLang neu.
-function maskHeadline(){
-  const h=document.querySelector('.mb-head .hero-h'); if(!h) return; let i=0;
-  function wrap(text, grad){ const frag=document.createDocumentFragment();
-    (text||'').split(/(\s+)/).forEach(tok=>{ if(!tok) return; if(!tok.trim()){ frag.appendChild(document.createTextNode(tok)); return; }
-      const w=document.createElement('span'); w.className='w';
-      const wi=document.createElement('span'); wi.className='wi'+(grad?' grad':''); wi.textContent=tok;
-      wi.style.animationDelay=(0.055*i++).toFixed(3)+'s'; w.appendChild(wi); frag.appendChild(w); });
-    return frag; }
-  const out=document.createDocumentFragment();
-  [...h.childNodes].forEach(n=>{ if(n.nodeType===3) out.appendChild(wrap(n.textContent,false));
-    else if(n.nodeName==='BR') out.appendChild(document.createElement('br'));
-    else if(n.nodeName==='SPAN') out.appendChild(wrap(n.textContent, n.classList.contains('grad')));
-    else out.appendChild(n.cloneNode(true)); });
-  h.innerHTML=''; h.appendChild(out); h.classList.remove('rise');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>h.classList.add('rise')));
-}
-// ── Aura hinter dem Laptop: weiches Leuchten + lange Light-Rays + Staubpartikel (lebendig, aber dezent) ──
-(function initAura(){
-  if(window.__LITE) return;   // LITE: keine Aura-Dauerschleife (Canvas ist eh ausgeblendet)
-  const c=document.querySelector('.mb-aura'); if(!c) return; const ctx=c.getContext('2d');
-  const sec=document.querySelector('.mb-scroll'); if(!sec) return;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let W=1,H=1;
-  function size(){ const r=c.getBoundingClientRect(); W=Math.max(1,Math.round(r.width*0.5)); H=Math.max(1,Math.round(r.height*0.5)); c.width=W; c.height=H; }  // 0.5× — Blur/Glow kaschiert die niedrige Auflösung
-  size(); addEventListener('resize', size);
-  const dust=[]; for(let i=0;i<60;i++) dust.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.5,s:Math.random()*.5+.15,o:Math.random()*.4+.18,ph:Math.random()*6.28});
-  let t0=performance.now(), last=0;
-  function draw(now){ requestAnimationFrame(draw);
-    const r=sec.getBoundingClientRect(); if(r.bottom<0 || r.top>innerHeight) return;   // außer Sicht: pausieren
-    if(now-last<33) return; last=now; const t=reduce?0:(now-t0)/1000;
-    ctx.clearRect(0,0,W,H); const cx=W*0.6, cy=H*0.52;
-    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.55);
-    g.addColorStop(0,'rgba(74,128,255,0.14)'); g.addColorStop(.35,'rgba(60,100,210,0.05)'); g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    ctx.globalCompositeOperation='lighter';
-    dust.forEach(p=>{ let yy=(p.y - t*p.s*0.02)%1; if(yy<0)yy+=1; const X=p.x*W+Math.sin(t*0.25+p.ph)*8, Y=yy*H;
-      ctx.beginPath(); ctx.fillStyle='rgba(165,198,255,'+(p.o*(0.55+0.45*Math.sin(t*1.3+p.ph))).toFixed(3)+')'; ctx.arc(X,Y,p.r,0,6.283); ctx.fill(); });
-    ctx.globalCompositeOperation='source-over';
-  }
-  requestAnimationFrame(draw);
-})();
-
-/* ───────── Konto / Lizenz (geteilt mit der App via localStorage) ───────── */
-const DISKY={
-  CHECKOUT_MONTHLY:"https://disky.lemonsqueezy.com/buy/DEIN-MONATS-PRODUKT",
-  CHECKOUT_YEARLY:"https://disky.lemonsqueezy.com/buy/DEIN-JAHRES-PRODUKT",
-  // ↓ Nach dem ersten GitHub-Release hier den Link zur .dmg eintragen + DOWNLOAD_READY:true
-  // (z.B. https://github.com/Siul98/disky-web/releases/latest/download/Disky-arm64.dmg)
-  DOWNLOAD_URL:"https://github.com/Siul98/disky-web/releases/latest",
-  VERSION:"0.1.0",
-  // Launch-Schalter: solange false → Warteliste/E-Mail statt totem Link.
-  // Auf true setzen, sobald (a) die DMG als Release hochgeladen bzw. (b) Lemon-Squeezy-Produkte live sind.
-  DOWNLOAD_READY:false,
-  CHECKOUT_READY:false,
-  WAITLIST:"mailto:hallo@disky.app?subject="+encodeURIComponent("Disky – Warteliste (macOS)"),
-  CONTACT_PRO:"mailto:hallo@disky.app?subject="+encodeURIComponent("Disky Pro – Interesse"),
-};
-function getLicense(){try{return JSON.parse(localStorage.getItem("disky_license")||"null");}catch(e){return null;}}
-function setLicense(o){localStorage.setItem("disky_license",JSON.stringify(o));}
-function isPro(){const l=getLicense();return !!(l&&l.valid&&(!l.expires||Date.parse(l.expires)>Date.now()));}
-async function validateLicense(key){
-  const res=await fetch("https://api.lemonsqueezy.com/v1/licenses/validate",{
-    method:"POST",headers:{"Accept":"application/json","Content-Type":"application/x-www-form-urlencoded"},
-    body:new URLSearchParams({license_key:key})});
-  const d=await res.json().catch(()=>({}));
-  if(d&&d.valid){const exp=d.license_key&&d.license_key.expires_at;
-    const cur=getLicense()||{}; setLicense({key,valid:true,expires:exp||null,email:cur.email||null});return{ok:true};}
-  return{ok:false,error:(d&&d.error)||tt('lg_err_invalid')};
-}
-function renderAccount(){
-  const el=document.getElementById("account"); if(!el) return;
-  if(isPro()){
-    el.innerHTML=`<span class="prochip"><span class="pdot"></span>Disky Pro</span>
-      <a class="btn" href="#download">${tt('acc_openapp')}</a>
-      <a class="link" id="logoutBtn">${tt('acc_signout')}</a>`;
-    el.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem("disky_license");renderAccount();};
-  }else{
-    el.innerHTML=`<a class="link" id="loginBtn">${tt('acc_signin')}</a>
-      <a class="btn" href="#download">${tt('acc_start')}</a>`;
-    el.querySelector("#loginBtn").onclick=showLogin;
-  }
-}
-function showLogin(){const o=document.getElementById("loginOverlay");o.style.display="flex";
-  const e=getLicense();if(e&&e.email)document.getElementById("loginEmail").value=e.email;
-  document.getElementById("loginKey").focus();}
-function closeLogin(){document.getElementById("loginOverlay").style.display="none";}
-document.getElementById("loginOverlay").addEventListener("click",e=>{if(e.target.id==="loginOverlay")closeLogin();});
-document.getElementById("loginGo").onclick=async()=>{
-  const key=document.getElementById("loginKey").value.trim();
-  const email=document.getElementById("loginEmail").value.trim();
-  const msg=document.getElementById("loginMsg");
-  if(!key){msg.innerHTML='<span style="color:#ff6b6b">'+tt('lg_msg_needkey')+'</span>';return;}
-  msg.style.color="var(--mut)";msg.textContent=tt('lg_msg_check');
-  try{const r=await validateLicense(key);
-    if(r.ok){const l=getLicense();l.email=email||l.email;setLicense(l);
-      msg.innerHTML='<span style="color:#4ade80">'+tt('lg_msg_ok')+'</span>';
-      setTimeout(()=>{closeLogin();renderAccount();},1000);}
-    else msg.innerHTML='<span style="color:#ff6b6b">'+r.error+'</span>';
-  }catch(e){msg.innerHTML='<span style="color:#ff6b6b">'+tt('lg_msg_neterr')+'</span>';}
-};
-// Kauf-Buttons — solange Checkout nicht live: zur „Interesse"-Mail statt totem Placeholder-Link
-function buy(url){ const ok=DISKY.CHECKOUT_READY && url && !/DEIN-/.test(url); open(ok?url:DISKY.CONTACT_PRO,"_blank"); }
-document.getElementById("buyYearly")?.addEventListener("click",e=>{e.preventDefault();buy(DISKY.CHECKOUT_YEARLY);});
-document.getElementById("buyMonthly")?.addEventListener("click",e=>{e.preventDefault();buy(DISKY.CHECKOUT_MONTHLY);});
-// Download-Button + Version aus der Config — solange nicht notarisiert: Warteliste statt totem Release-Link
-(()=>{const b=document.getElementById("dlBtn");
-  if(b){ if(DISKY.DOWNLOAD_READY){ b.href=DISKY.DOWNLOAD_URL; const l=document.getElementById("dlBtnLbl"); if(l)l.setAttribute("data-t","dl_btn"); const n=document.querySelector(".dlnote"); if(n)n.setAttribute("data-t","dl_note"); }
-         else { b.href=DISKY.WAITLIST; } }
-  const v=document.getElementById("dlVer");if(v)v.textContent=DISKY.VERSION;})();
-
-/* FAQ */
-const FAQ={
- de:[
-  ["Ist Disky sicher? Kann es Dateien löschen?","Nein. Disky liest deine Platten nur, um den Katalog zu erstellen — es kann technisch nichts löschen, verschieben oder verändern. Duplikate werden nur angezeigt; wegwerfen tust du selbst."],
-  ["Funktioniert das wirklich offline?","Ja. Du scannst jede Platte einmal, danach liegt der Katalog lokal auf deinem Mac. Suchen, Karte und Duplikate funktionieren auch, wenn die Platte abgesteckt ist — komplett ohne Internet."],
-  ["Auf welchen Macs läuft Disky?","Disky ist eine native Mac-App für macOS 12 oder neuer auf Apple Silicon (M1–M4). Kein Browser, kein Plug-in — einfach laden und scannen."],
-  ["Was kostet Disky?","Die ersten 2 Platten sind gratis — mit vollem Funktionsumfang. Für unbegrenzt viele Platten: 4,99 €/Monat oder 49,99 €/Jahr."],
-  ["Wie aktiviere ich Pro auf einem zweiten Gerät?","Mit deinem Lizenzschlüssel: oben rechts auf Anmelden klicken und den Schlüssel eingeben."],
-  ["Werden meine Daten hochgeladen?","Nein. Es gibt keinen Upload und keine Cloud. Alles bleibt auf deinem Rechner."],
- ],
- en:[
-  ["Is Disky safe? Can it delete files?","No. Disky only reads your drives to build the catalog — it technically cannot delete, move or change anything. Duplicates are only shown; you do the deleting yourself."],
-  ["Does it really work offline?","Yes. You scan each drive once, then the catalog lives locally on your Mac. Search, map and duplicates work even when the drive is unplugged — completely without internet."],
-  ["Which Macs does Disky run on?","Disky is a native Mac app for macOS 12 or newer on Apple Silicon (M1–M4). No browser, no plug-in — just download and scan."],
-  ["What does Disky cost?","The first 2 drives are free — with the full feature set. For unlimited drives: €4.99/month or €49.99/year."],
-  ["How do I activate Pro on a second device?","With your license key: click Sign in at the top right and enter the key."],
-  ["Is my data uploaded?","No. There's no upload and no cloud. Everything stays on your machine."],
- ],
-};
-function renderFAQ(){const el=document.getElementById("faqlist");if(!el)return;
-  el.innerHTML=(FAQ[LANG]||FAQ.en).map(([q,a])=>`<details class="qa"><summary>${q}</summary><div class="a">${a}</div></details>`).join("");}
-
-applyLang(LANG);
-
-/* „So funktioniert's"-Karten: nacheinander aufleuchten + Hover-Highlight */
-(function(){
-  const cards=[...document.querySelectorAll(".how .howcard")];
-  if(cards.length<2) return;
-  let i=0, paused=false;
-  const setHot=n=>cards.forEach((c,k)=>c.classList.toggle("hot",k===n));
-  setHot(0);
-  setInterval(()=>{ if(!paused){ i=(i+1)%cards.length; setHot(i); } }, 2200);
-  const wrap=document.querySelector(".how");
-  cards.forEach(c=>c.addEventListener("mouseenter",()=>{ paused=true; cards.forEach(x=>x.classList.remove("hot")); }));
-  if(wrap) wrap.addEventListener("mouseleave",()=>{ paused=false; setHot(i); });
-})();
-</script>
-<script type="module">
-/* MacBook-Showcase: echtes WebGL-3D (Three.js). Deckel klappt auf + dreht beim Scrollen;
-   die echte Übersicht-Seite liegt als live HTML (CSS3D) auf dem Bildschirm und bewegt sich mit. */
-// Three.js wird ERST beim ersten Scrollen dynamisch geladen (siehe startMB unten) → der Hero inkl. Platinen-Hintergrund bleibt beim Laden UNGEBLOCKT und erscheint sofort.
-
-const sec = document.querySelector('.mb-scroll');
-const stage = sec && sec.querySelector('.mb-stage');
-const mbHead = sec && sec.querySelector('.mb-head');
-const mbCaps = sec && sec.querySelector('.mb-caps');
-const mbOver = sec && sec.querySelector('.mb-over');
-const _idleOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;   // sanfte Dauerbewegung nur, wenn der Nutzer Bewegung nicht reduziert hat
-const canvas = sec && sec.querySelector('.mb-gl');
-const css3dHost = sec && sec.querySelector('.mb-css3d');
-const screenEl = document.getElementById('mbScreens');
-const caps = sec ? [].slice.call(sec.querySelectorAll('.mb-cap')) : [];
-const dots = sec ? [].slice.call(sec.querySelectorAll('.mb-dots i')) : [];
-const feats = screenEl ? [].slice.call(screenEl.querySelectorAll('.mb-feat')) : [];
-// MacBook-Animation ist scroll-gesteuert (vom Nutzer kontrolliert) → standardmäßig AN, auch bei „Bewegung reduzieren".
-// Mit ?still=1 lässt sich der statische Zustand erzwingen.
-const reduce = location.search.indexOf('still')!==-1;
-
-let _lastFeat=-1;
-function setFeat(i){
-  if(i===_lastFeat) return;   // nur bei echtem Wechsel umschalten → keine Transition-Neustarts
-  _lastFeat=i;
-  feats.forEach((f,k)=>f.classList.toggle('on',k===i));
-  // MILCHGLAS-STAPEL: aktive Karte zentriert & scharf; bereits gezeigte wandern nach oben + werden unscharf (Milchglas); kommende liegen unten & unsichtbar
-  caps.forEach((c,k)=>{
-    const d=k-i; c.classList.toggle('on',d===0);
-    let tf,bl,op,z;
-    if(d===0){ tf='translateY(-50%) scale(1)'; bl=0; op=1; z=30; }
-    else if(d<0){ const a=-d; tf='translateY(calc(-50% - '+(a*140)+'px)) scale('+Math.max(0.72,1-a*0.075).toFixed(3)+')'; bl=Math.min(11,a*3.6); op=Math.max(0,0.52-(a-1)*0.24); z=30-a; }
-    else { tf='translateY(calc(-50% + 86px)) scale(0.94)'; bl=2; op=0; z=1; }
-    c.style.transform=tf; c.style.filter=bl?('blur('+bl.toFixed(1)+'px)'):'none'; c.style.opacity=op; c.style.zIndex=z;
-  });
-  dots.forEach((f,k)=>f.classList.toggle('on',k===i));
-}
-setFeat(-1);   // Tiles initial VERSTECKT (Scroll-0-Zustand) → kein Aufblitzen von Karte 0 während der Poster-Phase, bevor das 3D + apply() laufen
-
-if (sec && canvas && stage && screenEl) {
- let _mbStarted=false;
- async function startMB(){
-  if(_mbStarted) return; _mbStarted=true;
-  setTimeout(()=>{ var _pp=document.getElementById('mbPoster'); if(_pp && model) _pp.classList.add('gone'); }, 7000);   // Sicherheitsnetz: Poster nach 7s weg — ABER nur wenn das 3D-Modell geladen ist (sonst bleibt das Poster als Fallback stehen, nie leere Bühne)
-  const THREE = await import('three');
-  const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-  const { CSS3DRenderer, CSS3DObject } = await import('three/addons/renderers/CSS3DRenderer.js');
-  const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
-  const { MeshoptDecoder } = await import('three/addons/libs/meshopt_decoder.module.js');   // entpackt die komprimierte (meshopt) GLB — Decoder aus demselben CDN
-  const W0 = ()=>stage.clientWidth||960, H0 = ()=>stage.clientHeight||560;
-
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-  renderer.setPixelRatio(Math.min(1.5, devicePixelRatio||1));   // Retina-Cap 1.5 → deutlich flüssiger, Antialias kaschiert den Rest
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.86;
-
-  const css = new CSS3DRenderer();
-  css3dHost.appendChild(css.domElement);
-  css.domElement.style.position='absolute'; css.domElement.style.top='0'; css.domElement.style.left='0';
-
-  const scene = new THREE.Scene();
-  const cam = new THREE.PerspectiveCamera(28, W0()/H0(), 300, 9000);   // enge Near/Far-Spanne → präziser Tiefenpuffer → kein Z-Fighting
-  cam.position.set(-150, 360, 2380); cam.lookAt(-150, 360, 0);   // GRÖSSER (näher dran) + tiefer angepeilt + links gepannt → MacBook rechts, KOMPLETT im Bild
-  const isMobile = ()=> matchMedia('(max-width:820px)').matches;
-  let LOOK = new THREE.Vector3(-150, 360, 0);                     // Blickpunkt (Desktop: rechts versetzt; Mobil: zentriert)
-  let DIR  = new THREE.Vector3().subVectors(cam.position, LOOK).normalize();  // Blickrichtung (für Dolly-Zoom)
-  let DIST0 = cam.position.distanceTo(LOOK);                       // Start-Distanz (weit, viel Rand)
-  // Kamera-Framing: Desktop = handgetunt (Laptop rechts); Mobil = zentriert + Auto-Fit (passt IMMER komplett, nie angeschnitten)
-  function frameView(){
-    if(isMobile() && model){
-      // fully-open Bounding-Box NUR vom Laptop (ohne Schatten-Plane!) ermitteln und exakt einpassen — egal wie schmal der Screen ist
-      const wasT = mixer && clip ? mixer.time : null;
-      const wasRot = macRoot.rotation.y;
-      if(mixer && clip) mixer.setTime(OPEN_T);
-      macRoot.rotation.y = 0;                 // frontal messen (so wird mobil auch gerendert)
-      macRoot.updateMatrixWorld(true);
-      const box = new THREE.Box3().setFromObject(model);   // nur das Modell, nicht die große Schatten-Fläche
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      const vFov = cam.fov*Math.PI/180;
-      const hFov = 2*Math.atan(Math.tan(vFov/2)*cam.aspect);
-      const fitH = (size.y/2)/Math.tan(vFov/2);
-      const fitW = (size.x/2)/Math.tan(hFov/2);
-      const dist = Math.max(fitH, fitW) * 1.32;   // 32% Rand → garantiert nie angeschnitten (oben/unten/seitlich)
-      LOOK.copy(center);
-      DIR.set(0,0,1);
-      DIST0 = dist;
-      macRoot.rotation.y = wasRot;
-      if(wasT!=null && mixer && clip) mixer.setTime(wasT);
-    } else {
-      LOOK.set(-150, 360, 0);
-      cam.position.set(-150, 360, 2380);
-      DIR.subVectors(cam.position, LOOK).normalize();
-      DIST0 = cam.position.distanceTo(LOOK);
-      // Laptop-Bounding-Box in PRÄSENTATIONS-Drehung einmal vermessen (Welt-Einheiten, auflösungsunabhängig).
-      // Distanz/Ziel werden dann pro Frame mit der LIVE-Aspect berechnet → passt sich jeder Fenstergröße an, nie angeschnitten.
-      if(model){ const wasT2=mixer&&clip?mixer.time:null, wasR2=macRoot.rotation.y;
-        if(mixer&&clip)mixer.setTime(OPEN_T);
-        macRoot.rotation.y=-0.26; macRoot.updateMatrixWorld(true);
-        const b=new THREE.Box3().setFromObject(model), s=b.getSize(new THREE.Vector3()), c=b.getCenter(new THREE.Vector3());
-        presBox={ hw:s.x/2, hh:s.y/2, cx:c.x, cy:c.y };
-        if(screenMesh){ const sb=new THREE.Box3().setFromObject(screenMesh), sc=sb.getCenter(new THREE.Vector3()), ssz=sb.getSize(new THREE.Vector3());
-          presBox.scx=sc.x; presBox.scy=sc.y; presBox.shw=ssz.x/2; presBox.shh=ssz.y/2; }   // Screen-Box: der lesbare Teil, der NIE in den Feather laufen darf
-        // Screen-Mitte auch FRONTAL (Drehung 0) messen → das Intro zielt darauf und startet exakt zentriert
-        macRoot.rotation.y=0; macRoot.updateMatrixWorld(true);
-        if(screenMesh){ const sb0=new THREE.Box3().setFromObject(screenMesh), sc0=sb0.getCenter(new THREE.Vector3()); presBox.scx0=sc0.x; presBox.scy0=sc0.y; }
-        macRoot.rotation.y=wasR2; macRoot.updateMatrixWorld(true); if(wasT2!=null&&mixer&&clip)mixer.setTime(wasT2); }
-    }
-  }
-
-  // Umgebungs-Reflexionen (macht das Alu echt)
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-  scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0a0c10, 0.42));
-  const key = new THREE.DirectionalLight(0xffffff, 0.5); key.position.set(400, 2400, 2100); scene.add(key);   // weiches Key-Light von oben-vorne
-  const rim = new THREE.DirectionalLight(0x88aaff, 0.45); rim.position.set(-1300, 900, -900); scene.add(rim);
-  const rim2 = new THREE.DirectionalLight(0xbcd6ff, 0.9); rim2.position.set(-500, 1450, -1900); scene.add(rim2);   // Rim-Light: Kantenglanz von hinten-oben
-  // BACKLIGHT (nur Kanten): zwei flache, grazing Lichter direkt von HINTER dem Laptop → nur die Silhouetten-Kanten leuchten, Flächen bleiben unverändert
-  const rim3 = new THREE.DirectionalLight(0xaccaff, 3.8); rim3.position.set(-1300, 380, -1150); scene.add(rim3);   // hinten-links, flach → linke Kante
-  const rim4 = new THREE.DirectionalLight(0xb4d6ff, 3.8); rim4.position.set(1300, 360, -1150); scene.add(rim4);    // hinten-rechts, flach → rechte Kante
-  scene.environmentIntensity = 0.22;   // weniger Umgebungs-Reflexion auf dem Alu (falls unterstützt)
-
-  // PERFORMANCE: Das Display zeigt die statische Cockpit-Textur (echter Screenshot, 1:1) statt einer LIVE-App im iframe.
-  // Das live iframe (eigener App-Lauf + CSS3D-Neukomposition pro Frame) war die Haupt-Lag-Quelle. Bei Hero-Größe sieht der
-  // statische Screenshot identisch aus — aber das Scrollen/Rendern läuft butterweich. (Auf true → wieder Live-Screen.)
-  const LIVE_SCREEN = false;
-  let screenMat = null, screenMesh = null, cssScreen = null, screenTex = null, drawScreen = null, appFrame = null, appHost = null, appGlare = null;
-  let setScreenView = null, screenBusy = null;   // Steuerung der echten App-Views auf dem Screen-Display
-  // Display-Spiegelung an die aktuelle Drehung koppeln: mehr Drehung → Reflexion sichtbarer, Glanzstreifen wandert mit
-  function updateGlare(roty){ if(!appGlare) return; const a=Math.min(1, Math.abs(roty)/0.42);
-    appGlare.style.opacity=(0.06 + a*0.20).toFixed(3);
-    appGlare.style.setProperty('--gb', (50 - (roty/0.42)*40).toFixed(1)+'%');
-    appGlare.style.setProperty('--gx', (34 - (roty/0.42)*26).toFixed(1)+'%'); }
-  const CSS_FIX = new THREE.Quaternion();   // Ausrichtungs-Korrektur (per window.__fix tunebar)
-
-  // Boden-Schatten (weiche Kontaktfläche)
-  const shadowTex = (()=>{ const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d');
-    const rg=g.createRadialGradient(128,128,2,128,128,126); rg.addColorStop(0,'rgba(0,0,0,.66)'); rg.addColorStop(.26,'rgba(0,0,0,.34)'); rg.addColorStop(.54,'rgba(0,0,0,.10)'); rg.addColorStop(.78,'rgba(0,0,0,.02)'); rg.addColorStop(1,'rgba(0,0,0,0)');
-    g.fillStyle=rg; g.fillRect(0,0,256,256); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();   // dunkler, enger Kern + langer weicher Auslauf → realistischer Kontaktschatten, Ränder komplett transparent
-
-  const macRoot = new THREE.Group(); scene.add(macRoot);
-  let mixer=null, clip=null, model=null, ready=false;
-  const easeOut = t => 1 - Math.pow(1-t, 3);
-  const clock = new THREE.Clock();
-
-  // ===== Screen = ECHTE App-UI 1:1 (gerendert) + animierte Sterne-Reflektion =====
-  function buildScreen(){
-    const cv=document.createElement('canvas'); cv.width=1600; cv.height=1000;
-    const x=cv.getContext('2d');
-    const tex=new THREE.CanvasTexture(cv); tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=8;
-    // gespiegelte Sterne (feste Positionen, funkeln) — wie das Sternenfeld der Seite
-    const STARS = Array.from({length:30},(_,i)=>({ x:24+((i*173)%1560), y:18+((i*229)%964), r:0.7+(i%3)*0.7, a:0.05+(i%4)*0.025, p:i*1.7 }));
-    // 5 ECHTE App-Views — der Screen schaltet beim Scrollen passend zum linken Punkt um (overview→map→Projekt-Manager→dupes→search)
-    const VSRC={overview:'screen-overview',map:'screen-map',backup:'screen-backup',dupes:'screen-dupes',search:'screen-search'};
-    const imgs={};
-    for(const k in VSRC){ const im=new Image(); im.decoding='async'; im.onload=()=>draw(0); im.src='assets/'+VSRC[k]+'.webp?v=1'; imgs[k]=im; }
-    let curView='overview', prevView='overview', fade=1;
-    function blit(im,a){ if(!im||!im.naturalWidth||a<=0) return; x.globalAlpha=a; const s=1600/im.naturalWidth, dh=im.naturalHeight*s, dy=(1000-dh)/2; x.drawImage(im,0,dy,1600,dh); x.globalAlpha=1; }
-    function draw(t){
-      x.fillStyle='#0c0f15'; x.fillRect(0,0,1600,1000);
-      if(fade<1){ fade=Math.min(1, fade+0.16); const fe=fade*fade*(3-2*fade); blit(imgs[prevView],1-fe); blit(imgs[curView],fe); }
-      else blit(imgs[curView],1);
-      // dezente Glas-Spiegelung + funkelnde, gespiegelte Sterne
-      const sh=x.createLinearGradient(0,0,1300,1000);
-      sh.addColorStop(0,'rgba(255,255,255,0.06)'); sh.addColorStop(0.4,'rgba(255,255,255,0.015)'); sh.addColorStop(0.62,'rgba(255,255,255,0)');
-      x.fillStyle=sh; x.fillRect(0,0,1600,1000);
-      x.save();
-      for(const st of STARS){ const tw=0.5+0.5*Math.sin(t*0.9+st.p); x.globalAlpha=st.a*(0.35+0.65*tw); x.fillStyle='#dbe8ff'; x.beginPath(); x.arc(st.x,st.y,st.r,0,7); x.fill(); }
-      x.restore();
-      // ── Atom „lebt" — NUR auf der Übersicht (additives Licht); beim Wechsel passend ein-/ausgeblendet ──
-      const atomA = (fade<1) ? ((curView==='overview'?fade:0)+(prevView==='overview'?1-fade:0)) : (curView==='overview'?1:0);
-      if(atomA>0.01){
-        const ax=908, ay=540;
-        x.save(); x.globalCompositeOperation='lighter';
-        const pa=0.5+0.5*Math.sin(t*1.5);
-        const cg=x.createRadialGradient(ax,ay,0,ax,ay,140);
-        cg.addColorStop(0,'rgba(120,180,255,'+(atomA*(0.09+0.15*pa)).toFixed(3)+')');
-        cg.addColorStop(0.55,'rgba(60,130,240,'+(atomA*(0.03+0.05*pa)).toFixed(3)+')');
-        cg.addColorStop(1,'rgba(60,130,240,0)');
-        x.fillStyle=cg; x.beginPath(); x.arc(ax,ay,140,0,7); x.fill();
-        x.fillStyle='rgba(205,228,255,'+(atomA*(0.32+0.5*pa)).toFixed(3)+')'; x.beginPath(); x.arc(ax,ay,5+1.6*pa,0,7); x.fill();
-        const rx=98, ry=30, rots=[0,1.05,2.1], spd=[1.1,-0.9,1.35];
-        for(let e=0;e<3;e++){ const th=t*spd[e]+e*2.1, c=Math.cos(rots[e]), s2=Math.sin(rots[e]);
-          const exx=Math.cos(th)*rx, eyy=Math.sin(th)*ry;
-          const px=ax+exx*c-eyy*s2, py=ay+exx*s2+eyy*c;
-          const eg=x.createRadialGradient(px,py,0,px,py,15); eg.addColorStop(0,'rgba(160,215,255,'+(0.85*atomA).toFixed(3)+')'); eg.addColorStop(1,'rgba(120,180,255,0)');
-          x.fillStyle=eg; x.beginPath(); x.arc(px,py,15,0,7); x.fill();
-          x.fillStyle='rgba(225,242,255,'+(0.95*atomA).toFixed(3)+')'; x.beginPath(); x.arc(px,py,2.5,0,7); x.fill();
-        }
-        x.restore();
-      }
-      tex.needsUpdate=true;
-    }
-    function setView(v){ if(!VSRC[v]||v===curView) return; prevView=curView; curView=v; fade=0; }
-    function busy(){ return fade<1; }
-    return {tex, draw, setView, busy};
-  }
-
-  // Echtes MacBook-Modell laden (Sketchfab, CC-BY · timblewee) — inkl. Aufklapp-Animation
-  // LAZY: erst laden, wenn die Sektion in die Nähe scrollt (spart 5 MB GLB + iframe beim Initial-Load)
-  let _macLoading=false;
-  function loadMac(){ if(_macLoading) return; _macLoading=true;
-  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('assets/macbook.glb', (gltf)=>{
-    model = gltf.scene;
-    // Zentrieren + auf feste Größe skalieren (GLB-Einheiten unbekannt → Auto-Fit)
-    let box = new THREE.Box3().setFromObject(model);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    model.position.sub(center);
-    const TARGET = 1500;
-    model.scale.setScalar(TARGET / Math.max(size.x, size.y, size.z));
-    macRoot.add(model);
-    // Display: kompletter Disky-Overview LIVE GECODET (Canvas) — selbstleuchtend, glüht im Disky-Look
-    model.traverse(o=>{
-      if(!(o.isMesh && o.material)) return;
-      const mats = Array.isArray(o.material) ? o.material : [o.material];
-      mats.forEach(m=>{
-        if(m.name==='Material.002'){ screenMat=m; screenMesh=o; return; }
-        // Alu/Gehäuse mattieren → keine krasse Reflektion / kein harter Chromstreifen oben
-        if('roughness' in m){ m.roughness = Math.min(1, (m.roughness||0.4) + 0.4); }   // matt (Szene unverändert) — der Edge-Glow kommt rein übers Backlight
-        if('metalness' in m){ m.metalness = Math.min(m.metalness!=null?m.metalness:0.6, 0.5); }
-        m.envMapIntensity = 0.18;
-        m.needsUpdate = true;
-      });
-    });
-    if(screenMat){
-      const S=buildScreen(); screenTex=S.tex; drawScreen=S.draw; setScreenView=S.setView; screenBusy=S.busy; drawScreen(0);
-      screenMat.map=screenTex; screenMat.emissive=new THREE.Color(0xffffff); screenMat.emissiveMap=screenTex; screenMat.emissiveIntensity=1.85;   // leichter Glow
-      screenMat.metalness=0; screenMat.roughness=0.82; screenMat.envMapIntensity=0.05;   // hohe Rauheit → Highlight breit & weich statt harter Hotspot
-      screenMat.polygonOffset=true; screenMat.polygonOffsetFactor=-2; screenMat.polygonOffsetUnits=-2;   // Screen vor die Glasfläche → kein Z-Fighting
-      screenMat.depthWrite=true; screenMat.needsUpdate=true;
-    }
-    // === ECHTE LIVE-APP als iframe auf dem Display (CSS3D, am Screen-Mesh verankert → folgt Aufklappen/Zoom) ===
-    if(screenMesh){
-      screenMesh.geometry.computeBoundingBox();
-      const bb=screenMesh.geometry.boundingBox, sz=new THREE.Vector3(); bb.getSize(sz);
-      const ctr=new THREE.Vector3(); bb.getCenter(ctr);
-      const dims=[['x',sz.x],['y',sz.y],['z',sz.z]].sort((a,b)=>a[1]-b[1]);
-      const normalAxis=dims[0][0];                 // dünnste Achse = Display-Normale
-      if(LIVE_SCREEN){
-      const host=document.createElement('div'); appHost=host;
-      host.style.cssText='width:1600px;height:1000px;overflow:hidden;background:#0a0c10;opacity:0;transition:opacity .5s ease';
-      appFrame=document.createElement('iframe');
-      appFrame.src='screen-app.html?v=pm3&lang='+(LANG==='de'?'de':'en');
-      appFrame.setAttribute('scrolling','no'); appFrame.setAttribute('tabindex','-1');
-      appFrame.style.cssText='width:1600px;height:1000px;border:0;display:block;background:#0a0c10;pointer-events:none';
-      // iframe lädt + seedet + reloadt intern → erst wenn die echte App da ist einblenden.
-      // Solange zeigt das statische Cockpit-PNG dahinter (fast identisch → nahtlos).
-      appFrame.addEventListener('load', ()=>{ lastView=null; setTimeout(()=>{ host.style.opacity='1'; lastView=null; if(ready) apply(); var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }, 600); });
-      host.appendChild(appFrame);
-      // Großflächige, weiche Display-Spiegelung — wandert beim Drehen (Update in apply()/Idle via updateGlare). Sehr dezent, blend „screen".
-      const glare=document.createElement('div'); appGlare=glare;
-      glare.style.cssText='position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;'
-        +'background:'
-          +'radial-gradient(135% 80% at var(--gx,30%) -12%, rgba(200,222,255,.18), rgba(200,222,255,.05) 38%, transparent 58%),'  /* kühle Sky-Reflexion oben */
-          +'linear-gradient(112deg, transparent 40%, rgba(255,255,255,.045) 47%, rgba(255,255,255,.13) 50%, rgba(255,255,255,.045) 53%, transparent 60%);'  /* breiter, weicher Glanzstreifen */
-        +'background-repeat:no-repeat;background-size:160% 130%, 280% 100%;background-position:var(--gx,30%) 0, var(--gb,50%) 0;'
-        +'transition:opacity .5s ease';
-      host.appendChild(glare);
-      const cssObj=new CSS3DObject(host); cssScreen=cssObj;
-      // Fläche entlang der zwei großen Achsen → px↦lokale Einheiten
-      const planeW = normalAxis==='x'? sz.z : sz.x;
-      const planeH = normalAxis==='y'? sz.z : sz.y;
-      cssObj.scale.set(planeW/1600, planeH/1000, 1);
-      cssObj.position.copy(ctr);
-      if(normalAxis==='y') cssObj.rotation.x=Math.PI/2;       // Display schaut zum Betrachter (nicht Rückseite)
-      else if(normalAxis==='x') cssObj.rotation.y=Math.PI/2;
-      screenMesh.add(cssObj);
-      css3dHost.style.display='block';
-      window.__css={ o:cssObj,
-        set:(q)=>{ ['px','py','pz'].forEach((k,i)=>{ if(q[k]!=null) cssObj.position.setComponent(i,q[k]); });
-          ['rx','ry','rz'].forEach((k)=>{ if(q[k]!=null) cssObj.rotation[k[1]]=q[k]; });
-          if(q.sx!=null)cssObj.scale.x=q.sx; if(q.sy!=null)cssObj.scale.y=q.sy; if(q.flip!=null)cssObj.scale.x=Math.abs(cssObj.scale.x)*(q.flip?-1:1);
-          renderer.render(scene,cam); css.render(scene,cam); },
-        info:()=>({sz:sz.toArray().map(v=>+v.toFixed(1)), normalAxis, pos:cssObj.position.toArray().map(v=>+v.toFixed(1)), rot:[cssObj.rotation.x,cssObj.rotation.y,cssObj.rotation.z].map(v=>+v.toFixed(3)), scale:cssObj.scale.toArray().map(v=>+v.toFixed(4))}) };
-      }   // Ende if(LIVE_SCREEN)
-    }
-    // Kontaktschatten EXAKT an der Laptop-Basis (statt geraten) — eng, weich, realistisch
-    const _mbb=new THREE.Box3().setFromObject(model), _mc=_mbb.getCenter(new THREE.Vector3());
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(TARGET*0.96, TARGET*0.56), new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, depthWrite:false, opacity:0.55 }));
-    shadow.rotation.x=-Math.PI/2; shadow.position.set(_mc.x, _mbb.min.y + TARGET*0.004, _mc.z + TARGET*0.05); macRoot.add(shadow);
-    // Aufklapp-Animation (wird beim Scrollen gescrubbt)
-    if (gltf.animations && gltf.animations.length){
-      mixer = new THREE.AnimationMixer(model); clip = gltf.animations[0];
-      const a = mixer.clipAction(clip); a.play();   // nicht pausen! sonst ignoriert setTime() den Clip
-    }
-    // MacBook geladen: smooth einblenden statt hartem Pop-in
-    macRoot.traverse(o=>{ if(o.isMesh && o.material){
-      const mats=Array.isArray(o.material)?o.material:[o.material];
-      mats.forEach(m=>{ m.transparent=true; m.opacity=0; m.needsUpdate=true; });
-    }});
-    let _fadeT=0; const _fadeStep=()=>{
-      _fadeT=Math.min(1,_fadeT+0.04);
-      const eas=_fadeT*_fadeT*(3-2*_fadeT); // smoothstep
-      macRoot.traverse(o=>{ if(o.isMesh&&o.material){
-        const mats=Array.isArray(o.material)?o.material:[o.material];
-        mats.forEach(m=>{ if(m.transparent) m.opacity=eas; });
-      }});
-      needsRender=true;
-      if(_fadeT<1) requestAnimationFrame(_fadeStep);
-      else { macRoot.traverse(o=>{ if(o.isMesh&&o.material){
-        const mats=Array.isArray(o.material)?o.material:[o.material];
-        mats.forEach(m=>{ m.transparent=false; m.opacity=1; m.needsUpdate=true; });
-      }});
-        var _pp=document.getElementById('mbPoster'); if(_pp) _pp.classList.add('gone'); }   // MacBook steht → Sofort-Poster sanft ausblenden (greift auch ohne Live-iframe)
-    };
-    requestAnimationFrame(_fadeStep);
-    ready = true; computeScreenTarget(); frameView(); apply();   // Screen-Ziel + Framing mit geladenem Modell
-    window.__mb = { setP:(v)=>{ p=v; apply(); renderer.render(scene,cam); },
-      info:()=>{ const L=model.getObjectByName('Bevels_2'); const w=L?Math.min(1,Math.abs(L.quaternion.w)):1;
-        return { p, mixerTime: mixer&&mixer.time, lidAngleDeg:(2*Math.acos(w)*180/Math.PI).toFixed(1) }; } };
-  }, undefined, (err)=>console.warn('GLB load failed', err));
-  }
-  // startMB läuft bereits ab dem ersten Scroll (bzw. 7s-Fallback) → GLB+iframe jetzt direkt nachladen.
-  loadMac();
-
-  // App-Screen (CSS3D) — Sichtbarkeit wird nach dem GLB-Laden gesetzt (oben, wenn screenMesh da ist)
-
-  let p = 0, openP = 0, raf = 0, running = false, animDir = -1, lastView = null, _rp = 0, _baseRotY = 0, needsRender = true;   // GLB-Clip: t=0 offen, t=dur zu → umkehren (Scroll öffnet)
-  const OPEN_T = 4.35;   // Sekunde im Clip, an der der Deckel weit offen ist (~115°, Peak 120° @ 4.54s) — kräftigere Auffalt-Geste
-  const START_T = 0.7;   // Deckel startet fast zu (~20°) → die Aufklapp-Bewegung ist viel deutlicher
-  const _lk = new THREE.Vector3();                 // wiederverwendeter Lerp-Vektor (Zoom-in-den-Screen)
-  let screenCenter = new THREE.Vector3(-150, 360, 0);   // Welt-Mittelpunkt des Displays (für Hinein-Zoom)
-  let screenDist = null;                            // Distanz, bei der das Display den Frame füllt
-  let presBox = null;   // Welt-Bounding-Box des Laptops in PRÄSENTATIONS-Drehung (-0.26) — einmal gemessen, auflösungsunabhängig
-  // Display anvisieren: Mittelpunkt + Fit-Distanz aus der Screen-Mesh-Box (offen)
-  function computeScreenTarget(){
-    if(!screenMesh) return;
-    const wasT = mixer && clip ? mixer.time : null;
-    if(mixer && clip) mixer.setTime(OPEN_T);
-    macRoot.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(screenMesh);
-    const c = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3());
-    screenCenter.copy(c);
-    const vFov = cam.fov*Math.PI/180;
-    const hFov = 2*Math.atan(Math.tan(vFov/2)*cam.aspect);
-    const fitH = (size.y/2)/Math.tan(vFov/2);
-    const fitW = (size.x/2)/Math.tan(hFov/2);
-    screenDist = Math.max(fitH, fitW) * 1.16;   // Display GROSS & lesbar (näher dran) — links bleibt nur noch wenig Rand für die Captions
-    if(wasT!=null && mixer && clip) mixer.setTime(wasT);
-  }
-  function apply(){
-    const mob = isMobile();
-    // Aufklappen: an den REINEN Scroll-Fortschritt p gekoppelt → bei Scroll 0 ist der Deckel zu (man sieht den Deckel), öffnet sich erst beim Scrollen, voll offen ab p≈0.42
-    const op = reduce ? 1 : Math.min(1, Math.max(0, (p-0.16))/0.30);   // öffnet ERST ab p=0.16 (wenn die Headline schon weg ist) → kein Überlappen mit dem Titel
-    const e = easeOut(op);
-    if (mixer && clip){ mixer.setTime(START_T + (OPEN_T-START_T)*e); }   // fast zu → weit offen
-    macRoot.scale.setScalar(0.96);   // feste Größe — der Zoom kommt durch die Kamera (Dolly)
-    // CHOREOGRAFIE: INTRO (frontal + zentriert, hebt sich & verdeckt die Jarvis-Headline) → PRÄSENTATION (nach rechts + nach AUSSEN gedreht) → ZOOM in den Screen
-    const introP = mob ? 0 : Math.max(0, Math.min(1, (0.30 - p)/0.30));   // Intro (zentriert, geschlossen) → rückt bis p=0.30 nach rechts in die Präsentation
-    const ie = easeOut(introP);
-    const zt = (reduce ? 0.14 : easeOut(Math.min(1, Math.max(0, (p-0.24)/0.52))));   // Hinein-Zoom startet nach dem Intro, erreicht den großen Screen früher
-    // Rotation: frontal (0) im Intro → nach AUSSEN gedreht in Präsentation (negativ = die andere Richtung als zuvor)
-    _baseRotY = mob ? 0.0 : (reduce ? -0.26 : (-0.26*(1-ie) - 0.10*p));   // dreht über den GANZEN Scroll langsam weiter → bewegt sich permanent, steht nie still
-    macRoot.rotation.y = _baseRotY;
-    macRoot.rotation.x = 0;
-    updateGlare(_baseRotY);
-    needsRender = true;
-    if(mob){
-      // Mobil: zentriert, Auto-Fit-Abstand — klappt beim Scrollen auf, nie angeschnitten
-      cam.position.copy(DIR).multiplyScalar(DIST0).add(LOOK); cam.lookAt(LOOK);
-    } else {
-      // PRÄSENTATION adaptiv: Distanz am SCREEN bemessen (nicht am ganzen Laptop) → lesbarer Screen IMMER komplett & außerhalb des Feathers;
-      // nur Rahmen/Tastatur dürfen in den weichen Auslauf laufen. Bühne füllt jetzt das VOLLE Fenster → Laptop wird groß & ist mittig.
-      const tanV = Math.tan(cam.fov*Math.PI/360);   // halbes vertikales FOV
-      const tanH = tanV * cam.aspect;               // halbes horizontales FOV (live Fenster-Aspect)
-      const MsV = 0.62, MxH = 0.86, TX = 0.30;      // MacBook wieder ~20% größer (Screen füllt ~62% der Höhe), klar rechts versetzt → links Platz für die Tiles, keine Überlappung
-      let presDist, presCx, presCy;
-      if(presBox && presBox.shh){
-        presDist = Math.max(presBox.shh/(MsV*tanV), presBox.hw/((MxH-TX)*tanH));   // vertikal: Screen sicher; horizontal: Laptop-Körper darf an die Feather-Kante
-        presCx = presBox.scx; presCy = presBox.scy;                               // Ziel = Screen-Mitte (gedreht)
-      } else if(presBox){
-        presDist = Math.max(presBox.hh/(0.98*tanV), presBox.hw/((MxH-TX)*tanH));
-        presCx = presBox.cx; presCy = presBox.cy;
-      } else { presDist = DIST0*1.06; presCx = -150; presCy = 360; }
-      const introDist = presDist * 0.82;   // Intro: geschlossener Laptop in schöner GROSSER Größe & zentriert (Deckel klar sichtbar); beim Scrollen klappt er auf UND rückt kleiner nach rechts in die Präsentation
-      const dist = (introDist*ie + presDist*(1-ie)) * (1 - 0.045*p);   // zoomt über den ganzen Scroll minimal weiter rein → permanente Bewegung
-      // Intro zielt auf die FRONTALE Screen-Mitte (scx0) → startet EXAKT zentriert; Präsentation auf die gedrehte Mitte minus Rechts-Versatz (TX)
-      const introX = (presBox && presBox.scx0!=null) ? presBox.scx0 : presCx;
-      const presX  = presCx - TX*dist*tanH;
-      _lk.set( introX*ie + presX*(1-ie), presCy, 0 );
-      cam.position.copy(DIR).multiplyScalar(dist).add(_lk); cam.lookAt(_lk);
-    }
-    // Kopf (Headline+Punkte+CTA) faded aus. Bühne füllt jetzt das volle Fenster → der Laptop ist von Haus aus mittig.
-    // Im INTRO (Headline sichtbar) schieben wir den Laptop nach UNTEN, damit er unter der Headline sitzt; sobald die Headline weg ist, steht er zentriert.
-    let downShift = 0;
-    if(mbHead){
-      const headP = mob ? 1 : Math.max(0, Math.min(1, (0.18 - p)/0.10));   // Headline faded SCHNELL p≈0.08→0.18 — komplett weg, BEVOR der MacBook aufklappt (kein Überlappen)
-      const hsmooth = headP*headP*(3-2*headP);
-      mbHead.style.opacity = hsmooth.toFixed(3);
-      mbHead.style.transform = mob ? '' : ('translateY('+(-(1-hsmooth)*64).toFixed(1)+'px)');
-      mbHead.style.pointerEvents = hsmooth<0.5 ? 'none' : '';
-      // Intro: Laptop GROSS & tief — Basis unter dem Fold, nur der obere Screen-Rand lugt hoch & überdeckt den Titel-Boden.
-      // Auf KURZEN Fenstern extra nach unten, damit der (kompaktere) Titel komplett über dem Laptop bleibt — nie überdeckt.
-      // Beim Scrollen (hsmooth 1→0) steigt er auf, klappt weiter aus und kommt voll ins Bild.
-      downShift = mob ? 0 : hsmooth * (innerHeight * 0.10 + Math.max(0, 800 - innerHeight) * 0.42);
-    }
-    // Overline über dem Laptop: blendet ein, sobald die Headline weg ist (Präsentation)
-    if(mbOver){ const op=Math.max(0,Math.min(1,(p-0.30)/0.12)); mbOver.style.opacity=(mob?0:op*op*(3-2*op)).toFixed(3); }   // Overline kommt ERST in der Präsentation (Headline längst weg)
-    const tf = downShift ? ('translateY('+downShift.toFixed(1)+'px)') : '';
-    if(canvas) canvas.style.transform = tf;
-    if(css3dHost) css3dHost.style.transform = tf;
-    if(mbCaps) mbCaps.style.transform = 'translateY(-50%)';
-    // Captions/Feature-Tour laufen schon WÄHREND der Bewegung 1.→2. Position nebenher (früher Start)
-    const s2=0.30, e2=1.0, fp=Math.min(0.9999,Math.max(0,(p-s2)/(e2-s2)));   // Tiles laufen erst in der Präsentation (ab p=0.30, nach Header-Fade + Aufklappen) → kein Überlappen
-    const fi=(!mob && p<s2) ? -1 : Math.min(feats.length-1, Math.floor(fp*feats.length));
-    setFeat(fi);
-    // Scroll steuert die ECHTE App im Display: der Screen schaltet sofort auf die passende View um (Crossfade in der Textur)
-    const VIEWS=['overview','map','backup','dupes','search'];
-    const wantView=VIEWS[Math.max(0, Math.min(VIEWS.length-1, fi))];
-    if(wantView!==lastView){ lastView=wantView; if(setScreenView){ setScreenView(wantView); needsRender=true; } }
-  }
-  // ── „Find any project"-Demo: tippt automatisch Projektnamen in die Deep Search des iframes + erzwingt Repaint ──
-  let _sd=null;
-  function stopSearchDemo(){ if(_sd){ _sd.stop=true; clearTimeout(_sd.t); clearInterval(_sd.rp); _sd=null; if(appFrame) appFrame.style.opacity='1'; needsRender=true; } }
-  function startSearchDemo(){
-    stopSearchDemo();
-    const st=_sd={stop:false,t:0,rp:0}, queries=['Wedding','Doku Nordsee','Berlin']; let qi=0;
-    // Kontinuierlicher, unsichtbarer Opacity-Toggle → erzwingt den CSS3D-Recomposite die GANZE Demo über, sonst friert das Tippen im Composite ein
-    let _rn=0; st.rp=setInterval(()=>{ if(appFrame){ _rn^=1; appFrame.style.opacity=_rn?'0.997':'1'; } needsRender=true; }, 55);
-    const dw=()=> (appFrame && appFrame.contentDocument && appFrame.contentWindow) ? [appFrame.contentDocument, appFrame.contentWindow] : null;
-    const setVal=(el,val,win)=>{ el.value=val; el.dispatchEvent(new win.Event('input',{bubbles:true})); needsRender=true; };
-    function type(text,done){ if(st.stop) return; const d=dw(); if(!d){ st.t=setTimeout(()=>type(text,done),250); return; }
-      const pill=d[0].querySelector('.deep-pill[data-mode="all"]'); if(pill && !pill.classList.contains('on')) pill.click();
-      let i=0; (function step(){ if(st.stop) return; const d2=dw(); if(!d2){ return; } const el=d2[0].getElementById('deepQ'); if(!el){ st.t=setTimeout(step,200); return; }
-        setVal(el, text.slice(0,i), d2[1]);
-        if(i++<text.length) st.t=setTimeout(step, 95+Math.random()*75); else st.t=setTimeout(done, 1700); })();
-    }
-    function cycle(){ if(st.stop) return; type(queries[qi%queries.length], ()=>{ if(st.stop) return;
-      const d=dw(); if(d){ const el=d[0].getElementById('deepQ'); if(el) setVal(el,'',d[1]); } qi++; st.t=setTimeout(cycle, 650); }); }
-    st.t=setTimeout(cycle, 600);
-  }
-  function resize(){
-    const w=W0(), h=H0();
-    renderer.setSize(w,h,false); css.setSize(w,h);
-    cam.aspect=w/h; cam.updateProjectionMatrix();
-    computeScreenTarget();   // Screen-Ziel an neuen Aspect anpassen
-    frameView();             // Framing neu berechnen (Desktop ⇄ Mobil-Auto-Fit, abhängig von Breite/Aspect)
-    needsRender=true;
-  }
-  resize();
-  // PERFORMANCE: nur rendern, wenn sich was ändert (Scroll/Resize/Laden) — kein 60fps-Dauerrendern im Leerlauf.
-  // Das Live-iframe animiert (Uhr/Atom) als eigene DOM-Ebene von selbst weiter, auch ohne Re-Render.
-  let _lastIdle=0, _lastScreen=0;
-  function frame(){
-    const r=sec.getBoundingClientRect();
-    const inView = r.bottom>-200 && r.top<innerHeight+200;
-    if(!inView && _sd){ stopSearchDemo(); lastView=null; }   // außer Sicht: Tipp-Demo stoppen, beim Wiederkommen neu auslösen
-    const now=performance.now();
-    // Screen-Textur neu zeichnen: (a) während eines View-Wechsels (Crossfade — auch bei reduced-motion), (b) für die Atom-Animation (nur wenn Bewegung erlaubt). Sehr günstig: Canvas + 1 Texture-Upload, max ~30fps.
-    const _sBusy = screenBusy && screenBusy();
-    if(drawScreen && inView && (_sBusy || (_idleOK && !isMobile())) && now-_lastScreen>(_sBusy?28:80)){ _lastScreen=now; drawScreen(now*0.001); needsRender=true; }
-    if(inView && _idleOK && !isMobile() && macRoot && now-_lastIdle>40){
-      // SANFTE DAUERBEWEGUNG: der Laptop atmet leicht weiter — jetzt NUR WebGL (kein iframe/CSS3D mehr) → sehr günstig. ~25fps gedrosselt.
-      _lastIdle=now; const t=now/1000;
-      macRoot.rotation.y=_baseRotY + Math.sin(t*0.5)*0.021;
-      macRoot.rotation.x=Math.sin(t*0.37+1.2)*0.011;
-      updateGlare(macRoot.rotation.y);
-      renderer.render(scene,cam); if(cssScreen) css.render(scene,cam); needsRender=false;
-    } else if(needsRender){
-      if(inView){ renderer.render(scene,cam); if(cssScreen) css.render(scene,cam); }
-      needsRender=false;
-    }
-    raf=requestAnimationFrame(frame);
-  }
-
-  function _computeScroll(){
-    const r=sec.getBoundingClientRect(); const total=sec.offsetHeight-innerHeight;
-    p = total>0 ? Math.min(1,Math.max(0,(-r.top)/total)) : 0;   // Pinned-Fortschritt (Captions + Dolly-Zoom)
-    // Öffnungs-Fortschritt inkl. Eintritt → Laptop öffnet DURCHGEHEND ab Auftauchen, keine statische Phase
-    const span = innerHeight + (total>0?total:0);
-    openP = Math.min(1, Math.max(0, (innerHeight - r.top) / span));
-    apply();
-  }
-  // rAF-gedrosselt: viele Scroll-Events werden zu MAX. EINEM apply() pro Frame zusammengefasst → flüssig, kein Mehrfach-Rechnen pro Frame
-  let _sRaf=0;
-  function onScroll(){ if(_sRaf) return; _sRaf=requestAnimationFrame(()=>{ _sRaf=0; _computeScroll(); }); }
-  // Handshake: sobald die Live-App im iframe bereit ist → einblenden + die aktuelle Ansicht zuverlässig setzen
-  addEventListener('message', (e)=>{ if(e&&e.data&&e.data.diskyReady){ if(appHost) appHost.style.opacity='1'; lastView=null; if(ready) apply(); needsRender=true; } });
-  addEventListener('scroll', onScroll, {passive:true});
-  addEventListener('resize', ()=>{ resize(); _computeScroll(); });
-  _computeScroll(); apply();
-  frame();   // Render-Loop läuft durchgehend (rendert nur nah am Viewport)
+ en:{
+  meta_title:"Disky — See inside sealed drives.",
+  meta_desc:"Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.",
+  nav_features:"Features",nav_privacy:"Privacy",nav_pricing:"Pricing",nav_dl:"Download",
+  hero_eb:"Disky for Mac",hero_l1:"See inside",hero_l2:"sealed drives.",
+  hero_sub:"Index each external drive once. From then on you search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer.",
+  cta_dl:"Download for Mac — free to start",cta_how:"See it find a file in seconds ›",
+  soon:"Coming soon for Mac",soon_short:"Coming soon",
+  trustline:"Free to start · macOS, Apple Silicon · No account · 100% local · Read-only",
+  hs_q:"wedding tegernsee",hs_tag:"in the drawer",
+  t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No account",t5:"Works offline",
+  live_off:"Live — try it",live_on:"You're live",live_hint:"You're driving the real app — scroll up to continue the tour.",
+  caps:[
+   {eb:"Index once",h:"Plug in a drive once. Never again to search.",p:"Each drive gets read a single time, then lives in your catalog forever. Every search after that touches nothing physical — no mounting, no eject-and-repeat, no wear. Type a name and Disky returns the exact drive and the exact path before you've reached for a cable.",pr:"Search 1M+ files across 22+ drives in seconds — every disk in the drawer"},
+   {eb:"Deep Search",h:"Find the shot you can't name.",p:"Type “underwater” and every clip with water surfaces — even the ones misnamed DJI_0423. The model reads what's inside the frame, not the filename, and it runs entirely on your Mac. Badly named footage stops hiding across all your drives at once.",pr:"On-device AI · 0 bytes uploaded · 100% local"},
+   {eb:"Storage Map",h:"See exactly what's eating your drives.",p:"Every folder becomes a ring, sized by what it weighs. One look tells you what's huge and what's hiding — then the Cleanup Assistant flags the expendable: render cache, proxies, duplicates. Read-only by design, so nothing goes until you release it yourself.",pr:"Reclaim estimates to the gigabyte — Disky reads, you decide"},
+   {eb:"Project Manager",h:"Know what's unprotected before a drive dies.",p:"Every project sorts itself into backed-up, partial, or needs-backup. The single-copy job on a live drive that's about to fail surfaces now — while the footage is still recoverable, not after you find out the hard way.",pr:"44 GB flagged unprotected in a typical first scan"},
+   {eb:"Duplicate Finder",h:"Stop paying to store the same file twice.",p:"Disky matches files by checksum, not by name, so renamed and moved copies can't hide across drives. You see the exact space you'd reclaim before you touch a thing — then release it yourself.",pr:"80.4 GB reclaimable across 5 duplicate groups"},
+   {eb:"Worldmap",h:"See everywhere you've ever shot.",p:"Disky reads the GPS buried in your footage and plots a quiet, glowing map of every location — including drives you haven't opened in years. Your whole body of work, drawn from disks still in the drawer, seen at once.",pr:"Pulled straight from embedded metadata — read-only, never moved"}
+  ],
+  pv_h:"Your work never leaves your Mac.",pv_sub:"No cloud, no account, no upload. The content-search AI runs on-device, and Disky only ever reads your drives — it never moves, renames, or deletes a thing.",
+  pm1_t:"On-device",pm1_d:"The AI runs locally — nothing uploaded.",pm2_t:"Read-only",pm2_d:"Never moves, renames, or deletes a file.",pm3_t:"No account",pm3_d:"No sign-up, no cloud, no recurring bill.",
+  pr_h:"Free to start. Yours to keep.",pr_sub:"A one-time Mac app — not a subscription, not a cloud login. Catalog your first drives free; own it for good.",
+  sp1:"Platform",sp2:"Intelligence",sp2v:"On-device",sp3:"License",sp3v:"One-time",sp4:"Network",sp4v:"Works offline",
+  faq_h:"Questions, answered.",
+  end_h:"Stop digging through the drawer.",end_sub:"Index your drives once. Find anything across all of them in seconds — unplugged, on your Mac, yours alone.",
+  foot_legal:"Legal",
+  faq:[
+   ["Do I have to plug in my drives to search?","No — that's the whole point. You index each drive once. After that, every filename, folder, and project lives in Disky and stays searchable while the disk sits unplugged in the drawer. Disky names the exact drive and the exact path without mounting anything."],
+   ["Is my footage uploaded anywhere?","Never. Disky runs 100% on your Mac. The content-search AI is on-device — nothing is uploaded, nothing leaves the machine, and there's no account to create."],
+   ["Can Disky change or delete files on my drives?","No. Disky is strictly read-only. It catalogs, maps, and flags what you could reclaim, but it never moves, renames, or deletes anything. You release space yourself, in Finder — Disky only shows you the gigabytes and waits."],
+   ["How does the content search actually work?","Disky reads what's in your clips and photos, so you can search by what the footage shows — type “underwater” and it surfaces every clip with water, across all drives, even ones unplugged and misnamed. The model runs on-device."],
+   ["How does it find duplicates if files are renamed?","By checksum, not filename. Disky compares files byte-for-byte, so identical footage is caught even after it's renamed or moved between drives — then shows the exact space you'd reclaim (80.4 GB across 5 groups in the example)."],
+   ["Is it a subscription?","No. Disky is free to start and a one-time Mac app — yours to keep. No account, no recurring bill, no cloud lock-in."],
+   ["How many drives can it handle?","It's built for walls of drives — 10 to 22 and beyond. Over a million files across multiple drives stays searchable in seconds."]
+  ]
+ },
+ de:{
+  meta_title:"Disky — Schau in versiegelte Platten.",
+  meta_desc:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt. Native Mac-App. 100% lokal.",
+  nav_features:"Features",nav_privacy:"Privatsphäre",nav_pricing:"Preise",nav_dl:"Laden",
+  hero_eb:"Disky für Mac",hero_l1:"Schau in",hero_l2:"versiegelte Platten.",
+  hero_sub:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt.",
+  cta_dl:"Für Mac laden — kostenlos starten",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
+  soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
+  trustline:"Kostenlos starten · macOS, Apple Silicon · Kein Konto · 100% lokal · Nur-Lesen",
+  hs_q:"hochzeit tegernsee",hs_tag:"im Schrank",
+  t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Konto",t5:"Offline-fähig",
+  live_off:"Live — ausprobieren",live_on:"Du bist live",live_hint:"Du steuerst die echte App — scroll nach oben für die Tour.",
+  caps:[
+   {eb:"Einmal indexieren",h:"Eine Platte einmal anstecken. Zum Suchen nie wieder.",p:"Jede Platte wird ein einziges Mal gelesen und lebt danach für immer in deinem Katalog. Jede Suche danach fasst nichts Physisches an — kein Mounten, kein Auswerfen-und-wieder, kein Verschleiß. Tippe einen Namen, und Disky liefert die exakte Platte und den exakten Pfad, bevor du nach einem Kabel greifst.",pr:"1 Mio.+ Dateien über 22+ Platten in Sekunden — jede Disk in der Schublade"},
+   {eb:"Deep Search",h:"Finde die Aufnahme, die du nicht benennen kannst.",p:"Tippe „unter Wasser“, und jeder Clip mit Wasser taucht auf — auch die, die DJI_0423 heißen. Das Modell liest, was im Bild steckt, nicht den Dateinamen, und läuft komplett auf deinem Mac. Schlecht benanntes Material kann sich über alle Platten hinweg nicht mehr verstecken.",pr:"KI on-device · 0 Byte hochgeladen · 100% lokal"},
+   {eb:"Storage Map",h:"Sieh genau, was deine Platten auffrisst.",p:"Jeder Ordner wird zum Ring, skaliert nach seinem Gewicht. Ein Blick zeigt, was riesig ist und was sich versteckt — dann markiert der Cleanup-Assistent das Entbehrliche: Render-Cache, Proxys, Duplikate. Nur-Lesen by Design, also geht nichts, bis du es selbst freigibst.",pr:"Freigabe-Schätzungen aufs Gigabyte genau — Disky liest, du entscheidest"},
+   {eb:"Project Manager",h:"Wisse, was ungesichert ist, bevor eine Platte stirbt.",p:"Jedes Projekt sortiert sich selbst in gesichert, teilweise oder Backup nötig. Der Single-Copy-Job auf einer laufenden Platte, die kurz vorm Ausfall steht, taucht jetzt auf — solange das Material noch zu retten ist, nicht erst, wenn du es auf die harte Tour erfährst.",pr:"44 GB beim ersten Scan typischerweise als ungesichert markiert"},
+   {eb:"Duplicate Finder",h:"Schluss damit, dieselbe Datei zweimal zu speichern.",p:"Disky gleicht Dateien per Prüfsumme ab, nicht per Name — umbenannte und verschobene Kopien können sich über Platten hinweg nicht verstecken. Du siehst den exakten Platz, den du zurückgewinnst, bevor du irgendetwas anfasst — und gibst ihn selbst frei.",pr:"80,4 GB rückgewinnbar über 5 Duplikat-Gruppen"},
+   {eb:"Worldmap",h:"Sieh überall, wo du je gedreht hast.",p:"Disky liest die GPS-Daten, die in deinem Material stecken, und zeichnet eine stille, leuchtende Karte jedes Orts — auch von Platten, die du seit Jahren nicht geöffnet hast. Dein ganzes Werk, gezeichnet aus Disks, die in der Schublade liegen, auf einen Blick.",pr:"Direkt aus eingebetteten Metadaten — nur gelesen, nie bewegt"}
+  ],
+  pv_h:"Deine Arbeit verlässt nie deinen Mac.",pv_sub:"Keine Cloud, kein Konto, kein Upload. Die Inhalts-KI läuft on-device, und Disky liest deine Platten nur — es verschiebt, benennt oder löscht nie etwas.",
+  pm1_t:"On-device",pm1_d:"Die KI läuft lokal — nichts wird hochgeladen.",pm2_t:"Nur-Lesen",pm2_d:"Verschiebt, benennt, löscht nie eine Datei.",pm3_t:"Kein Konto",pm3_d:"Keine Anmeldung, keine Cloud, keine Abo-Rechnung.",
+  pr_h:"Kostenlos starten. Dir gehörend.",pr_sub:"Eine einmalige Mac-App — kein Abo, kein Cloud-Login. Katalogisiere deine ersten Platten gratis; behalte sie für immer.",
+  sp1:"Plattform",sp2:"Intelligenz",sp2v:"On-device",sp3:"Lizenz",sp3v:"Einmalig",sp4:"Netzwerk",sp4v:"Offline-fähig",
+  faq_h:"Fragen, beantwortet.",
+  end_h:"Hör auf, die Schublade zu durchwühlen.",end_sub:"Deine Platten einmal indexieren. Alles über alle hinweg in Sekunden finden — ungesteckt, auf deinem Mac, dir allein.",
+  foot_legal:"Rechtliches",
+  faq:[
+   ["Muss ich meine Platten anstecken, um zu suchen?","Nein — genau das ist der Punkt. Du katalogisierst jede Platte einmal. Danach liegt jeder Dateiname, Ordner und jedes Projekt in Disky und bleibt durchsuchbar, während die Disk ungesteckt in der Schublade liegt. Disky nennt dir die exakte Platte und den exakten Pfad, ohne etwas zu mounten."],
+   ["Wird mein Material irgendwo hochgeladen?","Nie. Disky läuft zu 100% auf deinem Mac. Die Inhalts-KI ist on-device — nichts wird hochgeladen, nichts verlässt die Maschine, und es gibt kein Konto anzulegen."],
+   ["Kann Disky Dateien auf meinen Platten ändern oder löschen?","Nein. Disky ist strikt nur-lesend. Es katalogisiert, kartiert und markiert, was du freiräumen könntest — aber es verschiebt, benennt oder löscht nie etwas. Du gibst Platz selbst frei, im Finder. Disky zeigt dir nur die Gigabyte und wartet."],
+   ["Wie funktioniert die Inhalts-Suche eigentlich?","Disky liest, was in deinen Clips und Fotos ist — du suchst nach dem, was das Material zeigt. Tippe „unter Wasser“ und es findet jeden Clip mit Wasser, über alle Platten, selbst ungesteckte und falsch benannte. Das Modell läuft on-device."],
+   ["Wie findet es Duplikate, wenn Dateien umbenannt sind?","Per Prüfsumme, nicht per Name. Disky vergleicht Dateien Byte für Byte — identisches Material wird erkannt, selbst nach Umbenennen oder Verschieben zwischen Platten — und zeigt dann den genauen Platz, den du zurückbekommst (im Beispiel 80,4 GB über 5 Gruppen)."],
+   ["Ist es ein Abo?","Nein. Disky ist kostenlos zum Starten und eine einmalige Mac-App — dir gehörend. Kein Konto, keine wiederkehrende Rechnung, kein Cloud-Zwang."],
+   ["Wie viele Platten verkraftet es?","Es ist für Regale voller Platten gebaut — 10 bis 22 und mehr. Über eine Million Dateien über mehrere Platten bleiben in Sekunden durchsuchbar."]
+  ]
  }
- // MacBook ist der Hero → nach dem ersten Paint laden. ABER nur auf fähigen Geräten (kein LITE) — sonst bleibt das Sofort-Poster stehen.
- if(!window.__LITE){
-   addEventListener('scroll', startMB, {once:true, passive:true});
-   if('requestIdleCallback' in window) requestIdleCallback(startMB, {timeout:500}); else setTimeout(startMB, 350);
- }
+};
+const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+let LANG=(store.get('diskyLang')||(navigator.language||'en').slice(0,2)); if(LANG!=='de')LANG='en';
+function tt(k){return (I18N[LANG]&&I18N[LANG][k])!=null?I18N[LANG][k]:(I18N.en[k]||k);}
+function renderCaps(){
+  document.querySelectorAll('#caps .cap').forEach((el,i)=>{ const c=(I18N[LANG].caps||I18N.en.caps)[i]; if(!c)return;
+    el.querySelector('.eyebrow').textContent=c.eb; el.querySelector('h2').textContent=c.h; el.querySelector('p').textContent=c.p; el.querySelector('.proof').textContent=c.pr; });
 }
-</script>
-<script>
-/* Funkelnde Sterne — kleine, dezent schimmernde Punkte hinter dem Inhalt (wie in der App) */
-(function(){
-  var cv=document.getElementById('stars'); if(!cv) return; var ctx=cv.getContext('2d'); if(!ctx) return;
-  var dpr=Math.min(2,window.devicePixelRatio||1), w=0,h=0, stars=[], tk=0, raf=0;
-  var reduce=(location.search.indexOf('still')!==-1) || !!window.__LITE;   // Sterne funkeln standardmäßig; statisch bei ?still=1 ODER LITE-Gerät (einmal zeichnen, keine Dauerschleife)
-  function spawn(){ var n=Math.max(60,Math.min(240, Math.round(w*h/9000))); stars=[];
-    for(var i=0;i<n;i++) stars.push([Math.random()*w, Math.random()*h, Math.random()*6.283, (Math.random()<0.32?1.7:0.9)+Math.random()*0.5, 0.25+Math.random()*0.55]); }
-  function resize(){ w=innerWidth; h=innerHeight; cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); spawn(); }
-  function draw(){ tk++; ctx.clearRect(0,0,w,h);
-    for(var i=0;i<stars.length;i++){ var s=stars[i]; var tw=0.5+0.5*Math.sin(tk*0.03+s[2]);
-      ctx.globalAlpha=Math.min(1, s[4]*(0.35+0.65*tw)); ctx.fillStyle='#cfe6ff';
-      var r=s[3]*(0.7+0.5*tw); ctx.beginPath(); ctx.arc(s[0],s[1],r,0,6.283); ctx.fill(); }
-    ctx.globalAlpha=1; if(!reduce && !document.hidden) raf=requestAnimationFrame(draw); }
-  resize(); addEventListener('resize',function(){ cancelAnimationFrame(raf); resize(); draw(); }); draw();
-  document.addEventListener('visibilitychange',function(){ if(!document.hidden && !reduce){ cancelAnimationFrame(raf); draw(); } });
+function renderFAQ(){ const el=document.getElementById('faqlist'); if(!el)return;
+  el.innerHTML=(I18N[LANG].faq||I18N.en.faq).map(([q,a])=>`<details class="qa"><summary>${q}<span class="plus"></span></summary><div class="a">${a}</div></details>`).join(''); }
+function applyLang(l){
+  if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
+  document.title=tt('meta_title'); const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute('content',tt('meta_desc'));
+  document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
+  // live toggle label respects interactive state
+  const lt=document.getElementById('liveToggle'); if(lt) lt.querySelector('span').textContent=tt(document.getElementById('display').classList.contains('interactive')?'live_on':'live_off');
+  renderCaps(); renderFAQ();
+  document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
+}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
+applyLang();
+
+/* nav blur */
+const nav=document.getElementById('nav');
+const navState=()=>nav.classList.toggle('scrolled',scrollY>20);
+addEventListener('scroll',navState,{passive:true}); navState();
+
+/* reveal */
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.12});
+document.querySelectorAll('.rev').forEach(e=>io.observe(e));
+
+/* hero search resolve */
+setTimeout(()=>{const r=document.getElementById('hsRes');if(r)r.classList.add('in');},900);
+
+/* ─────────── smooth scroll (Lenis) ─────────── */
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let lenisInst=null;
+function glideTo(target,offset){ // unified scroll that respects Lenis if active
+  if(lenisInst){ lenisInst.scrollTo(target,{offset:offset||0,duration:1.1}); }
+  else{ const y=(typeof target==='number')?target:(scrollY+target.getBoundingClientRect().top+(offset||0)); scrollTo({top:y,behavior:reduced?'auto':'smooth'}); }
+}
+(function loadLenis(){
+  if(reduced) return;
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';
+  s.onload=()=>{ try{
+    lenisInst=new Lenis({lerp:0.085,wheelMultiplier:1,smoothWheel:true});
+    function raf(t){lenisInst.raf(t);requestAnimationFrame(raf);} requestAnimationFrame(raf);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+      const id=a.getAttribute('href'); if(id.length<2)return; const el=document.querySelector(id); if(!el)return;
+      e.preventDefault(); glideTo(el,-72);
+    }));
+  }catch(e){} };
+  s.onerror=()=>{}; // offline → native scroll, page still works
+  document.head.appendChild(s);
 })();
+
+/* ─────────── live app embed + scroll story ─────────── */
+const VIEWS=['overview','search','map','backup','dupes','worldmap'];
+const display=document.getElementById('display'), frame=document.getElementById('appFrame'),
+      scrim=document.getElementById('scrim'), caps=[...document.querySelectorAll('#caps .cap')],
+      dotsWrap=document.getElementById('dots'), liveToggle=document.getElementById('liveToggle');
+let APPW=null, appReady=false, curStep=-1, interactive=false, inView=false;
+
+// dots
+caps.forEach((_,i)=>{ const b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Step '+(i+1));
+  b.onclick=()=>{ const rail=document.getElementById('rail'); const top=scrollY+rail.getBoundingClientRect().top;
+    const span=rail.offsetHeight-innerHeight; glideTo(top+span*((i+0.35)/VIEWS.length)); };
+  dotsWrap.appendChild(b); });
+const dotEls=[...dotsWrap.children];
+
+// scale the live app to fit the display
+function fitApp(){ const w=display.querySelector('.display-screen').clientWidth; frame.style.transform='scale('+(w/1320)+')'; }
+addEventListener('resize',fitApp);
+
+// shared localStorage (same origin) → app skips onboarding & matches language
+store.set('disky_onboarded','1'); store.set('disky_lang',LANG);
+
+async function seedAndStart(){
+  APPW=frame.contentWindow;
+  const t0=Date.now();
+  while((typeof APPW.addDrive!=='function' || !(()=>{try{APPW.tx(['drives'],'readonly');return true;}catch(e){return false;}})()) && Date.now()-t0<15000){ await new Promise(r=>setTimeout(r,50)); }
+  try{ if(window.diskySeedDemo) await window.diskySeedDemo(APPW); }catch(e){}
+  try{ APPW.document.body.classList.remove('booting'); const a=APPW.document.getElementById('app'); if(a)a.classList.remove('boot-in'); }catch(e){}
+  appReady=true; fitApp();
+  applyView(curStep<0?0:curStep,true);
+  setTimeout(()=>scrim.classList.add('gone'),260);
+}
+function applyView(step,force){
+  if(!appReady||(!force&&step===curStep))return; curStep=step;
+  dotEls.forEach((d,i)=>d.classList.toggle('on',i===step));
+  caps.forEach((c,i)=>c.classList.toggle('on',i===step));
+  if(interactive)return; // user is driving — don't override
+  const v=VIEWS[step]; try{ APPW.setView&&APPW.setView(v);
+    if(v==='search'){ setTimeout(()=>{ try{ const d=APPW.document; const pill=d.querySelector('.deep-pill[data-mode="all"]'); if(pill)pill.click();
+      const inp=d.getElementById('deepQ'); if(inp){ inp.value='Footage'; inp.dispatchEvent(new APPW.Event('input',{bubbles:true})); } }catch(e){} },140); }
+  }catch(e){}
+}
+// pause the app's starfield rAF when the showcase is off-screen → protects page smoothness
+function setAppActive(on){ try{ if(APPW) APPW._animActive=on; }catch(e){} }
+
+// load the iframe only when the showcase approaches (keeps initial paint light & smooth)
+const railSec=document.getElementById('features');
+const preIO=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting && !frame.src){ frame.src='/app/index.html'; frame.addEventListener('load',seedAndStart,{once:true}); preIO.disconnect(); } }); },{rootMargin:'600px 0px'});
+preIO.observe(railSec);
+
+// in-view tracking for the sticky stage
+const viewIO=new IntersectionObserver((es)=>{ es.forEach(e=>{ inView=e.isIntersecting; setAppActive(inView); }); },{threshold:.01});
+viewIO.observe(document.querySelector('.show-sticky'));
+
+// scroll → step
+let raf=0;
+function onScroll(){ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
+  const rail=document.getElementById('rail'); const r=rail.getBoundingClientRect();
+  const span=rail.offsetHeight-innerHeight; if(span<=0)return;
+  const prog=Math.min(1,Math.max(0,(-r.top)/span));
+  let step=Math.floor(prog*VIEWS.length); step=Math.max(0,Math.min(VIEWS.length-1,step));
+  if(step!==curStep) applyView(step);
+}); }
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+// live toggle — flip the real app to interactive
+liveToggle.addEventListener('click',()=>{ interactive=!interactive; display.classList.toggle('interactive',interactive);
+  liveToggle.querySelector('span').textContent=tt(interactive?'live_on':'live_off');
+  if(interactive){ setAppActive(true); } });
+// leaving the showcase resets interactive mode so the story resumes cleanly
+viewIO && document.addEventListener('visibilitychange',()=>{});
+new IntersectionObserver((es)=>{ es.forEach(e=>{ if(!e.isIntersecting && interactive){ interactive=false; display.classList.remove('interactive'); liveToggle.querySelector('span').textContent=tt('live_off'); } }); },{threshold:0}).observe(document.querySelector('.show-sticky'));
 </script>
-</body></html>
+</body>
+</html>
