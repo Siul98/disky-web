@@ -37,8 +37,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 
 /* fan of drives (hand of cards) */
 .stage{position:absolute;inset:0;z-index:2}
-.fan{position:absolute;left:50%;bottom:46px;width:0;height:0}
-.fcard{position:absolute;left:0;bottom:0;width:272px;height:182px;margin-left:-136px;transform-origin:50% 100%;will-change:transform,opacity}
+.fan{position:absolute;left:50%;bottom:150px;width:0;height:0}
+.fcard{position:absolute;left:0;bottom:0;width:268px;height:180px;margin-left:-134px;transform-origin:50% 72%;will-change:transform,opacity}
 .fcard.ph svg{display:block;width:100%;height:100%;filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
 .t9c{z-index:2}
 .dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
@@ -114,7 +114,8 @@ const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t
   h+=`<span style="top:${y}%;left:${x}px;width:${s}px;height:${s}px;animation-delay:${d}s"></span>`;} scanline.insertAdjacentHTML('beforeend',h);})();
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
-const FAN=13;
+// sauberer Karten-Fächer: jede Karte horizontal versetzt + leicht gedreht, in einem Bogen
+function fanT(i){ return `translateX(${i*112}px) translateY(${Math.abs(i)*30}px) rotate(${i*9}deg)`; }
 function apply(p){
   const lift=ease(clamp(p/0.62));        // T9 fährt hoch in die Mitte
   const scan=clamp((p-0.42)/0.5);        // Scan + X-ray
@@ -122,13 +123,13 @@ function apply(p){
   cards.forEach(c=>{
     const i=+c.dataset.i;
     if(i===0){
-      const ty=-270*lift, sc=1+0.36*lift;            // bis in die Bildmitte, ÜBER die Headline
-      c.style.transform=`rotate(0deg) translateY(${ty}px) scale(${sc})`;
+      const ty=-250*lift, sc=1+0.36*lift;            // fährt aus der Fächer-Mitte hoch über die Headline
+      c.style.transform=`translateX(0px) translateY(${ty}px) rotate(0deg) scale(${sc})`;
       c.style.opacity=1;
       c.style.zIndex = lift>0.05 ? 12 : 2;            // schiebt sich über die Headline (z>head)
     } else {
-      c.style.transform=`rotate(${i*FAN}deg)`;
-      c.style.opacity=(1-0.55*spread).toFixed(3);
+      c.style.transform=fanT(i);                      // bleibt sauber im Fächer
+      c.style.opacity=(1-0.5*spread).toFixed(3);
     }
   });
   // X-ray entsteht am Scan-Strich (weiche Maske) + Glow-Partikel
@@ -149,7 +150,7 @@ function apply(p){
 }
 function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
   c.style.zIndex = i===0 ? 2 : (Math.abs(i)===1 ? 3 : 1);
-  c.style.transform = `rotate(${i*FAN}deg)`;}); }
+  c.style.transform = fanT(i);}); }
 setRest();
 let raf=0;
 addEventListener('scroll',()=>{ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
