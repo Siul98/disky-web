@@ -243,11 +243,11 @@ function apply(p){
   fan.classList.toggle('resting',resting);
   floor.style.opacity=((1-0.7*spread)*(1-pullE)).toFixed(3);
   const g=heroGeom(lift); let hSc=1, hDy=0, hOp=1;
-  if(p2>0){ hSc*=(1-0.92*pullE); hDy+=70*pullE; hOp=1-clamp((pullE-0.85)/0.15); }
+  if(p2>0){ hSc*=(1-0.92*pullE); hDy+=160*pullE; hOp=1-clamp((pullE-0.92)/0.08); }   // schrumpft sichtbar in den Screen, voll opak bis kurz vor Schluss
   hero.style.transform=heroT(g,hDy,hSc);
   hero.style.opacity=hOp.toFixed(3);
   hero.style.filter = flash>0.01 ? `brightness(${(1+0.9*flash).toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))` : 'none';
-  hero.style.zIndex = p2>0.05 ? 3 : 11;
+  hero.style.zIndex = 11;   // bleibt vor dem Screen, schrumpft hinein (kein abruptes Verschwinden)
   hero.classList.toggle('resting',resting);
   const bx=scan*100, ft=6;
   if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on','appear'); }
@@ -279,9 +279,9 @@ function apply(p){
     el.style.transform=`translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px)) scale(${Math.max(.1,sc).toFixed(3)})`;
   });
   funnel.style.opacity=(clamp((pullE-0.05)/0.4)*0.85).toFixed(3);
-  const mb=ease(clamp((p2-0.08)/0.5));
-  macbook.style.opacity=mb.toFixed(3);
-  macbook.style.transform=`translateX(-50%) translateY(${(60*(1-mb)).toFixed(0)}px) scale(${(0.93+0.07*mb).toFixed(3)})`;
+  const mb=ease(clamp((p2-0.06)/0.46));
+  macbook.style.opacity=clamp(mb/0.12).toFixed(3);                                    // voll opak — der Fade passiert komplett unter dem Fold
+  macbook.style.transform=`translateX(-50%) translateY(${((1-mb)*innerHeight*0.72).toFixed(0)}px)`;  // fährt voll opak von unten hoch
   ingest.style.opacity=(clamp((pullE-0.25)/0.5)*0.9).toFixed(3);
   hint.style.opacity=p>0.05?0:1;
 }
