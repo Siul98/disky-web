@@ -141,7 +141,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
     <!-- DIE T9 — ein Element, dreht Hoch→Quer, X-ray-Scan -->
     <div class="hero" id="hero">
       <img class="dimg front" src="../assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
-      <img class="dimg xray" src="../assets/drives/t9xray-land.webp" alt="" decoding="async">
+      <img class="dimg xray" data-src="../assets/drives/t9xray-land.webp" alt="" decoding="async">
       <div class="scanline" id="scanline"><i class="bm"></i><div class="warp"></div></div>
     </div>
 
@@ -159,6 +159,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
 const fan=document.getElementById('fan'), floor=document.getElementById('floor'), hero=document.getElementById('hero');
 const xray=hero.querySelector('.xray'), front=hero.querySelector('.front'), scanline=document.getElementById('scanline');
+(function(){ let done=false; const go=()=>{ if(done)return; done=true; if(xray.dataset.src) xray.src=xray.dataset.src; };
+  ('requestIdleCallback' in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,1600);
+  addEventListener('scroll',go,{once:true,passive:true}); })();
 const bloom=document.getElementById('bloom'), shock=document.getElementById('shock');
 const appwin=document.getElementById('appwin'), awmain=document.getElementById('awmain'), filesWrap=document.getElementById('files');
 const cap1=document.getElementById('cap1'), cap2=document.getElementById('cap2');

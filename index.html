@@ -353,7 +353,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       </div>
       <div class="hf-t9" id="hf-t9">
         <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
-        <img class="hf-dimg hf-xray" src="assets/drives/t9xray-land.webp" alt="" decoding="async">
+        <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp" alt="" decoding="async">
         <div class="hf-scanline" id="hf-scanline"><i class="hf-bm"></i><div class="hf-warp"></div></div>
       </div>
       <div class="hf-files" id="hf-files"></div>
@@ -673,6 +673,10 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   const cards=[...document.querySelectorAll('.hf-fcard')], head=$('hf-head'), hint=$('hf-hint');
   const fan=$('hf-fan'), floor=$('hf-floor'), hero=$('hf-t9');
   const xray=hero.querySelector('.hf-xray'), front=hero.querySelector('.hf-front'), scanline=$('hf-scanline');
+  // X-ray nur beim Scan sichtbar → erst nach dem kritischen Load nachladen (spart ~110KB initial)
+  (function(){ let done=false; const go=()=>{ if(done)return; done=true; if(xray.dataset.src) xray.src=xray.dataset.src; };
+    ('requestIdleCallback' in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,1600);
+    addEventListener('scroll',go,{once:true,passive:true}); })();
   const bloom=$('hf-bloom'), shock=$('hf-shock');
   const appwin=$('hf-appwin'), awmain=$('hf-awmain'), filesWrap=$('hf-files');
   const cap1=$('hf-cap1'), cap2=$('hf-cap2');
