@@ -14,11 +14,12 @@ window.diskySeedDemo = async function(win){
     { label:'LaCie Rugged', driveType:'rugged', cap:4*TB, used:3.1*TB, fc:48211, vn:'LaCie_Rugged' },
     { label:'Archiv 2023', driveType:'mybook', cap:8*TB, used:7.2*TB, fc:301755, vn:'Archiv_2023' },
     { label:'Sony A7S · Card', driveType:'card', cap:256*GB, used:201*GB, fc:1422, vn:'A7S_CARD' },
+    { label:'Samsung T9', driveType:'t9', cap:2*TB, used:1.62*TB, fc:24817, vn:'Samsung_T9' },
   ];
   const ids=[];
   for(const d of drives){ const id=await win.addDrive({label:d.label,driveType:d.driveType,capacityBytes:d.cap,
     bytes:Math.round(d.used),fileCount:d.fc,volumeName:d.vn,volumeUUID:'uuid-'+d.vn,model:d.label,scannedAt:now-2*DAY}); ids.push(id); }
-  const [MAC,RAID,LACIE,ARCH,CARD]=ids;
+  const [MAC,RAID,LACIE,ARCH,CARD,T9]=ids;
   const rnd=(s)=>{ let x=Math.sin(s)*10000; return x-Math.floor(x); };
   const files=[]; let seed=7;
   const mk=(driveId,proj,sub,name,ext,size,hash,lat,lon)=>{ seed++;
@@ -51,6 +52,11 @@ window.diskySeedDemo = async function(win){
   buildProj(ARCH,'Doku Kapstadt',1.1,-33.92,18.42);
   buildProj(ARCH,'Branded Doc Lissabon',1.0,38.72,-9.14);
   buildProj(MAC,'Werbespot Hamburg',0.4,53.55,9.99);
+  // the freshly-scanned Samsung T9 from the hero — same projects show up here in the real app
+  buildProj(T9,'Hochzeit Tegernsee',1.0,47.71,11.75);
+  buildProj(T9,'Werbespot Hamburg',0.9,53.55,9.99);
+  buildProj(T9,'Doku Nordsee',1.0,54.91,8.31);
+  buildProj(T9,'Reise Island',0.9,64.14,-21.94);
   // fresh card footage (one location)
   for(let i=1;i<=8;i++) mk(CARD,'Reise Japan','DCIM','C00'+i,'.mxf',(6+rnd(i)*10)*GB,null,35.68,139.69);
   // explicit cross-drive duplicates (same hash+size on multiple drives)

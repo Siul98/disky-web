@@ -255,6 +255,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes hf-txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 .hf-beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+#hf-cap1{top:74%}#hf-cap2{top:10%}
 .hf-stage{position:absolute;inset:0;z-index:2}
 .hf-fan{position:absolute;left:50%;bottom:-118px;width:0;height:0;transform:scale(var(--hffs,1));transform-origin:50% 100%}
 .hf-fcard{position:absolute;left:50%;bottom:0;height:280px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
@@ -686,18 +687,18 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   const ICON={folder:folderSVG,pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('PPT','#f0922b'),ai:()=>fileSVG('AI','#e8a33d'),
    mp4:()=>fileSVG('MP4','#7d6cf0'),mov:()=>fileSVG('MOV','#7d6cf0'),wav:()=>fileSVG('WAV','#ef5fa0'),psd:()=>fileSVG('PSD','#2f9be8')};
   const FILES=[
-   {name:'Client_A_2024_Rebrand',type:'folder',head:1,sz:'12 '+FW,cx:19,cy:17,r:-6},
-   {name:'brand_guide_v3.pdf',type:'pdf',sz:'15.2 MB',cx:79,cy:13,r:5},
-   {name:'presentation_final.pptx',type:'pptx',sz:'32.1 MB',cx:12,cy:37,r:-8},
-   {name:'logo_master.ai',type:'ai',sz:'4.7 MB',cx:87,cy:33,r:7},
-   {name:'Documentary_Project',type:'folder',head:1,sz:'9 '+FW,cx:25,cy:61,r:5},
-   {name:'final_master.mp4',type:'mp4',sz:'4.72 GB',cx:81,cy:58,r:-7},
-   {name:'color_grade_v1.mov',type:'mov',sz:'2.16 GB',cx:41,cy:10,r:-4},
-   {name:'rough_cut_v2.mov',type:'mov',sz:'2.45 GB',cx:62,cy:9,r:5},
-   {name:'interview_A.wav',type:'wav',sz:'847 MB',cx:10,cy:53,r:-6},
-   {name:'Personal_Work',type:'folder',head:1,sz:'6 '+FW,cx:89,cy:51,r:8},
-   {name:'landscape_01.psd',type:'psd',sz:'85.3 MB',cx:34,cy:70,r:-5},
-   {name:'sketchbook_2024.pdf',type:'pdf',sz:'120 MB',cx:67,cy:69,r:6}
+   {name:'Hochzeit_Tegernsee',type:'folder',head:1,sz:'24 '+FW,cx:19,cy:17,r:-6},
+   {name:'Hochzeit_Trailer_FINAL.mp4',type:'mp4',sz:'2.1 GB',cx:79,cy:13,r:5},
+   {name:'Ceremony_4K_master.mov',type:'mov',sz:'18.6 GB',cx:12,cy:37,r:-8},
+   {name:'Werbespot_Hamburg',type:'folder',head:1,sz:'31 '+FW,cx:87,cy:33,r:7},
+   {name:'Spot_30s_FINAL.mov',type:'mov',sz:'3.4 GB',cx:25,cy:61,r:5},
+   {name:'Spot_Master_4K.mp4',type:'mp4',sz:'6.2 GB',cx:81,cy:58,r:-7},
+   {name:'Doku_Nordsee',type:'folder',head:1,sz:'47 '+FW,cx:41,cy:10,r:-4},
+   {name:'Doku_Master_ProRes.mov',type:'mov',sz:'46 GB',cx:62,cy:9,r:5},
+   {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:10,cy:53,r:-6},
+   {name:'Reise_Island',type:'folder',head:1,sz:'19 '+FW,cx:89,cy:51,r:8},
+   {name:'Aurora_FINAL.mp4',type:'mp4',sz:'4.7 GB',cx:34,cy:70,r:-5},
+   {name:'O-Ton_Recorder.wav',type:'wav',sz:'847 MB',cx:67,cy:69,r:6}
   ];
   const N=FILES.length;
   filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="hf-nm">${f.name}</span><span class="hf-sz">${f.sz}</span></div>`).join('');
