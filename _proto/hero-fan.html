@@ -1,5 +1,5 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disky · Hero — Fächer → Scan</title>
+<title>Disky · Hero — Fächer → Scan (echte T9)</title>
 <style>
 :root{--bg:#08090c;--ink:#f4f7fb;--mut:rgba(244,247,251,.62);--mut2:rgba(244,247,251,.42);
  --acc:#4a9eff;--acc2:#37cfe0;--line:rgba(255,255,255,.09);--mono:"SF Mono",ui-monospace,Menlo,monospace;
@@ -11,24 +11,25 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .note b{color:var(--acc)}
 .rail{position:relative;height:300vh}
 .sticky{position:sticky;top:0;height:100vh;overflow:hidden}
-.sticky::before{content:"";position:absolute;left:50%;top:46%;width:980px;height:680px;transform:translateX(-50%);
+.sticky::before{content:"";position:absolute;left:50%;top:48%;width:1000px;height:700px;transform:translateX(-50%);
  background:radial-gradient(closest-side,rgba(45,98,200,.22),transparent 72%);pointer-events:none}
-.head{position:absolute;left:0;right:0;top:0;z-index:3;text-align:center;padding-top:21vh;will-change:transform,opacity}
+.head{position:absolute;left:0;right:0;top:0;z-index:3;text-align:center;padding-top:19vh;will-change:transform,opacity}
 .head .eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:18px}
 .head h1{font-size:clamp(48px,8.2vw,96px);letter-spacing:-.045em;margin:0;line-height:.97}
 .head h1 .l1{display:block;color:#eef3fa}
 .head h1 .l2{display:block;background:linear-gradient(180deg,#fff,#bcd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .head .sub{margin:26px auto 0;max-width:560px;font-size:18px;color:var(--mut)}
-/* fan */
+/* fan (landscape cards) */
 .stage{position:absolute;inset:0;z-index:2}
-.fan{position:absolute;left:50%;bottom:120px;width:0;height:0}
-.fcard{position:absolute;left:0;bottom:0;width:172px;height:236px;margin-left:-86px;
- transform-origin:50% 156%;will-change:transform,opacity;filter:drop-shadow(0 26px 46px rgba(0,0,0,.6))}
-.fcard svg{display:block;width:100%;height:100%;overflow:visible}
-.t9c{z-index:5}
-/* T9 x-ray overlay */
-.xray{position:absolute;inset:0;opacity:0;will-change:opacity}
-.beam{position:absolute;top:-3%;bottom:-3%;left:0;width:2px;background:linear-gradient(180deg,transparent,#9fd2ff,#37cfe0,transparent);
+.fan{position:absolute;left:50%;bottom:130px;width:0;height:0}
+.fcard{position:absolute;left:0;bottom:0;width:272px;height:182px;margin-left:-136px;
+ transform-origin:50% 230%;will-change:transform,opacity}
+.fcard.ph{border-radius:18px;filter:drop-shadow(0 24px 44px rgba(0,0,0,.6))}
+.fcard.ph svg{display:block;width:100%;height:100%}
+.t9c{z-index:6}
+.dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 24px 44px rgba(0,0,0,.6))}
+.dimg.xray{opacity:0;will-change:opacity;filter:drop-shadow(0 24px 50px rgba(20,70,140,.5))}
+.beam{position:absolute;top:2%;bottom:2%;left:6%;width:2px;background:linear-gradient(180deg,transparent,#9fd2ff,#37cfe0,transparent);
  box-shadow:0 0 20px 6px rgba(74,158,255,.7);opacity:0;border-radius:2px}
 .beam::before{content:"";position:absolute;top:0;bottom:0;left:-24px;width:48px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.2),transparent)}
 .scrollhint{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);z-index:40;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
@@ -36,19 +37,14 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .cap{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;font-family:var(--mono);font-size:11px;color:var(--mut2)}
 </style></head>
 <body>
-<div class="note">PROTOTYP · selbst gebaute Vektor-Platten · <b>scrollen</b></div>
+<div class="note">PROTOTYP · <b>echte T9</b> (Produkt + X-ray) · andere 4 = Platzhalter · <b>scrollen</b></div>
 
-<!-- shared gradients / filters -->
 <svg width="0" height="0" style="position:absolute"><defs>
   <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
   <linearGradient id="lrG" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#f7a046"/><stop offset=".5" stop-color="#ea7820"/><stop offset="1" stop-color="#bf560e"/></linearGradient>
   <linearGradient id="sdG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2d33"/><stop offset="1" stop-color="#141619"/></linearGradient>
-  <linearGradient id="t9G" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#2b2f36"/><stop offset=".5" stop-color="#14171b"/><stop offset="1" stop-color="#0c0e11"/></linearGradient>
   <linearGradient id="t7G" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7c8693"/><stop offset=".5" stop-color="#525b67"/><stop offset="1" stop-color="#363d47"/></linearGradient>
   <linearGradient id="lsG" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".5" stop-color="#c3cad2"/><stop offset="1" stop-color="#9aa2ad"/></linearGradient>
-  <linearGradient id="lsFacet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".85"/><stop offset="1" stop-color="#aab2bb" stop-opacity=".2"/></linearGradient>
-  <linearGradient id="xrG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e2236"/><stop offset="1" stop-color="#06101c"/></linearGradient>
-  <radialGradient id="ledG" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#bfe6ff"/><stop offset="1" stop-color="#4a9eff"/></radialGradient>
 </defs></svg>
 
 <div class="rail" id="rail">
@@ -60,103 +56,41 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
     </div>
     <div class="stage"><div class="fan" id="fan">
 
-      <!-- LaCie Rugged -->
-      <div class="fcard" data-i="-2"><svg viewBox="0 0 172 236">
-        <rect x="8" y="8" width="156" height="220" rx="26" fill="url(#lrG)"/>
-        <rect x="22" y="22" width="128" height="192" rx="16" fill="#14110d" opacity=".16"/>
-        <g stroke="#fff" stroke-opacity=".10" stroke-width="2.4">
-          <line x1="20" y1="70" x2="152" y2="44"/><line x1="20" y1="104" x2="152" y2="78"/><line x1="20" y1="138" x2="152" y2="112"/><line x1="20" y1="172" x2="152" y2="146"/><line x1="20" y1="206" x2="152" y2="180"/></g>
-        <circle cx="86" cy="120" r="30" fill="none" stroke="#16120c" stroke-opacity=".5" stroke-width="6"/>
-        <circle cx="86" cy="120" r="9" fill="#16120c" fill-opacity=".42"/>
-        <rect x="8" y="8" width="156" height="220" rx="26" fill="url(#sheen)"/>
-      </svg></div>
+      <!-- LaCie Rugged (placeholder, landscape) -->
+      <div class="fcard ph" data-i="-2"><svg viewBox="0 0 272 182">
+        <rect x="6" y="6" width="260" height="170" rx="20" fill="url(#lrG)"/>
+        <g stroke="#fff" stroke-opacity=".10" stroke-width="2.4"><line x1="30" y1="60" x2="244" y2="36"/><line x1="30" y1="100" x2="244" y2="76"/><line x1="30" y1="140" x2="244" y2="116"/></g>
+        <circle cx="136" cy="91" r="26" fill="none" stroke="#16120c" stroke-opacity=".5" stroke-width="6"/><circle cx="136" cy="91" r="8" fill="#16120c" fill-opacity=".4"/>
+        <rect x="6" y="6" width="260" height="170" rx="20" fill="url(#sheen)"/></svg></div>
 
-      <!-- SanDisk Extreme -->
-      <div class="fcard" data-i="-1"><svg viewBox="0 0 172 236">
-        <rect x="8" y="8" width="156" height="220" rx="22" fill="url(#sdG)"/>
-        <path d="M8 30 a22 22 0 0 1 22-22 h40 l-30 30 v170 a22 22 0 0 1-22 22 h0 a22 22 0 0 1-22-22 z" fill="#ef5a23" opacity=".9"/>
-        <circle cx="138" cy="34" r="13" fill="none" stroke="#0c0e11" stroke-width="7"/>
-        <circle cx="138" cy="34" r="13" fill="none" stroke="#3a3f47" stroke-width="2"/>
-        <g stroke="#000" stroke-opacity=".25" stroke-width="1.4">
-          <line x1="60" y1="60" x2="150" y2="92"/><line x1="56" y1="96" x2="150" y2="130"/><line x1="56" y1="132" x2="150" y2="166"/><line x1="56" y1="168" x2="130" y2="196"/></g>
-        <text x="92" y="210" text-anchor="middle" font-family="Arial" font-weight="800" font-size="15" fill="#fff" fill-opacity=".8" letter-spacing="1">SanDisk</text>
-        <rect x="8" y="8" width="156" height="220" rx="22" fill="url(#sheen)"/>
-      </svg></div>
+      <!-- SanDisk Extreme (placeholder) -->
+      <div class="fcard ph" data-i="-1"><svg viewBox="0 0 272 182">
+        <rect x="6" y="6" width="260" height="170" rx="18" fill="url(#sdG)"/>
+        <path d="M6 26 a20 20 0 0 1 20-20 h44 l-30 26 v126 a20 20 0 0 1-20 20 h-14 a20 20 0 0 1-20-20 z" fill="#ef5a23" opacity=".92"/>
+        <circle cx="236" cy="30" r="12" fill="none" stroke="#0c0e11" stroke-width="6"/>
+        <text x="150" y="150" text-anchor="middle" font-family="Arial" font-weight="800" font-size="17" fill="#fff" fill-opacity=".8">SanDisk</text>
+        <rect x="6" y="6" width="260" height="170" rx="18" fill="url(#sheen)"/></svg></div>
 
-      <!-- Samsung T9 (hero, gets scanned) -->
+      <!-- Samsung T9 — REAL images -->
       <div class="fcard t9c" data-i="0">
-        <svg viewBox="0 0 172 236" class="t9front">
-          <rect x="8" y="8" width="156" height="220" rx="24" fill="url(#t9G)"/>
-          <g stroke="#fff" stroke-opacity=".05" stroke-width="2.2">
-            <line x1="14" y1="60" x2="158" y2="24"/><line x1="14" y1="92" x2="158" y2="56"/><line x1="14" y1="124" x2="158" y2="88"/><line x1="14" y1="156" x2="158" y2="120"/><line x1="14" y1="188" x2="158" y2="152"/><line x1="14" y1="220" x2="158" y2="184"/></g>
-          <g stroke="#000" stroke-opacity=".22" stroke-width="2.2">
-            <line x1="14" y1="74" x2="158" y2="38"/><line x1="14" y1="106" x2="158" y2="70"/><line x1="14" y1="138" x2="158" y2="102"/><line x1="14" y1="170" x2="158" y2="134"/><line x1="14" y1="202" x2="158" y2="166"/></g>
-          <circle cx="150" cy="22" r="3.4" fill="url(#ledG)"/>
-          <text x="86" y="208" text-anchor="middle" font-family="Arial" font-weight="800" font-size="13" fill="#fff" fill-opacity=".72" letter-spacing="2">SAMSUNG</text>
-          <rect x="8" y="8" width="156" height="220" rx="24" fill="url(#sheen)"/>
-        </svg>
-        <!-- X-RAY overlay (circuit + V-NAND + folder tree) -->
-        <svg viewBox="0 0 172 236" class="xray">
-          <rect x="8" y="8" width="156" height="220" rx="24" fill="url(#xrG)"/>
-          <rect x="8" y="8" width="156" height="220" rx="24" fill="none" stroke="#4a9eff" stroke-opacity=".5" stroke-width="1.4"/>
-          <!-- USB-C port -->
-          <rect x="76" y="6" width="20" height="6" rx="3" fill="#9fd2ff" opacity=".7"/>
-          <!-- left: PCB + chips -->
-          <g opacity=".85">
-            <rect x="18" y="26" width="52" height="184" rx="5" fill="#0d2740" stroke="#2f6da0" stroke-width=".8"/>
-            <rect x="24" y="34" width="40" height="34" rx="3" fill="#103453" stroke="#3f8fd0" stroke-width=".8"/>
-            <rect x="24" y="74" width="40" height="34" rx="3" fill="#103453" stroke="#3f8fd0" stroke-width=".8"/>
-            <rect x="24" y="114" width="40" height="34" rx="3" fill="#103453" stroke="#3f8fd0" stroke-width=".8"/>
-            <rect x="24" y="154" width="40" height="34" rx="3" fill="#103453" stroke="#3f8fd0" stroke-width=".8"/>
-            <g stroke="#5aa8e0" stroke-width=".6" stroke-opacity=".7" fill="none">
-              <path d="M44 68 v6 M44 108 v6 M44 148 v6 M70 50 h10 M70 90 h10 M70 130 h10 M70 170 h10"/></g>
-          </g>
-          <!-- right: folder tree -->
-          <g font-family="ui-monospace,Menlo,monospace" font-size="6.4" fill="#a6d4ff">
-            <text x="80" y="32" fill="#7fb6e8" font-size="5.4" letter-spacing=".4">SAMSUNG · T9 · 2TB</text>
-            <line x1="80" y1="37" x2="156" y2="37" stroke="#2f6da0" stroke-width=".5"/>
-            <text x="80" y="50">▾ PROJECTS</text>
-            <text x="86" y="62" fill="#bfe2ff">▾ Client_A_2024</text>
-            <text x="92" y="73">▸ 01_Research</text>
-            <text x="92" y="84">▸ 02_Concepts</text>
-            <text x="92" y="95">▸ 03_Designs</text>
-            <text x="92" y="106" fill="#7fa6c8">brand_guide.pdf</text>
-            <text x="86" y="120" fill="#bfe2ff">▾ Documentary</text>
-            <text x="92" y="131">▸ 01_Footage</text>
-            <text x="92" y="142" fill="#7fa6c8">rough_cut.mov</text>
-            <text x="92" y="153" fill="#7fa6c8">final_master.mp4</text>
-            <text x="86" y="167" fill="#bfe2ff">▾ Personal_Work</text>
-            <text x="92" y="178" fill="#7fa6c8">landscape_01.psd</text>
-            <text x="80" y="194">▾ Archive</text>
-            <text x="86" y="205" fill="#7fa6c8">Old_Projects …</text>
-          </g>
-          <rect x="8" y="8" width="156" height="220" rx="24" fill="none" stroke="#000" stroke-opacity="0"/>
-        </svg>
+        <img class="dimg front" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async">
+        <img class="dimg xray" src="../assets/drives/t9-xray.webp" alt="" decoding="async">
         <div class="beam"></div>
       </div>
 
-      <!-- Samsung T7 -->
-      <div class="fcard" data-i="1"><svg viewBox="0 0 172 236">
-        <rect x="14" y="8" width="144" height="220" rx="22" fill="url(#t7G)"/>
-        <rect x="14" y="8" width="144" height="220" rx="22" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="1.2"/>
-        <circle cx="142" cy="24" r="3" fill="#9fd2ff" opacity=".55"/>
-        <text x="86" y="206" text-anchor="middle" font-family="Arial" font-weight="800" font-size="12" fill="#fff" fill-opacity=".55" letter-spacing="2">SAMSUNG</text>
-        <rect x="14" y="8" width="144" height="220" rx="22" fill="url(#sheen)"/>
-      </svg></div>
+      <!-- Samsung T7 (placeholder) -->
+      <div class="fcard ph" data-i="1"><svg viewBox="0 0 272 182">
+        <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#t7G)"/>
+        <rect x="10" y="14" width="252" height="154" rx="18" fill="none" stroke="#fff" stroke-opacity=".14"/>
+        <text x="150" y="150" text-anchor="middle" font-family="Arial" font-weight="800" font-size="14" fill="#fff" fill-opacity=".5" letter-spacing="2">SAMSUNG</text>
+        <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#sheen)"/></svg></div>
 
-      <!-- LaCie Mobile (silver, diamond-cut) -->
-      <div class="fcard" data-i="2"><svg viewBox="0 0 172 236">
-        <rect x="10" y="8" width="152" height="220" rx="14" fill="url(#lsG)"/>
-        <g opacity=".7">
-          <path d="M10 8 L86 90 L162 8 Z" fill="url(#lsFacet)" opacity=".5"/>
-          <path d="M10 228 L86 146 L162 228 Z" fill="#7e858f" opacity=".35"/>
-          <path d="M86 90 L162 8 L162 228 L86 146 Z" fill="#fff" opacity=".18"/>
-          <path d="M10 8 L86 90 L86 146 L10 228 Z" fill="#9aa2ad" opacity=".22"/>
-        </g>
-        <circle cx="86" cy="118" r="16" fill="none" stroke="#5b626c" stroke-opacity=".5" stroke-width="3.2"/>
-        <circle cx="86" cy="118" r="4.5" fill="#5b626c" fill-opacity=".4"/>
-        <rect x="10" y="8" width="152" height="220" rx="14" fill="url(#sheen)"/>
-      </svg></div>
+      <!-- LaCie Mobile silver (placeholder) -->
+      <div class="fcard ph" data-i="2"><svg viewBox="0 0 272 182">
+        <rect x="8" y="8" width="256" height="166" rx="12" fill="url(#lsG)"/>
+        <g opacity=".6"><path d="M8 8 L136 78 L264 8 Z" fill="#fff" opacity=".4"/><path d="M8 174 L136 104 L264 174 Z" fill="#7e858f" opacity=".3"/></g>
+        <circle cx="136" cy="91" r="14" fill="none" stroke="#5b626c" stroke-opacity=".5" stroke-width="3"/>
+        <rect x="8" y="8" width="256" height="166" rx="12" fill="url(#sheen)"/></svg></div>
 
     </div></div>
   </div>
@@ -165,10 +99,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 <div class="cap">Fächer · T9 fährt hoch · X-ray-Scan</div>
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
-const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.t9front'), beam=t9.querySelector('.beam');
+const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.front'), beam=t9.querySelector('.beam');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
-const FAN=15;
+const FAN=13;
 function apply(p){
   const lift=ease(clamp(p/0.55));
   const scan=clamp((p-0.5)/0.42);
@@ -176,26 +110,26 @@ function apply(p){
   cards.forEach(c=>{
     const i=+c.dataset.i;
     if(i===0){
-      const ty=-150*lift, sc=1+1.0*lift;
+      const ty=-130*lift, sc=1+0.95*lift;
       c.style.transform=`rotate(0deg) translateY(${ty}px) scale(${sc})`;
       c.style.opacity=1;
     } else {
       const rot=i*FAN*(1+0.95*spread);
-      const ty=Math.abs(i)*10 + 170*spread;
+      const ty=Math.abs(i)*8 + 180*spread;
       c.style.transform=`rotate(${rot}deg) translateY(${ty}px)`;
       c.style.opacity=(1-0.95*spread).toFixed(3);
     }
   });
   beam.style.opacity = scan>0 && scan<1 ? 1 : 0;
-  beam.style.left=(scan*100).toFixed(1)+'%';
-  const xr=ease(clamp((scan-0.12)/0.88));
+  beam.style.left=(6+scan*88).toFixed(1)+'%';
+  const xr=ease(clamp((scan-0.1)/0.9));
   xray.style.opacity=xr.toFixed(3);
   front.style.opacity=(1-ease(clamp(scan/0.55))).toFixed(3);
-  head.style.opacity=(1-0.94*spread).toFixed(3);
+  head.style.opacity=(1-0.95*spread).toFixed(3);
   head.style.transform=`translateY(${(-46*spread).toFixed(1)}px)`;
   hint.style.opacity=p>0.05?0:1;
 }
-function setRest(){ cards.forEach(c=>{const i=+c.dataset.i; c.style.transform = i===0 ? 'rotate(0deg)' : `rotate(${i*FAN}deg) translateY(${Math.abs(i)*10}px)`;}); }
+function setRest(){ cards.forEach(c=>{const i=+c.dataset.i; c.style.transform = i===0 ? 'rotate(0deg)' : `rotate(${i*FAN}deg) translateY(${Math.abs(i)*8}px)`;}); }
 setRest();
 let raf=0;
 addEventListener('scroll',()=>{ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
