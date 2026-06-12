@@ -52,8 +52,17 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
  box-shadow:0 0 26px 9px rgba(74,158,255,.7)}
 .scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-30px;width:60px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.20),transparent);
  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%)}
-.scanline span{position:absolute;border-radius:1px;background:#cdeeff;box-shadow:0 0 7px 1.5px rgba(130,200,255,.95);opacity:0;animation:flick .85s steps(2,end) infinite}
+/* Beam baut sich auf (wächst aus der Mitte + Glow-Flash) statt ruckartig da zu sein */
+.scanline.appear .bm{animation:bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
+@keyframes bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
+.px-scatter{position:absolute;top:0;bottom:0;left:0;width:0}
+.px-scatter span{position:absolute;border-radius:1px;background:#cdeeff;box-shadow:0 0 7px 1.5px rgba(130,200,255,.95);opacity:0;animation:flick .85s steps(2,end) infinite}
 @keyframes flick{0%,100%{opacity:0}45%{opacity:1}}
+/* Pixel-Burst: Glow-Pixel fliegen beim Erscheinen zum Strahl zusammen */
+.px-burst{position:absolute;top:-30%;bottom:-30%;left:0;width:0}
+.px-burst span{position:absolute;left:0;width:3px;height:3px;margin-left:-1.5px;border-radius:1px;background:#e6f5ff;box-shadow:0 0 9px 2px rgba(140,205,255,.95);opacity:0}
+.scanline.appear .px-burst span{animation:pxPop .66s cubic-bezier(.2,.8,.3,1) both}
+@keyframes pxPop{0%{opacity:0;transform:translate(var(--dx,12px),var(--dy,0)) scale(.3)}35%{opacity:1}100%{opacity:0;transform:translate(0,0) scale(1)}}
 .scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 .cap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;font-family:var(--mono);font-size:11px;color:var(--mut2)}
@@ -93,7 +102,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
       <div class="fcard t9c" data-i="0">
         <img class="dimg front" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async">
         <img class="dimg xray" src="../assets/drives/t9-xray.webp" alt="" decoding="async">
-        <div class="scanline" id="scanline"><i class="bm"></i></div>
+        <div class="scanline" id="scanline"><i class="bm"></i><div class="px-scatter" id="pxscatter"></div><div class="px-burst" id="pxburst"></div></div>
       </div>
       <div class="fcard ph" data-i="1"><svg viewBox="0 0 272 182">
         <rect x="10" y="14" width="252" height="154" rx="18" fill="url(#t7G)"/>
@@ -113,16 +122,20 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
 const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.front'), scanline=document.getElementById('scanline');
-(function(){let h='';for(let i=0;i<22;i++){const y=(Math.random()*100).toFixed(1),x=(-15+Math.random()*30).toFixed(0),d=(Math.random()*0.85).toFixed(2),s=(1.4+Math.random()*2.2).toFixed(1);
-  h+=`<span style="top:${y}%;left:${x}px;width:${s}px;height:${s}px;animation-delay:${d}s"></span>`;} scanline.insertAdjacentHTML('beforeend',h);})();
+(function(){const sc=document.getElementById('pxscatter'),bu=document.getElementById('pxburst');
+  let h='';for(let i=0;i<22;i++){const y=(Math.random()*100).toFixed(1),x=(-15+Math.random()*30).toFixed(0),d=(Math.random()*0.85).toFixed(2),s=(1.4+Math.random()*2.2).toFixed(1);
+    h+=`<span style="top:${y}%;left:${x}px;width:${s}px;height:${s}px;animation-delay:${d}s"></span>`;} sc.innerHTML=h;
+  let bb='';for(let i=0;i<15;i++){const y=(i/14*100).toFixed(1),dx=((Math.random()<.5?-1:1)*(14+Math.random()*30)).toFixed(0),dy=((-12+Math.random()*24)).toFixed(0),dl=(Math.random()*0.2).toFixed(2);
+    bb+=`<span style="top:${y}%;--dx:${dx}px;--dy:${dy}px;animation-delay:${dl}s"></span>`;} bu.innerHTML=bb;})();
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
+const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;   // sanftes Beschleunigen + Abbremsen
 // sauberer Karten-Fächer: jede Karte horizontal versetzt + leicht gedreht, in einem Bogen
 function fanT(i){ return `translateX(${i*112}px) translateY(${Math.abs(i)*30}px) rotate(${i*9}deg)`; }
 function apply(p){
-  const lift=ease(clamp(p/0.62));        // T9 fährt hoch in die Mitte
+  const lift=easeIO(clamp(p/0.62));      // T9 fährt sanft hoch in die Mitte (accel + decel)
   const scan=clamp((p-0.42)/0.5);        // Scan + X-ray
-  const spread=ease(clamp(p/0.55));
+  const spread=easeIO(clamp(p/0.55));
   cards.forEach(c=>{
     const i=+c.dataset.i;
     if(i===0){
@@ -137,13 +150,14 @@ function apply(p){
   });
   // X-ray entsteht am Scan-Strich (weiche Maske) + Glow-Partikel
   const bx=scan*100, f=6;
-  if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on'); }
-  else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on'); }
+  if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on','appear'); }
+  else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on','appear'); }
   else {
     xray.style.opacity=1; front.style.opacity=1;
     xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-f).toFixed(2)}%,transparent ${(bx+f).toFixed(2)}%)`;
     front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-f).toFixed(2)}%,#000 ${(bx+f).toFixed(2)}%)`;
     scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
+    if(!scanline.classList.contains('appear')) scanline.classList.add('appear');   // einmaliger Pixel-Aufbau beim Erscheinen
   }
   // Headline wird cinematisch unscharf, skaliert & blendet ab (wie 21st.dev), während die T9 drüberschiebt
   head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
@@ -155,9 +169,11 @@ function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
   c.style.zIndex = i===0 ? 2 : (Math.abs(i)===1 ? 3 : 1);
   c.style.transform = fanT(i);}); }
 setRest();
-let raf=0;
-addEventListener('scroll',()=>{ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
-  const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight;
-  apply(clamp((-r.top)/span)); }); },{passive:true});
+// Lerp-Glättung: die Animation GLEITET zur Scroll-Position (eased), statt sie hart zu tracken
+let targetP=0,curP=0,looping=false;
+function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
+function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.085; apply(curP); requestAnimationFrame(tick); }
+addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
+readTarget(); curP=targetP; apply(curP);
 </script>
 </body></html>
