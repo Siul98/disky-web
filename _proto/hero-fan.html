@@ -324,9 +324,9 @@ function dock(e){
   if(mx<b.x0-m||mx>b.x1+m||my<b.y0-m||my>b.y1+m){ if(docked){ setRest(); docked=false; } return; }
   docked=true;
   cards.forEach(c=>{ const r=c.getBoundingClientRect(); const d=mx-(r.left+r.width/2); const fct=Math.exp(-(d*d)/(2*DOCK_SIG*DOCK_SIG));
-    c.style.zIndex=12+Math.round(fct*14); c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });
+    c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });   // kein zIndex → keine Tiefenänderung
   const r=hero.getBoundingClientRect(); const dH=mx-(r.left+r.width/2); const fH=Math.exp(-(dH*dH)/(2*DOCK_SIG*DOCK_SIG));
-  const g=heroGeom(0); hero.style.zIndex=12+Math.round(fH*16); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
+  const g=heroGeom(0); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
 }
 addEventListener('mousemove',dock,{passive:true});
 document.addEventListener('mouseleave',()=>{ if(curP<0.03&&docked){ setRest(); docked=false; } },{passive:true});
