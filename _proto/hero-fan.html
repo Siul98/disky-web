@@ -11,6 +11,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .note b{color:var(--acc)}
 .rail{position:relative;height:250vh}
 .sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
+/* Sterne */
+#stars{position:absolute;inset:0;z-index:0;pointer-events:none;
+ -webkit-mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%);mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%)}
 .bggrid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;
  background-image:linear-gradient(to right,rgba(244,247,251,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(244,247,251,.05) 1px,transparent 1px);
  -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%)}
@@ -36,58 +39,68 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .stage{position:absolute;inset:0;z-index:2}
 .fan{position:absolute;left:50%;bottom:128px;width:0;height:0;transform:scale(var(--fs,1));transform-origin:50% 100%}
 .fcard{position:absolute;left:50%;bottom:0;height:180px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
-.fan.resting .fcard{transition:transform .34s cubic-bezier(.2,.8,.3,1),filter .34s ease}
+.fan.resting .fcard{transition:transform .22s cubic-bezier(.2,.8,.3,1),filter .22s ease}
 .fcard .drv{height:100%;width:auto;display:block;filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
 
-/* Scan-Stage: die herausgezogene T9 — QUER, rotiert beim Rausholen in Position */
-.scanstage{position:absolute;left:50%;top:50%;z-index:9;width:min(460px,54vw);opacity:0;pointer-events:none;will-change:transform,opacity,filter}
-.scanstage .dimg{display:block;width:100%;height:auto}
-.scanstage .front{filter:drop-shadow(0 30px 60px rgba(0,0,0,.7));will-change:mask}
-.scanstage .xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
+/* DIE T9 — ein einziges Element, immer opak, dreht in EINER Bewegung Hoch- → Querformat, wird gescannt */
+.hero{position:absolute;left:50%;top:50%;width:480px;z-index:11;pointer-events:none;will-change:transform,filter}
+.hero.resting{transition:transform .22s cubic-bezier(.2,.8,.3,1),filter .22s ease}
+.hero .dimg{display:block;width:100%;height:auto}
+.hero .front{filter:drop-shadow(0 34px 64px rgba(0,0,0,.72));will-change:mask}
+.hero .xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .scanline.on{opacity:1}
-.scanline .bm{position:absolute;top:-32%;bottom:-32%;left:-1px;width:2px;border-radius:2px;
+.scanline .bm{position:absolute;top:-30%;bottom:-30%;left:-1.4px;width:2.8px;border-radius:3px;
  background:linear-gradient(180deg,transparent 0%,rgba(205,238,255,.5) 16%,#cdeeff 40%,#37cfe0 50%,#cdeeff 60%,rgba(205,238,255,.5) 84%,transparent 100%);
- box-shadow:0 0 26px 9px rgba(74,158,255,.7)}
-.scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-30px;width:60px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.20),transparent);
+ box-shadow:0 0 30px 10px rgba(74,158,255,.72)}
+.scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-34px;width:68px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.22),transparent);
  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 24%,#000 76%,transparent 100%)}
+/* Energiewelle: Displacement-/Refraktionsband, das mit dem Strahl läuft und das Bild dahinter verwölbt */
+.scanline .warp{position:absolute;top:-16%;bottom:-16%;left:50%;width:60px;transform:translateX(-50%);pointer-events:none;
+ backdrop-filter:blur(3px) brightness(1.16) saturate(1.25);-webkit-backdrop-filter:blur(3px) brightness(1.16) saturate(1.25);
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 26%,#000 74%,transparent);mask-image:linear-gradient(90deg,transparent,#000 26%,#000 74%,transparent)}
+.scanline .warp::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(150,205,255,.16) 45%,rgba(120,235,255,.22) 50%,rgba(150,205,255,.16) 55%,transparent);
+ -webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)}
 .scanline.appear .bm{animation:bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
 @keyframes bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
-.px-burst{position:absolute;top:-30%;bottom:-30%;left:0;width:0}
+.px-burst{position:absolute;top:-28%;bottom:-28%;left:0;width:0}
 .px-burst span{position:absolute;left:0;width:3px;height:3px;margin-left:-1.5px;border-radius:1px;background:#e6f5ff;box-shadow:0 0 9px 2px rgba(140,205,255,.95);opacity:0}
 .scanline.appear .px-burst span{animation:pxPop .66s cubic-bezier(.2,.8,.3,1) both}
 @keyframes pxPop{0%{opacity:0;transform:translate(var(--dx,12px),var(--dy,0)) scale(.3)}35%{opacity:1}100%{opacity:0;transform:translate(0,0) scale(1)}}
 
-/* epische Beleuchtung (Bloom) hinter der gescannten Platte */
-.bloom{position:absolute;left:50%;top:48%;width:1100px;height:1100px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;
+/* epische Beleuchtung hinter der gescannten Platte */
+.bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;
  background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
-.shock{position:absolute;left:50%;top:48%;width:480px;height:480px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;
+.shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;
  border:3px solid rgba(190,224,255,.95);box-shadow:0 0 60px rgba(110,180,255,.7),inset 0 0 50px rgba(74,158,255,.35)}
 
 .scrollhint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 .cap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;font-family:var(--mono);font-size:11px;color:var(--mut2)}
 
-/* Mehrwert-Badges (Glas) — eng um die Platte */
+/* Mehrwert-Badges (Glas) — größer + zweizeilig */
 .keywords{position:absolute;inset:0;z-index:12;pointer-events:none}
-.kw{position:absolute;display:inline-flex;align-items:center;gap:11px;padding:10px 18px 10px 11px;border-radius:15px;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;color:#eaf2ff;
- background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.035));backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
- box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 24px 55px -14px rgba(0,0,0,.75),0 0 34px -10px rgba(74,158,255,.45);opacity:0;will-change:transform,opacity}
+.kw{position:absolute;display:inline-flex;align-items:center;gap:13px;padding:13px 22px 13px 13px;border-radius:18px;white-space:nowrap;color:#eaf2ff;
+ background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.04));backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 28px 60px -16px rgba(0,0,0,.78),0 0 40px -10px rgba(74,158,255,.5);opacity:0;will-change:transform,opacity}
 .kw::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
- background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(255,255,255,.06) 42%,rgba(74,158,255,.5));
+ background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.07) 42%,rgba(74,158,255,.55));
  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.kw .ic{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;flex:0 0 auto;color:#c5e2ff;
- background:linear-gradient(140deg,rgba(74,158,255,.32),rgba(55,207,224,.14));
- box-shadow:inset 0 0 0 1px rgba(140,200,255,.4),0 0 18px -5px rgba(74,158,255,.7)}
-.kw .ic svg{width:17px;height:17px;display:block}
+.kw .ic{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;flex:0 0 auto;color:#cbe6ff;
+ background:linear-gradient(140deg,rgba(74,158,255,.34),rgba(55,207,224,.15));
+ box-shadow:inset 0 0 0 1px rgba(140,200,255,.42),0 0 22px -5px rgba(74,158,255,.75)}
+.kw .ic svg{width:22px;height:22px;display:block}
+.kw .tx{display:flex;flex-direction:column;line-height:1.18;text-align:left}
+.kw .tx b{font-size:16.5px;font-weight:650;letter-spacing:-.01em}
+.kw .tx i{font-size:12.5px;font-style:normal;font-weight:500;color:var(--mut2);letter-spacing:0}
 /* Re-Puls: nach abgeschlossenem Scan leuchten alle Badges nochmal auf */
-.keywords.lit .kw{animation:kwPulse .9s ease both}
+.keywords.lit .kw{animation:kwPulse .95s ease both}
 .keywords.lit .kw:nth-of-type(1){animation-delay:0s}
-.keywords.lit .kw:nth-of-type(2){animation-delay:.05s}
-.keywords.lit .kw:nth-of-type(3){animation-delay:.1s}
-.keywords.lit .kw:nth-of-type(4){animation-delay:.15s}
-.keywords.lit .kw:nth-of-type(5){animation-delay:.2s}
-@keyframes kwPulse{0%{filter:brightness(1)}24%{filter:brightness(1.65) drop-shadow(0 0 16px rgba(125,195,255,.95))}100%{filter:brightness(1)}}
+.keywords.lit .kw:nth-of-type(2){animation-delay:.06s}
+.keywords.lit .kw:nth-of-type(3){animation-delay:.12s}
+.keywords.lit .kw:nth-of-type(4){animation-delay:.18s}
+.keywords.lit .kw:nth-of-type(5){animation-delay:.24s}
+@keyframes kwPulse{0%{filter:brightness(1)}22%{filter:brightness(1.7) drop-shadow(0 0 20px rgba(125,195,255,.98))}100%{filter:brightness(1)}}
 
 /* MacBook — nur Screen, Body fadet in Schwarz, App im Screen */
 .macbook{position:absolute;left:50%;bottom:1%;transform:translateX(-50%);z-index:4;width:min(720px,84vw);opacity:0;will-change:transform,opacity}
@@ -102,10 +115,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 @media(prefers-reduced-motion:reduce){.t3d,.silver,.eb,.sub{animation:none!important;opacity:1!important;clip-path:none!important}}
 </style></head>
 <body>
-<div class="note">PROTOTYP · Fächer + Hover · T9 dreht quer beim Scan · <b>scrollen</b></div>
+<div class="note">PROTOTYP · Fächer + Dock-Hover · T9 dreht in EINER Bewegung quer · <b>scrollen</b></div>
 
 <div class="rail" id="rail">
   <div class="sticky">
+    <canvas id="stars"></canvas>
     <span class="glow"></span><div class="bggrid"></div>
     <div class="head" id="head">
       <div class="eb">Drive catalog for Mac</div>
@@ -113,10 +127,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
       <p class="sub">Jede Platte einmal indexieren — dann findest du alles, ohne eine einzige anzustecken.</p>
     </div>
 
-    <div class="stage"><div class="fan" id="fan">
+    <div class="stage" id="stage"><div class="fan" id="fan">
       <div class="fcard" data-i="-2"><img class="drv" src="../assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async"></div>
       <div class="fcard" data-i="-1"><img class="drv" src="../assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async"></div>
-      <div class="fcard t9c" data-i="0"><img class="drv" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async"></div>
       <div class="fcard" data-i="1"><img class="drv" src="../assets/drives/t5.webp" alt="Samsung T5" decoding="async"></div>
       <div class="fcard" data-i="2"><img class="drv" src="../assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async"></div>
     </div></div>
@@ -125,20 +138,20 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
     <div class="bloom" id="bloom"></div>
     <div class="shock" id="shock"></div>
 
-    <!-- herausgezogene, quer rotierte T9 + X-ray-Scan -->
-    <div class="scanstage" id="scanstage">
+    <!-- DIE T9 — ein Element, dreht Hoch→Quer, X-ray-Scan -->
+    <div class="hero" id="hero">
       <img class="dimg front" src="../assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
       <img class="dimg xray" src="../assets/drives/t9xray-land.webp" alt="" decoding="async">
-      <div class="scanline" id="scanline"><i class="bm"></i><div class="px-burst" id="pxburst"></div></div>
+      <div class="scanline" id="scanline"><i class="bm"></i><div class="warp"></div><div class="px-burst" id="pxburst"></div></div>
     </div>
 
-    <!-- Mehrwert-Badges, eng um die Platte -->
+    <!-- Mehrwert-Badges -->
     <div class="keywords" id="keywords">
-      <span class="kw" style="top:24%;left:18%" data-dx="-34" data-dy="-16"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg></span>Offline durchsuchbar</span>
-      <span class="kw" style="top:22%;right:16%" data-dx="34" data-dy="-18"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg></span>Jede Datei indexiert</span>
-      <span class="kw" style="top:53%;left:13%" data-dx="-44" data-dy="0"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.6 3 7.6 7 9 4-1.4 7-4.4 7-9V6l-7-3Z"/><path d="m9.3 12 1.9 1.9 3.6-3.7"/></svg></span>Read-only · sicher</span>
-      <span class="kw" style="top:51%;right:14%" data-dx="44" data-dy="4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span>In Sekunden gefunden</span>
-      <span class="kw" style="top:74%;left:50%" data-bx="-50" data-dx="0" data-dy="28"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>Drehort-GPS</span>
+      <span class="kw" style="top:21%;left:11%" data-dx="-36" data-dy="-16"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg></span><span class="tx"><b>Offline durchsuchbar</b><i>Kein Kabel, kein Anstecken</i></span></span>
+      <span class="kw" style="top:19%;right:10%" data-dx="36" data-dy="-18"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg></span><span class="tx"><b>Jede Datei indexiert</b><i>Name, Pfad, Größe, Datum</i></span></span>
+      <span class="kw" style="top:54%;left:7%" data-dx="-46" data-dy="0"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.6 3 7.6 7 9 4-1.4 7-4.4 7-9V6l-7-3Z"/><path d="m9.3 12 1.9 1.9 3.6-3.7"/></svg></span><span class="tx"><b>Read-only · sicher</b><i>Platte wird nie verändert</i></span></span>
+      <span class="kw" style="top:52%;right:7%" data-dx="46" data-dy="4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span><span class="tx"><b>In Sekunden gefunden</b><i>Volltext über alle Platten</i></span></span>
+      <span class="kw" style="top:75%;left:50%" data-bx="-50" data-dx="0" data-dy="28"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z"/><circle cx="12" cy="10" r="2.6"/></svg></span><span class="tx"><b>Drehort-GPS</b><i>Footage nach Ort filtern</i></span></span>
     </div>
 
     <!-- MacBook: nur Screen, Body fadet in Schwarz, App im Screen -->
@@ -149,59 +162,83 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
   </div>
 </div>
 <div class="scrollhint" id="hint">↓ scrollen</div>
-<div class="cap">Fächer · Hover · T9 quer + X-ray · Sog in den Mac</div>
+<div class="cap">Fächer · Dock-Hover · T9 quer + X-ray · Sog in den Mac</div>
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
-const fan=document.getElementById('fan'), scanstage=document.getElementById('scanstage');
-const xray=scanstage.querySelector('.xray'), front=scanstage.querySelector('.front'), scanline=document.getElementById('scanline');
+const fan=document.getElementById('fan'), stage=document.getElementById('stage'), hero=document.getElementById('hero');
+const xray=hero.querySelector('.xray'), front=hero.querySelector('.front'), scanline=document.getElementById('scanline');
 const bloom=document.getElementById('bloom'), shock=document.getElementById('shock'), keywords=document.getElementById('keywords'), kws=[...document.querySelectorAll('#keywords .kw')], macbook=document.getElementById('macbook');
 // Pixel-Burst am Strahl
 (function(){const bu=document.getElementById('pxburst');let bb='';
   for(let i=0;i<15;i++){const y=(i/14*100).toFixed(1),dx=((i%2?1:-1)*(14+(i*7%30))).toFixed(0),dy=((-12+(i*9%24))).toFixed(0),dl=((i%5)*0.04).toFixed(2);
     bb+=`<span style="top:${y}%;--dx:${dx}px;--dy:${dy}px;animation-delay:${dl}s"></span>`;} bu.innerHTML=bb;})();
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
 const ease=t=>1-Math.pow(1-t,3);
 const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+
+/* ---------- Sterne ---------- */
+const cv=document.getElementById('stars'), sx=cv.getContext('2d'); let stars=[];
+function initStars(){ cv.width=innerWidth; cv.height=innerHeight; const n=Math.round(innerWidth*innerHeight/13000); stars=[];
+  for(let i=0;i<n;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.3+0.25,p:Math.random()*6.28,s:0.5+Math.random()*1.4}); }
+function drawStars(t){ sx.clearRect(0,0,cv.width,cv.height);
+  for(const s of stars){ const a=0.22+0.5*(0.5+0.5*Math.sin(t*0.0011*s.s+s.p));
+    sx.globalAlpha=a; sx.fillStyle='#bcd4ff'; sx.beginPath(); sx.arc(s.x,s.y,s.r,0,6.2832); sx.fill(); }
+  sx.globalAlpha=1; requestAnimationFrame(drawStars); }
+initStars(); requestAnimationFrame(drawStars);
+
+/* ---------- Fächer-Layout ---------- */
 // Höhen optisch kalibriert: 2.5"-Platten groß, SSD-Trio kompakt (t9≈rugged), T5 am kleinsten
 const DRV={'-2':{h:155,ar:0.631},'-1':{h:220,ar:0.666},'0':{h:160,ar:0.683},'1':{h:120,ar:0.766},'2':{h:194,ar:0.710}};
-const REFW=900;
-let fanScale=1;
-// Karten-Fächer: horizontaler Versatz + Rotation, leichter Bogen — alle Hochformat
+const REFW=900, HEROW=480, HEROAR=1.464;   // t9-land 1010x690
+let fanScale=1, heroTyRest=0, heroScRest=0.33, heroScLift=1;
+// Karten-Fächer: horizontaler Versatz + Rotation, leichter Bogen
 function fanParts(i){ return {tx:i*78, ty:Math.abs(i)*-7, rot:i*8.5}; }
-function fanT(i){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx.toFixed(1)}px), ${f.ty.toFixed(1)}px) rotate(${f.rot}deg)`; }
+function cardT(i,dy,sc){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx.toFixed(1)}px), ${(f.ty+(dy||0)).toFixed(1)}px) rotate(${f.rot}deg) scale(${(sc||1).toFixed(3)})`; }
 function baseZ(i){ return 10-Math.abs(i); }
 function layout(){
   fanScale=Math.min(1,innerWidth/REFW);
   fan.style.setProperty('--fs',fanScale.toFixed(3));
   cards.forEach(c=>{ c.style.height=DRV[c.dataset.i].h+'px'; });
+  // Hero-Geometrie: Ruhe = Fächermitte (Hochformat-Look), Lift = Bühnenmitte (Querformat)
+  heroScLift=Math.min(1,innerWidth*0.92/HEROW);
+  heroScRest=(160*fanScale)/HEROW;                       // rotiert -90° → sichtbare Höhe 160*fanScale
+  const restCenterY=innerHeight-128-80*fanScale;          // Fächer-Grundlinie minus halbe Platte
+  heroTyRest=restCenterY-innerHeight/2;
 }
+// Hero-Transform: eine durchgehende Bewegung (Position + Rotation Hoch→Quer + Scale), IMMER opak
+function heroGeom(lift){ return { ty:lerp(heroTyRest,-26,lift), rot:lerp(-90,0,lift), scl:lerp(heroScRest,heroScLift,lift) }; }
+function heroT(g,dy,sc){ return `translate(-50%,-50%) translateY(${(g.ty+(dy||0)).toFixed(1)}px) rotate(${g.rot.toFixed(2)}deg) scale(${(g.scl*(sc||1)).toFixed(4)})`; }
+
+/* ---------- Haupt-Animation ---------- */
+let litState=false;
 function apply(p){
   const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);
-  const lift=easeIO(clamp(p1/0.46));                    // T9 raus + Stage hoch/dreht
+  const lift=easeIO(clamp(p1/0.46));                    // T9 raus + dreht quer (eine Bewegung)
   const scan=clamp((p1-0.5)/0.4);                       // X-ray-Strahl quert die Platte
   const spread=easeIO(clamp(p1/0.5));                   // Headline-Blur + übrige dimmen
-  const done=clamp((scan-0.74)/0.26);                   // Scan abgeschlossen?
+  const done=clamp((scan-0.74)/0.26);                  // Scan abgeschlossen?
   const flash=Math.sin(clamp(done)*Math.PI);           // epischer Licht-Puls beim Abschluss
   const pull=clamp(p2/0.82), pullE=pull*pull;
-  // Fächer
+  const resting=p<0.03;
+  // Fächer (4 Platten)
   cards.forEach(c=>{
-    const i=+c.dataset.i; let tx,ty,rot,scl=1,op=1; const f=fanParts(i);
-    if(i===0){ tx=f.tx*(1-lift); ty=f.ty-150*lift; rot=f.rot-20*lift; scl=1+0.12*lift; op=1-clamp(lift*1.7); }  // Hero raus + dreht + faded
-    else { tx=f.tx; ty=f.ty; rot=f.rot; op=1-0.62*spread; }
+    const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.62*spread;
     if(p2>0){ tx*=(1-pullE); ty=ty*(1-pullE)+(-30)*pullE; rot*=(1-pullE); scl*=(1-0.93*pullE); op*=(1-Math.min(1,pullE*1.25)); }
     c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.04,scl).toFixed(3)})`;
     c.style.opacity=Math.max(0,op).toFixed(3);
-    c.style.zIndex = p2>0.05 ? 3 : (i===0 ? (lift>0.05?6:baseZ(i)) : baseZ(i));
+    c.style.zIndex = p2>0.05 ? 3 : baseZ(i);
   });
-  // Scan-Stage: steigt + rotiert von Hochformat (70°) auf Querformat (0°), wächst
-  const em=lift;
-  let stTy=(1-em)*120-22, stRot=(1-em)*70, stScl=0.6+0.4*em, stOp=clamp(em*1.7-0.2), stBr=1+1.0*flash;
-  if(p2>0){ stScl*=(1-0.92*pullE); stOp*=(1-Math.min(1,pullE*1.3)); stTy+=70*pullE; }
-  scanstage.style.transform=`translate(-50%,-50%) translateY(${stTy.toFixed(1)}px) rotate(${stRot.toFixed(1)}deg) scale(${stScl.toFixed(3)})`;
-  scanstage.style.opacity=Math.max(0,stOp).toFixed(3);
-  scanstage.style.filter=`brightness(${stBr.toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))`;
-  scanstage.style.zIndex = p2>0.05 ? 3 : 9;
-  // X-ray am Scan-Strich (weiche Maske) — nur wenn Stage steht
+  fan.classList.toggle('resting',resting);
+  // DIE T9 — ein Element
+  const g=heroGeom(lift); let hSc=1, hDy=0, hOp=1;
+  if(p2>0){ hSc*=(1-0.92*pullE); hDy+=70*pullE; hOp=1-clamp((pullE-0.85)/0.15); }
+  hero.style.transform=heroT(g,hDy,hSc);
+  hero.style.opacity=hOp.toFixed(3);
+  hero.style.filter=`brightness(${(1+0.9*flash).toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))`;
+  hero.style.zIndex = p2>0.05 ? 3 : 11;
+  hero.classList.toggle('resting',resting);
+  // X-ray am Scan-Strich (weiche Maske) — front+xray decken IMMER voll ab (nie transparent)
   const bx=scan*100, ft=6;
   if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on','appear'); }
   else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on','appear'); }
@@ -212,23 +249,20 @@ function apply(p){
     scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
     if(!scanline.classList.contains('appear')) scanline.classList.add('appear');
   }
-  // epischer Bloom: sanftes Feld solange Platte da + großer Flash bei Scan-Abschluss
-  const bloomOp=clamp(0.12*em*(1-pullE) + 1.15*flash);
-  bloom.style.opacity=bloomOp.toFixed(3);
-  bloom.style.transform=`translate(-50%,-50%) scale(${(0.68+0.12*em+0.55*flash).toFixed(3)})`;
-  // Schockwelle: dehnt sich schnell aus (sichtbar über die Platte hinaus) und blitzt auf
+  // epischer Bloom + Schockwelle beim Scan-Abschluss
+  bloom.style.opacity=clamp(0.12*lift*(1-pullE) + 1.15*flash).toFixed(3);
+  bloom.style.transform=`translate(-50%,-50%) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
   shock.style.opacity=(flash*0.95*(1-pullE)).toFixed(3);
   shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
   // Headline cinematisch unscharf, skaliert + abblendend
   head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
   head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
   head.style.opacity=(1-0.82*spread).toFixed(3);
-  // Badges: erscheinen mit dem Scan, verschwinden beim Sog
+  // Badges
   const kwShow=ease(clamp((scan-0.4)/0.5))*(1-clamp(p2/0.10));
   kws.forEach((k,j)=>{ const d=clamp(kwShow*1.35 - j*0.08), dx=+k.dataset.dx, dy=+k.dataset.dy, bx2=+(k.dataset.bx||0);
     k.style.opacity=d.toFixed(3);
     k.style.transform=`translate(calc(${bx2}% + ${(dx*(1-d)).toFixed(1)}px), ${(dy*(1-d)).toFixed(1)}px) scale(${(0.9+0.1*d).toFixed(3)})`; });
-  // Re-Puls der Badges beim Scan-Abschluss (mit Hysterese, damit Scrubbing sauber neu triggert)
   if(done>0.55 && !litState){ keywords.classList.remove('lit'); void keywords.offsetWidth; keywords.classList.add('lit'); litState=true; }
   else if(done<0.32 && litState){ keywords.classList.remove('lit'); litState=false; }
   // MacBook-Screen in Beat 2
@@ -236,28 +270,35 @@ function apply(p){
   macbook.style.opacity=mb.toFixed(3);
   macbook.style.transform=`translateX(-50%) translateY(${(60*(1-mb)).toFixed(0)}px) scale(${(0.93+0.07*mb).toFixed(3)})`;
   hint.style.opacity=p>0.05?0:1;
-  // Hover nur im Ruhezustand erlauben
-  fan.classList.toggle('resting',p<0.03);
 }
-let litState=false;
-function setRest(){ cards.forEach(c=>{ const i=+c.dataset.i; c.style.zIndex=baseZ(i); c.style.transform=fanT(i); }); }
-// Hover: Platte hebt sich + wird größer (nur im Ruhezustand)
-let hoverK=null;
-cards.forEach(c=>{
-  c.addEventListener('mouseenter',()=>{ if(curP>=0.03) return; hoverK=c.dataset.i; const f=fanParts(+c.dataset.i);
-    c.style.zIndex=20;
-    c.style.transform=`translate(calc(-50% + ${f.tx.toFixed(1)}px), ${(f.ty-26).toFixed(1)}px) rotate(${f.rot}deg) scale(1.09)`;
-    c.style.filter='drop-shadow(0 34px 56px rgba(0,0,0,.7)) brightness(1.07)'; });
-  c.addEventListener('mouseleave',()=>{ if(hoverK!==c.dataset.i) return; hoverK=null; const i=+c.dataset.i;
-    c.style.zIndex=baseZ(i); c.style.transform=fanT(i); c.style.filter=''; });
-});
+function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
+  const g=heroGeom(0); hero.style.transform=heroT(g,0,1); hero.style.zIndex=11; }
+
+/* ---------- Mac-Dock-Hover über dem Stapel ---------- */
+const DOCK_SIG=80, DOCK_AMP=0.34, DOCK_LIFT=26;
+function heroCenterX(){ const r=hero.getBoundingClientRect(); return r.left+r.width/2; }
+function dock(e){
+  if(curP>=0.03) return;
+  const mx=e.clientX;
+  cards.forEach(c=>{ const r=c.getBoundingClientRect(); const d=mx-(r.left+r.width/2);
+    const fct=Math.exp(-(d*d)/(2*DOCK_SIG*DOCK_SIG));
+    c.style.zIndex=12+Math.round(fct*14);
+    c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct);
+    c.style.filter=`drop-shadow(0 ${(22+30*fct).toFixed(0)}px ${(40+18*fct).toFixed(0)}px rgba(0,0,0,.65)) brightness(${(1+0.07*fct).toFixed(3)})`; });
+  const dH=mx-heroCenterX(); const fH=Math.exp(-(dH*dH)/(2*DOCK_SIG*DOCK_SIG));
+  const g=heroGeom(0); hero.style.zIndex=12+Math.round(fH*16); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
+}
+// an window binden: die .head (z3) liegt über der .stage und würde sonst die mousemove abfangen
+addEventListener('mousemove',dock,{passive:true});
+document.addEventListener('mouseleave',()=>{ if(curP<0.03) setRest(); },{passive:true});
+
 layout(); setRest();
-// Lerp-Glättung
+/* ---------- Lerp-Scroll ---------- */
 let targetP=0,curP=0,looping=false;
 function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
 function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.085; apply(curP); requestAnimationFrame(tick); }
 addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
-addEventListener('resize',()=>{ layout(); readTarget(); apply(curP); },{passive:true});
+addEventListener('resize',()=>{ initStars(); layout(); readTarget(); apply(curP); },{passive:true});
 readTarget(); curP=targetP; apply(curP);
 </script>
 </body></html>
