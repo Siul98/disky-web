@@ -1,0 +1,152 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disky · Hero — Fächer → Scan</title>
+<style>
+:root{--bg:#08090c;--ink:#f4f7fb;--mut:rgba(244,247,251,.62);--mut2:rgba(244,247,251,.42);
+ --acc:#4a9eff;--acc2:#37cfe0;--line:rgba(255,255,255,.09);--mono:"SF Mono",ui-monospace,Menlo,monospace;
+ --disp:-apple-system,"SF Pro Display","Helvetica Neue",sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);overflow-x:hidden}
+.note{position:fixed;left:14px;top:12px;z-index:50;font-family:var(--mono);font-size:11px;color:var(--mut2);background:rgba(8,9,12,.6);padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
+.note b{color:var(--acc)}
+
+.rail{position:relative;height:300vh}              /* scroll track */
+.sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.sticky::before{content:"";position:absolute;left:50%;top:38%;width:900px;height:620px;transform:translateX(-50%);
+ background:radial-gradient(closest-side,rgba(45,98,200,.2),transparent 72%);pointer-events:none}
+
+.head{position:relative;z-index:3;text-align:center;padding-top:84px;will-change:transform,opacity}
+.head .eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:18px}
+.head h1{font-size:clamp(46px,8vw,92px);letter-spacing:-.045em;margin:0;line-height:.98}
+.head h1 .l1{display:block;color:#eef3fa}
+.head h1 .l2{display:block;background:linear-gradient(180deg,#fff,#bcd6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.head .sub{margin:26px auto 0;max-width:540px;font-size:18px;color:var(--mut)}
+
+/* fan stage */
+.stage{position:absolute;left:0;right:0;bottom:0;top:0;z-index:2}
+.fan{position:absolute;left:50%;bottom:150px;width:0;height:0}
+.fcard{position:absolute;left:0;bottom:0;width:112px;height:158px;margin-left:-56px;border-radius:15px;
+ transform-origin:50% 150%;will-change:transform,opacity;box-shadow:0 24px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
+ border:1px solid rgba(255,255,255,.1);overflow:hidden}
+.fcard .nm{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:rgba(255,255,255,.55)}
+.fcard .led{position:absolute;right:9px;top:9px;width:5px;height:5px;border-radius:50%;background:#2c3543}
+.fcard::after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,transparent 35%,rgba(255,255,255,.06) 50%,transparent 65%)}
+/* brand-evocative placeholders (replaced by real cut-out PNGs later) */
+.lacie-r{background:linear-gradient(160deg,#f08a2c,#d4661a 60%,#b9530f)}
+.lacie-r .core{position:absolute;inset:24px 22px;border-radius:8px;background:#15171b;box-shadow:inset 0 0 0 6px #f08a2c}
+.sandisk{background:linear-gradient(160deg,#23262b,#15171b);border-color:rgba(244,90,40,.4)}
+.sandisk .core{position:absolute;left:50%;top:14px;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;border:3px solid #f4502a}
+.sandisk .bar{position:absolute;left:14px;right:14px;bottom:42px;height:3px;border-radius:2px;background:#f4502a;opacity:.85}
+.t7{background:linear-gradient(160deg,#5b6573,#3a4250 60%,#2b323d)}
+.lacie-s{background:linear-gradient(160deg,#e6e9ee,#b9c0c9 55%,#9aa2ad)}
+.lacie-s .nm{color:rgba(20,24,30,.6)}
+.lacie-s::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.5) 0 2px,transparent 2px 9px);opacity:.35}
+/* T9 hero card */
+.t9{background:linear-gradient(150deg,#23262c,#0e1014 55%,#141619);z-index:5}
+.t9::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(128deg,rgba(255,255,255,.05) 0 1px,transparent 1px 7px)}
+.t9 .brand{position:absolute;left:0;right:0;bottom:30px;text-align:center;font-weight:800;font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.66)}
+/* x-ray overlay revealed on scan */
+.t9 .xray{position:absolute;inset:0;opacity:0;background:linear-gradient(150deg,#0a1622,#06101a);}
+.t9 .xray .scr{position:absolute;inset:7px 8px;border:1px solid rgba(74,158,255,.3);border-radius:8px;overflow:hidden;background:rgba(6,14,22,.6)}
+.t9 .xray .hd{font-family:var(--mono);font-size:6.5px;letter-spacing:.08em;color:#7fb6e8;padding:6px 8px 4px;border-bottom:1px solid rgba(74,158,255,.18)}
+.t9 .xray .tree{padding:6px 8px;font-family:var(--mono);font-size:6.5px;line-height:1.85;color:#a6d4ff}
+.t9 .xray .tree .f::before{content:"▸ ";color:#4a9eff}
+.t9 .xray .tree .o::before{content:"▾ ";color:#4a9eff}
+.t9 .xray .tree .fl{color:#7fa6c8}
+.t9 .xray .tree .in{padding-left:9px}.t9 .xray .tree .in2{padding-left:18px}
+.t9 .xray::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(74,158,255,.05) 0 1px,transparent 1px 3px);pointer-events:none}
+/* scan beam */
+.t9 .beam{position:absolute;top:-4%;bottom:-4%;left:0;width:2px;background:linear-gradient(180deg,transparent,#9fd2ff,#37cfe0,transparent);
+ box-shadow:0 0 18px 5px rgba(74,158,255,.7);opacity:0}
+.t9 .beam::before{content:"";position:absolute;top:0;bottom:0;left:-22px;width:44px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.18),transparent)}
+
+.cap{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:40;font-family:var(--mono);font-size:11px;color:var(--mut2)}
+.scrollhint{position:fixed;left:50%;bottom:48px;transform:translateX(-50%);z-index:40;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;opacity:1;transition:opacity .3s}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
+</style></head>
+<body>
+<div class="note">PROTOTYP · Platzhalter-Platten (echte freigestellte PNGs kommen rein) · <b>scrollen</b></div>
+<div class="rail" id="rail">
+  <div class="sticky">
+    <div class="head" id="head">
+      <div class="eb">Drive catalog for Mac</div>
+      <h1><span class="l1">Five drives.</span><span class="l2">Or five seconds.</span></h1>
+      <div class="sub">Jede Platte einmal indexieren — dann findest du alles, ohne eine einzige anzustecken.</div>
+    </div>
+    <div class="stage"><div class="fan" id="fan">
+      <div class="fcard lacie-r" data-i="-2"><span class="led"></span><span class="core"></span><span class="nm">LaCie Rugged</span></div>
+      <div class="fcard sandisk" data-i="-1"><span class="led"></span><span class="core"></span><span class="bar"></span><span class="nm">SanDisk SSD</span></div>
+      <div class="fcard t9" data-i="0">
+        <span class="led"></span><span class="brand">SAMSUNG · T9</span>
+        <div class="xray"><div class="scr">
+          <div class="hd">SAMSUNG · Portable SSD T9 · 2TB</div>
+          <div class="tree">
+            <div class="o">PROJECTS</div>
+            <div class="in o">Client_A_2024_Rebrand</div>
+            <div class="in2 f">01_Research</div>
+            <div class="in2 f">02_Concepts</div>
+            <div class="in2 f">03_Designs</div>
+            <div class="in2 fl">brand_guide_v3.pdf</div>
+            <div class="in o">Documentary_Project</div>
+            <div class="in2 f">01_Footage</div>
+            <div class="in2 fl">rough_cut_v2.mov</div>
+            <div class="in2 fl">final_master.mp4</div>
+            <div class="in o">Personal_Work</div>
+            <div class="in2 fl">landscape_01.psd</div>
+          </div>
+        </div></div>
+        <div class="beam"></div>
+      </div>
+      <div class="fcard t7" data-i="1"><span class="led"></span><span class="nm">Samsung T7</span></div>
+      <div class="fcard lacie-s" data-i="2"><span class="led"></span><span class="nm">LaCie Mobile</span></div>
+    </div></div>
+  </div>
+</div>
+<div class="scrollhint" id="hint">↓ scrollen</div>
+<div class="cap" id="cap">Fächer · ziehen am T9 · X-ray</div>
+<script>
+const rail=document.getElementById('rail'), fan=document.getElementById('fan'),
+ cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'),
+ hint=document.getElementById('hint');
+const t9=document.querySelector('.t9'), xray=t9.querySelector('.xray'), beam=t9.querySelector('.beam');
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const ease=t=>1-Math.pow(1-t,3);
+const FAN=15; // Grad zwischen Karten
+function apply(p){
+  // p 0..1 über die Rail
+  const lift=ease(clamp(p/0.55));          // T9 fährt hoch
+  const scan=clamp((p-0.5)/0.42);          // Scan + X-ray in der 2. Hälfte
+  const spread=ease(clamp(p/0.5));
+  cards.forEach(c=>{
+    const i=+c.dataset.i;
+    if(i===0){
+      const ty=-120*lift, sc=1+0.95*lift;
+      c.style.transform=`rotate(0deg) translateY(${ty}px) scale(${sc})`;
+      c.style.opacity=1;
+    } else {
+      const rot=i*FAN*(1+0.9*spread);        // fächert weiter auf
+      const ty=Math.abs(i)*8 + 150*spread;    // sinkt weg
+      c.style.transform=`rotate(${rot}deg) translateY(${ty}px)`;
+      c.style.opacity=(1-0.95*spread).toFixed(3);
+    }
+  });
+  // Scan-Beam fährt über den T9, X-ray blendet auf
+  beam.style.opacity = scan>0 && scan<1 ? 1 : 0;
+  beam.style.left = (scan*100).toFixed(1)+'%';
+  xray.style.opacity = ease(clamp((scan-0.15)/0.85)).toFixed(3);
+  t9.querySelector('.brand').style.opacity=(1-ease(clamp(scan/0.5))).toFixed(3);
+  head.style.opacity=(1-0.92*spread).toFixed(3);
+  head.style.transform=`translateY(${(-40*spread).toFixed(1)}px)`;
+  hint.style.opacity = p>0.05?0:1;
+}
+// Ruhezustand: Fächer
+function setRest(){ cards.forEach(c=>{const i=+c.dataset.i; if(i===0){c.style.transform='rotate(0deg)';} else {c.style.transform=`rotate(${i*FAN}deg) translateY(${Math.abs(i)*8}px)`;}}); }
+setRest();
+let raf=0;
+function onScroll(){ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
+  const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight;
+  const p=clamp((-r.top)/span); apply(p);
+}); }
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+</script>
+</body></html>
