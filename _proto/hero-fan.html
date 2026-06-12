@@ -27,11 +27,17 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .fcard.ph{border-radius:18px;filter:drop-shadow(0 24px 44px rgba(0,0,0,.6))}
 .fcard.ph svg{display:block;width:100%;height:100%}
 .t9c{z-index:6}
-.dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 24px 44px rgba(0,0,0,.6))}
-.dimg.xray{opacity:0;will-change:opacity;filter:drop-shadow(0 24px 50px rgba(20,70,140,.5))}
-.beam{position:absolute;top:2%;bottom:2%;left:6%;width:2px;background:linear-gradient(180deg,transparent,#9fd2ff,#37cfe0,transparent);
- box-shadow:0 0 20px 6px rgba(74,158,255,.7);opacity:0;border-radius:2px}
-.beam::before{content:"";position:absolute;top:0;bottom:0;left:-24px;width:48px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.2),transparent)}
+.dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.dimg.front{filter:drop-shadow(0 24px 44px rgba(0,0,0,.6));will-change:clip-path}
+.dimg.xray{mix-blend-mode:screen;clip-path:inset(0 100% 0 0);will-change:clip-path}  /* schwarzer BG verschwindet · enthüllt sich hinterm Scan */
+/* Scan-Linie + Glow-Partikel an der Kante */
+.scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
+.scanline.on{opacity:1}
+.scanline .bm{position:absolute;top:-3%;bottom:-3%;left:-1px;width:2px;border-radius:2px;
+ background:linear-gradient(180deg,transparent,#cdeeff,#37cfe0,transparent);box-shadow:0 0 22px 7px rgba(74,158,255,.8)}
+.scanline .bm::before{content:"";position:absolute;top:0;bottom:0;left:-28px;width:56px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.22),transparent)}
+.scanline span{position:absolute;border-radius:1px;background:#cdeeff;box-shadow:0 0 7px 1.5px rgba(130,200,255,.95);opacity:0;animation:flick .85s steps(2,end) infinite}
+@keyframes flick{0%,100%{opacity:0}45%{opacity:1}}
 .scrollhint{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);z-index:40;color:var(--mut2);font-size:12px;animation:bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 .cap{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;font-family:var(--mono);font-size:11px;color:var(--mut2)}
@@ -75,7 +81,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
       <div class="fcard t9c" data-i="0">
         <img class="dimg front" src="../assets/drives/t9.webp" alt="Samsung T9" decoding="async">
         <img class="dimg xray" src="../assets/drives/t9-xray.webp" alt="" decoding="async">
-        <div class="beam"></div>
+        <div class="scanline" id="scanline"><i class="bm"></i></div>
       </div>
 
       <!-- Samsung T7 (placeholder) -->
@@ -99,7 +105,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 <div class="cap">Fächer · T9 fährt hoch · X-ray-Scan</div>
 <script>
 const rail=document.getElementById('rail'), cards=[...document.querySelectorAll('.fcard')], head=document.getElementById('head'), hint=document.getElementById('hint');
-const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.front'), beam=t9.querySelector('.beam');
+const t9=document.querySelector('.t9c'), xray=t9.querySelector('.xray'), front=t9.querySelector('.front'), scanline=document.getElementById('scanline');
+// Glow-Partikel an der Scan-Kante
+(function(){let h='';for(let i=0;i<22;i++){const y=(Math.random()*100).toFixed(1),x=(-15+Math.random()*30).toFixed(0),d=(Math.random()*0.85).toFixed(2),s=(1.4+Math.random()*2.2).toFixed(1);
+  h+=`<span style="top:${y}%;left:${x}px;width:${s}px;height:${s}px;animation-delay:${d}s"></span>`;} scanline.insertAdjacentHTML('beforeend',h);})();
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=t=>1-Math.pow(1-t,3);
 const FAN=13;
@@ -120,11 +129,12 @@ function apply(p){
       c.style.opacity=(1-0.95*spread).toFixed(3);
     }
   });
-  beam.style.opacity = scan>0 && scan<1 ? 1 : 0;
-  beam.style.left=(6+scan*88).toFixed(1)+'%';
-  const xr=ease(clamp((scan-0.1)/0.9));
-  xray.style.opacity=xr.toFixed(3);
-  front.style.opacity=(1-ease(clamp(scan/0.55))).toFixed(3);
+  // X-ray entsteht DORT, wo der Scan-Strich gerade ist (clip-path folgt dem Beam) — kein globaler Fade
+  const bx=scan*100;
+  xray.style.clipPath=`inset(0 ${(100-bx).toFixed(2)}% 0 0)`;   // sichtbar 0..bx
+  front.style.clipPath=`inset(0 0 0 ${bx.toFixed(2)}%)`;        // sichtbar bx..100
+  scanline.style.left=bx.toFixed(2)+'%';
+  scanline.classList.toggle('on', scan>0.002 && scan<0.998);
   head.style.opacity=(1-0.95*spread).toFixed(3);
   head.style.transform=`translateY(${(-46*spread).toFixed(1)}px)`;
   hint.style.opacity=p>0.05?0:1;
