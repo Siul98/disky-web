@@ -87,7 +87,17 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 .aw-nav{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;font-size:12.5px;color:var(--mut);font-weight:550}
 .aw-nav svg{width:15px;height:15px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.7}
 .aw-nav.act{background:linear-gradient(135deg,rgba(74,158,255,.22),rgba(74,158,255,.08));color:#dceafd;box-shadow:inset 0 0 0 1px rgba(74,158,255,.25)}
-.aw-main{position:relative;flex:1 1 auto;padding:15px 20px;overflow:hidden}
+.aw-content{flex:1 1 auto;display:flex;flex-direction:column;min-width:0}
+.aw-top{padding:14px 20px 11px;border-bottom:1px solid var(--line)}
+.aw-head2{font-size:17px;font-weight:700;letter-spacing:-.01em;color:#eaf1fb}
+.aw-drive{font-size:11.5px;color:var(--mut2);margin-top:2px;font-family:var(--mono)}
+.aw-split{flex:1 1 auto;display:flex;min-height:0}
+.sun{position:relative;flex:0 0 44%;display:grid;place-items:center;padding:12px;opacity:0;will-change:opacity,transform}
+.sun svg{width:min(100%,228px);height:auto;overflow:visible}
+.sun-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
+.sun-c b{font-size:12.5px;color:#eaf1fb;font-weight:650}
+.sun-c span{font-size:15px;color:#9fd0ff;font-weight:700;font-family:var(--mono);margin-top:2px}
+.aw-main{position:relative;flex:1 1 auto;padding:14px 18px;overflow:hidden;border-left:1px solid var(--line)}
 .aw-head{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 
 /* Datei-/Ordner-Items: schwirren beim Scan (Unordnung) → gleiten in die Liste (Ordnung) */
@@ -130,11 +140,17 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
         <div class="aw-side">
           <div class="aw-nav"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</div>
           <div class="aw-nav"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.2-4.2"/></svg>Deep Search</div>
-          <div class="aw-nav"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12V3M12 12l7 4"/></svg>Storage Map</div>
-          <div class="aw-nav act"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Project Manager</div>
+          <div class="aw-nav act"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12V3M12 12l7 4"/></svg>Storage Map</div>
+          <div class="aw-nav"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/></svg>Project Manager</div>
           <div class="aw-nav"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Duplicate Finder</div>
         </div>
-        <div class="aw-main" id="awmain"><div class="aw-head">Projects · 3</div></div>
+        <div class="aw-content">
+          <div class="aw-top"><div class="aw-head2">Storage Map</div><div class="aw-drive">Samsung T9 · 1.62 TB of 2 TB</div></div>
+          <div class="aw-split">
+            <div class="sun" id="sun"></div>
+            <div class="aw-main" id="awmain"><div class="aw-head">Contents</div></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -163,7 +179,7 @@ const xray=hero.querySelector('.xray'), front=hero.querySelector('.front'), scan
   ('requestIdleCallback' in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,1600);
   addEventListener('scroll',go,{once:true,passive:true}); })();
 const bloom=document.getElementById('bloom'), shock=document.getElementById('shock');
-const appwin=document.getElementById('appwin'), awmain=document.getElementById('awmain'), filesWrap=document.getElementById('files');
+const appwin=document.getElementById('appwin'), awmain=document.getElementById('awmain'), filesWrap=document.getElementById('files'), sun=document.getElementById('sun');
 const cap1=document.getElementById('cap1'), cap2=document.getElementById('cap2');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -192,6 +208,14 @@ const fitems=[...filesWrap.querySelectorAll('.fitem')];
 // Reihenfolge-Index, in dem die Items beim Scan vom Strahl „freigelegt" werden (links→rechts)
 const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
 const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);
+// Storage-Map-Sunburst der T9
+(function(){
+  const SEG=[{f:.38,c:'#4a9eff'},{f:.27,c:'#37cfe0'},{f:.22,c:'#5b8def'},{f:.13,c:'#79d0e0'}];
+  const ringG=(r,w,segs,op)=>{ const C=2*Math.PI*r; let off=0,h=''; for(const s of segs){ const len=s.f*C;
+    h+=`<circle r="${r}" fill="none" stroke="${s.c}" stroke-width="${w}" stroke-dasharray="${(len-3).toFixed(1)} ${(C-len+3).toFixed(1)}" stroke-dashoffset="${(-off).toFixed(1)}" stroke-opacity="${op}"/>`; off+=len; } return h; };
+  const subs=[]; SEG.forEach(s=>[.45,.32,.23].forEach(pf=>subs.push({f:s.f*pf,c:s.c})));
+  sun.innerHTML=`<svg viewBox="-118 -118 236 236" style="transform:rotate(-90deg)"><g>${ringG(101,8,subs,.45)}${ringG(78,22,SEG,1)}</g><circle r="44" fill="rgba(11,15,23,.92)" stroke="rgba(255,255,255,.08)" stroke-width="1"/></svg><div class="sun-c"><b>Samsung T9</b><span>1.62 TB</span></div>`;
+})();
 
 /* ---------- 3D-Sternenfeld (Weltall, pures Canvas) ---------- */
 const starCv=document.getElementById('stars'), starCtx=starCv.getContext('2d');
@@ -289,6 +313,9 @@ function apply(p){
   head.style.opacity=(1-0.82*spread).toFixed(3);
   // App-Fenster blendet auf, während die Dateien sich ordnen
   appwin.style.opacity=clamp((p2-0.1)/0.32).toFixed(3);
+  const sunRev=easeIO(clamp((p2-0.16)/0.42));
+  sun.style.opacity=sunRev.toFixed(3);
+  sun.style.transform=`scale(${(0.72+0.28*sunRev).toFixed(3)}) rotate(${((1-sunRev)*-26).toFixed(1)}deg)`;
   // Dateien: erscheinen beim Scan (Unordnung, gekippt) → gleiten geordnet in die Liste-Rows
   const W=innerWidth,H=innerHeight;
   fitems.forEach((el,i)=>{ const f=FILES[i], o=ORDER[i]||{x:W/2,y:H*0.7,w:300};
