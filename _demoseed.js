@@ -4,6 +4,10 @@
 window.diskySeedDemo = async function(win){
   win = win || window;
   const GB=1073741824, MB=1048576, TB=1099511627776, now=Date.now(), DAY=86400000;
+  // wipe any prior demo data first — IndexedDB persists across loads, so without this
+  // every page view would ADD another full set (5 → 10 → 15 … drives accumulating).
+  await new Promise((res)=>{ try{ const t=win.tx(['drives','files'],'readwrite');
+    t.objectStore('drives').clear(); t.objectStore('files').clear(); t.oncomplete=res; t.onerror=res; }catch(e){ res(); } });
   const drives=[
     { label:'Macintosh HD', driveType:'mac', cap:1*TB, used:0.62*TB, fc:184213, vn:'Macintosh HD' },
     { label:'Studio RAID', driveType:'raidsilver', cap:24*TB, used:18.4*TB, fc:512904, vn:'Studio_RAID' },
