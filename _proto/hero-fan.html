@@ -26,10 +26,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
  transform-origin:50% 230%;will-change:transform,opacity}
 .fcard.ph{border-radius:18px;filter:drop-shadow(0 24px 44px rgba(0,0,0,.6))}
 .fcard.ph svg{display:block;width:100%;height:100%}
-.t9c{z-index:6}
+.t9c{z-index:2}   /* steckt im Fächer · kommt erst beim Hochfahren nach vorn (JS) */
 .dimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.dimg.front{filter:drop-shadow(0 24px 44px rgba(0,0,0,.6));will-change:clip-path}
-.dimg.xray{mix-blend-mode:screen;clip-path:inset(0 100% 0 0);will-change:clip-path}  /* schwarzer BG verschwindet · enthüllt sich hinterm Scan */
+.dimg.front{filter:drop-shadow(0 24px 44px rgba(0,0,0,.6));will-change:mask}
+.dimg.xray{mix-blend-mode:screen;opacity:0;will-change:mask,opacity}  /* schwarzer BG verschwindet · weiche Masken-Kante folgt dem Scan */
 /* Scan-Linie + Glow-Partikel an der Kante */
 .scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .scanline.on{opacity:1}
@@ -122,6 +122,7 @@ function apply(p){
       const ty=-130*lift, sc=1+0.95*lift;
       c.style.transform=`rotate(0deg) translateY(${ty}px) scale(${sc})`;
       c.style.opacity=1;
+      c.style.zIndex = lift>0.05 ? 12 : 2;   // mittig im Stapel · vorn sobald sie hochfährt
     } else {
       const rot=i*FAN*(1+0.95*spread);
       const ty=Math.abs(i)*8 + 180*spread;
@@ -129,17 +130,23 @@ function apply(p){
       c.style.opacity=(1-0.95*spread).toFixed(3);
     }
   });
-  // X-ray entsteht DORT, wo der Scan-Strich gerade ist (clip-path folgt dem Beam) — kein globaler Fade
-  const bx=scan*100;
-  xray.style.clipPath=`inset(0 ${(100-bx).toFixed(2)}% 0 0)`;   // sichtbar 0..bx
-  front.style.clipPath=`inset(0 0 0 ${bx.toFixed(2)}%)`;        // sichtbar bx..100
-  scanline.style.left=bx.toFixed(2)+'%';
-  scanline.classList.toggle('on', scan>0.002 && scan<0.998);
+  // X-ray entsteht DORT, wo der Scan-Strich ist — weiche Masken-Kante (kein harter Schnitt, kein globaler Fade)
+  const bx=scan*100, f=6;
+  if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('on'); }
+  else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('on'); }
+  else {
+    xray.style.opacity=1; front.style.opacity=1;
+    xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-f).toFixed(2)}%,transparent ${(bx+f).toFixed(2)}%)`;
+    front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-f).toFixed(2)}%,#000 ${(bx+f).toFixed(2)}%)`;
+    scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('on');
+  }
   head.style.opacity=(1-0.95*spread).toFixed(3);
   head.style.transform=`translateY(${(-46*spread).toFixed(1)}px)`;
   hint.style.opacity=p>0.05?0:1;
 }
-function setRest(){ cards.forEach(c=>{const i=+c.dataset.i; c.style.transform = i===0 ? 'rotate(0deg)' : `rotate(${i*FAN}deg) translateY(${Math.abs(i)*8}px)`;}); }
+function setRest(){ cards.forEach(c=>{const i=+c.dataset.i;
+  c.style.zIndex = i===0 ? 2 : (Math.abs(i)===1 ? 3 : 1);   // direkte Nachbarn liegen ÜBER der T9 → sie steckt mittig im Fächer
+  c.style.transform = i===0 ? 'rotate(0deg)' : `rotate(${i*FAN}deg) translateY(${Math.abs(i)*8}px)`;}); }
 setRest();
 let raf=0;
 addEventListener('scroll',()=>{ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
