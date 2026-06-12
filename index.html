@@ -260,7 +260,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-fan{position:absolute;left:50%;bottom:-118px;width:0;height:0;transform:scale(var(--hffs,1));transform-origin:50% 100%}
 .hf-fcard{position:absolute;left:50%;bottom:0;height:280px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
 .hf-fan.hf-resting .hf-fcard{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
-.hf-fcard .hf-drv{height:100%;width:auto;display:block;filter:drop-shadow(0 30px 44px rgba(0,0,0,.7))}
+.hf-fcard .hf-drv{height:100%;width:auto;display:block;filter:drop-shadow(0 16px 26px rgba(0,0,0,.6))}
+.hf-fan:not(.hf-resting) .hf-drv{filter:none}   /* Schatten-Filter nur im Ruhezustand → kein teures Repaint während der Bewegung */
 .hf-t9{position:absolute;left:50%;top:50%;width:520px;z-index:11;pointer-events:none;will-change:transform}
 .hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
 .hf-t9 .hf-dimg{display:block;width:100%;height:auto}
@@ -283,7 +284,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-awlive{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#9fd0ff}
 .hf-awlive i{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80}
 .hf-awscreen{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#06080c}
-#hf-appframe{position:absolute;top:0;left:0;width:1320px;height:900px;border:0;transform-origin:top left;background:#06080c}
+#hf-appframe{position:absolute;top:0;left:0;width:1320px;height:900px;border:0;transform-origin:top left;background:#06080c;will-change:transform;contain:content}
 .hf-awscrim{position:absolute;inset:0;background:#0a0d15;transition:opacity .6s ease;pointer-events:none}
 .hf-awscrim.gone{opacity:0}
 .hf-awbody{display:flex;height:calc(100% - 38px)}
@@ -354,10 +355,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       </div></div>
       <div class="hf-bloom" id="hf-bloom"></div>
       <div class="hf-shock" id="hf-shock"></div>
-      <div class="hf-appwin" id="hf-appwin">
-        <div class="hf-awbar"><span class="hf-tl r"></span><span class="hf-tl y"></span><span class="hf-tl g"></span><span class="hf-awtitle">Disky</span><span class="hf-awlive"><i></i>Live</span></div>
-        <div class="hf-awscreen"><iframe id="hf-appframe" title="Disky — Storage Map" tabindex="-1" scrolling="no"></iframe><div class="hf-awscrim" id="hf-awscrim"></div></div>
-      </div>
       <div class="hf-t9" id="hf-t9">
         <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
         <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp" alt="" decoding="async">
@@ -685,7 +682,7 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     ('requestIdleCallback' in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,1600);
     addEventListener('scroll',go,{once:true,passive:true}); })();
   const bloom=$('hf-bloom'), shock=$('hf-shock');
-  const appwin=$('hf-appwin'), filesWrap=$('hf-files'), appframe=$('hf-appframe'), awscrim=$('hf-awscrim');
+  const filesWrap=$('hf-files');
   const cap1=$('hf-cap1'), cap2=$('hf-cap2');
   const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
   const lerp=(a,b,t)=>a+(b-a)*t;
@@ -712,29 +709,14 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
   const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);
 
-  // ECHTE Disky-App ins Hero-Fenster (Live-iframe) → zeigt die Storage Map der gescannten T9
-  let APPW=null, appReady=false, appActive=false;
-  function fitApp(){ try{ const s=appwin.querySelector('.hf-awscreen'); const sc=s.clientWidth/1320; appframe.style.transform='scale('+sc+')'; appframe.style.height=(s.clientHeight/sc)+'px'; }catch(e){} }
-  async function startApp(){
-    APPW=appframe.contentWindow; const t0=Date.now();
-    while((typeof APPW.addDrive!=='function' || !(()=>{try{APPW.tx(['drives'],'readonly');return true;}catch(e){return false;}})()) && Date.now()-t0<15000){ await new Promise(r=>setTimeout(r,60)); }
-    try{ if(window.diskySeedDemo) await window.diskySeedDemo(APPW); }catch(e){}
-    try{ APPW.document.body.classList.remove('booting'); const a=APPW.document.getElementById('app'); if(a)a.classList.remove('boot-in'); }catch(e){}
-    appReady=true; fitApp(); setAppActive(appActive);
-    try{ APPW.setView && APPW.setView('map'); }catch(e){}
-    // den Samsung-T9-Tab in der Storage Map wählen (Klick triggert die echte App-Logik)
-    setTimeout(()=>{ try{ const btns=[...APPW.document.querySelectorAll('.mapdrive[data-md]')]; const t9=btns.find(b=>/Samsung T9/i.test(b.textContent)); if(t9)t9.click(); }catch(e){} },300);
-    setTimeout(()=>awscrim.classList.add('gone'),520);
-  }
-  function setAppActive(on){ appActive=on; try{ if(APPW) APPW._animActive=on; }catch(e){} }
-  let appLoadStarted=false;
-  function loadApp(){ if(appLoadStarted) return; appLoadStarted=true; appframe.addEventListener('load',startApp,{once:true}); appframe.src='/app/index.html'; }
+  // Hero bleibt leicht: KEIN zweites App-iframe (gleich-origin = Main-Thread-Block beim Boot).
+  // Die Dateien strömen nach unten in die EINE echte App (Showcase) → dort wird die T9 real angezeigt.
 
   /* Sterne (3D, pures Canvas) — pausiert wenn der Hero aus dem Viewport ist */
   const starCv=$('hf-stars'), starCtx=starCv.getContext('2d');
   let stars3=[],rotY=0,rotX=0,FOCAL=800,starsOn=true,running=false;
   function sizeStars(){ starCv.width=innerWidth; starCv.height=innerHeight; FOCAL=Math.max(640,innerHeight*0.92);
-    const n=Math.min(2000,Math.round(innerWidth*innerHeight/1150)); stars3=[];
+    const n=Math.min(820,Math.round(innerWidth*innerHeight/2700)); stars3=[];
     for(let i=0;i<n;i++) stars3.push({x:(Math.random()-0.5)*2000,y:(Math.random()-0.5)*2000,z:(Math.random()-0.5)*2000}); }
   function frame(){ if(!starsOn){running=false;return;}
     rotY+=0.0001; rotX+=0.00005;
@@ -754,13 +736,13 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   }
   function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
   sizeStars();
-  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); else setAppActive(false); }),{threshold:0.01}).observe(rail);
+  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);
   startStars();
 
   /* Fächer-Layout */
   const DRV={'-2':{h:300,ar:0.631},'-1':{h:424,ar:0.666},'0':{h:318,ar:0.683},'1':{h:238,ar:0.766},'2':{h:378,ar:0.710}};
   const REFW=1120, HEROW=520, REST_VIS=318, FAN_BOTTOM=-118;
-  let fanScale=1, heroTyRest=0, heroScRest=0.5, heroScLift=1, ORDER=[];
+  let fanScale=1, heroTyRest=0, heroScRest=0.5, heroScLift=1;
   function fanParts(i){ return {tx:i*126, ty:Math.abs(i)*-12, rot:i*8.5}; }
   function cardT(i,dy,sc){ const f=fanParts(i); return `translate(calc(-50% + ${f.tx.toFixed(1)}px), ${(f.ty+(dy||0)).toFixed(1)}px) rotate(${f.rot}deg) scale(${(sc||1).toFixed(3)})`; }
   function baseZ(i){ return 10-Math.abs(i); }
@@ -774,7 +756,6 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     heroScRest=(REST_VIS*fanScale)/HEROW;
     const restCenterY=(innerHeight-FAN_BOTTOM)-(REST_VIS/2)*fanScale;
     heroTyRest=restCenterY-innerHeight/2;
-    fitApp();
   }
 
   function apply(p){
@@ -819,18 +800,15 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
     head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
     head.style.opacity=(1-0.82*spread).toFixed(3);
-    appwin.style.opacity=clamp((p2-0.08)/0.3).toFixed(3);
-    if(p>0.12) loadApp();                 // echte App rechtzeitig vorladen
-    setAppActive(p>0.45 && p<0.999);      // nur aktiv (Starfield-rAF) wenn der Screen sichtbar ist
-    // Dateien strömen in die echte App + verblassen beim Eintauchen
-    const aw=appwin.getBoundingClientRect(), tgx=aw.left+aw.width/2, tgy=aw.top+aw.height*0.42, W=innerWidth,H=innerHeight;
+    // Dateien strömen nach unten in die echte App (Showcase darunter) + verblassen
+    const tgx=innerWidth/2, tgy=innerHeight+120, W=innerWidth,H=innerHeight;
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
-      const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.4)), fm=flow*flow;
+      const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.42)), fm=flow*flow;
       const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
-      const x=lerp(chX,tgx,fm), y=lerp(chY,tgy,fm), rot=lerp(f.r,0,flow), sc=1-0.55*fm;
+      const x=lerp(chX,tgx,fm), y=lerp(chY,tgy,fm), rot=lerp(f.r,0,flow), sc=1-0.45*fm;
       el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
-      el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.5)/0.42))).toFixed(3);
+      el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.45)/0.4))).toFixed(3);
     });
     const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
     const cap2Op=clamp((p2-0.2)/0.26);
