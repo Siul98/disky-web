@@ -261,7 +261,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 /* ===== Cinematic scroll hero (isolated hf- module) ===== */
 .hfhero{position:relative;display:block;margin:0;padding:0}
-.hf-rail{position:relative;height:300vh}
+.hf-rail{position:relative;height:780vh}   /* scan+land ~38% → dann Tool-Tour (6 Screenshots) auf demselben MacBook */
 .hf-sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
 #hf-stars{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%);mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%)}
 .hf-grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;background-image:linear-gradient(to right,rgba(244,247,251,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(244,247,251,.05) 1px,transparent 1px);-webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%)}
@@ -357,6 +357,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 18px 24px -14px rgba(0,0,0,.6)}
 .hf-mbase::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
   width:60px;height:6px;border-radius:0 0 9px 9px;background:linear-gradient(180deg,#7a808a,#9aa0a8)}
+/* Tool-Tour caption (unter dem MacBook während der Explore-Phase) */
+.hf-tour{position:absolute;left:50%;bottom:8.5%;transform:translateX(-50%);z-index:15;width:min(620px,88vw);text-align:center;opacity:0;pointer-events:none;will-change:opacity}
+.hf-tour-eb{display:block;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);margin-bottom:9px}
+.hf-tour-h{font-size:clamp(20px,2.5vw,31px);letter-spacing:-.02em;margin:0;line-height:1.16;color:var(--ink);font-weight:680}
 .hf-scrollhint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:30;color:var(--mut2);font-size:12px;pointer-events:none;animation:hf-bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes hf-bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 @media(prefers-reduced-motion:reduce){.hf-t3d,.hf-silver,.hf-eb,.hf-sub,.hf-cta,.hf-tl{animation:none!important;opacity:1!important;clip-path:none!important}}
@@ -463,12 +467,21 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <div class="hf-mlid">
           <span class="hf-mcam" aria-hidden="true"></span>
           <div class="hf-mscr">
-            <img data-src="assets/screen-overview.webp" alt="Disky app" decoding="async">
+            <img class="hf-shot" data-i="0" data-src="assets/screen-overview.webp" alt="Disky — overview" decoding="async">
+            <img class="hf-shot" data-i="1" data-src="assets/screen-search.webp" alt="Disky — search" decoding="async">
+            <img class="hf-shot" data-i="2" data-src="assets/screen-map.webp" alt="Disky — storage map" decoding="async">
+            <img class="hf-shot" data-i="3" data-src="assets/screen-backup.webp" alt="Disky — projects & backup" decoding="async">
+            <img class="hf-shot" data-i="4" data-src="assets/screen-dupes.webp" alt="Disky — duplicates" decoding="async">
+            <img class="hf-shot" data-i="5" data-src="assets/screen-worldmap.webp" alt="Disky — worldmap" decoding="async">
             <div class="hf-mglow" aria-hidden="true"></div>
             <div class="hf-mswipe" aria-hidden="true"></div>
           </div>
         </div>
         <div class="hf-mbase" aria-hidden="true"></div>
+      </div>
+      <div class="hf-tour" id="hf-tour" aria-live="polite">
+        <span class="hf-tour-eb"></span>
+        <h2 class="hf-tour-h"></h2>
       </div>
       <div class="hf-files" id="hf-files"></div>
       <div class="hf-beatcap" id="hf-cap1" data-t="hero_cap1">Scan once.</div>
@@ -487,44 +500,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <span><b data-t="t5">Works offline</b></span>
 </div></section>
 
-<!-- LIVE SHOWCASE -->
-<section class="show" id="features">
-  <div class="show-rail" id="rail">
-    <div class="show-sticky">
-      <div class="stage">
-        <div class="macbook">
-          <div class="mb-lid">
-            <span class="mb-cam" aria-hidden="true"></span>
-            <div class="display" id="display">
-              <div class="display-bar">
-                <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
-                <span class="dlabel">Disky</span>
-                <span class="livebadge"><i aria-hidden="true"></i><span data-t="live_lbl">Live</span></span>
-              </div>
-              <div class="display-screen">
-                <iframe id="appFrame" title="Disky — live app" loading="lazy"></iframe>
-                <div class="scrim" id="scrim"><div class="spin"></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="mb-base" aria-hidden="true"></div>
-        </div>
-        <div class="caps" id="caps">
-          <article class="cap" data-step="0"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
-          <article class="cap" data-step="1"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
-          <article class="cap" data-step="2"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
-          <article class="cap" data-step="3"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
-          <article class="cap" data-step="4"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
-          <article class="cap" data-step="5"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
-        </div>
-      </div>
-      <div class="show-dots" id="dots"></div>
-    </div>
-  </div>
-</section>
-
 <!-- FEATURE CARDS -->
-<section class="sec bord feats"><div class="wrap">
+<section class="sec bord feats" id="features"><div class="wrap">
   <span class="eyebrow rev" data-t="feats_eb">Six tools. One catalog.</span>
   <h2 class="feats-h rev" data-t="feats_h">Everything Disky does, at a glance.</h2>
   <div class="feat-grid" id="featGrid">
@@ -712,7 +689,7 @@ function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
   document.title=tt('meta_title'); const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute('content',tt('meta_desc'));
   document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
-  renderCaps(); renderFAQ(); renderFeats();
+  renderCaps(); renderFAQ(); renderFeats(); if(window.__hfRefreshTour)window.__hfRefreshTour();
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
@@ -759,68 +736,6 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   document.head.appendChild(s);
 })();
 
-/* ─────────── live app embed + scroll story ─────────── */
-const VIEWS=['overview','search','map','backup','dupes','worldmap'];
-const display=document.getElementById('display'), frame=document.getElementById('appFrame'),
-      scrim=document.getElementById('scrim'), caps=[...document.querySelectorAll('#caps .cap')],
-      dotsWrap=document.getElementById('dots');
-let APPW=null, appReady=false, curStep=-1, inView=false;
-
-// dots
-caps.forEach((_,i)=>{ const b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Step '+(i+1));
-  b.onclick=()=>{ const rail=document.getElementById('rail'); const top=scrollY+rail.getBoundingClientRect().top;
-    const span=rail.offsetHeight-innerHeight; glideTo(top+span*((i+0.35)/VIEWS.length)); };
-  dotsWrap.appendChild(b); });
-const dotEls=[...dotsWrap.children];
-
-// scale the live app to fit the display
-function fitApp(){ const w=display.querySelector('.display-screen').clientWidth; frame.style.transform='scale('+(w/1320)+')'; }
-addEventListener('resize',fitApp);
-
-// shared localStorage (same origin) → app skips onboarding & matches language
-store.set('disky_onboarded','1'); store.set('disky_lang',LANG);
-
-async function seedAndStart(){
-  APPW=frame.contentWindow;
-  const t0=Date.now();
-  while((typeof APPW.addDrive!=='function' || !(()=>{try{APPW.tx(['drives'],'readonly');return true;}catch(e){return false;}})()) && Date.now()-t0<15000){ await new Promise(r=>setTimeout(r,50)); }
-  try{ if(window.diskySeedDemo) await window.diskySeedDemo(APPW); }catch(e){}
-  try{ APPW.document.body.classList.remove('booting'); const a=APPW.document.getElementById('app'); if(a)a.classList.remove('boot-in'); }catch(e){}
-  appReady=true; fitApp();
-  applyView(curStep<0?0:curStep,true);
-  setTimeout(()=>scrim.classList.add('gone'),260);
-}
-function applyView(step,force){
-  if(!appReady||(!force&&step===curStep))return; curStep=step;
-  dotEls.forEach((d,i)=>d.classList.toggle('on',i===step));
-  caps.forEach((c,i)=>c.classList.toggle('on',i===step));
-  const v=VIEWS[step]; try{ APPW.setView&&APPW.setView(v);
-    if(v==='search'){ setTimeout(()=>{ try{ const d=APPW.document; const pill=d.querySelector('.deep-pill[data-mode="all"]'); if(pill)pill.click();
-      const inp=d.getElementById('deepQ'); if(inp){ inp.value='Footage'; inp.dispatchEvent(new APPW.Event('input',{bubbles:true})); } }catch(e){} },140); }
-  }catch(e){}
-}
-// pause the app's starfield rAF when the showcase is off-screen → protects page smoothness
-function setAppActive(on){ try{ if(APPW) APPW._animActive=on; }catch(e){} }
-
-// load the iframe only when the showcase approaches (keeps initial paint light & smooth)
-const railSec=document.getElementById('features');
-const preIO=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting && !frame.src){ frame.src='/app/index.html'; frame.addEventListener('load',seedAndStart,{once:true}); preIO.disconnect(); } }); },{rootMargin:'220px 0px'});
-preIO.observe(railSec);
-
-// in-view tracking for the sticky stage
-const viewIO=new IntersectionObserver((es)=>{ es.forEach(e=>{ inView=e.isIntersecting; setAppActive(inView); }); },{threshold:.01});
-viewIO.observe(document.querySelector('.show-sticky'));
-
-// scroll → step
-let raf=0;
-function onScroll(){ if(raf)return; raf=requestAnimationFrame(()=>{ raf=0;
-  const rail=document.getElementById('rail'); const r=rail.getBoundingClientRect();
-  const span=rail.offsetHeight-innerHeight; if(span<=0)return;
-  const prog=Math.min(1,Math.max(0,(-r.top)/span));
-  let step=Math.floor(prog*VIEWS.length); step=Math.max(0,Math.min(VIEWS.length-1,step));
-  if(step!==curStep) applyView(step);
-}); }
-addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
 </script>
 <script>
@@ -838,8 +753,13 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
   const bloom=$('hf-bloom'), shock=$('hf-shock');
   const filesWrap=$('hf-files');
   const cap1=$('hf-cap1'), cap2=$('hf-cap2');
-  const mac=$('hf-mac'), macImg=mac.querySelector('img'), macGlow=mac.querySelector('.hf-mglow'), macSwipe=mac.querySelector('.hf-mswipe');
-  (function(){ let d=false; const go=()=>{ if(d)return; d=true; if(macImg.dataset.src) macImg.src=macImg.dataset.src; };
+  const mac=$('hf-mac'), macGlow=mac.querySelector('.hf-mglow'), macSwipe=mac.querySelector('.hf-mswipe');
+  const shots=[...mac.querySelectorAll('.hf-shot')], NS=shots.length, tour=$('hf-tour');
+  let shotsLoaded=false, lastTour=-1;
+  function renderTour(i){ if(!tour)return; let cps=[]; try{cps=I18N[LANG].caps||I18N.en.caps;}catch(e){} const c=cps[i]; if(!c)return;
+    tour.querySelector('.hf-tour-eb').textContent=c.eb; tour.querySelector('.hf-tour-h').textContent=c.h; }
+  window.__hfRefreshTour=function(){ if(lastTour>=0) renderTour(lastTour); };
+  (function(){ let d=false; const go=()=>{ if(d)return; d=true; if(shots[0]&&shots[0].dataset.src) shots[0].src=shots[0].dataset.src; };  // Overview fürs Wake-up vorladen
     ('requestIdleCallback' in window)?requestIdleCallback(go,{timeout:2500}):setTimeout(go,1700);
     addEventListener('scroll',go,{once:true,passive:true}); })();
   const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
@@ -918,7 +838,8 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     heroTyRest=restCenterY-innerHeight/2;
   }
 
-  function apply(p){
+  function apply(P){
+    const A=0.38, sp=clamp(P/A), pe=clamp((P-A)/(1-A)), p=sp;   // sp: Scan+Land+Wake, pe: Tool-Tour
     const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);
     const lift=easeIO(clamp(p1/0.46));
     const scan=clamp((p1-0.5)/0.4);
@@ -960,17 +881,29 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
     head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
     head.style.opacity=(1-0.82*spread).toFixed(3);
-    // MacBook steigt hoch und fängt die Dateien; ist alles drin, „erwacht" die App (echter Screenshot, kein iframe)
+    // EIN MacBook: steigt hoch & fängt die Dateien → App „erwacht" → tourt durch die 6 Tools (echte Screenshots)
     const macIn=easeIO(clamp(p2/0.42));
     const macReact=ease(clamp((p2-0.5)/0.34));
-    mac.style.opacity=macIn.toFixed(3);
-    mac.style.transform=`translate(-50%,calc(-50% + ${(120*(1-macIn)).toFixed(0)}px)) scale(${(0.9+0.1*macIn).toFixed(3)})`;
-    macImg.style.opacity=macReact.toFixed(3);
-    macImg.style.transform=`scale(${(1.06-0.06*macReact).toFixed(3)})`;
-    macGlow.style.opacity=(Math.sin(clamp(macReact)*Math.PI)*0.7).toFixed(3);
+    const eIn=clamp(pe/0.08);
+    const macY=120*(1-macIn) - innerHeight*0.065*eIn;
+    const macSc=(0.9+0.1*macIn)*(1+0.11*eIn);
+    mac.style.opacity=(pe>0?1:macIn).toFixed(3);
+    mac.style.transform=`translate(-50%,calc(-50% + ${macY.toFixed(0)}px)) scale(${macSc.toFixed(3)})`;
     const sw=clamp((p2-0.5)/0.2);
-    macSwipe.style.opacity=(sw>0&&sw<1?0.9:0).toFixed(2);
+    macSwipe.style.opacity=(pe<=0&&sw>0&&sw<1?0.9:0).toFixed(2);
     macSwipe.style.transform=`translateX(${(sw*240).toFixed(0)}%)`;
+    macGlow.style.opacity=(pe<=0?Math.sin(clamp(macReact)*Math.PI)*0.7:0).toFixed(3);
+    if(pe<=0){                              // Wake-up: Overview-Screenshot geht an
+      shots[0].style.opacity=macReact.toFixed(3);
+      for(let i=1;i<NS;i++) shots[i].style.opacity='0';
+      if(tour) tour.style.opacity='0';
+    } else {                                // Explore: durch die 6 Tools faden + Tool-Caption
+      if(!shotsLoaded){ shotsLoaded=true; for(let i=1;i<NS;i++){ if(shots[i].dataset.src) shots[i].src=shots[i].dataset.src; } }
+      const seg=pe*6, cur=clamp(Math.floor(seg),0,5), f=seg-Math.floor(seg), nxt=Math.min(5,cur+1);
+      for(let i=0;i<NS;i++){ let o=0; if(i===cur)o=f<0.8?1:(1-(f-0.8)/0.2); if(i===nxt&&f>0.8)o=(f-0.8)/0.2; shots[i].style.opacity=o.toFixed(3); }
+      if(cur!==lastTour){ lastTour=cur; renderTour(cur); }
+      if(tour) tour.style.opacity=(clamp(Math.min(f/0.12,(1-f)/0.12,1))*clamp(pe/0.04)).toFixed(3);
+    }
     // Dateien fliegen in den MacBook-Screen und werden „aufgesaugt" (schrumpfen + verblassen)
     const tgx=innerWidth/2, tgy=innerHeight*0.47, W=innerWidth,H=innerHeight;
     fitems.forEach((el,i)=>{ const f=FILES[i];
@@ -982,10 +915,10 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
       el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.6)/0.28))).toFixed(3);
     });
     const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
-    const cap2Op=clamp((p2-0.2)/0.26);
+    const cap2Op=clamp((p2-0.2)/0.26)*(1-clamp(pe/0.06));   // „Remembered forever" weicht der Tool-Tour
     cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(16*(1-cap1Op)).toFixed(0)}px)`;
     cap2.style.opacity=cap2Op.toFixed(3); cap2.style.transform=`translateX(-50%) translateY(${(16*(1-cap2Op)).toFixed(0)}px)`;
-    if(hint) hint.style.opacity=p>0.05?0:1;
+    if(hint) hint.style.opacity=P>0.05?0:1;
   }
   function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
     const g=heroGeom(0); hero.style.transform=heroT(g,0,1); hero.style.zIndex=11; hero.style.filter=''; }
