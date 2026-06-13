@@ -391,6 +391,108 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .feat2-proof{margin-top:20px;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mut2);line-height:1.5;max-width:430px}
 .feat2-proof::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 10px rgba(74,158,255,.8)}
 @media(max-width:820px){.feat2{grid-template-columns:1fr;gap:22px}.feat2:nth-child(even) .feat2-media{order:0}.feat2-p,.feat2-proof{max-width:none}}
+/* ===== Feature reel: purpose-built animated demos (show the benefit, not screenshots) ===== */
+.reel{margin-top:clamp(28px,5vh,54px)}
+.rl-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-bottom:clamp(26px,4vh,42px)}
+.rl-pill{position:relative;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--mut);font:inherit;font-size:13.5px;font-weight:600;letter-spacing:-.01em;padding:9px 17px;border-radius:980px;cursor:pointer;transition:color .25s,border-color .25s,background .25s}
+.rl-pill:hover{color:var(--ink);border-color:var(--line2)}
+.rl-pill.on{color:#fff;border-color:transparent;background:rgba(74,158,255,.16)}
+.rl-pill .pg{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.rl-pill.on.run .pg{animation:rl-fill var(--rl-dur,6s) linear forwards}
+@keyframes rl-fill{from{width:0}to{width:100%}}
+.rl-stage{display:grid;grid-template-columns:1.16fr .84fr;gap:clamp(30px,4vw,64px);align-items:center}
+.rl-screen{position:relative;aspect-ratio:16/10.4;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(130% 120% at 50% -10%,rgba(40,82,150,.16),transparent 60%),#080b11;box-shadow:0 44px 100px -40px rgba(0,0,0,.82),inset 0 1px 0 rgba(255,255,255,.05)}
+.rl-demo{position:absolute;inset:0;opacity:0;transition:opacity .45s ease}
+.rl-demo.on{opacity:1}
+.reel.paused .rl-demo *,.reel.paused .rl-pill .pg,.reel.hold .rl-demo *,.reel.hold .rl-pill .pg{animation-play-state:paused}
+.rl-copy .eb{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
+.rl-copy h3{font-size:clamp(23px,2.7vw,33px);letter-spacing:-.025em;line-height:1.14;margin:0 0 15px;color:var(--ink)}
+.rl-copy p{font-size:15px;color:var(--mut);line-height:1.6;margin:0;max-width:430px}
+.rl-copy .pr{margin-top:20px;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mut2);line-height:1.5;max-width:400px}
+.rl-copy .pr::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 10px rgba(74,158,255,.8)}
+.rl-copy.swap{opacity:0;transform:translateY(10px)}
+.rl-copy{transition:opacity .4s ease,transform .4s ease}
+@media(max-width:860px){.rl-stage{grid-template-columns:1fr;gap:26px}.rl-copy p,.rl-copy .pr{max-width:none}}
+@media(prefers-reduced-motion:reduce){.rl-demo *{animation:none!important}}
+
+/* -- demo: Deep Search -- */
+.demo-search{padding:6%}
+.ds-bar{display:flex;align-items:center;gap:10px;height:14%;min-height:38px;padding:0 16px;border-radius:11px;background:rgba(255,255,255,.06);border:1px solid var(--line2);color:#eaf1fb;font-size:clamp(15px,1.9vw,20px);font-weight:600;letter-spacing:-.01em}
+.ds-bar svg{width:18px;height:18px;flex:0 0 auto;stroke:#9fb6d4;fill:none;stroke-width:2}
+.ds-q{white-space:nowrap;overflow:hidden;opacity:0}
+.demo-search.on .ds-q{animation:ds-type 6s ease infinite}
+.ds-cur{width:2px;height:1.1em;background:var(--acc);box-shadow:0 0 6px var(--acc);margin-left:-5px}
+.demo-search.on .ds-cur{animation:ds-cur 6s steps(1) infinite}
+.ds-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3.4%;margin-top:5.5%;height:76%}
+.ds-tile{position:relative;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#222c3d,#141a27)}
+.ds-tile::after{content:"";position:absolute;left:50%;top:50%;width:0;height:0;transform:translate(-40%,-50%);border-left:12px solid rgba(255,255,255,.28);border-top:7.5px solid transparent;border-bottom:7.5px solid transparent}
+.ds-tile.m{background:linear-gradient(150deg,#1f6f9e,#0e3a5e)}
+.ds-tile.m::after{border-left-color:rgba(220,240,255,.6)}
+.ds-tile.m::before{content:"";position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 2px rgba(86,170,255,1),0 0 22px rgba(74,158,255,.7);opacity:0}
+.demo-search.on .ds-tile{animation:ds-dim 6s ease infinite}
+.demo-search.on .ds-tile.m{animation:ds-hit 6s ease infinite}
+.demo-search.on .ds-tile.m::before{animation:ds-ring 6s ease infinite}
+.ds-count{position:absolute;right:7%;bottom:7%;display:flex;align-items:center;gap:8px;padding:8px 15px;border-radius:980px;background:rgba(74,158,255,.2);border:1px solid rgba(74,158,255,.5);color:#dcebff;color:#d6e9ff;font-size:13px;font-weight:680;opacity:0;backdrop-filter:blur(2px)}
+.demo-search.on .ds-count{animation:ds-badge 6s ease infinite}
+@keyframes ds-type{0%,7%{opacity:0}11%{opacity:1}100%{opacity:1}}
+@keyframes ds-cur{0%,44%{opacity:1}46%,100%{opacity:0}}
+@keyframes ds-dim{0%,38%{opacity:1;filter:none}52%,96%{opacity:.13;filter:grayscale(1) brightness(.7)}100%{opacity:1;filter:none}}
+@keyframes ds-hit{0%,38%{transform:scale(1);filter:none}52%,96%{transform:scale(1.06);filter:brightness(1.12)}100%{transform:scale(1);filter:none}}
+@keyframes ds-ring{0%,40%{opacity:0}54%,94%{opacity:1}100%{opacity:0}}
+@keyframes ds-badge{0%,50%{opacity:0;transform:translateY(8px)}62%,94%{opacity:1;transform:none}100%{opacity:0;transform:translateY(8px)}}
+
+/* -- demo: Storage Map (DaisyDisk-style donut sunburst) -- */
+.demo-map{display:flex;align-items:center;justify-content:center}
+.demo-map svg{width:54%;height:54%;overflow:visible}
+.dm-burst{transform-box:fill-box;transform-origin:center;opacity:0}
+.demo-map.on .dm-burst{animation:dm-in 6s cubic-bezier(.2,.8,.3,1) infinite}
+.dm-seg{fill:none;stroke-width:13}
+.demo-map.on .dm-seg.hog{animation:dm-hog 6s ease infinite}
+.dm-label{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:980px;background:rgba(255,86,86,.16);border:1px solid rgba(255,86,86,.5);color:#ffc2c2;font-size:12.5px;font-weight:650;opacity:0}
+.demo-map.on .dm-label{animation:dm-badge 6s ease infinite}
+@keyframes dm-in{0%{opacity:0;transform:scale(.55) rotate(-24deg)}16%,100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes dm-hog{0%,52%{stroke:#3f5d86}66%,95%{stroke:#ff5656;filter:drop-shadow(0 0 5px rgba(255,86,86,.55))}100%{stroke:#3f5d86}}
+@keyframes dm-badge{0%,56%{opacity:0;transform:translate(-50%,8px)}68%,95%{opacity:1;transform:translateX(-50%)}100%{opacity:0;transform:translate(-50%,8px)}}
+
+/* -- demo: Duplicates -- */
+.demo-dup{display:flex;align-items:center;justify-content:center;gap:7%}
+.dd-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.dd-drive{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2)}
+.dd-file{position:relative;width:clamp(46px,7vw,72px);height:clamp(58px,9vw,90px);border-radius:9px;background:linear-gradient(160deg,#22304a,#162032);border:1px solid #31507e;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.dd-file::after{content:"MOV";position:absolute;left:50%;bottom:9px;transform:translateX(-50%);font-size:8.5px;font-weight:800;color:#7d9bf0}
+.demo-dup.on .dd-col:nth-child(2) .dd-file{animation:dd-merge 6s ease infinite}
+.demo-dup.on .dd-col:nth-child(4) .dd-file{animation:dd-merge 6s ease infinite;animation-direction:reverse}
+.demo-dup.on .dd-col:nth-child(3) .dd-file{animation:dd-keep 6s ease infinite}
+.dd-badge{position:absolute;left:50%;top:14%;transform:translateX(-50%);padding:7px 14px;border-radius:980px;background:rgba(74,158,255,.16);border:1px solid rgba(74,158,255,.4);color:#cfe4ff;font-size:12.5px;font-weight:650;opacity:0}
+.demo-dup.on .dd-badge{animation:dd-badge 6s ease infinite}
+@keyframes dd-merge{0%,44%{opacity:1;transform:translateX(0) scale(1)}70%,100%{opacity:0;transform:translateX(0) scale(.6)}}
+@keyframes dd-keep{0%,55%{box-shadow:0 6px 18px rgba(0,0,0,.4)}72%,96%{box-shadow:0 0 0 2px rgba(74,158,255,.8),0 0 22px rgba(74,158,255,.5)}100%{box-shadow:0 6px 18px rgba(0,0,0,.4)}}
+@keyframes dd-badge{0%,8%{opacity:0;transform:translate(-50%,6px)}18%,92%{opacity:1;transform:translateX(-50%)}100%{opacity:0;transform:translate(-50%,6px)}}
+
+/* -- demo: Project Radar (backup status) -- */
+.demo-backup{display:flex;flex-direction:column;justify-content:center;gap:11px;padding:9%}
+.bk-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line2)}
+.bk-name{flex:1;height:9px;border-radius:5px;background:rgba(255,255,255,.14)}
+.bk-name.s{max-width:62%}.bk-name.m{max-width:78%}.bk-name.l{max-width:50%}
+.bk-chip{flex:0 0 auto;width:74px;height:22px;border-radius:980px;background:rgba(255,255,255,.08)}
+.demo-backup.on .bk-row:nth-child(1) .bk-chip{animation:bk-safe 6s ease infinite .15s}
+.demo-backup.on .bk-row:nth-child(2) .bk-chip{animation:bk-safe 6s ease infinite .45s}
+.demo-backup.on .bk-row:nth-child(3) .bk-chip{animation:bk-warn 6s ease infinite .75s}
+.demo-backup.on .bk-row:nth-child(4) .bk-chip{animation:bk-safe 6s ease infinite 1.05s}
+@keyframes bk-safe{0%,30%{background:rgba(255,255,255,.08)}42%,96%{background:rgba(74,222,128,.2);box-shadow:inset 0 0 0 1px rgba(74,222,128,.5)}100%{background:rgba(255,255,255,.08)}}
+@keyframes bk-warn{0%,30%{background:rgba(255,255,255,.08)}42%,96%{background:rgba(255,86,86,.22);box-shadow:inset 0 0 0 1px rgba(255,86,86,.55),0 0 16px rgba(255,86,86,.35)}100%{background:rgba(255,255,255,.08)}}
+
+/* -- demo: Worldmap -- */
+.demo-world{background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.025) 1px,transparent 1.6px) 0 0/15px 15px}
+.dw-pin{position:absolute;width:13px;height:13px;transform:translate(-50%,-100%) scale(0);transform-origin:bottom center}
+.dw-pin i{position:absolute;inset:0;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--acc);box-shadow:0 0 12px rgba(74,158,255,.7)}
+.dw-pin i::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:#0a1020;transform:translate(-50%,-50%) rotate(45deg)}
+.demo-world.on .dw-pin{animation:dw-drop 6s cubic-bezier(.3,1.4,.5,1) infinite}
+.demo-world.on .dw-pin:nth-child(1){animation-delay:.3s}.demo-world.on .dw-pin:nth-child(2){animation-delay:.7s}.demo-world.on .dw-pin:nth-child(3){animation-delay:1.1s}.demo-world.on .dw-pin:nth-child(4){animation-delay:1.5s}.demo-world.on .dw-pin:nth-child(5){animation-delay:1.9s}.demo-world.on .dw-pin:nth-child(6){animation-delay:2.3s}
+.dw-count{position:absolute;left:50%;bottom:10%;transform:translateX(-50%);padding:7px 14px;border-radius:980px;background:rgba(74,158,255,.16);border:1px solid rgba(74,158,255,.4);color:#cfe4ff;font-size:12.5px;font-weight:650;opacity:0}
+.demo-world.on .dw-count{animation:dw-badge 6s ease infinite}
+@keyframes dw-drop{0%,8%{transform:translate(-50%,-100%) scale(0)}16%{transform:translate(-50%,-100%) scale(1)}90%{transform:translate(-50%,-100%) scale(1)}100%{transform:translate(-50%,-100%) scale(0)}}
+@keyframes dw-badge{0%,48%{opacity:0;transform:translate(-50%,8px)}60%,94%{opacity:1;transform:translateX(-50%)}100%{opacity:0;transform:translate(-50%,8px)}}
 /* ===== legacy feature cards (kept dormant) ===== */
 .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:46px}
 @media(max-width:880px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
@@ -514,13 +616,59 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <span><b data-t="t5">Works offline</b></span>
 </div></section>
 
-<!-- FEATURE SECTIONS (real app screenshots, alternating, normal scroll) -->
-<section class="sec bord feats features2" id="features"><div class="wrap">
+<!-- FEATURE REEL — purpose-built animated demos (show the benefit, not screenshots) -->
+<section class="sec bord feats" id="features"><div class="wrap">
   <div class="feat2-intro">
     <span class="eyebrow rev" data-t="feats_eb">Six tools. One catalog.</span>
     <h2 class="feats-h rev" data-t="feats_h">Everything Disky does, at a glance.</h2>
   </div>
-  <div class="feat2-list" id="feat2-list"></div>
+  <div class="reel rev" id="reel">
+    <div class="rl-pills" id="rl-pills"></div>
+    <div class="rl-stage">
+      <div class="rl-screen">
+        <div class="rl-demo demo-search" data-demo="search">
+          <div class="ds-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><span class="ds-q" data-t="rl_q">underwater</span><span class="ds-cur"></span></div>
+          <div class="ds-grid"><span class="ds-tile"></span><span class="ds-tile m"></span><span class="ds-tile"></span><span class="ds-tile m"></span><span class="ds-tile"></span><span class="ds-tile"></span><span class="ds-tile m"></span><span class="ds-tile"></span><span class="ds-tile m"></span><span class="ds-tile"></span><span class="ds-tile"></span><span class="ds-tile"></span></div>
+          <div class="ds-count" data-t="rl_search_n">8 clips · 4 drives</div>
+        </div>
+        <div class="rl-demo demo-map" data-demo="map">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <g class="dm-burst">
+              <circle class="dm-seg hog" cx="100" cy="100" r="60" stroke="#3f5d86" stroke-dasharray="153 224" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+              <circle class="dm-seg" cx="100" cy="100" r="60" stroke="#37cfe0" stroke-dasharray="97 280" stroke-dashoffset="-158" transform="rotate(-90 100 100)"/>
+              <circle class="dm-seg" cx="100" cy="100" r="60" stroke="#4a9eff" stroke-dasharray="63 314" stroke-dashoffset="-260" transform="rotate(-90 100 100)"/>
+              <circle class="dm-seg" cx="100" cy="100" r="60" stroke="#5a7bb5" stroke-dasharray="44 333" stroke-dashoffset="-328" transform="rotate(-90 100 100)"/>
+              <circle class="dm-seg" cx="100" cy="100" r="38" stroke="#6aa6e6" stroke-dasharray="134 105" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+              <circle class="dm-seg" cx="100" cy="100" r="38" stroke="#39598a" stroke-dasharray="95 144" stroke-dashoffset="-139" transform="rotate(-90 100 100)"/>
+            </g>
+          </svg>
+          <div class="dm-label" data-t="rl_map_n">Reclaim 80 GB</div>
+        </div>
+        <div class="rl-demo demo-dup" data-demo="dup">
+          <div class="dd-badge" data-t="rl_dup_n">same file · ×3 · 46 GB</div>
+          <div class="dd-col"><span class="dd-drive">RAID</span><div class="dd-file"></div></div>
+          <div class="dd-col"><span class="dd-drive">Archive</span><div class="dd-file"></div></div>
+          <div class="dd-col"><span class="dd-drive">LaCie</span><div class="dd-file"></div></div>
+        </div>
+        <div class="rl-demo demo-backup" data-demo="backup">
+          <div class="bk-row"><span class="bk-name m"></span><span class="bk-chip"></span></div>
+          <div class="bk-row"><span class="bk-name s"></span><span class="bk-chip"></span></div>
+          <div class="bk-row"><span class="bk-name l"></span><span class="bk-chip"></span></div>
+          <div class="bk-row"><span class="bk-name s"></span><span class="bk-chip"></span></div>
+        </div>
+        <div class="rl-demo demo-world" data-demo="world">
+          <span class="dw-pin" style="left:24%;top:42%"><i></i></span>
+          <span class="dw-pin" style="left:46%;top:34%"><i></i></span>
+          <span class="dw-pin" style="left:52%;top:56%"><i></i></span>
+          <span class="dw-pin" style="left:67%;top:39%"><i></i></span>
+          <span class="dw-pin" style="left:78%;top:62%"><i></i></span>
+          <span class="dw-pin" style="left:38%;top:66%"><i></i></span>
+          <div class="dw-count" data-t="rl_world_n">14 locations</div>
+        </div>
+      </div>
+      <div class="rl-copy" id="rl-copy"><span class="eb"></span><h3></h3><p></p><div class="pr"></div></div>
+    </div>
+  </div>
 </div></section>
 
 <!-- PRIVACY -->
@@ -580,6 +728,7 @@ const I18N={
   t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"Works offline",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
+  rl_q:"underwater",rl_search_n:"8 clips · 4 drives",rl_map_n:"Reclaim 80 GB",rl_dup_n:"same file · ×3 · 46 GB",rl_world_n:"14 locations",
   feats:[
     {tag:"Index once",t:"Plug in once. Find it forever.",d:"Scan each drive a single time. Disky remembers every file — and pulls it up a year later while that drive sits powered-off in a drawer."},
     {tag:"Deep Search",t:"Search by content, not file names.",d:"Forget what you called it. Type what's in the shot and Disky finds it across every drive — instantly, fully offline."},
@@ -630,6 +779,7 @@ const I18N={
   t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Offline-fähig",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
+  rl_q:"unter Wasser",rl_search_n:"8 Clips · 4 Platten",rl_map_n:"80 GB frei",rl_dup_n:"gleiche Datei · ×3 · 46 GB",rl_world_n:"14 Orte",
   feats:[
     {tag:"Einmal indexieren",t:"Einmal anstecken. Für immer finden.",d:"Scanne jede Platte ein einziges Mal. Disky merkt sich jede Datei — und holt sie ein Jahr später hervor, während die Platte ausgeschaltet im Schrank liegt."},
     {tag:"Tiefen-Suche",t:"Such nach Inhalt, nicht nach Dateinamen.",d:"Vergiss, wie du sie genannt hast. Tipp, was im Bild ist — Disky findet's über alle Platten. Sofort, komplett offline."},
@@ -679,27 +829,49 @@ function renderFeats(){ const cards=document.querySelectorAll('#featGrid .feat-c
     if(tg)tg.textContent=f.tag; if(h)h.textContent=f.t; if(pp)pp.textContent=f.d; }); }
 function renderFAQ(){ const el=document.getElementById('faqlist'); if(!el)return;
   el.innerHTML=(I18N[LANG].faq||I18N.en.faq).map(([q,a])=>`<details class="qa"><summary>${q}<span class="plus"></span></summary><div class="a">${a}</div></details>`).join(''); }
-/* Apple-style feature sections — real app screenshots + caps copy (overview is the hero, so start at Deep Search) */
-const FEAT2=[{ci:1,img:'assets/screen-search.webp'},{ci:2,img:'assets/screen-map.webp'},{ci:3,img:'assets/screen-backup.webp'},{ci:4,img:'assets/screen-dupes.webp'},{ci:5,img:'assets/screen-worldmap.webp'}];
-function buildFeatures2(){ const wrap=document.getElementById('feat2-list'); if(!wrap)return;
-  wrap.innerHTML=FEAT2.map(f=>`<div class="feat2 rev">
-    <div class="feat2-media"><div class="feat2-win"><div class="bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span></div><img src="${f.img}" alt="" loading="lazy" decoding="async"></div></div>
-    <div class="feat2-copy"><span class="feat2-eb"></span><h3 class="feat2-h"></h3><p class="feat2-p"></p><div class="feat2-proof"></div></div>
-  </div>`).join(''); }
-function renderFeatures2(){ const wrap=document.getElementById('feat2-list'); if(!wrap)return; const cps=I18N[LANG].caps||I18N.en.caps;
-  [...wrap.children].forEach((el,k)=>{ const c=cps[FEAT2[k].ci]; if(!c)return;
-    el.querySelector('.feat2-eb').textContent=c.eb; el.querySelector('.feat2-h').textContent=c.h;
-    el.querySelector('.feat2-p').textContent=c.p; el.querySelector('.feat2-proof').textContent=c.pr;
-    const im=el.querySelector('img'); if(im)im.alt='Disky — '+c.eb; }); }
+/* Feature reel — purpose-built animated demos; copy from caps (overview is the hero, so start at Deep Search) */
+const REEL=[{ci:1,demo:'search'},{ci:2,demo:'map'},{ci:4,demo:'dup'},{ci:3,demo:'backup'},{ci:5,demo:'world'}];
+const RL_DUR=6000; let rlIdx=0, rlTimer=0, rlInView=false;
+function buildReel(){ const pills=document.getElementById('rl-pills'); if(!pills)return;
+  const cps=I18N[LANG].caps||I18N.en.caps;
+  pills.innerHTML=REEL.map((f,i)=>`<button class="rl-pill" type="button" data-i="${i}"><span class="lbl">${cps[f.ci].eb}</span><span class="pg"></span></button>`).join('');
+  [...pills.children].forEach(b=>b.addEventListener('click',()=>setReel(+b.dataset.i,true)));
+  const reel=document.getElementById('reel'); if(reel)reel.style.setProperty('--rl-dur',(RL_DUR/1000)+'s');
+  setReel(0,false);
+  // auto-advance only while the reel is in view (perf: pauses demo animations off-screen)
+  new IntersectionObserver(es=>es.forEach(e=>{ rlInView=e.isIntersecting; reel&&reel.classList.toggle('paused',!rlInView);
+    rlInView?restartReel():clearInterval(rlTimer); }),{threshold:.25}).observe(reel);
+  reel&&reel.addEventListener('mouseenter',()=>{ clearInterval(rlTimer); reel.classList.add('hold'); });
+  reel&&reel.addEventListener('mouseleave',()=>{ reel.classList.remove('hold'); if(rlInView)restartReel(); });
+}
+function setReel(i,user){ rlIdx=((i%REEL.length)+REEL.length)%REEL.length;
+  document.querySelectorAll('.rl-demo').forEach(d=>d.classList.toggle('on',d.dataset.demo===REEL[rlIdx].demo));
+  const pills=document.querySelectorAll('.rl-pill');
+  pills.forEach((p,k)=>{ p.classList.toggle('on',k===rlIdx); p.classList.remove('run'); });
+  const act=pills[rlIdx]; if(act){ void act.offsetWidth; act.classList.add('run'); }
+  renderReelCopy();
+  if(user) restartReel();
+}
+function renderReelCopy(){ const copy=document.getElementById('rl-copy'); if(!copy)return;
+  const c=(I18N[LANG].caps||I18N.en.caps)[REEL[rlIdx].ci]; if(!c)return;
+  copy.classList.add('swap');
+  setTimeout(()=>{ copy.querySelector('.eb').textContent=c.eb; copy.querySelector('h3').textContent=c.h;
+    copy.querySelector('p').textContent=c.p; copy.querySelector('.pr').textContent=c.pr; copy.classList.remove('swap'); },170);
+}
+function renderReel(){ const cps=I18N[LANG].caps||I18N.en.caps;
+  document.querySelectorAll('#rl-pills .rl-pill .lbl').forEach((el,k)=>{ el.textContent=cps[REEL[k].ci].eb; });
+  renderReelCopy(); }
+function advanceReel(){ setReel(rlIdx+1,false); }
+function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval(advanceReel,RL_DUR); }
 function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
   document.title=tt('meta_title'); const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute('content',tt('meta_desc'));
   document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
-  renderCaps(); renderFAQ(); renderFeatures2(); if(window.__hfRefreshTour)window.__hfRefreshTour();
+  renderCaps(); renderFAQ(); renderReel(); if(window.__hfRefreshTour)window.__hfRefreshTour();
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
-buildFeatures2(); applyLang();
+buildReel(); applyLang();
 
 /* nav blur */
 const nav=document.getElementById('nav');
