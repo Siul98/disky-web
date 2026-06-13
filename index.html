@@ -144,6 +144,30 @@ a{color:inherit;text-decoration:none}
 .display-screen .scrim .spin{width:30px;height:30px;border-radius:50%;border:2.5px solid rgba(255,255,255,.12);border-top-color:var(--acc);animation:sp 0.8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
+/* MacBook frame around the live app */
+.macbook{position:relative;width:100%;filter:drop-shadow(0 54px 84px rgba(0,0,0,.55))}
+.mb-lid{position:relative;padding:12px 12px 13px;border-radius:20px 20px 7px 7px;
+  background:linear-gradient(158deg,#0d0f13,#050608 62%);
+  box-shadow:inset 0 0 0 2px #1a1e24,inset 0 1px 0 rgba(255,255,255,.06)}
+.mb-lid::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(180deg,rgba(196,202,210,.6),rgba(120,126,135,.22) 32%,rgba(54,58,64,.55));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.mb-cam{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;
+  background:#16181d;box-shadow:inset 0 0 0 1px rgba(120,150,200,.22)}
+.mb-cam::after{content:"";position:absolute;inset:1.5px;border-radius:50%;
+  background:radial-gradient(circle at 38% 34%,rgba(95,155,235,.55),transparent 72%)}
+.macbook .display{border:0;border-radius:7px;box-shadow:none}
+.mb-base{position:relative;width:114%;left:-7%;height:15px;
+  border-radius:1.5px 1.5px 11px 11px;
+  background:linear-gradient(180deg,#d8dce1,#bbc0c8 28%,#9ea4ad 74%,#7c818a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 24px 30px -16px rgba(0,0,0,.65)}
+.mb-base::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:68px;height:7px;border-radius:0 0 10px 10px;
+  background:linear-gradient(180deg,#7a808a,#9aa0a8);box-shadow:inset 0 -1px 1px rgba(0,0,0,.22)}
+.mb-base::after{content:"";position:absolute;top:-2px;left:2.5%;right:2.5%;height:2px;border-radius:2px;
+  background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0))}
+
 /* captions */
 .caps{position:relative;min-height:360px}
 .cap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
@@ -433,16 +457,22 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="show-rail" id="rail">
     <div class="show-sticky">
       <div class="stage">
-        <div class="display" id="display">
-          <div class="display-bar">
-            <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
-            <span class="dlabel">Disky</span>
-            <span class="livebadge"><i aria-hidden="true"></i><span data-t="live_lbl">Live</span></span>
+        <div class="macbook">
+          <div class="mb-lid">
+            <span class="mb-cam" aria-hidden="true"></span>
+            <div class="display" id="display">
+              <div class="display-bar">
+                <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+                <span class="dlabel">Disky</span>
+                <span class="livebadge"><i aria-hidden="true"></i><span data-t="live_lbl">Live</span></span>
+              </div>
+              <div class="display-screen">
+                <iframe id="appFrame" title="Disky — live app" loading="lazy"></iframe>
+                <div class="scrim" id="scrim"><div class="spin"></div></div>
+              </div>
+            </div>
           </div>
-          <div class="display-screen">
-            <iframe id="appFrame" title="Disky — live app" loading="lazy"></iframe>
-            <div class="scrim" id="scrim"><div class="spin"></div></div>
-          </div>
+          <div class="mb-base" aria-hidden="true"></div>
         </div>
         <div class="caps" id="caps">
           <article class="cap" data-step="0"><span class="eyebrow"></span><h2></h2><p></p><div class="proof"></div></article>
