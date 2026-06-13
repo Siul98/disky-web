@@ -347,8 +347,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .feat-card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:16px;padding:16px;overflow:hidden}
 .fc-anim{height:118px;border-radius:11px;background:radial-gradient(120% 130% at 50% -10%,rgba(74,158,255,.12),transparent 65%),#0a0e16;margin-bottom:15px;overflow:hidden}
 .fc-anim svg{width:100%;height:100%;display:block}
-.fc-txt h3{font-size:16.5px;font-weight:650;letter-spacing:-.01em;margin:0;color:var(--ink)}
-.fc-txt p{font-size:13.5px;color:var(--mut);margin:5px 0 0;line-height:1.45}
+.fc-tag{display:block;font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--acc);margin:0 0 6px;opacity:.92}
+.fc-txt h3{font-size:16.5px;font-weight:650;letter-spacing:-.012em;margin:0;color:var(--ink);line-height:1.22}
+.fc-txt p{font-size:13px;color:var(--mut);margin:7px 0 0;line-height:1.5}
 .feat-card .fc-anim *{animation-play-state:paused}
 .feat-card.live .fc-anim *{animation-play-state:running}
 /* index */
@@ -493,12 +494,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <span class="eyebrow rev" data-t="feats_eb">Six tools. One catalog.</span>
   <h2 class="feats-h rev" data-t="feats_h">Everything Disky does, at a glance.</h2>
   <div class="feat-grid" id="featGrid">
-    <article class="feat-card rev" data-anim="index"><div class="fc-anim a-index"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="d" x="62" y="30" width="76" height="56" rx="9"/><g class="dt"><circle cx="80" cy="48" r="2.6"/><circle cx="96" cy="48" r="2.6"/><circle cx="112" cy="48" r="2.6"/><circle cx="80" cy="62" r="2.6"/><circle cx="96" cy="62" r="2.6"/><circle cx="112" cy="62" r="2.6"/></g><line class="bm" x1="100" y1="24" x2="100" y2="92"/></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
-    <article class="feat-card rev" data-anim="search"><div class="fc-anim a-search"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="pill" x="40" y="22" width="120" height="22" rx="11"/><circle class="mg" cx="54" cy="33" r="5"/><line class="mgl" x1="58" y1="37" x2="62" y2="41"/><rect class="r r1" x="40" y="56" width="120" height="11" rx="3"/><rect class="r r2" x="40" y="74" width="120" height="11" rx="3"/><rect class="r r3" x="40" y="92" width="120" height="11" rx="3"/></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
-    <article class="feat-card rev" data-anim="map"><div class="fc-anim a-map"><svg viewBox="0 0 200 116" aria-hidden="true"><g transform="translate(100 58)"><circle class="ring r1" r="34"/><circle class="ring r2" r="24"/><circle class="ring r3" r="15"/></g></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
-    <article class="feat-card rev" data-anim="projects"><div class="fc-anim a-proj"><svg viewBox="0 0 200 116" aria-hidden="true"><g><rect x="46" y="32" width="108" height="14" rx="4" class="pr"/><circle class="st s1" cx="142" cy="39" r="3.4"/><rect x="46" y="51" width="108" height="14" rx="4" class="pr"/><circle class="st s2" cx="142" cy="58" r="3.4"/><rect x="46" y="70" width="108" height="14" rx="4" class="pr"/><circle class="st s3" cx="142" cy="77" r="3.4"/></g></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
-    <article class="feat-card rev" data-anim="dupes"><div class="fc-anim a-dup"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="f f1" x="42" y="36" width="44" height="44" rx="7"/><rect class="f f2" x="114" y="36" width="44" height="44" rx="7"/><text class="eq" x="100" y="63" text-anchor="middle">=</text><line class="strike" x1="118" y1="40" x2="154" y2="76"/></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
-    <article class="feat-card rev" data-anim="world"><div class="fc-anim a-world"><svg viewBox="0 0 200 116" aria-hidden="true"><g class="globe" fill="#3a567e"><circle cx="58" cy="44" r="1.6"/><circle cx="74" cy="40" r="1.6"/><circle cx="90" cy="46" r="1.6"/><circle cx="106" cy="42" r="1.6"/><circle cx="122" cy="48" r="1.6"/><circle cx="138" cy="44" r="1.6"/><circle cx="64" cy="58" r="1.6"/><circle cx="82" cy="60" r="1.6"/><circle cx="100" cy="56" r="1.6"/><circle cx="118" cy="62" r="1.6"/><circle cx="134" cy="58" r="1.6"/><circle cx="74" cy="74" r="1.6"/><circle cx="94" cy="76" r="1.6"/><circle cx="112" cy="72" r="1.6"/></g><g class="pins"><path class="pin p1" d="M70 50c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/><path class="pin p2" d="M126 56c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/><path class="pin p3" d="M100 44c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/></g></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="index"><div class="fc-anim a-index"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="d" x="62" y="30" width="76" height="56" rx="9"/><g class="dt"><circle cx="80" cy="48" r="2.6"/><circle cx="96" cy="48" r="2.6"/><circle cx="112" cy="48" r="2.6"/><circle cx="80" cy="62" r="2.6"/><circle cx="96" cy="62" r="2.6"/><circle cx="112" cy="62" r="2.6"/></g><line class="bm" x1="100" y1="24" x2="100" y2="92"/></svg></div><div class="fc-txt"><span class="fc-tag"></span><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="search"><div class="fc-anim a-search"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="pill" x="40" y="22" width="120" height="22" rx="11"/><circle class="mg" cx="54" cy="33" r="5"/><line class="mgl" x1="58" y1="37" x2="62" y2="41"/><rect class="r r1" x="40" y="56" width="120" height="11" rx="3"/><rect class="r r2" x="40" y="74" width="120" height="11" rx="3"/><rect class="r r3" x="40" y="92" width="120" height="11" rx="3"/></svg></div><div class="fc-txt"><span class="fc-tag"></span><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="map"><div class="fc-anim a-map"><svg viewBox="0 0 200 116" aria-hidden="true"><g transform="translate(100 58)"><circle class="ring r1" r="34"/><circle class="ring r2" r="24"/><circle class="ring r3" r="15"/></g></svg></div><div class="fc-txt"><span class="fc-tag"></span><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="projects"><div class="fc-anim a-proj"><svg viewBox="0 0 200 116" aria-hidden="true"><g><rect x="46" y="32" width="108" height="14" rx="4" class="pr"/><circle class="st s1" cx="142" cy="39" r="3.4"/><rect x="46" y="51" width="108" height="14" rx="4" class="pr"/><circle class="st s2" cx="142" cy="58" r="3.4"/><rect x="46" y="70" width="108" height="14" rx="4" class="pr"/><circle class="st s3" cx="142" cy="77" r="3.4"/></g></svg></div><div class="fc-txt"><span class="fc-tag"></span><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="dupes"><div class="fc-anim a-dup"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="f f1" x="42" y="36" width="44" height="44" rx="7"/><rect class="f f2" x="114" y="36" width="44" height="44" rx="7"/><text class="eq" x="100" y="63" text-anchor="middle">=</text><line class="strike" x1="118" y1="40" x2="154" y2="76"/></svg></div><div class="fc-txt"><span class="fc-tag"></span><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="world"><div class="fc-anim a-world"><svg viewBox="0 0 200 116" aria-hidden="true"><g class="globe" fill="#3a567e"><circle cx="58" cy="44" r="1.6"/><circle cx="74" cy="40" r="1.6"/><circle cx="90" cy="46" r="1.6"/><circle cx="106" cy="42" r="1.6"/><circle cx="122" cy="48" r="1.6"/><circle cx="138" cy="44" r="1.6"/><circle cx="64" cy="58" r="1.6"/><circle cx="82" cy="60" r="1.6"/><circle cx="100" cy="56" r="1.6"/><circle cx="118" cy="62" r="1.6"/><circle cx="134" cy="58" r="1.6"/><circle cx="74" cy="74" r="1.6"/><circle cx="94" cy="76" r="1.6"/><circle cx="112" cy="72" r="1.6"/></g><g class="pins"><path class="pin p1" d="M70 50c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/><path class="pin p2" d="M126 56c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/><path class="pin p3" d="M100 44c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/></g></svg></div><div class="fc-txt"><span class="fc-tag"></span><h3></h3><p></p></div></article>
   </div>
 </div></section>
 
@@ -574,6 +575,14 @@ const I18N={
   t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"Works offline",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
+  feats:[
+    {tag:"Index once",t:"Plug in once. Find it forever.",d:"Scan each drive a single time. Disky remembers every file — and pulls it up a year later while that drive sits powered-off in a drawer."},
+    {tag:"Deep Search",t:"Search by content, not file names.",d:"Forget what you called it. Type what's in the shot and Disky finds it across every drive — instantly, fully offline."},
+    {tag:"Storage Map",t:"See what's eating your drives.",d:"Every folder becomes a ring. The cache bloat and dead exports hogging half your SSD light up at a glance — you delete only what you choose."},
+    {tag:"Project Radar",t:"Know what has no backup.",d:"Disky tracks which projects still live on a single drive — and warns you before it dies, not at the funeral."},
+    {tag:"Duplicate Finder",t:"Stop buying space you own.",d:"That 46 GB master sitting on three drives? Disky catches every copy — to the gigabyte — so the next SSD can wait."},
+    {tag:"Worldmap",t:"Re-walk every shoot.",d:"Every clip with a GPS stamp, pinned on a world map. Find a location by where you filmed it — not by what you named the file."},
+  ],
   caps:[
    {eb:"Index once",h:"Plug in a drive once. Never again to search.",p:"Each drive gets read a single time, then lives in your catalog forever. Every search after that touches nothing physical — no mounting, no eject-and-repeat, no wear. Type a name and Disky returns the exact drive and the exact path before you've reached for a cable.",pr:"Search 1M+ files across 22+ drives in seconds — every disk in the drawer"},
    {eb:"Deep Search",h:"Find the shot you can't name.",p:"Type “underwater” and every clip with water surfaces — even the ones misnamed DJI_0423. The model reads what's inside the frame, not the filename, and it runs entirely on your Mac. Badly named footage stops hiding across all your drives at once.",pr:"On-device AI · 0 bytes uploaded · 100% local"},
@@ -616,6 +625,14 @@ const I18N={
   t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Offline-fähig",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
+  feats:[
+    {tag:"Einmal indexieren",t:"Einmal anstecken. Für immer finden.",d:"Scanne jede Platte ein einziges Mal. Disky merkt sich jede Datei — und holt sie ein Jahr später hervor, während die Platte ausgeschaltet im Schrank liegt."},
+    {tag:"Tiefen-Suche",t:"Such nach Inhalt, nicht nach Dateinamen.",d:"Vergiss, wie du sie genannt hast. Tipp, was im Bild ist — Disky findet's über alle Platten. Sofort, komplett offline."},
+    {tag:"Speicher-Karte",t:"Sieh, was deine Platten frisst.",d:"Jeder Ordner wird zum Ring. Cache-Müll und tote Exporte, die deine halbe SSD belegen, leuchten sofort auf — du löschst nur, was du freigibst."},
+    {tag:"Projekt-Radar",t:"Wisse, was kein Backup hat.",d:"Disky behält im Blick, welche Projekte nur auf einer Platte liegen — und warnt dich, bevor sie stirbt, nicht erst danach."},
+    {tag:"Duplikat-Finder",t:"Kauf keinen Platz, den du schon hast.",d:"Das 46-GB-Master auf drei Platten? Disky erkennt jede Kopie — auf den Gigabyte genau — die nächste SSD kann warten."},
+    {tag:"Weltkarte",t:"Lauf jeden Dreh nochmal ab.",d:"Jeder Clip mit GPS-Stempel, auf der Weltkarte gepinnt. Finde einen Ort über das Wo — nicht über den Dateinamen."},
+  ],
   caps:[
    {eb:"Einmal indexieren",h:"Eine Platte einmal anstecken. Zum Suchen nie wieder.",p:"Jede Platte wird ein einziges Mal gelesen und lebt danach für immer in deinem Katalog. Jede Suche danach fasst nichts Physisches an — kein Mounten, kein Auswerfen-und-wieder, kein Verschleiß. Tippe einen Namen, und Disky liefert die exakte Platte und den exakten Pfad, bevor du nach einem Kabel greifst.",pr:"1 Mio.+ Dateien über 22+ Platten in Sekunden — jede Disk in der Schublade"},
    {eb:"Deep Search",h:"Finde die Aufnahme, die du nicht benennen kannst.",p:"Tippe „unter Wasser“, und jeder Clip mit Wasser taucht auf — auch die, die DJI_0423 heißen. Das Modell liest, was im Bild steckt, nicht den Dateinamen, und läuft komplett auf deinem Mac. Schlecht benanntes Material kann sich über alle Platten hinweg nicht mehr verstecken.",pr:"KI on-device · 0 Byte hochgeladen · 100% lokal"},
@@ -652,8 +669,9 @@ function renderCaps(){
   document.querySelectorAll('#caps .cap').forEach((el,i)=>{ const c=(I18N[LANG].caps||I18N.en.caps)[i]; if(!c)return;
     el.querySelector('.eyebrow').textContent=c.eb; el.querySelector('h2').textContent=c.h; el.querySelector('p').textContent=c.p; el.querySelector('.proof').textContent=c.pr; });
 }
-function renderFeats(){ const cards=document.querySelectorAll('#featGrid .feat-card'); const cps=(I18N[LANG].caps||I18N.en.caps);
-  cards.forEach((c,i)=>{ const cp=cps[i]; if(!cp)return; const h=c.querySelector('h3'),pp=c.querySelector('p'); if(h)h.textContent=cp.eb; if(pp)pp.textContent=cp.h; }); }
+function renderFeats(){ const cards=document.querySelectorAll('#featGrid .feat-card'); const fs=(I18N[LANG].feats||I18N.en.feats);
+  cards.forEach((c,i)=>{ const f=fs[i]; if(!f)return; const tg=c.querySelector('.fc-tag'),h=c.querySelector('h3'),pp=c.querySelector('p');
+    if(tg)tg.textContent=f.tag; if(h)h.textContent=f.t; if(pp)pp.textContent=f.d; }); }
 function renderFAQ(){ const el=document.getElementById('faqlist'); if(!el)return;
   el.innerHTML=(I18N[LANG].faq||I18N.en.faq).map(([q,a])=>`<details class="qa"><summary>${q}<span class="plus"></span></summary><div class="a">${a}</div></details>`).join(''); }
 function applyLang(l){
