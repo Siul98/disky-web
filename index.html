@@ -306,7 +306,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-awhead{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 .hf-files{position:absolute;inset:0;z-index:12;pointer-events:none}
 .hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:14px 14px}
-.hf-fitem .hf-ic{width:27px;height:33px;flex:0 0 auto;filter:drop-shadow(0 3px 7px rgba(0,0,0,.55))}
+.hf-fitem .hf-ic{width:46px;height:55px;flex:0 0 auto;filter:drop-shadow(0 4px 9px rgba(0,0,0,.6))}
 .hf-fitem .hf-nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
 .hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
@@ -776,7 +776,7 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
    {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:80,cy:64,r:5}
   ];
   const N=FILES.length;
-  filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="hf-nm">${f.name}</span><span class="hf-sz">${f.sz}</span></div>`).join('');
+  filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem">${ICON[f.type]()}</div>`).join('');   // nur Icons, keine Beschriftung → ruhiger
   const fitems=[...filesWrap.querySelectorAll('.hf-fitem')];
   const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
   const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);

@@ -109,7 +109,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--disp);over
 /* Datei-/Ordner-Items: schwirren beim Scan (Unordnung) → gleiten in die Liste (Ordnung) */
 .files{position:absolute;inset:0;z-index:12;pointer-events:none}
 .fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:14px 14px}
-.fitem .ic{width:27px;height:33px;flex:0 0 auto;filter:drop-shadow(0 3px 7px rgba(0,0,0,.55))}
+.fitem .ic{width:46px;height:55px;flex:0 0 auto;filter:drop-shadow(0 4px 9px rgba(0,0,0,.6))}
 .fitem .nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
 .fitem.folder .nm{font-weight:700;color:#fff}
 .fitem .sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--mono)}
@@ -196,7 +196,7 @@ const FILES=[
  {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:80,cy:64,r:5}
 ];
 const N=FILES.length;
-filesWrap.innerHTML=FILES.map(f=>`<div class="fitem ${f.type==='folder'?'folder':''}">${ICON[f.type]()}<span class="nm">${f.name}</span><span class="sz">${f.sz}</span></div>`).join('');
+filesWrap.innerHTML=FILES.map(f=>`<div class="fitem">${ICON[f.type]()}</div>`).join('');   // nur Icons, keine Beschriftung
 const fitems=[...filesWrap.querySelectorAll('.fitem')];
 // Reihenfolge-Index, in dem die Items beim Scan vom Strahl „freigelegt" werden (links→rechts)
 const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
