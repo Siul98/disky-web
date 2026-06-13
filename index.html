@@ -279,7 +279,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes hf-txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 .hf-beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
-#hf-cap1{top:74%}#hf-cap2{top:5%}
+#hf-cap1{top:19%}#hf-cap2{top:5%}
 .hf-stage{position:absolute;inset:0;z-index:2}
 .hf-fan{position:absolute;left:50%;bottom:-118px;width:0;height:0;transform:scale(var(--hffs,1));transform-origin:50% 100%}
 .hf-fcard{position:absolute;left:50%;bottom:0;height:280px;transform-origin:50% 86%;will-change:transform,opacity;cursor:pointer}
@@ -832,7 +832,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     fanScale=Math.min(1,innerWidth/REFW);
     fan.style.setProperty('--hffs',fanScale.toFixed(3));
     cards.forEach(c=>{ c.style.height=DRV[c.dataset.i].h+'px'; });
-    heroScLift=Math.min(1,innerWidth*0.9/HEROW);
+    heroScLift=Math.min(0.72,innerWidth*0.6/HEROW);   // T9 beim Scan nur leicht größer als im Stapel → mehr Platz für die Icons
     heroScRest=(REST_VIS*fanScale)/HEROW;
     const restCenterY=(innerHeight-FAN_BOTTOM)-(REST_VIS/2)*fanScale;
     heroTyRest=restCenterY-innerHeight/2;
