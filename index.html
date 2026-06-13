@@ -776,6 +776,8 @@ addEventListener('scroll',onScroll,{passive:true}); onScroll();
    {name:'drone_4k_FINAL.mov',type:'mov',sz:'12.4 GB',cx:80,cy:64,r:5}
   ];
   const N=FILES.length;
+  // Icons gleichmäßig im Ring um die Platte (ordentlich, aufrecht) statt zufälligem Scatter
+  (function(){ const RCY=42, RRX=40, RRY=29; FILES.forEach((f,i)=>{ const a=(-90+i*360/N)*Math.PI/180; f.cx=50+RRX*Math.cos(a); f.cy=RCY+RRY*Math.sin(a); f.r=0; }); })();
   filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem">${ICON[f.type]()}</div>`).join('');   // nur Icons, keine Beschriftung → ruhiger
   const fitems=[...filesWrap.querySelectorAll('.hf-fitem')];
   const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
