@@ -313,6 +313,57 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-scrollhint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:30;color:var(--mut2);font-size:12px;pointer-events:none;animation:hf-bob 1.8s ease-in-out infinite;transition:opacity .3s}
 @keyframes hf-bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 @media(prefers-reduced-motion:reduce){.hf-t3d,.hf-silver,.hf-eb,.hf-sub,.hf-cta,.hf-tl{animation:none!important;opacity:1!important;clip-path:none!important}}
+
+/* ===== Feature cards (mini-animations, only run while in view) ===== */
+.feats .eyebrow,.feats-h{text-align:center;display:block}
+.feats-h{font-size:clamp(27px,3.8vw,42px);letter-spacing:-.03em;margin:10px auto 0;max-width:720px}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:46px}
+@media(max-width:880px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
+.feat-card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:16px;padding:16px;overflow:hidden}
+.fc-anim{height:118px;border-radius:11px;background:radial-gradient(120% 130% at 50% -10%,rgba(74,158,255,.12),transparent 65%),#0a0e16;margin-bottom:15px;overflow:hidden}
+.fc-anim svg{width:100%;height:100%;display:block}
+.fc-txt h3{font-size:16.5px;font-weight:650;letter-spacing:-.01em;margin:0;color:var(--ink)}
+.fc-txt p{font-size:13.5px;color:var(--mut);margin:5px 0 0;line-height:1.45}
+.feat-card .fc-anim *{animation-play-state:paused}
+.feat-card.live .fc-anim *{animation-play-state:running}
+/* index */
+.a-index .d{fill:none;stroke:#39455c;stroke-width:1.6}
+.a-index .dt circle{fill:#4a9eff;opacity:0;animation:idxdot 3s ease-in-out infinite}
+.a-index .dt circle:nth-child(1){animation-delay:.5s}.a-index .dt circle:nth-child(2){animation-delay:.62s}.a-index .dt circle:nth-child(3){animation-delay:.74s}.a-index .dt circle:nth-child(4){animation-delay:.86s}.a-index .dt circle:nth-child(5){animation-delay:.98s}.a-index .dt circle:nth-child(6){animation-delay:1.1s}
+.a-index .bm{stroke:#86d4ff;stroke-width:2;opacity:0;filter:drop-shadow(0 0 5px #4a9eff);animation:idxbeam 3s ease-in-out infinite}
+@keyframes idxbeam{0%{transform:translateX(-40px);opacity:0}10%{opacity:1}45%{transform:translateX(40px);opacity:1}55%,100%{opacity:0}}
+@keyframes idxdot{0%,42%{opacity:0}56%{opacity:1}92%{opacity:1}100%{opacity:.12}}
+/* search */
+.a-search .pill{fill:rgba(255,255,255,.04);stroke:var(--acc);stroke-width:1.2}
+.a-search .mg{fill:none;stroke:#86d4ff;stroke-width:2}.a-search .mgl{stroke:#86d4ff;stroke-width:2;stroke-linecap:round}
+.a-search .r{fill:rgba(74,158,255,.18);opacity:0;transform-box:fill-box;animation:srow 3s ease infinite}
+.a-search .r1{animation-delay:.5s}.a-search .r2{animation-delay:.68s}.a-search .r3{animation-delay:.86s}
+@keyframes srow{0%,15%{opacity:0;transform:translateX(-12px)}32%,80%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(0)}}
+/* map */
+.a-map .ring{fill:none;stroke-width:7;stroke-linecap:round;transform-origin:100px 58px}
+.a-map .r1{stroke:#4a9eff;stroke-dasharray:150 64;animation:fspin 4.4s linear infinite}
+.a-map .r2{stroke:#37cfe0;stroke-dasharray:104 47;animation:fspin 3.2s linear infinite reverse}
+.a-map .r3{stroke:#86d4ff;stroke-dasharray:56 38;animation:fspin 2.4s linear infinite}
+@keyframes fspin{to{transform:rotate(360deg)}}
+/* projects */
+.a-proj .pr{fill:rgba(255,255,255,.05);stroke:var(--line);stroke-width:1}
+.a-proj .st{fill:#39455c}
+.a-proj .s1{animation:stok 3.2s ease infinite}.a-proj .s2{animation:stwarn 3.2s ease infinite .35s}.a-proj .s3{animation:stok 3.2s ease infinite .7s}
+@keyframes stok{0%,22%{fill:#39455c;filter:none}42%,100%{fill:#4ade80;filter:drop-shadow(0 0 4px #4ade80)}}
+@keyframes stwarn{0%,32%{fill:#39455c;filter:none}52%,100%{fill:#febc2e;filter:drop-shadow(0 0 4px #febc2e)}}
+/* dupes */
+.a-dup .f{fill:none;stroke:#39455c;stroke-width:1.6}.a-dup .f2{stroke:#4a9eff;animation:dupfade 3s ease infinite}
+.a-dup .eq{fill:#86d4ff;font:700 19px var(--fdisp);opacity:0;animation:dupeq 3s ease infinite}
+.a-dup .strike{stroke:#ff6b6b;stroke-width:2.6;stroke-linecap:round;stroke-dasharray:54;stroke-dashoffset:54;animation:dupstrike 3s ease infinite}
+@keyframes dupeq{0%,18%{opacity:0}34%,58%{opacity:1}78%,100%{opacity:0}}
+@keyframes dupstrike{0%,55%{stroke-dashoffset:54}74%,100%{stroke-dashoffset:0}}
+@keyframes dupfade{0%,72%{opacity:1}92%,100%{opacity:.3}}
+/* world */
+.a-world .pin{fill:#4a9eff;opacity:0;transform-box:fill-box;transform-origin:center bottom;animation:pinpop 3.2s ease infinite}
+.a-world .p2{animation-delay:.4s}.a-world .p3{animation-delay:.8s}
+@keyframes pinpop{0%,8%{opacity:0;transform:translateY(7px) scale(.3)}24%{opacity:1;transform:translateY(0) scale(1)}82%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.fc-anim *{animation:none!important;opacity:1!important}}
 </style>
 </head>
 <body>
@@ -407,6 +458,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   </div>
 </section>
 
+<!-- FEATURE CARDS -->
+<section class="sec bord feats"><div class="wrap">
+  <span class="eyebrow rev" data-t="feats_eb">Six tools. One catalog.</span>
+  <h2 class="feats-h rev" data-t="feats_h">Everything Disky does, at a glance.</h2>
+  <div class="feat-grid" id="featGrid">
+    <article class="feat-card rev" data-anim="index"><div class="fc-anim a-index"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="d" x="62" y="30" width="76" height="56" rx="9"/><g class="dt"><circle cx="80" cy="48" r="2.6"/><circle cx="96" cy="48" r="2.6"/><circle cx="112" cy="48" r="2.6"/><circle cx="80" cy="62" r="2.6"/><circle cx="96" cy="62" r="2.6"/><circle cx="112" cy="62" r="2.6"/></g><line class="bm" x1="100" y1="24" x2="100" y2="92"/></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="search"><div class="fc-anim a-search"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="pill" x="40" y="22" width="120" height="22" rx="11"/><circle class="mg" cx="54" cy="33" r="5"/><line class="mgl" x1="58" y1="37" x2="62" y2="41"/><rect class="r r1" x="40" y="56" width="120" height="11" rx="3"/><rect class="r r2" x="40" y="74" width="120" height="11" rx="3"/><rect class="r r3" x="40" y="92" width="120" height="11" rx="3"/></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="map"><div class="fc-anim a-map"><svg viewBox="0 0 200 116" aria-hidden="true"><g transform="translate(100 58)"><circle class="ring r1" r="34"/><circle class="ring r2" r="24"/><circle class="ring r3" r="15"/></g></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="projects"><div class="fc-anim a-proj"><svg viewBox="0 0 200 116" aria-hidden="true"><g><rect x="46" y="32" width="108" height="14" rx="4" class="pr"/><circle class="st s1" cx="142" cy="39" r="3.4"/><rect x="46" y="51" width="108" height="14" rx="4" class="pr"/><circle class="st s2" cx="142" cy="58" r="3.4"/><rect x="46" y="70" width="108" height="14" rx="4" class="pr"/><circle class="st s3" cx="142" cy="77" r="3.4"/></g></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="dupes"><div class="fc-anim a-dup"><svg viewBox="0 0 200 116" aria-hidden="true"><rect class="f f1" x="42" y="36" width="44" height="44" rx="7"/><rect class="f f2" x="114" y="36" width="44" height="44" rx="7"/><text class="eq" x="100" y="63" text-anchor="middle">=</text><line class="strike" x1="118" y1="40" x2="154" y2="76"/></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+    <article class="feat-card rev" data-anim="world"><div class="fc-anim a-world"><svg viewBox="0 0 200 116" aria-hidden="true"><g class="globe" fill="#3a567e"><circle cx="58" cy="44" r="1.6"/><circle cx="74" cy="40" r="1.6"/><circle cx="90" cy="46" r="1.6"/><circle cx="106" cy="42" r="1.6"/><circle cx="122" cy="48" r="1.6"/><circle cx="138" cy="44" r="1.6"/><circle cx="64" cy="58" r="1.6"/><circle cx="82" cy="60" r="1.6"/><circle cx="100" cy="56" r="1.6"/><circle cx="118" cy="62" r="1.6"/><circle cx="134" cy="58" r="1.6"/><circle cx="74" cy="74" r="1.6"/><circle cx="94" cy="76" r="1.6"/><circle cx="112" cy="72" r="1.6"/></g><g class="pins"><path class="pin p1" d="M70 50c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/><path class="pin p2" d="M126 56c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/><path class="pin p3" d="M100 44c0 4-5 8-5 8s-5-4-5-8a5 5 0 0 1 10 0z"/></g></svg></div><div class="fc-txt"><h3></h3><p></p></div></article>
+  </div>
+</div></section>
+
 <!-- PRIVACY -->
 <section class="sec bord privacy" id="privacy"><div class="wrap">
   <div class="rev">
@@ -478,6 +543,7 @@ const I18N={
   hs_q:"wedding tegernsee",hs_tag:"in the drawer",
   t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"Works offline",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
+  feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
   caps:[
    {eb:"Index once",h:"Plug in a drive once. Never again to search.",p:"Each drive gets read a single time, then lives in your catalog forever. Every search after that touches nothing physical — no mounting, no eject-and-repeat, no wear. Type a name and Disky returns the exact drive and the exact path before you've reached for a cable.",pr:"Search 1M+ files across 22+ drives in seconds — every disk in the drawer"},
    {eb:"Deep Search",h:"Find the shot you can't name.",p:"Type “underwater” and every clip with water surfaces — even the ones misnamed DJI_0423. The model reads what's inside the frame, not the filename, and it runs entirely on your Mac. Badly named footage stops hiding across all your drives at once.",pr:"On-device AI · 0 bytes uploaded · 100% local"},
@@ -519,6 +585,7 @@ const I18N={
   hs_q:"hochzeit tegernsee",hs_tag:"im Schrank",
   t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Offline-fähig",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
+  feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
   caps:[
    {eb:"Einmal indexieren",h:"Eine Platte einmal anstecken. Zum Suchen nie wieder.",p:"Jede Platte wird ein einziges Mal gelesen und lebt danach für immer in deinem Katalog. Jede Suche danach fasst nichts Physisches an — kein Mounten, kein Auswerfen-und-wieder, kein Verschleiß. Tippe einen Namen, und Disky liefert die exakte Platte und den exakten Pfad, bevor du nach einem Kabel greifst.",pr:"1 Mio.+ Dateien über 22+ Platten in Sekunden — jede Disk in der Schublade"},
    {eb:"Deep Search",h:"Finde die Aufnahme, die du nicht benennen kannst.",p:"Tippe „unter Wasser“, und jeder Clip mit Wasser taucht auf — auch die, die DJI_0423 heißen. Das Modell liest, was im Bild steckt, nicht den Dateinamen, und läuft komplett auf deinem Mac. Schlecht benanntes Material kann sich über alle Platten hinweg nicht mehr verstecken.",pr:"KI on-device · 0 Byte hochgeladen · 100% lokal"},
@@ -555,13 +622,15 @@ function renderCaps(){
   document.querySelectorAll('#caps .cap').forEach((el,i)=>{ const c=(I18N[LANG].caps||I18N.en.caps)[i]; if(!c)return;
     el.querySelector('.eyebrow').textContent=c.eb; el.querySelector('h2').textContent=c.h; el.querySelector('p').textContent=c.p; el.querySelector('.proof').textContent=c.pr; });
 }
+function renderFeats(){ const cards=document.querySelectorAll('#featGrid .feat-card'); const cps=(I18N[LANG].caps||I18N.en.caps);
+  cards.forEach((c,i)=>{ const cp=cps[i]; if(!cp)return; const h=c.querySelector('h3'),pp=c.querySelector('p'); if(h)h.textContent=cp.eb; if(pp)pp.textContent=cp.h; }); }
 function renderFAQ(){ const el=document.getElementById('faqlist'); if(!el)return;
   el.innerHTML=(I18N[LANG].faq||I18N.en.faq).map(([q,a])=>`<details class="qa"><summary>${q}<span class="plus"></span></summary><div class="a">${a}</div></details>`).join(''); }
 function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
   document.title=tt('meta_title'); const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute('content',tt('meta_desc'));
   document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
-  renderCaps(); renderFAQ();
+  renderCaps(); renderFAQ(); renderFeats();
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
@@ -575,6 +644,9 @@ addEventListener('scroll',navState,{passive:true}); navState();
 /* reveal */
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.12});
 document.querySelectorAll('.rev').forEach(e=>io.observe(e));
+/* feature-card mini-animations run ONLY while the card is in view (perf) */
+const featLiveIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('live',e.isIntersecting)),{threshold:.25});
+document.querySelectorAll('#featGrid .feat-card').forEach(c=>featLiveIO.observe(c));
 
 /* pause the hero X-ray loop once it's scrolled out of view (saves continuous paint) */
 (function(){const xr=document.querySelector('.xray');if(!xr)return;
