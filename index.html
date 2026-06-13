@@ -450,8 +450,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="navlinks">
     <a class="hide-sm" href="#features" data-t="nav_features">Features</a>
     <a class="hide-sm" href="#privacy" data-t="nav_privacy">Privacy</a>
-    <a class="hide-sm" href="#pricing" data-t="nav_pricing">Pricing</a>
-    <span class="soon"><i aria-hidden="true"></i><span data-t="soon_short">Coming soon</span></span>
+    <a class="soon" href="#download"><i aria-hidden="true"></i><span data-t="soon_short">Coming soon</span></a>
   </div>
 </div></nav>
 
@@ -537,21 +536,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   </div>
 </div></section>
 
-<!-- PRICING -->
-<section class="sec pricing" id="pricing"><div class="wrap rev">
-  <div>
-    <h2 data-t="pr_h">Free to start. Yours to keep.</h2>
-    <p class="ptri" data-t="pr_sub">A one-time Mac app — not a subscription, no cloud lock-in. Catalog your first drives free, then own it for good. Pricing is announced at launch — early users keep the launch price.</p>
-    <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
-  </div>
-  <div class="specs">
-    <div><span class="k" data-t="sp1">Platform</span><span class="v">macOS · Apple Silicon</span></div>
-    <div><span class="k" data-t="sp2">Intelligence</span><span class="v" data-t="sp2v">On-device</span></div>
-    <div><span class="k" data-t="sp3">License</span><span class="v" data-t="sp3v">One-time</span></div>
-    <div><span class="k" data-t="sp4">Network</span><span class="v" data-t="sp4v">Works offline</span></div>
-  </div>
-</div></section>
-
 <!-- FAQ -->
 <section class="sec bord faq"><div class="wrap">
   <h2 data-t="faq_h">Questions, answered.</h2>
@@ -626,7 +610,7 @@ const I18N={
    ["Can Disky change or delete files on my drives?","No. Disky is strictly read-only. It catalogs, maps, and flags what you could reclaim, but it never moves, renames, or deletes anything. You release space yourself, in Finder — Disky only shows you the gigabytes and waits."],
    ["How does the content search actually work?","Disky reads what's in your clips and photos, so you can search by what the footage shows — type “underwater” and it surfaces every clip with water, across all drives, even ones unplugged and misnamed. The model runs on-device."],
    ["How does it find duplicates if files are renamed?","By checksum, not filename. Disky compares files byte-for-byte, so identical footage is caught even after it's renamed or moved between drives — then shows the exact space you'd reclaim (80.4 GB across 5 groups in the example)."],
-   ["Is it a subscription?","No. Disky is free to start and a one-time Mac app — yours to keep. No subscription, no recurring bill, no cloud lock-in."],
+   ["What will it cost?","Disky is free to start — catalog your first drives without paying. No subscription, no cloud lock-in. The full pricing lands at launch, right inside the app — download now and you'll see it before you ever pay."],
    ["How many drives can it handle?","It's built for walls of drives — 10 to 22 and beyond. Over a million files across multiple drives stays searchable in seconds."],
    ["Is it safe to run on my drives?","Completely. Disky is strictly read-only — it catalogs and maps your drives but never moves, renames, or deletes a single file. It physically can't change your footage. The only thing it ever writes is its own catalog, on your Mac."],
    ["Why isn't it in the Mac App Store?","Disky runs outside the App Store sandbox on purpose — that's the only way it can see every external drive you own. It's a direct download for Apple Silicon Macs, launching soon."]
@@ -676,7 +660,7 @@ const I18N={
    ["Kann Disky Dateien auf meinen Platten ändern oder löschen?","Nein. Disky ist strikt nur-lesend. Es katalogisiert, kartiert und markiert, was du freiräumen könntest — aber es verschiebt, benennt oder löscht nie etwas. Du gibst Platz selbst frei, im Finder. Disky zeigt dir nur die Gigabyte und wartet."],
    ["Wie funktioniert die Inhalts-Suche eigentlich?","Disky liest, was in deinen Clips und Fotos ist — du suchst nach dem, was das Material zeigt. Tippe „unter Wasser“ und es findet jeden Clip mit Wasser, über alle Platten, selbst ungesteckte und falsch benannte. Das Modell läuft on-device."],
    ["Wie findet es Duplikate, wenn Dateien umbenannt sind?","Per Prüfsumme, nicht per Name. Disky vergleicht Dateien Byte für Byte — identisches Material wird erkannt, selbst nach Umbenennen oder Verschieben zwischen Platten — und zeigt dann den genauen Platz, den du zurückbekommst (im Beispiel 80,4 GB über 5 Gruppen)."],
-   ["Ist es ein Abo?","Nein. Disky ist kostenlos zum Starten und eine einmalige Mac-App — dir gehörend. Kein Abo, keine wiederkehrende Rechnung, kein Cloud-Zwang."],
+   ["Was wird es kosten?","Disky ist kostenlos im Einstieg — katalogisiere deine ersten Platten, ohne zu zahlen. Kein Abo, kein Cloud-Zwang. Den vollen Preis nennen wir zum Launch, direkt in der App — lad sie jetzt und du siehst ihn, bevor du je zahlst."],
    ["Wie viele Platten verkraftet es?","Es ist für Regale voller Platten gebaut — 10 bis 22 und mehr. Über eine Million Dateien über mehrere Platten bleiben in Sekunden durchsuchbar."],
    ["Ist es sicher auf meinen Platten?","Komplett. Disky ist strikt nur-lesend — es katalogisiert und kartiert deine Platten, verschiebt, benennt oder löscht aber nie eine einzige Datei. Es kann dein Material gar nicht verändern. Das Einzige, was es je schreibt, ist sein eigener Katalog, auf deinem Mac."],
    ["Warum ist es nicht im Mac App Store?","Disky läuft bewusst außerhalb der App-Store-Sandbox — nur so sieht es jede externe Platte, die du besitzt. Es ist ein Direkt-Download für Apple-Silicon-Macs, bald verfügbar."]
