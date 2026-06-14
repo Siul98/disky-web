@@ -389,8 +389,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-awmain{position:relative;flex:1 1 auto;padding:14px 18px;overflow:hidden;border-left:1px solid var(--line)}
 .hf-awhead{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 .hf-files{position:absolute;inset:0;z-index:12;pointer-events:none}
-.hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:14px 14px}
-.hf-fitem .hf-ic{width:46px;height:55px;flex:0 0 auto;filter:drop-shadow(0 4px 9px rgba(0,0,0,.6))}
+.hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:50% 14px}
+.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6))}
 .hf-fitem .hf-nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
 .hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
@@ -1135,7 +1135,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   ];
   const N=FILES.length;
   // Icons gleichmäßig im Ring um die Platte (ordentlich, aufrecht) statt zufälligem Scatter
-  (function(){ const RCY=42, RRX=40, RRY=29; FILES.forEach((f,i)=>{ const a=(-90+i*360/N)*Math.PI/180; f.cx=50+RRX*Math.cos(a); f.cy=RCY+RRY*Math.sin(a); f.r=0; }); })();
+  (function(){ const RCY=47, RRX=41, RRY=31; FILES.forEach((f,i)=>{ const a=(-90+i*360/N)*Math.PI/180; f.cx=50+RRX*Math.cos(a); f.cy=RCY+RRY*Math.sin(a); f.r=0; }); })();   // konzentrisch zur SSD, etwas weiter raus für die größeren Icons
   filesWrap.innerHTML=ICODEFS+FILES.map(f=>`<div class="hf-fitem">${ICON[f.type]()}</div>`).join('');   // geteilte Defs einmal + nur Icons, keine Beschriftung → ruhiger
   const fitems=[...filesWrap.querySelectorAll('.hf-fitem')];
   const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
@@ -1196,8 +1196,10 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const lift=easeIO(clamp(p1/0.46));
     const scan=clamp((p1-0.5)/0.4);
     const spread=easeIO(clamp(p1/0.5));
-    const done=clamp((scan-0.74)/0.26);
-    const flash=Math.sin(clamp(done)*Math.PI);
+    const finish=clamp((p1-0.82)/0.16);            // Glow-Welle erst am ENDE des Scans (Peak genau wenn fertig gescannt)
+    const flash=Math.sin(clamp(finish)*Math.PI);   // Helligkeits-Blitz, Peak bei Scan-Abschluss
+    const cxC=innerWidth*0.5, cyC=innerHeight*0.47;   // zentrierte Komposition — Ring/Welle konzentrisch zur SSD
+    const waveR=finish*innerWidth*0.55;            // Schockwellen-Front wächst nach außen
     const pull=clamp(p2/0.82), pullE=pull*pull;
     const resting=p<0.03;
     const GAP=innerHeight*0.66;   // Abstand SSD↔MacBook bewusst <1 Viewport, damit keine tote Strecke in der Mitte klafft
@@ -1206,11 +1208,11 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
       const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1;
       // WÄHREND DES SCANS (recede 0→1 über den ganzen Scan): Schärfeverlagerung auf die SSD — die Platten driften voneinander weg, werden kleiner, wandern nach unten und faden in Unschärfe
       const recede=easeIO(clamp(p1/0.9));        // läuft über den kompletten Scan (fertig wenn der X-Ray durch ist)
-      tx += i*innerWidth*0.045*recede;          // voneinander weg driften (äußere weiter raus)
-      ty += innerHeight*0.16*recede;            // wandern nach unten
-      scl -= 0.34*recede;                        // werden kleiner
-      op  -= 0.5*recede;                         // faden aus …
-      let blur = 7*recede;                       // … in Unschärfe
+      tx += i*innerWidth*0.05*recede;           // voneinander weg driften (äußere weiter raus)
+      ty += innerHeight*0.46*recede;            // wandern KOMPLETT nach unten aus dem Bild
+      scl -= 0.42*recede;                        // werden kleiner
+      op   = 1 - 1.18*recede;                    // faden VOLLSTÄNDIG aus (weg bevor die Glow-Welle kommt)
+      let blur = 9*recede;                       // … in Unschärfe
       if(p2>0){ const part=easeIO(clamp(p2/0.72));   // beim Runterscrollen: weiter zur Seite, mit der Szene hoch, ganz raus
         tx += Math.sign(i)*innerWidth*0.22*part + i*innerWidth*0.06*part; rot += i*6*part; ty-=pan*0.55;
         blur += 5*part; op -= 0.5*part; }
@@ -1238,10 +1240,11 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
       scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('hf-on');
       if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
     }
-    bloom.style.opacity=clamp(0.1*lift*(1-pullE) + 0.8*flash).toFixed(3);
-    bloom.style.transform=`translate(-50%,-50%) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
-    shock.style.opacity=(flash*0.42*(1-pullE)).toFixed(3);
-    shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
+    const dyC=(cyC-innerHeight*0.5).toFixed(0);   // Welle/Bloom auf den SSD-Mittelpunkt schieben
+    bloom.style.opacity=clamp(0.08*lift*(1-pullE) + 0.85*flash).toFixed(3);
+    bloom.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
+    shock.style.opacity=(clamp(finish/0.08)*(1-finish)*0.62*(1-pullE)).toFixed(3);   // Ring erscheint, expandiert nach außen, fadet beim Wachsen
+    shock.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.4+waveR/250).toFixed(3)})`;
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
     head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
     head.style.opacity=(1-0.82*spread).toFixed(3);
@@ -1258,8 +1261,11 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
       const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.5)), fm=flow*flow;
-      const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
-      const x=lerp(chX,tgx,fm), y=lerp(chY,sceneTgy,fm)-pan, rot=lerp(f.r,0,flow), sc=1-0.6*fm;   // schrumpfen langsamer → füllen die Mitte beim Runterfliegen
+      const icx=f.cx/100*W, icy=f.cy/100*H;                       // Icon-Mittelpunkt
+      const dx=icx-cxC, dy=icy-cyC, dist=Math.hypot(dx,dy)||1;
+      const bump=Math.exp(-Math.pow((waveR-dist)/92,2));          // Schockwellen-Front trifft das Icon → radialer Stoß nach außen
+      const chX=icx-33+dx/dist*bump*26, chY=icy-14+dy/dist*bump*26;
+      const x=lerp(chX,tgx,fm), y=lerp(chY,sceneTgy,fm)-pan, rot=lerp(f.r,0,flow), sc=(1-0.6*fm)*(1+bump*0.13);   // beim Treffer kurz größer; danach schrumpfen sie langsam beim Runterfliegen
       el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.07,sc).toFixed(3)})`;
       el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.7)/0.25))).toFixed(3);
     });
