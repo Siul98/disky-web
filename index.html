@@ -300,7 +300,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 /* ===== Cinematic scroll hero (isolated hf- module) ===== */
 .hfhero{position:relative;display:block;margin:0;padding:0}
-.hf-rail{position:relative;height:320vh}   /* cineastisch begrenzt: Scan → App wacht auf → entpinnt, danach scrollt es normal weiter */
+.hf-rail{position:relative;height:215vh}   /* knapper: Scan → Runter-Scroll zum MacBook, keine tote Strecke */
 .hf-sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1500px}
 #hf-stars{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%);mask-image:radial-gradient(ellipse 70% 70% at center,transparent 8%,#000 60%)}
 .hf-grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;background-size:60px 60px;background-image:linear-gradient(to right,rgba(244,247,251,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(244,247,251,.05) 1px,transparent 1px);-webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%)}
@@ -1150,11 +1150,12 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const flash=Math.sin(clamp(done)*Math.PI);
     const pull=clamp(p2/0.82), pullE=pull*pull;
     const resting=p<0.03;
-    const sd=clamp(p2), pan=sd*innerHeight;   // ECHTE Runter-Scroll-Fahrt: Szene fährt linear (1:1 zum Scroll) eine Viewport-Höhe hoch (Kamera nach unten)
+    const GAP=innerHeight*0.66;   // Abstand SSD↔MacBook bewusst <1 Viewport, damit keine tote Strecke in der Mitte klafft
+    const sd=clamp(p2), pan=sd*GAP;   // ECHTE Runter-Scroll-Fahrt: Szene fährt linear (1:1 zum Scroll) um GAP hoch (Kamera nach unten)
     cards.forEach(c=>{
       const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.4*spread;
       if(p2>0){ const part=easeIO(clamp(p2/0.72));   // teilen sich zur Seite — die linken 2 nach links, die rechten 2 nach rechts, OHNE Opacity-Verlust
-        tx += Math.sign(i)*innerWidth*0.34*part; rot += Math.sign(i)*5*part; ty-=pan*0.55; }   // + driften mit der Szene nach oben (bleiben sichtbar)
+        tx += Math.sign(i)*innerWidth*0.255*part + i*innerWidth*0.07*part; rot += i*6*part; ty-=pan*0.55; }   // zur Seite + zusätzlich VONEINANDER weg driften (äußere weiter raus) + mit der Szene hoch (bleiben sichtbar)
       c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${scl.toFixed(3)})`;
       c.style.opacity=Math.max(0,op).toFixed(3);
       c.style.zIndex = baseZ(i);
@@ -1186,7 +1187,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
     head.style.opacity=(1-0.82*spread).toFixed(3);
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
-    const macTY = innerHeight*1.0 - pan;   // unten (+1.0h) → Mitte (0)
+    const macTY = GAP - pan;   // wartet GAP tiefer → scrollt in die Mitte (0)
     mac.style.opacity = (p2>0.001?1:0).toString();
     mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
     macSwipe.style.opacity='0'; macGlow.style.opacity='0';   // keine Replacement-/Wake-Fades
@@ -1194,19 +1195,19 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     for(let i=1;i<NS;i++) shots[i].style.opacity='0';
     if(tour) tour.style.opacity='0';
     // Dateien fliegen NACH UNTEN in den MacBook-Screen (Szene-Koordinaten, dann Kamera-Schwenk -pan oben drauf) und werden aufgesaugt
-    const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*1.46;   // MacBook-Screen liegt in Szene ~1.46h unten
+    const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*0.46+GAP;   // MacBook-Screen liegt in Szene GAP+0.46h unten
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
       const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.5)), fm=flow*flow;
       const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
-      const x=lerp(chX,tgx,fm), y=lerp(chY,sceneTgy,fm)-pan, rot=lerp(f.r,0,flow), sc=1-0.78*fm;
+      const x=lerp(chX,tgx,fm), y=lerp(chY,sceneTgy,fm)-pan, rot=lerp(f.r,0,flow), sc=1-0.6*fm;   // schrumpfen langsamer → füllen die Mitte beim Runterfliegen
       el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.07,sc).toFixed(3)})`;
       el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.7)/0.25))).toFixed(3);
     });
     const cap1Op=clamp((p1-0.4)/0.15);   // „Scan once" erscheint im Scan und scrollt dann mit der Szene hoch raus (KEIN Fade)
     cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(-pan).toFixed(0)}px)`;
     cap2.style.opacity=(p2>0.05?1:0).toString();   // „Remembered forever" scrollt mit dem MacBook von unten hoch (kein Fade)
-    cap2.style.transform=`translateX(-50%) translateY(${(innerHeight*1.0 - pan).toFixed(0)}px)`;
+    cap2.style.transform=`translateX(-50%) translateY(${(GAP - pan).toFixed(0)}px)`;
     if(hint) hint.style.opacity=P>0.05?0:1;
   }
   function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
