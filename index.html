@@ -1150,10 +1150,11 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const flash=Math.sin(clamp(done)*Math.PI);
     const pull=clamp(p2/0.82), pullE=pull*pull;
     const resting=p<0.03;
+    const sd=clamp(p2), pan=sd*innerHeight;   // ECHTE Runter-Scroll-Fahrt: Szene fährt linear (1:1 zum Scroll) eine Viewport-Höhe hoch (Kamera nach unten)
     cards.forEach(c=>{
       const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.4*spread;
       if(p2>0){ const part=easeIO(clamp(p2/0.72));   // teilen sich zur Seite — die linken 2 nach links, die rechten 2 nach rechts, OHNE Opacity-Verlust
-        tx += Math.sign(i)*innerWidth*0.34*part; rot += Math.sign(i)*5*part; ty-=10*part; }
+        tx += Math.sign(i)*innerWidth*0.34*part; rot += Math.sign(i)*5*part; ty-=pan*0.55; }   // + driften mit der Szene nach oben (bleiben sichtbar)
       c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${scl.toFixed(3)})`;
       c.style.opacity=Math.max(0,op).toFixed(3);
       c.style.zIndex = baseZ(i);
@@ -1161,7 +1162,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     fan.classList.toggle('hf-resting',resting);
     floor.style.opacity=((1-0.7*spread)*(1-pullE)).toFixed(3);
     const g=heroGeom(lift); let hSc=1, hDy=0, hOp=1;
-    if(p2>0){ const ex=clamp(p2/0.3); hSc*=(1-0.85*ex); hDy-=400*ex; hOp=1-ex; }
+    if(p2>0){ hDy=-pan; }   // gescannte SSD bleibt VOLL da (kein Fade, kein Shrink) und scrollt mit der Szene nach oben raus
     hero.style.transform=heroT(g,hDy,hSc);
     hero.style.opacity=Math.max(0,hOp).toFixed(3);
     hero.style.filter = flash>0.01 ? `brightness(${(1+0.9*flash).toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))` : 'none';
@@ -1182,45 +1183,30 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     shock.style.opacity=(flash*0.42*(1-pullE)).toFixed(3);
     shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
-    head.style.transform=`translateY(${(-innerHeight*0.34*easeIO(clamp(p2/0.55))).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text verlassen → nach oben raus, wir bewegen uns runter
-    head.style.opacity=((1-0.82*spread)*(1-clamp(p2/0.35))).toFixed(3);
-    // EIN MacBook: steigt hoch & fängt die Dateien → App „erwacht" → tourt durch die 6 Tools (echte Screenshots)
-    const macIn=easeIO(clamp(p2/0.42));
-    const macReact=ease(clamp((p2-0.5)/0.34));
-    const eIn=clamp(pe/0.08);
-    const macY=lerp(innerHeight*0.66, innerHeight*0.13, macIn);   // MacBook steigt von unten hoch und wartet etwas UNTER der Mitte
-    const macSc=(0.9+0.1*macIn)*(1+0.11*eIn);
-    mac.style.opacity=(pe>0?1:macIn).toFixed(3);
-    mac.style.transform=`translate(-50%,calc(-50% + ${macY.toFixed(0)}px)) scale(${macSc.toFixed(3)})`;
-    const sw=clamp((p2-0.5)/0.2);
-    macSwipe.style.opacity=(pe<=0&&sw>0&&sw<1?0.9:0).toFixed(2);
-    macSwipe.style.transform=`translateX(${(sw*240).toFixed(0)}%)`;
-    macGlow.style.opacity=(pe<=0?Math.sin(clamp(macReact)*Math.PI)*0.7:0).toFixed(3);
-    if(pe<=0){                              // Wake-up: Overview-Screenshot geht an
-      shots[0].style.opacity=macReact.toFixed(3);
-      for(let i=1;i<NS;i++) shots[i].style.opacity='0';
-      if(tour) tour.style.opacity='0';
-    } else {                                // Explore: durch die 6 Tools faden + Tool-Caption
-      if(!shotsLoaded){ shotsLoaded=true; for(let i=1;i<NS;i++){ if(shots[i].dataset.src) shots[i].src=shots[i].dataset.src; } }
-      const seg=pe*6, cur=clamp(Math.floor(seg),0,5), f=seg-Math.floor(seg), nxt=Math.min(5,cur+1);
-      for(let i=0;i<NS;i++){ let o=0; if(i===cur)o=f<0.8?1:(1-(f-0.8)/0.2); if(i===nxt&&f>0.8)o=(f-0.8)/0.2; shots[i].style.opacity=o.toFixed(3); }
-      if(cur!==lastTour){ lastTour=cur; renderTour(cur); }
-      if(tour) tour.style.opacity=(clamp(Math.min(f/0.12,(1-f)/0.12,1))*clamp(pe/0.04)).toFixed(3);
-    }
-    // Dateien fliegen in den MacBook-Screen und werden „aufgesaugt" (schrumpfen + verblassen)
-    const tgx=innerWidth/2, tgy=innerHeight*0.585, W=innerWidth,H=innerHeight;   // Dateien fliegen NACH UNTEN in den (tiefer wartenden) MacBook-Screen
+    head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
+    head.style.opacity=(1-0.82*spread).toFixed(3);
+    // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
+    const macTY = innerHeight*1.0 - pan;   // unten (+1.0h) → Mitte (0)
+    mac.style.opacity = (p2>0.001?1:0).toString();
+    mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
+    macSwipe.style.opacity='0'; macGlow.style.opacity='0';   // keine Replacement-/Wake-Fades
+    shots[0].style.opacity='1';                               // Overview-Screen ist von Anfang an da
+    for(let i=1;i<NS;i++) shots[i].style.opacity='0';
+    if(tour) tour.style.opacity='0';
+    // Dateien fliegen NACH UNTEN in den MacBook-Screen (Szene-Koordinaten, dann Kamera-Schwenk -pan oben drauf) und werden aufgesaugt
+    const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*1.46;   // MacBook-Screen liegt in Szene ~1.46h unten
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
-      const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.4)), fm=flow*flow;
+      const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.5)), fm=flow*flow;
       const chX=f.cx/100*W-14, chY=f.cy/100*H-14;
-      const x=lerp(chX,tgx,fm), y=lerp(chY,tgy,fm), rot=lerp(f.r,0,flow), sc=1-0.82*fm;
-      el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.06,sc).toFixed(3)})`;
-      el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.6)/0.28))).toFixed(3);
+      const x=lerp(chX,tgx,fm), y=lerp(chY,sceneTgy,fm)-pan, rot=lerp(f.r,0,flow), sc=1-0.78*fm;
+      el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.07,sc).toFixed(3)})`;
+      el.style.opacity=clamp(Math.min(appear,1-clamp((fm-0.7)/0.25))).toFixed(3);
     });
-    const cap1Op=clamp((p1-0.4)/0.15)*(1-clamp(p2/0.12));
-    const cap2Op=clamp((p2-0.2)/0.26)*(1-clamp(pe/0.06));   // „Remembered forever" weicht der Tool-Tour
-    cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(16*(1-cap1Op)).toFixed(0)}px)`;
-    cap2.style.opacity=cap2Op.toFixed(3); cap2.style.transform=`translateX(-50%) translateY(${(16*(1-cap2Op)).toFixed(0)}px)`;
+    const cap1Op=clamp((p1-0.4)/0.15);   // „Scan once" erscheint im Scan und scrollt dann mit der Szene hoch raus (KEIN Fade)
+    cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(-pan).toFixed(0)}px)`;
+    cap2.style.opacity=(p2>0.05?1:0).toString();   // „Remembered forever" scrollt mit dem MacBook von unten hoch (kein Fade)
+    cap2.style.transform=`translateX(-50%) translateY(${(innerHeight*1.0 - pan).toFixed(0)}px)`;
     if(hint) hint.style.opacity=P>0.05?0:1;
   }
   function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
