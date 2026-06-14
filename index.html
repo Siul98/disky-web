@@ -1153,11 +1153,20 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const GAP=innerHeight*0.66;   // Abstand SSD↔MacBook bewusst <1 Viewport, damit keine tote Strecke in der Mitte klafft
     const sd=clamp(p2), pan=sd*GAP;   // ECHTE Runter-Scroll-Fahrt: Szene fährt linear (1:1 zum Scroll) um GAP hoch (Kamera nach unten)
     cards.forEach(c=>{
-      const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.4*spread;
-      if(p2>0){ const part=easeIO(clamp(p2/0.72));   // teilen sich zur Seite — die linken 2 nach links, die rechten 2 nach rechts, OHNE Opacity-Verlust
-        tx += Math.sign(i)*innerWidth*0.255*part + i*innerWidth*0.07*part; rot += i*6*part; ty-=pan*0.55; }   // zur Seite + zusätzlich VONEINANDER weg driften (äußere weiter raus) + mit der Szene hoch (bleiben sichtbar)
-      c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${scl.toFixed(3)})`;
+      const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1;
+      // WÄHREND DES SCANS (recede 0→1 über den ganzen Scan): Schärfeverlagerung auf die SSD — die Platten driften voneinander weg, werden kleiner, wandern nach unten und faden in Unschärfe
+      const recede=easeIO(clamp(p1/0.9));        // läuft über den kompletten Scan (fertig wenn der X-Ray durch ist)
+      tx += i*innerWidth*0.045*recede;          // voneinander weg driften (äußere weiter raus)
+      ty += innerHeight*0.16*recede;            // wandern nach unten
+      scl -= 0.34*recede;                        // werden kleiner
+      op  -= 0.5*recede;                         // faden aus …
+      let blur = 7*recede;                       // … in Unschärfe
+      if(p2>0){ const part=easeIO(clamp(p2/0.72));   // beim Runterscrollen: weiter zur Seite, mit der Szene hoch, ganz raus
+        tx += Math.sign(i)*innerWidth*0.22*part + i*innerWidth*0.06*part; rot += i*6*part; ty-=pan*0.55;
+        blur += 5*part; op -= 0.5*part; }
+      c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(0.18,scl).toFixed(3)})`;
       c.style.opacity=Math.max(0,op).toFixed(3);
+      c.style.filter = blur>0.1 ? `blur(${blur.toFixed(1)}px)` : 'none';
       c.style.zIndex = baseZ(i);
     });
     fan.classList.toggle('hf-resting',resting);
