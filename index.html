@@ -1070,10 +1070,40 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
   const DE=(typeof LANG!=='undefined'&&LANG==='de'), FW=DE?'Dateien':'files';
 
+  // Geteilte Gradient-/Clip-Defs EINMAL injiziert (keine doppelten IDs, keine teuren Blur-Filter → leicht beim Scroll)
+  const ICODEFS=`<svg class="hf-defs" width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;pointer-events:none"><defs>
+   <linearGradient id="gIcoFile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe8ff"/><stop offset=".5" stop-color="#73b4ff"/><stop offset="1" stop-color="#4e95ff"/></linearGradient>
+   <linearGradient id="gIcoBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8cfff"/><stop offset=".5" stop-color="#4a98ff"/><stop offset="1" stop-color="#2a6ff0"/></linearGradient>
+   <linearGradient id="gIcoEdge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset=".5" stop-color="#dbeaff" stop-opacity=".14"/><stop offset="1" stop-color="#eaf3ff" stop-opacity=".4"/></linearGradient>
+   <radialGradient id="gIcoBloom" cx=".5" cy=".44" r=".6"><stop offset="0" stop-color="#d6ecff" stop-opacity=".6"/><stop offset="1" stop-color="#3f8cff" stop-opacity="0"/></radialGradient>
+   <linearGradient id="gIcoMilk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf3ff" stop-opacity=".34"/><stop offset=".44" stop-color="#d2e4fb" stop-opacity=".06"/><stop offset="1" stop-color="#c6dcf8" stop-opacity=".18"/></linearGradient>
+   <clipPath id="gFldClip"><path d="M185 160 H291 C311 160 315 198 339 198 H435 A20 20 0 0 1 455 218 V352 A20 20 0 0 1 435 372 H185 A20 20 0 0 1 165 352 V180 A20 20 0 0 1 185 160 Z"/></clipPath>
+  </defs></svg>`;
+  // CI-Glas-Ordner (aus der App übernommen, Blur-Filter durch Gradients ersetzt)
+  function glassFolder(){return `<svg class="hf-ic" viewBox="150 64 320 340" preserveAspectRatio="xMidYMid meet">
+   <rect x="178" y="184" width="204" height="184" rx="48" fill="url(#gIcoBloom)"/>
+   <path d="M234 80 H352 L404 128 V250 a10 10 0 0 1-10 10 H234 a10 10 0 0 1-10-10 V90 a10 10 0 0 1 10-10 Z" fill="url(#gIcoFile)"/>
+   <path d="M352 80 V118 a10 10 0 0 0 10 10 H404 Z" fill="#eef6ff" fill-opacity=".6"/>
+   <g clip-path="url(#gFldClip)"><rect x="165" y="160" width="290" height="212" fill="url(#gIcoBody)"/><ellipse cx="312" cy="298" rx="120" ry="84" fill="url(#gIcoBloom)" opacity=".55"/><rect x="165" y="160" width="290" height="212" fill="url(#gIcoMilk)"/></g>
+   <path d="M185 160 H291 C311 160 315 198 339 198 H435 A20 20 0 0 1 455 218 V352 A20 20 0 0 1 435 372 H185 A20 20 0 0 1 165 352 V180 A20 20 0 0 1 185 160 Z" fill="none" stroke="url(#gIcoEdge)" stroke-width="2.6"/>
+   <path d="M188 169 H289 C306 169 309 206 333 206 H432" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>
+  </svg>`;}
+  // CI-Glas-Video (gleiche Glas-Sprache wie der Ordner + Play-Button + Format-Chip)
+  function glassVideo(label){return `<svg class="hf-ic" viewBox="0 0 134 162" preserveAspectRatio="xMidYMid meet">
+   <rect x="20" y="40" width="94" height="98" rx="30" fill="url(#gIcoBloom)"/>
+   <path d="M28 12 H86 L116 42 V140 a11 11 0 0 1-11 11 H28 a11 11 0 0 1-11-11 V23 a11 11 0 0 1 11-11 Z" fill="url(#gIcoBody)"/>
+   <path d="M86 12 V35 a7 7 0 0 0 7 7 H116 Z" fill="#eef6ff" fill-opacity=".6"/>
+   <path d="M28 12 H86 L116 42 V140 a11 11 0 0 1-11 11 H28 a11 11 0 0 1-11-11 V23 a11 11 0 0 1 11-11 Z" fill="url(#gIcoMilk)"/>
+   <circle cx="66" cy="80" r="25" fill="#0b1424" fill-opacity=".18"/>
+   <circle cx="66" cy="80" r="25" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="2"/>
+   <path d="M59 68 L83 80 L59 92 Z" fill="#ffffff"/>
+   <rect x="36" y="118" width="62" height="21" rx="10.5" fill="#0b1424" fill-opacity=".4"/>
+   <text x="67" y="133" font-size="13" font-weight="800" fill="#dfeeff" text-anchor="middle" font-family="-apple-system,Helvetica,sans-serif" letter-spacing=".5">${label}</text>
+   <path d="M28 12 H86 L116 42 V140 a11 11 0 0 1-11 11 H28 a11 11 0 0 1-11-11 V23 a11 11 0 0 1 11-11 Z" fill="none" stroke="url(#gIcoEdge)" stroke-width="2.4"/>
+  </svg>`;}
   function fileSVG(label,color){return `<svg class="hf-ic" viewBox="0 0 36 44"><path d="M5 2.5h17l9 9v28a2.5 2.5 0 0 1-2.5 2.5h-23A2.5 2.5 0 0 1 3 39.5V5A2.5 2.5 0 0 1 5.5 2.5z" fill="#fcfdff"/><path d="M22 2.5l9 9h-7a2 2 0 0 1-2-2z" fill="#ccd3e0"/><rect x="3" y="27" width="23" height="12" rx="2.4" fill="${color}"/><text x="14.5" y="36" font-size="7.3" font-weight="800" fill="#fff" text-anchor="middle" font-family="-apple-system,Helvetica,sans-serif">${label}</text></svg>`;}
-  function folderSVG(){return `<svg class="hf-ic" viewBox="0 0 44 38"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h11.7a2.5 2.5 0 0 1 1.8.75L21 9h17.5A2.5 2.5 0 0 1 41 11.5V14H3z" fill="#4ea3ef"/><path d="M3 13h38v19.5A2.5 2.5 0 0 1 38.5 35h-33A2.5 2.5 0 0 1 3 32.5z" fill="#73bdf7"/><path d="M3 13h38v2.4H3z" fill="#9fd2fb" opacity=".6"/></svg>`;}
-  const ICON={folder:folderSVG,pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('PPT','#f0922b'),ai:()=>fileSVG('AI','#e8a33d'),
-   mp4:()=>fileSVG('MP4','#7d6cf0'),mov:()=>fileSVG('MOV','#7d6cf0'),wav:()=>fileSVG('WAV','#ef5fa0'),psd:()=>fileSVG('PSD','#2f9be8')};
+  const ICON={folder:glassFolder,mp4:()=>glassVideo('MP4'),mov:()=>glassVideo('MOV'),
+   pdf:()=>fileSVG('PDF','#ee5b54'),pptx:()=>fileSVG('PPT','#f0922b'),ai:()=>fileSVG('AI','#e8a33d'),wav:()=>fileSVG('WAV','#ef5fa0'),psd:()=>fileSVG('PSD','#2f9be8')};
   const FILES=[
    {name:'Hochzeit_Tegernsee',type:'folder',head:1,sz:'24 '+FW,cx:22,cy:18,r:-6},
    {name:'Hochzeit_Trailer_FINAL.mp4',type:'mp4',sz:'2.1 GB',cx:78,cy:15,r:5},
@@ -1086,7 +1116,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   const N=FILES.length;
   // Icons gleichmäßig im Ring um die Platte (ordentlich, aufrecht) statt zufälligem Scatter
   (function(){ const RCY=42, RRX=40, RRY=29; FILES.forEach((f,i)=>{ const a=(-90+i*360/N)*Math.PI/180; f.cx=50+RRX*Math.cos(a); f.cy=RCY+RRY*Math.sin(a); f.r=0; }); })();
-  filesWrap.innerHTML=FILES.map(f=>`<div class="hf-fitem">${ICON[f.type]()}</div>`).join('');   // nur Icons, keine Beschriftung → ruhiger
+  filesWrap.innerHTML=ICODEFS+FILES.map(f=>`<div class="hf-fitem">${ICON[f.type]()}</div>`).join('');   // geteilte Defs einmal + nur Icons, keine Beschriftung → ruhiger
   const fitems=[...filesWrap.querySelectorAll('.hf-fitem')];
   const emitOrder=FILES.map((f,i)=>i).sort((a,b)=>FILES[a].cx-FILES[b].cx);
   const emitRank=[]; emitOrder.forEach((idx,rank)=>emitRank[idx]=rank/N);
