@@ -812,8 +812,8 @@ const I18N={
   meta_title:"Disky — See inside sealed drives.",
   meta_desc:"Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.",
   nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",nav_pricing:"Pricing",nav_dl:"Download",
-  hero_eb:"Drive catalog for Mac",hero_l1:"Five tries.",hero_l2:"Or five seconds.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",
-  hero_sub:"Disky remembers every drive you own — search by name or what's inside, reclaim space, catch duplicates, see everywhere you've shot. All on your Mac, nothing plugged in.",
+  hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",
+  hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
   cta_dl:"Download for Mac — free to start",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
   trustline:"Free to start · macOS, Apple Silicon · Read-only · No account",
@@ -871,8 +871,8 @@ const I18N={
   meta_title:"Disky — Schau in versiegelte Platten.",
   meta_desc:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt. Native Mac-App. 100% lokal.",
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",nav_pricing:"Preise",nav_dl:"Laden",
-  hero_eb:"Platten-Katalog für Mac",hero_l1:"Fünf Versuche.",hero_l2:"Oder fünf Sekunden.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",
-  hero_sub:"Disky merkt sich jede Platte, die du besitzt — suche nach Name oder Inhalt, gib Speicher frei, finde Duplikate, sieh wo du überall gedreht hast. Alles auf deinem Mac, nichts angesteckt.",
+  hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",
+  hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
   cta_dl:"Für Mac laden — kostenlos starten",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
   trustline:"Kostenlos starten · macOS, Apple Silicon · Nur-Lesen · Kein Konto",
@@ -1151,11 +1151,12 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const pull=clamp(p2/0.82), pullE=pull*pull;
     const resting=p<0.03;
     cards.forEach(c=>{
-      const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.58*spread;
-      if(p2>0){ scl*=(1-0.7*pullE); op*=(1-Math.min(1,pullE*1.6)); ty-=40*pullE; }
-      c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(.04,scl).toFixed(3)})`;
+      const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1-0.4*spread;
+      if(p2>0){ const part=easeIO(clamp(p2/0.72));   // teilen sich zur Seite — die linken 2 nach links, die rechten 2 nach rechts, OHNE Opacity-Verlust
+        tx += Math.sign(i)*innerWidth*0.34*part; rot += Math.sign(i)*5*part; ty-=10*part; }
+      c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${scl.toFixed(3)})`;
       c.style.opacity=Math.max(0,op).toFixed(3);
-      c.style.zIndex = p2>0.05 ? 1 : baseZ(i);
+      c.style.zIndex = baseZ(i);
     });
     fan.classList.toggle('hf-resting',resting);
     floor.style.opacity=((1-0.7*spread)*(1-pullE)).toFixed(3);
@@ -1181,13 +1182,13 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     shock.style.opacity=(flash*0.42*(1-pullE)).toFixed(3);
     shock.style.transform=`translate(-50%,-50%) scale(${(0.5+2.2*clamp(done)).toFixed(3)})`;
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
-    head.style.transform=`scale(${(1+0.15*spread).toFixed(3)})`;
-    head.style.opacity=(1-0.82*spread).toFixed(3);
+    head.style.transform=`translateY(${(-innerHeight*0.34*easeIO(clamp(p2/0.55))).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text verlassen → nach oben raus, wir bewegen uns runter
+    head.style.opacity=((1-0.82*spread)*(1-clamp(p2/0.35))).toFixed(3);
     // EIN MacBook: steigt hoch & fängt die Dateien → App „erwacht" → tourt durch die 6 Tools (echte Screenshots)
     const macIn=easeIO(clamp(p2/0.42));
     const macReact=ease(clamp((p2-0.5)/0.34));
     const eIn=clamp(pe/0.08);
-    const macY=120*(1-macIn) - innerHeight*0.065*eIn;
+    const macY=lerp(innerHeight*0.66, innerHeight*0.13, macIn);   // MacBook steigt von unten hoch und wartet etwas UNTER der Mitte
     const macSc=(0.9+0.1*macIn)*(1+0.11*eIn);
     mac.style.opacity=(pe>0?1:macIn).toFixed(3);
     mac.style.transform=`translate(-50%,calc(-50% + ${macY.toFixed(0)}px)) scale(${macSc.toFixed(3)})`;
@@ -1207,7 +1208,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
       if(tour) tour.style.opacity=(clamp(Math.min(f/0.12,(1-f)/0.12,1))*clamp(pe/0.04)).toFixed(3);
     }
     // Dateien fliegen in den MacBook-Screen und werden „aufgesaugt" (schrumpfen + verblassen)
-    const tgx=innerWidth/2, tgy=innerHeight*0.47, W=innerWidth,H=innerHeight;
+    const tgx=innerWidth/2, tgy=innerHeight*0.585, W=innerWidth,H=innerHeight;   // Dateien fliegen NACH UNTEN in den (tiefer wartenden) MacBook-Screen
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
       const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.4)), fm=flow*flow;
