@@ -395,7 +395,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
 .hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
 /* Hero MacBook — catches the files, then the app reacts (real screenshot, no iframe → no boot lag) */
-.hf-mac{position:absolute;left:50%;top:50%;z-index:6;width:min(620px,72vw);opacity:0;
+.hf-mac{position:absolute;left:50%;top:50%;z-index:6;width:min(1160px,86vw);opacity:0;
   transform:translate(-50%,-50%);pointer-events:none;will-change:transform,opacity;
   filter:drop-shadow(0 44px 70px rgba(0,0,0,.6))}
 .hf-mlid{position:relative;padding:10px 10px 11px;border-radius:17px 17px 6px 6px;
@@ -412,6 +412,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   background:radial-gradient(80% 90% at 50% 42%,rgba(86,160,255,.55),transparent 70%)}
 .hf-mswipe{position:absolute;top:0;bottom:0;width:60%;left:-60%;pointer-events:none;opacity:0;
   background:linear-gradient(105deg,transparent,rgba(150,200,255,.65) 50%,transparent);mix-blend-mode:screen}
+/* lebendiges Atom („Universum" der Disk-Mindmap) — animiert über den statischen Screenshot, NICHT bedienbar */
+.hf-atom{position:absolute;left:57.5%;top:62.3%;width:15.5%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:screen;overflow:visible;z-index:2}
+.hf-atom .orb{fill:none;stroke:rgba(125,193,255,.5);stroke-width:.8}
+.hf-atom .el{fill:#e7f4ff;filter:drop-shadow(0 0 2.6px rgba(150,205,255,.95))}
+.hf-atom .hf-atom-core{fill:#d6edff;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 0 4px rgba(150,205,255,.95));animation:hfAtomCore 2.6s ease-in-out infinite}
+.hf-atom .hf-atom-halo{transform-box:fill-box;transform-origin:center;animation:hfAtomCore 3.4s ease-in-out infinite}
+@keyframes hfAtomCore{0%,100%{opacity:.6;transform:scale(.82)}50%{opacity:1;transform:scale(1.18)}}
+.hf-atom.hf-apaused *{animation-play-state:paused!important}
 .hf-mbase{position:relative;width:113%;left:-6.5%;height:13px;border-radius:1.5px 1.5px 10px 10px;
   background:linear-gradient(180deg,#d8dce1,#bbc0c8 28%,#9ea4ad 74%,#7c818a);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 18px 24px -14px rgba(0,0,0,.6)}
@@ -649,6 +657,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
           <span class="hf-mcam" aria-hidden="true"></span>
           <div class="hf-mscr">
             <img class="hf-shot" data-i="0" data-src="assets/screen-overview.webp" alt="Disky — overview" decoding="async">
+            <svg class="hf-atom" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs><radialGradient id="atomHalo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7ec3ff" stop-opacity=".5"/><stop offset=".55" stop-color="#4f9bff" stop-opacity=".18"/><stop offset="1" stop-color="#3f8cff" stop-opacity="0"/></radialGradient></defs>
+              <circle class="hf-atom-halo" cx="50" cy="50" r="48" fill="url(#atomHalo)"/>
+              <ellipse class="orb" cx="50" cy="50" rx="42" ry="15.5" transform="rotate(10 50 50)"/>
+              <ellipse class="orb" cx="50" cy="50" rx="42" ry="15.5" transform="rotate(70 50 50)"/>
+              <ellipse class="orb" cx="50" cy="50" rx="42" ry="15.5" transform="rotate(-54 50 50)"/>
+              <g transform="rotate(10 50 50)"><circle class="el" r="2.7"><animateMotion dur="3.2s" repeatCount="indefinite" path="M8 50 a42 15.5 0 1 0 84 0 a42 15.5 0 1 0 -84 0"/></circle></g>
+              <g transform="rotate(70 50 50)"><circle class="el" r="2.4"><animateMotion dur="4.4s" begin="-1.2s" repeatCount="indefinite" path="M8 50 a42 15.5 0 1 0 84 0 a42 15.5 0 1 0 -84 0"/></circle></g>
+              <g transform="rotate(-54 50 50)"><circle class="el" r="2.5"><animateMotion dur="3.7s" begin="-2.4s" repeatCount="indefinite" path="M8 50 a42 15.5 0 1 0 84 0 a42 15.5 0 1 0 -84 0"/></circle></g>
+              <circle class="hf-atom-core" cx="50" cy="50" r="4.6"/>
+            </svg>
             <div class="hf-mglow" aria-hidden="true"></div>
             <div class="hf-mswipe" aria-hidden="true"></div>
           </div>
@@ -1168,7 +1187,10 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   }
   function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
   sizeStars();
-  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);
+  const atomSvg=mac.querySelector('.hf-atom');
+  function atomActive(on){ if(!atomSvg) return; atomSvg.classList.toggle('hf-apaused',!on);
+    try{ on ? atomSvg.unpauseAnimations() : atomSvg.pauseAnimations(); }catch(_){} }   // SMIL der Elektronen + CSS-Pulse pausieren, wenn der Hero aus dem Bild ist
+  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); atomActive(e.isIntersecting); }),{threshold:0.01}).observe(rail);
   startStars();
 
   /* Fächer-Layout */
@@ -1203,6 +1225,8 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const pull=clamp(p2/0.82), pullE=pull*pull;
     const resting=p<0.03;
     const GAP=innerHeight*0.66;   // Abstand SSD↔MacBook bewusst <1 Viewport, damit keine tote Strecke in der Mitte klafft
+    const MAC_DROP=innerHeight*0.055;   // großes MacBook landet etwas unter der Mitte → Platz für den Text oben
+    const react=Math.sin(clamp((p2-0.24)/0.52)*Math.PI);   // Puls synchron zu den einströmenden Ordnern (Text + MacBook-Screen reagieren)
     const sd=clamp(p2), pan=sd*GAP;   // ECHTE Runter-Scroll-Fahrt: Szene fährt linear (1:1 zum Scroll) um GAP hoch (Kamera nach unten)
     cards.forEach(c=>{
       const i=+c.dataset.i; const f=fanParts(i); let tx=f.tx,ty=f.ty,rot=f.rot,scl=1,op=1;
@@ -1249,15 +1273,15 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
     head.style.opacity=(1-0.82*spread).toFixed(3);
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
-    const macTY = GAP - pan;   // wartet GAP tiefer → scrollt in die Mitte (0)
+    const macTY = GAP - pan + MAC_DROP;   // wartet GAP+DROP tiefer → landet bei DROP (etwas unter Mitte)
     mac.style.opacity = (p2>0.001?1:0).toString();
     mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
-    macSwipe.style.opacity='0'; macGlow.style.opacity='0';   // keine Replacement-/Wake-Fades
+    macSwipe.style.opacity='0'; macGlow.style.opacity=(0.5*react).toFixed(3);   // Screen leuchtet auf, während die Ordner reinströmen (reagiert)
     shots[0].style.opacity='1';                               // Overview-Screen ist von Anfang an da
     for(let i=1;i<NS;i++) shots[i].style.opacity='0';
     if(tour) tour.style.opacity='0';
     // Dateien fliegen NACH UNTEN in den MacBook-Screen (Szene-Koordinaten, dann Kamera-Schwenk -pan oben drauf) und werden aufgesaugt
-    const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*0.46+GAP;   // MacBook-Screen liegt in Szene GAP+0.46h unten
+    const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*0.46+GAP+MAC_DROP;   // MacBook-Screen (tiefer gelandet) liegt in Szene GAP+DROP+0.46h unten
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
       const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.5)), fm=flow*flow;
@@ -1271,8 +1295,13 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     });
     const cap1Op=clamp((p1-0.4)/0.15);   // „Scan once" erscheint im Scan und scrollt dann mit der Szene hoch raus (KEIN Fade)
     cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(-pan).toFixed(0)}px)`;
-    cap2.style.opacity=(p2>0.05?1:0).toString();   // „Remembered forever" scrollt mit dem MacBook von unten hoch (kein Fade)
-    cap2.style.transform=`translateX(-50%) translateY(${(GAP - pan).toFixed(0)}px)`;
+    // „Remembered forever" — Apple-Style: blurt + fadet + steigt rein; landet höher (Abstand zum großen MacBook); reagiert auf die einströmenden Ordner
+    const cap2Land=-innerHeight*0.145;                       // Landeposition (Text-Oberkante hoch über das MacBook)
+    const rev=ease(clamp((p2-0.10)/0.40));                   // Apple-Reveal-Fortschritt
+    const cap2TY=cap2Land + (GAP-pan);                       // steigt von unten hoch und landet bei cap2Land
+    cap2.style.opacity=rev.toFixed(3);
+    cap2.style.transform=`translateX(-50%) translateY(${cap2TY.toFixed(0)}px) scale(${((1.05-0.05*rev)*(1+0.02*react)).toFixed(3)})`;
+    cap2.style.filter=`blur(${((1-rev)*13).toFixed(2)}px) drop-shadow(0 0 ${(8+34*react).toFixed(0)}px rgba(130,185,255,${(0.16+0.55*react).toFixed(2)})) drop-shadow(0 8px 24px rgba(120,160,220,.22)) drop-shadow(0 2px 6px rgba(0,0,0,.5))`;
     if(hint) hint.style.opacity=P>0.05?0:1;
   }
   function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
