@@ -419,12 +419,29 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   background:linear-gradient(105deg,transparent,rgba(150,200,255,.65) 50%,transparent);mix-blend-mode:screen}
 /* lebendiges Atom („Universum" der Disk-Mindmap) — animiert über den statischen Screenshot, NICHT bedienbar */
 .hf-atom-mask{position:absolute;left:57.5%;top:62.3%;width:30%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;z-index:1;background:radial-gradient(closest-side,#080b12 0%,#080b12 50%,rgba(8,11,18,0) 86%)}
-.hf-atom{position:absolute;left:57.5%;top:62.3%;width:17%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:screen;overflow:visible;z-index:2}
-.hf-atom .orb{fill:none;stroke:rgba(125,193,255,.5);stroke-width:.8}
-.hf-atom .el{fill:#e7f4ff;filter:drop-shadow(0 0 2.6px rgba(150,205,255,.95))}
-.hf-atom .hf-atom-core{fill:#d6edff;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 0 4px rgba(150,205,255,.95));animation:hfAtomCore 2.6s ease-in-out infinite}
-.hf-atom .hf-atom-halo{transform-box:fill-box;transform-origin:center;animation:hfAtomCore 3.4s ease-in-out infinite}
-@keyframes hfAtomCore{0%,100%{opacity:.6;transform:scale(.82)}50%{opacity:1;transform:scale(1.18)}}
+.hf-atom{position:absolute;left:57.5%;top:62.3%;width:0;height:0;transform:scale(var(--atomS,0.9));transform-origin:0 0;pointer-events:none;mix-blend-mode:screen;z-index:2}
+/* echte App-Atom-Animation — 1:1 aus der App (.hub-universe) übernommen */
+.hf-atom .hub-universe{position:absolute;left:0;top:0;transform:translate(-50%,-50%);width:188px;height:188px}
+.hf-atom .hu-glow{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(74,158,255,.30),rgba(55,207,224,.12) 36%,transparent 70%);filter:blur(8px);animation:huPulse 6.5s ease-in-out infinite}
+.hf-atom .hu-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hf-atom .hu-orbit{transform-box:view-box;transform-origin:80px 80px}
+.hf-atom .hu-orbit ellipse{fill:none;stroke:url(#huStroke);stroke-width:1.7;opacity:.9}
+.hf-atom .hu-orbit.o1{animation:huSpin 17s linear infinite}
+.hf-atom .hu-orbit.o2{animation:huSpin 23s linear infinite reverse}
+.hf-atom .hu-orbit.o3{animation:huSpin 30s linear infinite}
+.hf-atom .hu-core{animation:huCorePulse 3.4s ease-in-out infinite;transform-box:view-box;transform-origin:80px 80px}
+.hf-atom .hu-particles{position:absolute;inset:0}
+.hf-atom .hu-particles i{position:absolute;left:50%;top:50%;width:3px;height:3px;border-radius:50%;background:#bff4ff;box-shadow:0 0 6px 1px rgba(127,233,247,.9);opacity:0;animation:huFloat 7s ease-in-out infinite}
+.hf-atom .hu-particles i:nth-child(1){animation-delay:0s;--dx:64px;--dy:-30px}
+.hf-atom .hu-particles i:nth-child(2){animation-delay:1.1s;--dx:-72px;--dy:-14px;background:#9ad8ff}
+.hf-atom .hu-particles i:nth-child(3){animation-delay:2.3s;--dx:50px;--dy:40px}
+.hf-atom .hu-particles i:nth-child(4){animation-delay:3.4s;--dx:-46px;--dy:44px;background:#9ad8ff}
+.hf-atom .hu-particles i:nth-child(5){animation-delay:4.6s;--dx:18px;--dy:-58px}
+.hf-atom .hu-particles i:nth-child(6){animation-delay:5.6s;--dx:-22px;--dy:-52px;background:#bff4ff}
+@keyframes huSpin{to{transform:rotate(360deg)}}
+@keyframes huPulse{0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
+@keyframes huCorePulse{0%,100%{opacity:.92;transform:scale(1)}50%{opacity:1;transform:scale(1.14)}}
+@keyframes huFloat{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.4)}35%{opacity:1}65%{opacity:.85}100%{opacity:0;transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(1)}}
 .hf-atom.hf-apaused *{animation-play-state:paused!important}
 .hf-mbase{position:relative;width:113%;left:-6.5%;height:13px;border-radius:1.5px 1.5px 10px 10px;
   background:linear-gradient(180deg,#d8dce1,#bbc0c8 28%,#9ea4ad 74%,#7c818a);
@@ -664,17 +681,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
           <div class="hf-mscr">
             <img class="hf-shot" data-i="0" data-src="assets/screen-overview.webp" alt="Disky — overview" decoding="async">
             <div class="hf-atom-mask" aria-hidden="true"></div>
-            <svg class="hf-atom" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <defs><radialGradient id="atomHalo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7ec3ff" stop-opacity=".5"/><stop offset=".55" stop-color="#4f9bff" stop-opacity=".18"/><stop offset="1" stop-color="#3f8cff" stop-opacity="0"/></radialGradient></defs>
-              <circle class="hf-atom-halo" cx="50" cy="50" r="48" fill="url(#atomHalo)"/>
-              <ellipse class="orb" cx="50" cy="50" rx="42" ry="15.5" transform="rotate(10 50 50)"/>
-              <ellipse class="orb" cx="50" cy="50" rx="42" ry="15.5" transform="rotate(70 50 50)"/>
-              <ellipse class="orb" cx="50" cy="50" rx="42" ry="15.5" transform="rotate(-54 50 50)"/>
-              <g transform="rotate(10 50 50)"><circle class="el" r="2.7"><animateMotion dur="3.2s" repeatCount="indefinite" path="M8 50 a42 15.5 0 1 0 84 0 a42 15.5 0 1 0 -84 0"/></circle></g>
-              <g transform="rotate(70 50 50)"><circle class="el" r="2.4"><animateMotion dur="4.4s" begin="-1.2s" repeatCount="indefinite" path="M8 50 a42 15.5 0 1 0 84 0 a42 15.5 0 1 0 -84 0"/></circle></g>
-              <g transform="rotate(-54 50 50)"><circle class="el" r="2.5"><animateMotion dur="3.7s" begin="-2.4s" repeatCount="indefinite" path="M8 50 a42 15.5 0 1 0 84 0 a42 15.5 0 1 0 -84 0"/></circle></g>
-              <circle class="hf-atom-core" cx="50" cy="50" r="4.6"/>
-            </svg>
+            <div class="hf-atom" aria-hidden="true">
+              <div class="hub-universe">
+                <span class="hu-glow"></span>
+                <svg class="hu-svg" viewBox="0 0 160 160" fill="none"><defs>
+                  <radialGradient id="huCoreG" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#f2fdff"/><stop offset="38%" stop-color="#8fdcff"/><stop offset="100%" stop-color="#2f7fe0"/></radialGradient>
+                  <linearGradient id="huStroke" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a9eff"/><stop offset="100%" stop-color="#37cfe0"/></linearGradient>
+                  <filter id="huGlow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                  <g class="hu-orbit o1"><ellipse cx="80" cy="80" rx="66" ry="24"/><circle class="hu-e" cx="146" cy="80" r="3.6" fill="#7fe9f7" filter="url(#huGlow)"/></g>
+                  <g class="hu-orbit o2"><ellipse cx="80" cy="80" rx="66" ry="24"/><circle class="hu-e" cx="14" cy="80" r="3" fill="#9ad8ff" filter="url(#huGlow)"/></g>
+                  <g class="hu-orbit o3"><ellipse cx="80" cy="80" rx="66" ry="24"/><circle class="hu-e" cx="146" cy="80" r="2.6" fill="#bff4ff" filter="url(#huGlow)"/></g>
+                  <circle class="hu-core" cx="80" cy="80" r="9.5" fill="url(#huCoreG)" filter="url(#huGlow)"/></svg>
+                <span class="hu-particles"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              </div>
+            </div>
             <div class="hf-mglow" aria-hidden="true"></div>
             <div class="hf-mswipe" aria-hidden="true"></div>
           </div>
@@ -1194,10 +1214,11 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   }
   function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
   sizeStars();
-  const atomSvg=mac.querySelector('.hf-atom');
-  function atomActive(on){ if(!atomSvg) return; atomSvg.classList.toggle('hf-apaused',!on);
-    try{ on ? atomSvg.unpauseAnimations() : atomSvg.pauseAnimations(); }catch(_){} }   // SMIL der Elektronen + CSS-Pulse pausieren, wenn der Hero aus dem Bild ist
+  const atomEl=mac.querySelector('.hf-atom'), mscr=mac.querySelector('.hf-mscr');
+  function atomActive(on){ if(atomEl) atomEl.classList.toggle('hf-apaused',!on); }   // App-Atom-Animation pausieren, wenn der Hero aus dem Bild ist
+  function sizeAtom(){ if(!atomEl||!mscr) return; const w=mscr.getBoundingClientRect().width; if(w) atomEl.style.setProperty('--atomS',(w/1240).toFixed(3)); }   // App-Atom (188px nativ) auf die Screen-Größe skalieren → passt zum Screenshot-Atom
   new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); atomActive(e.isIntersecting); }),{threshold:0.01}).observe(rail);
+  sizeAtom();
   startStars();
 
   /* Fächer-Layout */
@@ -1339,7 +1360,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
   function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.1; apply(curP); requestAnimationFrame(tick); }
   addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
-  addEventListener('resize',()=>{ sizeStars(); layout(); readTarget(); apply(curP); },{passive:true});
+  addEventListener('resize',()=>{ sizeStars(); layout(); readTarget(); apply(curP); sizeAtom(); },{passive:true});
   layout(); readTarget(); curP=targetP; apply(curP);
 })();
 </script>
