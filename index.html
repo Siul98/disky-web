@@ -244,13 +244,13 @@ a{color:inherit;text-decoration:none}
 .how-wire{position:absolute;left:0;right:0;top:0;height:0;z-index:1;pointer-events:none}   /* Kabel läuft HINTER den Karten durch ihre Mitte */
 .how-card{transition:transform .45s cubic-bezier(.2,.8,.3,1.1),box-shadow .45s ease,border-color .45s ease}
 .how-card.lit{transform:scale(1.05);border-color:rgba(122,182,255,.6);box-shadow:0 0 44px rgba(74,158,255,.32),0 0 0 1px rgba(122,182,255,.4)}   /* Karte reagiert: leuchtet + wird größer, wenn das Kabel sie erreicht */
-.hw-track{position:absolute;top:-2.5px;height:5px;border-radius:3px;background:rgba(150,185,255,.13)}   /* dickeres Kabel */
-.hw-fill{position:absolute;left:0;top:0;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,rgba(95,155,255,.5),#7cb8ff);box-shadow:0 0 12px rgba(95,165,255,.9),0 0 26px rgba(80,150,255,.5)}
-/* USB-C-Stecker am Kabelkopf — Overmold + Metall-Tip, korrekte Kabel-zu-Stecker-Proportionen */
-.hw-plug{position:absolute;left:0;top:-9px;width:26px;height:18px;transform:translateX(-60%);opacity:0;border-radius:4px;background:linear-gradient(180deg,#3b424f,#1f232b);box-shadow:0 0 16px rgba(120,185,255,.8),inset 0 1px 0 rgba(255,255,255,.18),0 2px 6px rgba(0,0,0,.55)}
-.hw-plug::before{content:"";position:absolute;left:-7px;top:5.5px;width:8px;height:7px;border-radius:2px 1px 1px 2px;background:linear-gradient(180deg,#2a2f38,#171a20)}   /* Kabel-Knickschutz links */
-.hw-plug::after{content:"";position:absolute;right:-9px;top:4.5px;width:11px;height:9px;border-radius:1.5px;background:linear-gradient(180deg,#e8edf3,#9aa3b1);box-shadow:inset 0 0 2px rgba(0,0,0,.45)}   /* Metall-Tip (USB-C) → steckt in die Platte */
-.how-drive{position:absolute;top:0;right:-150px;width:218px;transform:translateY(-50%) rotate(-90deg);transform-origin:50% 50%;filter:drop-shadow(0 18px 34px rgba(0,0,0,.55));transition:transform .4s cubic-bezier(.2,.9,.3,1.25)}
+.hw-track{position:absolute;top:-2.5px;height:5px;border-radius:3px;background:rgba(240,120,40,.14)}   /* oranges LaCie-Kabel */
+.hw-fill{position:absolute;left:0;top:0;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,rgba(240,120,40,.55),#ff8a3d);box-shadow:0 0 12px rgba(255,140,60,.9),0 0 26px rgba(240,110,30,.5)}
+/* USB-C-Stecker am Kabelkopf — orange Overmold + silberner Metall-Tip, korrekte Proportionen; Tip steckt IN die Platte */
+.hw-plug{position:absolute;left:0;top:-11px;width:34px;height:22px;transform:translateX(-100%);opacity:0;border-radius:5px;background:linear-gradient(180deg,#ff924a,#df5f17);box-shadow:0 0 14px rgba(255,140,60,.5),inset 0 1.5px 0 rgba(255,255,255,.32),inset 0 -2px 3px rgba(0,0,0,.28),0 3px 7px rgba(0,0,0,.5)}
+.hw-plug::before{content:"";position:absolute;left:-9px;top:7px;width:10px;height:8px;border-radius:3px 1px 1px 3px;background:linear-gradient(180deg,#e0641a,#b34a10)}   /* Kabel-Knickschutz (orange) links */
+.hw-plug::after{content:"";position:absolute;right:-13px;top:5.5px;width:14px;height:11px;border-radius:2px;background:linear-gradient(180deg,#eef2f7,#9aa3b1);box-shadow:inset 0 0 2px rgba(0,0,0,.45)}   /* Metall-Tip (USB-C, silbern) → verschwindet im Port */
+.how-drive{position:absolute;top:0;right:-150px;width:218px;z-index:3;transform:translateY(-50%) rotate(-90deg);transform-origin:50% 50%;filter:drop-shadow(0 18px 34px rgba(0,0,0,.55));transition:transform .4s cubic-bezier(.2,.9,.3,1.25)}   /* z-index:3 → liegt ÜBER dem Stecker, der Tip steckt sichtbar IN der Platte */
 .how-drive img{width:100%;display:block}
 .how-drive.plugged{transform:translateY(-50%) translateX(-8px) rotate(-90deg)}
 .how-led{position:absolute;left:46%;top:20%;width:10px;height:10px;border-radius:50%;background:#283142;box-shadow:inset 0 0 3px rgba(0,0,0,.6);transition:background .25s,box-shadow .25s}
@@ -672,31 +672,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   </div>
 </header>
 
-<!-- PROBLEM ANCHOR — name the pain right after the hero promise -->
-<section class="sec problem" id="problem"><div class="wrap">
-  <span class="eyebrow rev" data-t="pa_eb">For editors, photographers &amp; creatives</span>
-  <h2 class="pa-h rev"><span data-t="pa_h">A drawer full of drives.</span><span class="pa-h2" data-t="pa_h2">One clip you can't find.</span></h2>
-  <p class="pa-sub rev" data-t="pa_sub">You own ten, twenty, more — black bricks with no labels, and the shot lives on exactly one of them. Right now the only way to find it is to plug them in, one cable at a time, until you get lucky.</p>
-  <div class="pa-pile rev" aria-hidden="true">
-    <span class="pa-brick"><img src="assets/drives/lacie-rugged.webp" alt="" decoding="async"><i>?</i></span>
-    <span class="pa-brick"><img src="assets/drives/gdrive.webp" alt="" decoding="async"><i>?</i></span>
-    <span class="pa-brick"><img src="assets/drives/t5.webp" alt="" decoding="async"><i>?</i></span>
-    <span class="pa-brick"><img src="assets/drives/lacie-silver.webp" alt="" decoding="async"><i>?</i></span>
-    <span class="pa-brick"><img src="assets/drives/t9.webp" alt="" decoding="async"><i>?</i></span>
-  </div>
-  <p class="pa-tag rev" data-t="pa_tag">Drive 1 of 18 · still searching…</p>
-</div></section>
-
-<!-- TRUST -->
-<section class="trust"><div class="wrap">
-  <span><b data-t="t1">100% local</b></span><span class="dot">·</span>
-  <span><b data-t="t2">Read-only</b></span><span class="dot">·</span>
-  <span><b data-t="t3">On-device AI</b></span><span class="dot">·</span>
-  <span><b data-t="t5">No account</b></span><span class="dot">·</span>
-  <span><b data-t="t4">No subscription</b></span>
-</div></section>
-
-<!-- HOW IT WORKS — the unplugged-catalog mechanic, before the demos assume it -->
+<!-- HOW IT WORKS — direkt unter dem Hero: der Unplugged-Katalog-Mechanismus mit der Kabel-Animation -->
 <section class="sec bord how" id="how">
   <div class="how-wire" id="howWire" aria-hidden="true">
     <div class="how-drive" id="howDrive"><img src="assets/drives/lacie-rugged.webp" alt="" decoding="async"><span class="how-led" id="howLed"></span></div>
@@ -730,6 +706,21 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="how-tag" data-t="how_c3_pr">Nothing plugged in · the whole drawer, searchable</div>
     </article>
   </div>
+</div></section>
+
+<!-- PROBLEM ANCHOR — die Schublade voller Platten, jetzt nach „How it works" -->
+<section class="sec problem" id="problem"><div class="wrap">
+  <span class="eyebrow rev" data-t="pa_eb">For editors, photographers &amp; creatives</span>
+  <h2 class="pa-h rev"><span data-t="pa_h">A drawer full of drives.</span><span class="pa-h2" data-t="pa_h2">One clip you can't find.</span></h2>
+  <p class="pa-sub rev" data-t="pa_sub">You own ten, twenty, more — black bricks with no labels, and the shot lives on exactly one of them. Right now the only way to find it is to plug them in, one cable at a time, until you get lucky.</p>
+  <div class="pa-pile rev" aria-hidden="true">
+    <span class="pa-brick"><img src="assets/drives/lacie-rugged.webp" alt="" decoding="async"><i>?</i></span>
+    <span class="pa-brick"><img src="assets/drives/gdrive.webp" alt="" decoding="async"><i>?</i></span>
+    <span class="pa-brick"><img src="assets/drives/t5.webp" alt="" decoding="async"><i>?</i></span>
+    <span class="pa-brick"><img src="assets/drives/lacie-silver.webp" alt="" decoding="async"><i>?</i></span>
+    <span class="pa-brick"><img src="assets/drives/t9.webp" alt="" decoding="async"><i>?</i></span>
+  </div>
+  <p class="pa-tag rev" data-t="pa_tag">Drive 1 of 18 · still searching…</p>
 </div></section>
 
 <!-- FEATURE REEL — purpose-built animated demos (show the benefit, not screenshots) -->
