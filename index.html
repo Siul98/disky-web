@@ -1354,7 +1354,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const reach=cards.map(c=>{const r=c.getBoundingClientRect(); return (r.left-sr.left)+r.width*0.5;});   // „erreicht" = Mitte der Karte
     const p=clamp((H*0.84-(sr.top+lineTopRel))/(H*0.42));
     const x=p*portX;
-    track.style.width=portX+'px';
+    track.style.width=Math.max(0,x)+'px';   // Kabel endet AM Stecker — rechts vom Stecker (Richtung Platte) kein Kabel
     fill.style.width=Math.max(0,x)+'px';
     plug.style.left=x+'px'; plug.style.opacity=p>0.004?1:0;
     cards.forEach((c,i)=>c.classList.toggle('lit', x>=reach[i]));   // Karte leuchtet + wächst, sobald das Kabel ihre Mitte erreicht
