@@ -982,16 +982,28 @@ select.txt{cursor:pointer}
 .deep-bar input{flex:1;font:inherit;font-size:15px;color:var(--txt);background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 16px;outline:none;transition:border-color .14s,box-shadow .14s}
 .deep-bar input:focus{border-color:rgba(74,158,255,.55);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
 .deep-hint{color:var(--mut);font-size:13.5px;padding:16px 4px;line-height:1.5}.deep-hint b{color:#cdd5e0}
-.deep-res{display:flex;flex-direction:column;gap:3px}
-.dhit{display:grid;grid-template-columns:24px auto 1fr auto;grid-template-areas:"ic name drive size" "ic loc loc size";gap:2px 11px;align-items:center;text-align:left;font:inherit;color:var(--txt);background:transparent;border:1px solid transparent;border-radius:10px;padding:9px 12px;cursor:pointer;transition:background .12s,border-color .12s}
-.dhit:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
+.deep-res{display:flex;flex-direction:column;gap:9px}
+/* ── Treffer nach Platte gruppiert: jede Platte ein aufklappbarer Block ── */
+.dgroup{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.012)}
+.dg-head{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font:inherit;color:var(--txt);background:linear-gradient(180deg,rgba(74,158,255,.10),rgba(74,158,255,.025));border:0;border-bottom:1px solid transparent;padding:12px 15px;cursor:pointer;transition:background .14s}
+.dg-head:hover{background:linear-gradient(180deg,rgba(74,158,255,.16),rgba(74,158,255,.05))}
+.dgroup.open .dg-head{border-bottom-color:var(--line)}
+.dg-chev{flex:0 0 auto;width:13px;height:13px;color:#7fb0ec;transition:transform .2s ease}
+.dg-chev svg{width:100%;height:100%;display:block}
+.dgroup.open .dg-chev{transform:rotate(90deg)}
+.dg-disk{flex:0 0 auto;width:30px;height:22px;border-radius:5px;background:linear-gradient(180deg,rgba(74,158,255,.30),rgba(74,158,255,.14));border:1px solid rgba(120,180,255,.5);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.dg-disk::before{content:"";width:15px;height:11px;border-radius:2.5px;background:linear-gradient(180deg,#a9ccff,#5a93e6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0 -2px 2px rgba(0,0,0,.15)}
+.dg-name{font-weight:700;font-size:14.5px;color:#eaf2ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
+.dg-closet{flex:0 0 auto;font-size:10.5px;font-weight:600;letter-spacing:.02em;color:#9aa7b8;background:rgba(148,163,184,.14);border:1px solid rgba(148,163,184,.22);border-radius:6px;padding:2px 8px}
+.dg-meta{margin-left:auto;flex:0 0 auto;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dg-body{max-height:0;overflow:hidden;transition:max-height .26s ease}
+.dgroup.open .dg-body{max-height:2400px;padding:5px 7px 7px}
+.dhit{display:grid;grid-template-columns:24px 1fr auto;grid-template-areas:"ic name size" "ic loc size";gap:2px 11px;align-items:center;text-align:left;font:inherit;color:var(--txt);background:transparent;border:1px solid transparent;border-radius:10px;padding:8px 11px;cursor:pointer;transition:background .12s,border-color .12s}
+.dhit:hover{background:rgba(255,255,255,.045);border-color:var(--line)}
 .dhit .dh-ic{grid-area:ic;width:20px;height:20px;color:var(--mut);align-self:center}
 .dhit .dh-ic svg{width:100%;height:100%;display:block}
 .dhit.dfold .dh-ic{color:#6ea8e6}
-.dhit .dh-name{grid-area:name;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
-/* Platten-Chip — die Platte hebt sich farbig hervor (wichtigste Info: wo liegt's) */
-.dhit .dh-drive{grid-area:drive;justify-self:start;align-self:center;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.01em;color:#d6eaff;background:linear-gradient(180deg,rgba(74,158,255,.26),rgba(74,158,255,.12));border:1px solid rgba(120,180,255,.5);border-radius:8px;padding:3px 10px;white-space:nowrap;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1)}
-.dhit .dh-drive::before{content:"";width:14px;height:10px;border-radius:2.5px;background:linear-gradient(180deg,#a9ccff,#5a93e6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0 -2px 2px rgba(0,0,0,.15);flex:0 0 auto}
+.dhit .dh-name{grid-area:name;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
 .dhit .dh-loc{grid-area:loc;color:var(--mut);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dhit .dh-size{grid-area:size;color:var(--mut);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;align-self:center}
 .deep-grp{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7787;margin:18px 4px 7px}
@@ -2057,7 +2069,7 @@ const I18N = {
    deep_ph:"Suche über alle Platten — Projekt, Ordner, Dateiname, Pfad…", deep_clear:"Leeren",
    deep_hint:n=>`Tippen Sie oben los — <b>${n}</b> Dateien über alle Platten durchsuchbar, auch wenn die Platte im Schrank liegt.`,
    deep_grp_folders:n=>`Ordner · ${n}`, deep_grp_files:n=>`Dateien · ${n}`, deep_fold_t:"Ordner in der Speicher-Karte öffnen",
-   deep_file_show:"Im Finder zeigen", deep_file_noshow:"Im Speicher öffnen (Platte nicht angeschlossen)", deep_in_closet:" · im Schrank", deep_no_hits:q=>`Keine Treffer für „${q}".`,
+   deep_file_show:"Im Finder zeigen", deep_file_noshow:"Im Speicher öffnen (Platte nicht angeschlossen)", deep_in_closet:" · im Schrank", deep_closet_tag:"im Schrank", deep_grp_matches:"Treffer", deep_no_hits:q=>`Keine Treffer für „${q}".`,
    // KI-Suche
    ki_badge:"KI-Suche · 100% lokal", ki_title:"Suchen Sie nach Inhalt, nicht nur nach Namen.", ki_desc:`Tippen Sie, was Sie suchen — <i>„underwater", „sunset", „drone", „interview"</i> — und Disky findet die passenden Clips über alle Platten. Ohne Upload.`,
    ki_q_ph:"Wonach suchen Sie?", ki_search:"Suchen", ki_indexed:n=>`${n} Clips im KI-Index durchsuchbar`, ki_noindex:n=>`Noch kein KI-Index. ${n} Medien im Katalog.`, ki_scan_first:"Scannen Sie zuerst eine Platte mit Fotos/Videos.",
@@ -2182,7 +2194,7 @@ const I18N = {
    deep_ph:"Search across all drives — project, folder, file name, path…", deep_clear:"Clear",
    deep_hint:n=>`Start typing above — <b>${n}</b> files searchable across all drives, even when the drive is in the closet.`,
    deep_grp_folders:n=>`Folders · ${n}`, deep_grp_files:n=>`Files · ${n}`, deep_fold_t:"Open folder in Storage Map",
-   deep_file_show:"Show in Finder", deep_file_noshow:"Open in storage (drive not connected)", deep_in_closet:" · in the closet", deep_no_hits:q=>`No matches for “${q}”.`,
+   deep_file_show:"Show in Finder", deep_file_noshow:"Open in storage (drive not connected)", deep_in_closet:" · in the closet", deep_closet_tag:"in the closet", deep_grp_matches:"matches", deep_no_hits:q=>`No matches for “${q}”.`,
    ki_badge:"AI search · 100% local", ki_title:"Search by content, not just by name.", ki_desc:`Type what you're looking for — <i>“underwater”, “sunset”, “drone”, “interview”</i> — and Disky finds the matching clips across all drives. No upload.`,
    ki_q_ph:"What are you looking for?", ki_search:"Search", ki_indexed:n=>`${n} clips searchable in the AI index`, ki_noindex:n=>`No AI index yet. ${n} media in the catalog.`, ki_scan_first:"Scan a drive with photos/videos first.",
    ki_build:n=>`Build AI index (${n})`, ki_later:n=>`${n} more will be indexed once the drive is connected.`, ki_module_loading:"AI module still loading…", ki_searching:"Searching…", ki_results:(n,q,ind)=>`${n} results for “${q}” · ${ind} clips searched`,
@@ -3722,23 +3734,40 @@ async function deepNameBody(host){
         g.items++; g.bytes+=f.size||0; } } }
   const folders=[...fmap.values()].sort((a,b)=>b.bytes-a.bytes).slice(0,40);
   const fhits=files.filter(f=>(f.name||"").toLowerCase().includes(qq)).slice(0,300);
-  let html="";
-  if(folders.length){ html+=`<div class="deep-grp">${t("deep_grp_folders",folders.length)}</div>`+folders.map(g=>
-    `<button class="dhit dfold" data-did="${g.did}" data-path="${esc(g.path)}" title="${t("deep_fold_t")}">
-      <span class="dh-ic">${IC.folder}</span>
-      <span class="dh-name">${esc(g.name)}</span>
-      <span class="dh-drive">${esc(dById[g.did]||"?")}</span>
-      <span class="dh-loc">${esc(g.path)} · ${t("dc_files",nloc(g.items))}</span>
-      <span class="dh-size">${human(g.bytes)}</span></button>`).join(""); }
-  if(fhits.length){ html+=`<div class="deep-grp">${t("deep_grp_files",fhits.length>=300?"300+":fhits.length)}</div>`+fhits.map(f=>{
-    const on=!!mountOfDrive(f.driveId);
-    return `<button class="dhit dfile" data-did="${f.driveId}" data-rel="${esc(f.relPath||"")}" title="${on?t("deep_file_show"):t("deep_file_noshow")}">
-      <span class="dh-ic">${IC.file}</span>
-      <span class="dh-name">${esc(f.name||f.relPath||"?")}</span>
-      <span class="dh-drive">${esc(dById[f.driveId]||"?")}</span>
-      <span class="dh-loc">${esc(f.relPath||"")}${on?"":t("deep_in_closet")}</span>
-      <span class="dh-size">${human(f.size||0)}</span></button>`;}).join(""); }
-  res.innerHTML = html || `<div class="deep-hint">${t("deep_no_hits",esc(qq))}</div>`;
+  // ── nach Platte gruppieren: jede Platte = ein aufklappbarer Block mit ihren Treffern ──
+  const grps=new Map();
+  const grpOf=did=>{ let g=grps.get(did); if(!g){ g={did,fold:[],file:[],bytes:0,n:0}; grps.set(did,g); } return g; };
+  folders.forEach(g=>{ const G=grpOf(g.did); G.fold.push(g); G.bytes+=g.bytes; G.n++; });
+  fhits.forEach(f=>{ const G=grpOf(f.driveId); G.file.push(f); G.bytes+=f.size||0; G.n++; });
+  const list=[...grps.values()].sort((a,b)=>b.bytes-a.bytes);
+  if(!list.length){ res.innerHTML=`<div class="deep-hint">${t("deep_no_hits",esc(qq))}</div>`; return; }
+  const chevSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
+  res.innerHTML=list.map(G=>{
+    const on=!!mountOfDrive(G.did);
+    const foldRows=G.fold.map(g=>
+      `<button class="dhit dfold" data-did="${g.did}" data-path="${esc(g.path)}" title="${t("deep_fold_t")}">
+        <span class="dh-ic">${IC.folder}</span>
+        <span class="dh-name">${esc(g.name)}</span>
+        <span class="dh-loc">${esc(g.path)} · ${t("dc_files",nloc(g.items))}</span>
+        <span class="dh-size">${human(g.bytes)}</span></button>`).join("");
+    const fileRows=G.file.map(f=>
+      `<button class="dhit dfile" data-did="${f.driveId}" data-rel="${esc(f.relPath||"")}" title="${on?t("deep_file_show"):t("deep_file_noshow")}">
+        <span class="dh-ic">${IC.file}</span>
+        <span class="dh-name">${esc(f.name||f.relPath||"?")}</span>
+        <span class="dh-loc">${esc(f.relPath||"")}${on?"":t("deep_in_closet")}</span>
+        <span class="dh-size">${human(f.size||0)}</span></button>`).join("");
+    return `<div class="dgroup open">
+      <button class="dg-head" aria-expanded="true">
+        <span class="dg-chev">${chevSvg}</span>
+        <span class="dg-disk"></span>
+        <span class="dg-name">${esc(dById[G.did]||"?")}</span>
+        ${on?"":`<span class="dg-closet">${t("deep_closet_tag")}</span>`}
+        <span class="dg-meta">${nloc(G.n)} ${t("deep_grp_matches")} · ${human(G.bytes)}</span>
+      </button>
+      <div class="dg-body">${foldRows}${fileRows}</div>
+    </div>`;
+  }).join("");
+  res.querySelectorAll(".dg-head").forEach(h=>h.onclick=()=>{ const g=h.closest(".dgroup"); const open=g.classList.toggle("open"); h.setAttribute("aria-expanded",open?"true":"false"); });
   res.querySelectorAll(".dfold").forEach(b=>{
     const openMap=()=>{ mapDriveId=+b.dataset.did; mapStack=[]; mapTree=null; mapDrillPath=(b.dataset.path||"").split("/").filter(Boolean); setView("map"); };
     b.onclick=openMap;
