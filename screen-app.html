@@ -983,12 +983,15 @@ select.txt{cursor:pointer}
 .deep-bar input:focus{border-color:rgba(74,158,255,.55);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
 .deep-hint{color:var(--mut);font-size:13.5px;padding:16px 4px;line-height:1.5}.deep-hint b{color:#cdd5e0}
 .deep-res{display:flex;flex-direction:column;gap:3px}
-.dhit{display:grid;grid-template-columns:26px 1fr auto;grid-template-areas:"ic name size" "ic loc size";gap:0 12px;align-items:center;text-align:left;font:inherit;color:var(--txt);background:transparent;border:1px solid transparent;border-radius:10px;padding:9px 12px;cursor:pointer;transition:background .12s,border-color .12s}
+.dhit{display:grid;grid-template-columns:24px auto 1fr auto;grid-template-areas:"ic name drive size" "ic loc loc size";gap:2px 11px;align-items:center;text-align:left;font:inherit;color:var(--txt);background:transparent;border:1px solid transparent;border-radius:10px;padding:9px 12px;cursor:pointer;transition:background .12s,border-color .12s}
 .dhit:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
 .dhit .dh-ic{grid-area:ic;width:20px;height:20px;color:var(--mut);align-self:center}
 .dhit .dh-ic svg{width:100%;height:100%;display:block}
 .dhit.dfold .dh-ic{color:#6ea8e6}
-.dhit .dh-name{grid-area:name;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dhit .dh-name{grid-area:name;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+/* Platten-Chip — die Platte hebt sich farbig hervor (wichtigste Info: wo liegt's) */
+.dhit .dh-drive{grid-area:drive;justify-self:start;align-self:center;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.01em;color:#d6eaff;background:linear-gradient(180deg,rgba(74,158,255,.26),rgba(74,158,255,.12));border:1px solid rgba(120,180,255,.5);border-radius:8px;padding:3px 10px;white-space:nowrap;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1)}
+.dhit .dh-drive::before{content:"";width:14px;height:10px;border-radius:2.5px;background:linear-gradient(180deg,#a9ccff,#5a93e6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0 -2px 2px rgba(0,0,0,.15);flex:0 0 auto}
 .dhit .dh-loc{grid-area:loc;color:var(--mut);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dhit .dh-size{grid-area:size;color:var(--mut);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;align-self:center}
 .deep-grp{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7787;margin:18px 4px 7px}
@@ -3724,14 +3727,16 @@ async function deepNameBody(host){
     `<button class="dhit dfold" data-did="${g.did}" data-path="${esc(g.path)}" title="${t("deep_fold_t")}">
       <span class="dh-ic">${IC.folder}</span>
       <span class="dh-name">${esc(g.name)}</span>
-      <span class="dh-loc">${esc(dById[g.did]||"?")} · ${esc(g.path)} · ${t("dc_files",nloc(g.items))}</span>
+      <span class="dh-drive">${esc(dById[g.did]||"?")}</span>
+      <span class="dh-loc">${esc(g.path)} · ${t("dc_files",nloc(g.items))}</span>
       <span class="dh-size">${human(g.bytes)}</span></button>`).join(""); }
   if(fhits.length){ html+=`<div class="deep-grp">${t("deep_grp_files",fhits.length>=300?"300+":fhits.length)}</div>`+fhits.map(f=>{
     const on=!!mountOfDrive(f.driveId);
     return `<button class="dhit dfile" data-did="${f.driveId}" data-rel="${esc(f.relPath||"")}" title="${on?t("deep_file_show"):t("deep_file_noshow")}">
       <span class="dh-ic">${IC.file}</span>
       <span class="dh-name">${esc(f.name||f.relPath||"?")}</span>
-      <span class="dh-loc">${esc(dById[f.driveId]||"?")} · ${esc(f.relPath||"")}${on?"":t("deep_in_closet")}</span>
+      <span class="dh-drive">${esc(dById[f.driveId]||"?")}</span>
+      <span class="dh-loc">${esc(f.relPath||"")}${on?"":t("deep_in_closet")}</span>
       <span class="dh-size">${human(f.size||0)}</span></button>`;}).join(""); }
   res.innerHTML = html || `<div class="deep-hint">${t("deep_no_hits",esc(qq))}</div>`;
   res.querySelectorAll(".dfold").forEach(b=>{
