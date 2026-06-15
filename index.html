@@ -463,52 +463,70 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .sc-text p{font-size:15.5px;color:var(--mut);line-height:1.6;margin:0;max-width:44ch}
 .feats-more{text-align:center;margin:clamp(46px,7vh,88px) auto 0;font-size:clamp(17px,2vw,21px);font-weight:600;color:var(--mut2);letter-spacing:-.01em}
 @media(max-width:820px){.sc-row,.sc-row.reverse{grid-template-columns:1fr;gap:18px}.sc-row.reverse .sc-shot{order:0}}
-/* ── Showcase: echte App-Elemente, isoliert (statt flacher Screenshots) ── */
+/* ── Showcase: echte App-Elemente, isoliert + lebendig animiert ── */
+@property --sweep{syntax:'<angle>';inherits:false;initial-value:360deg}
 .sc-el{padding:clamp(20px,2.4vw,30px);min-height:298px;display:flex;flex-direction:column}
 .el-head{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mut2);display:flex;align-items:center;gap:8px;margin-bottom:20px}
 .el-dot{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(74,158,255,.85)}
-/* Storage Map — Sunburst-Rad */
+/* Storage Map — Sunburst-Rad (zeichnet sich im Uhrzeigersinn auf) */
 .sm-body{display:flex;align-items:center;gap:clamp(16px,3vw,38px);flex:1;flex-wrap:wrap}
 .sm-wheel{position:relative;flex:0 0 auto;width:clamp(158px,19vw,208px);height:clamp(158px,19vw,208px)}
-.sun{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 18px rgba(74,158,255,.18))}
+.sm-glow{position:absolute;inset:16%;border-radius:50%;background:radial-gradient(circle,rgba(74,158,255,.4),transparent 70%);opacity:0;filter:blur(11px);pointer-events:none}
+.sc-row.in .sm-glow{animation:smGlow 1.7s ease .55s}
+@keyframes smGlow{0%{opacity:0;transform:scale(.7)}45%{opacity:.85}100%{opacity:0;transform:scale(1.06)}}
+.sun{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 18px rgba(74,158,255,.2));-webkit-mask:conic-gradient(from -90deg,#000 var(--sweep),transparent 0);mask:conic-gradient(from -90deg,#000 var(--sweep),transparent 0)}
+.sc-row.in .sun{animation:sunSweep 1.05s cubic-bezier(.35,.6,.25,1) .15s both}
+@keyframes sunSweep{from{--sweep:0deg}to{--sweep:360deg}}
 .sun .seg{fill:none;stroke-width:23}
 .sun .seg.inner{stroke-width:21}
-.sm-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
-.sm-center b{font-size:clamp(18px,2.1vw,22px);color:var(--ink);font-weight:700;letter-spacing:-.02em}
+.sm-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;opacity:0}
+.sc-row.in .sm-center{opacity:1;transition:opacity .5s ease .72s}
+.sm-center b{font-size:clamp(18px,2.1vw,22px);color:var(--ink);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .sm-center span{font-size:10.5px;color:var(--mut2);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
-.sm-legend{flex:1 1 170px;min-width:155px;display:flex;flex-direction:column;gap:15px}
-.sm-legend .lg{display:flex;align-items:center;gap:10px;font-size:13.5px}
-.sm-legend .lg i{flex:0 0 auto;width:9px;height:9px;border-radius:3px;background:var(--c)}
-.sm-legend .lgn{flex:1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sm-legend .lgm{color:var(--mut);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.sm-legend .lgm b{color:var(--ink);font-weight:600}
-/* Duplicate Finder — Karten */
+.sm-legend{flex:1 1 170px;min-width:155px;display:flex;flex-direction:column;gap:16px}
+.sm-legend .lg{opacity:0;transform:translateX(10px)}
+.sc-row.in .sm-legend .lg{opacity:1;transform:none;transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.2,1)}
+.sc-row.in .sm-legend .lg:nth-child(1){transition-delay:.58s}
+.sc-row.in .sm-legend .lg:nth-child(2){transition-delay:.72s}
+.lg-top{display:flex;align-items:center;gap:10px;font-size:13.5px}
+.lg-top i{flex:0 0 auto;width:9px;height:9px;border-radius:3px;background:var(--c)}
+.lgn{flex:1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lgm{color:var(--ink);font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg-bar{height:4px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:8px}
+.lg-bar span{display:block;height:100%;width:var(--w);border-radius:3px;background:var(--c);transform:scaleX(0);transform-origin:left}
+.sc-row.in .lg-bar span{transform:scaleX(1);transition:transform .9s cubic-bezier(.3,.7,.25,1) .75s}
+/* Duplicate Finder — Karten (staffeln nacheinander rein) */
 .dup-stat{font-size:14px;color:var(--mut);margin-bottom:18px}
-.dup-stat b{color:var(--ink);font-weight:700;font-size:16.5px}
+.dup-stat b{color:var(--ink);font-weight:700;font-size:16.5px;font-variant-numeric:tabular-nums}
 .dup-stat b.amber{color:#ffb454}
 .dup-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;flex:1}
-.dcard{background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:12px;padding:15px 14px;display:flex;flex-direction:column;gap:7px}
-.dfic{width:32px;height:27px;display:block}
+.dcard{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.014));border:1px solid var(--line);border-radius:12px;padding:15px 14px;display:flex;flex-direction:column;gap:7px;opacity:0;transform:translateY(18px) scale(.97)}
+.sc-row.in .dcard{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.25,1);transition-delay:calc(var(--d,0)*.1s + .25s)}
+.dcard:hover{border-color:rgba(120,170,255,.32);transform:translateY(-3px)}
+.dfic{width:32px;height:27px;display:block;filter:drop-shadow(0 4px 9px rgba(74,158,255,.32))}
 .dcn{font-weight:600;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dcm{font-size:11.5px;color:var(--mut2)}
 .dchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;padding-top:6px}
 .dchips i{font-style:normal;font-size:10px;color:#bcd6f5;background:rgba(74,158,255,.14);border:1px solid rgba(74,158,255,.3);border-radius:6px;padding:2px 7px;white-space:nowrap}
 @media(max-width:560px){.dup-cards{grid-template-columns:1fr;gap:10px}.dcard{flex-direction:row;align-items:center;flex-wrap:wrap}.dchips{margin:0 0 0 auto;padding:0}}
-/* Project Manager — Status-Zeilen */
+/* Project Manager — Status-Zeilen (gleiten rein, Risk-Dot pingt) */
 .proj-rows{display:flex;flex-direction:column;gap:11px;flex:1;justify-content:center}
-.prow{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:11px;padding:14px 16px}
-.pdot{flex:0 0 auto;width:9px;height:9px;border-radius:50%}
+.prow{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:11px;padding:14px 16px;opacity:0;transform:translateX(-16px)}
+.sc-row.in .prow{opacity:1;transform:none;transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.25,1);transition-delay:calc(var(--d,0)*.09s + .25s)}
+.prow:hover{border-color:rgba(120,170,255,.28)}
+.pdot{position:relative;flex:0 0 auto;width:9px;height:9px;border-radius:50%}
 .pdot.ok{background:#3ddc97;box-shadow:0 0 8px rgba(61,220,151,.6)}
 .pdot.warn{background:#ffb454;box-shadow:0 0 8px rgba(255,180,84,.55)}
-.pdot.risk{background:#ff6b6b;box-shadow:0 0 8px rgba(255,107,107,.55)}
+.pdot.risk{background:#ff6b6b;box-shadow:0 0 8px rgba(255,107,107,.6)}
+.pdot.pulse::after{content:"";position:absolute;inset:0;border-radius:50%;opacity:0}
+.sc-row.live .pdot.risk.pulse::after{animation:pdotPing 2.1s ease-out infinite}
+@keyframes pdotPing{0%{box-shadow:0 0 0 0 rgba(255,107,107,.5);opacity:1}70%,100%{box-shadow:0 0 0 11px rgba(255,107,107,0);opacity:0}}
 .prow .pn{flex:1;font-weight:600;font-size:14.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pbadge{flex:0 0 auto;font-size:11.5px;font-weight:600;border-radius:980px;padding:4px 12px;white-space:nowrap}
 .pbadge.ok{color:#6fe6b4;background:rgba(61,220,151,.13);border:1px solid rgba(61,220,151,.32)}
 .pbadge.warn{color:#ffc873;background:rgba(255,180,84,.13);border:1px solid rgba(255,180,84,.32)}
 .pbadge.risk{color:#ff9a9a;background:rgba(255,107,107,.13);border:1px solid rgba(255,107,107,.34)}
-.sc-row.in .sc-el{animation:scelIn .7s cubic-bezier(.2,.7,.2,1) both}
-@keyframes scelIn{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.sc-row.in .sc-el{animation:none}}
+@media(prefers-reduced-motion:reduce){.sc-el *,.sc-el *::after{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}.sun{--sweep:360deg}.lg-bar span{transform:scaleX(1)}}
 .feat2-list{display:flex;flex-direction:column;gap:clamp(46px,8vh,120px)}
 .feat2{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(36px,5vw,84px);align-items:center}
 .feat2:nth-child(even) .feat2-media{order:2}
@@ -800,14 +818,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 <!-- FEATURE REEL — purpose-built animated demos (show the benefit, not screenshots) -->
 <section class="sec bord feats" id="features"><div class="wrap">
   <div class="feat2-intro">
-    <span class="eyebrow rev">A real power tool</span>
-    <h2 class="feats-h rev">An all-rounder for your data.</h2>
-    <p class="feats-sub rev">The offline catalog is just the start. Real features — shipping in the app, shown straight from it.</p>
+    <span class="eyebrow rev" data-t="pwr_eb">More than a catalog</span>
+    <h2 class="feats-h rev" data-t="pwr_h">Your whole archive, finally under control.</h2>
+    <p class="feats-sub rev" data-t="pwr_sub">The offline catalog is just the beginning. Every tool below ships in the app today — built for the messy reality of a hundred drives.</p>
   </div>
   <div class="showcase">
     <article class="sc-row rev">
       <div class="sc-shot"><div class="sc-el sm-el">
-        <div class="el-head"><span class="el-dot"></span>Storage Map · T9</div>
+        <div class="el-head"><span class="el-dot"></span><span data-t="sm_tag">Storage Map · T9</span></div>
         <div class="sm-body">
           <div class="sm-wheel">
             <svg class="sun" viewBox="0 0 200 200" aria-hidden="true"><g transform="rotate(-90 100 100)">
@@ -821,66 +839,67 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
               <circle class="seg inner" cx="100" cy="100" r="52" pathLength="100" stroke="#37cfe0" stroke-dasharray="28.6 71.4" stroke-dashoffset="-50"></circle>
               <circle class="seg inner" cx="100" cy="100" r="52" pathLength="100" stroke="#3a6fb0" stroke-dasharray="18.6 81.4" stroke-dashoffset="-80"></circle>
             </g><circle cx="100" cy="100" r="37" fill="#0a0e16"></circle></svg>
-            <div class="sm-center"><b>33.9 GB</b><span>T9 · total</span></div>
+            <div class="sm-glow" aria-hidden="true"></div>
+            <div class="sm-center"><b data-count="33.9" data-dec="1" data-suf=" GB">33.9 GB</b><span data-t="sm_total">T9 · total</span></div>
           </div>
           <div class="sm-legend">
-            <div class="lg"><i style="--c:#4a9eff"></i><span class="lgn">Wedding Mai 2026</span><span class="lgm"><b>23.7 GB</b> · 70%</span></div>
-            <div class="lg"><i style="--c:#37cfe0"></i><span class="lgn">Berlin Citytrip</span><span class="lgm"><b>10.3 GB</b> · 30%</span></div>
+            <div class="lg" style="--c:#4a9eff;--w:70%"><div class="lg-top"><i></i><span class="lgn">Wedding Mai 2026</span><span class="lgm">23.7 GB</span></div><div class="lg-bar"><span></span></div></div>
+            <div class="lg" style="--c:#37cfe0;--w:30%"><div class="lg-top"><i></i><span class="lgn">Berlin Citytrip</span><span class="lgm">10.3 GB</span></div><div class="lg-bar"><span></span></div></div>
           </div>
         </div>
       </div></div>
       <div class="sc-text">
-        <span class="sc-eb">Storage Map</span>
-        <h3>See what's eating your space.</h3>
-        <p>Every drive's biggest folders and files as one interactive map. Spot the space hogs in seconds — even with the drive unplugged in the drawer.</p>
+        <span class="sc-eb" data-t="sm_eb">Storage Map</span>
+        <h3 data-t="sm_h">See what's eating your space.</h3>
+        <p data-t="sm_p">Every drive becomes one interactive map — its biggest folders and files at a glance. Hunt down the space hogs in seconds, even with the disk sealed in the drawer.</p>
       </div>
     </article>
     <article class="sc-row rev reverse">
       <div class="sc-shot"><div class="sc-el dup-el">
-        <div class="el-head"><span class="el-dot"></span>Duplicate Finder</div>
-        <div class="dup-stat"><b>27</b> duplicate groups · <b class="amber">80.2 GB</b> reclaimable</div>
+        <div class="el-head"><span class="el-dot"></span><span data-t="dup_tag">Duplicate Finder</span></div>
+        <div class="dup-stat"><b data-count="27">27</b> <span data-t="dup_groups">duplicate groups</span> · <b class="amber" data-count="80.2" data-dec="1" data-suf=" GB">80.2 GB</b> <span data-t="dup_reclaim">reclaimable</span></div>
         <div class="dup-cards">
-          <div class="dcard">
-            <svg class="dfic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.6a1.6 1.6 0 0 1 1.6-1.6h4.1l1.8 1.9h7.9A1.6 1.6 0 0 1 20 8.5v9.4a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 17.9z" fill="#5a93e6"></path><path d="M3 9.4h17v1.2H3z" fill="rgba(255,255,255,.22)"></path></svg>
+          <div class="dcard" style="--d:0">
+            <svg class="dfic" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="fgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6aa6f0"></stop><stop offset="1" stop-color="#4d83d6"></stop></linearGradient></defs><path d="M3 6.6a1.6 1.6 0 0 1 1.6-1.6h4.1l1.8 1.9h7.9A1.6 1.6 0 0 1 20 8.5v9.4a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 17.9z" fill="url(#fgrad)"></path><path d="M3 9.4h17v1.2H3z" fill="rgba(255,255,255,.24)"></path></svg>
             <span class="dcn">Doku Nordsee</span><span class="dcm">46.4 GB · 26 files</span>
             <span class="dchips"><i>Studio RAID</i><i>Archive 2023</i></span>
           </div>
-          <div class="dcard">
-            <svg class="dfic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.6a1.6 1.6 0 0 1 1.6-1.6h4.1l1.8 1.9h7.9A1.6 1.6 0 0 1 20 8.5v9.4a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 17.9z" fill="#5a93e6"></path><path d="M3 9.4h17v1.2H3z" fill="rgba(255,255,255,.22)"></path></svg>
+          <div class="dcard" style="--d:1">
+            <svg class="dfic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.6a1.6 1.6 0 0 1 1.6-1.6h4.1l1.8 1.9h7.9A1.6 1.6 0 0 1 20 8.5v9.4a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 17.9z" fill="url(#fgrad)"></path><path d="M3 9.4h17v1.2H3z" fill="rgba(255,255,255,.24)"></path></svg>
             <span class="dcn">Client Nova Ad</span><span class="dcm">21.2 GB · 18 files</span>
             <span class="dchips"><i>LaCie Rugged</i><i>Studio RAID</i></span>
           </div>
-          <div class="dcard">
-            <svg class="dfic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.6a1.6 1.6 0 0 1 1.6-1.6h4.1l1.8 1.9h7.9A1.6 1.6 0 0 1 20 8.5v9.4a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 17.9z" fill="#5a93e6"></path><path d="M3 9.4h17v1.2H3z" fill="rgba(255,255,255,.22)"></path></svg>
+          <div class="dcard" style="--d:2">
+            <svg class="dfic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.6a1.6 1.6 0 0 1 1.6-1.6h4.1l1.8 1.9h7.9A1.6 1.6 0 0 1 20 8.5v9.4a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 17.9z" fill="url(#fgrad)"></path><path d="M3 9.4h17v1.2H3z" fill="rgba(255,255,255,.24)"></path></svg>
             <span class="dcn">Wedding Mai 2026</span><span class="dcm">12.8 GB · 14 files</span>
             <span class="dchips"><i>T9</i><i>LaCie Rugged</i><i>+1</i></span>
           </div>
         </div>
       </div></div>
       <div class="sc-text">
-        <span class="sc-eb">Duplicate Finder</span>
-        <h3>Reclaim space across every drive.</h3>
-        <p>Finds identical files by checksum — not by name — across all your drives. See exactly what's safe to remove, and how much you'd get back.</p>
+        <span class="sc-eb" data-t="dup_eb">Duplicate Finder</span>
+        <h3 data-t="dup_h">Reclaim the space you forgot you lost.</h3>
+        <p data-t="dup_p">Disky matches files by checksum, not by name — so it catches the same footage hiding under five different names. See what's safe to delete, and how many gigs you'll win back.</p>
       </div>
     </article>
     <article class="sc-row rev">
       <div class="sc-shot"><div class="sc-el proj-el">
-        <div class="el-head"><span class="el-dot"></span>Project Manager</div>
+        <div class="el-head"><span class="el-dot"></span><span data-t="proj_tag">Project Manager</span></div>
         <div class="proj-rows">
-          <div class="prow"><span class="pdot ok"></span><span class="pn">Wedding Mai 2026</span><span class="pbadge ok">Backed up ×2</span></div>
-          <div class="prow"><span class="pdot warn"></span><span class="pn">Client Nova Ad</span><span class="pbadge warn">Only once</span></div>
-          <div class="prow"><span class="pdot risk"></span><span class="pn">Doku Nordsee</span><span class="pbadge risk">At risk</span></div>
-          <div class="prow"><span class="pdot ok"></span><span class="pn">Berlin Citytrip</span><span class="pbadge ok">Backed up ×2</span></div>
+          <div class="prow" style="--d:0"><span class="pdot ok"></span><span class="pn">Wedding Mai 2026</span><span class="pbadge ok" data-t="proj_safe">Backed up ×2</span></div>
+          <div class="prow" style="--d:1"><span class="pdot warn"></span><span class="pn">Client Nova Ad</span><span class="pbadge warn" data-t="proj_once">Only once</span></div>
+          <div class="prow" style="--d:2"><span class="pdot risk pulse"></span><span class="pn">Doku Nordsee</span><span class="pbadge risk" data-t="proj_risk">At risk</span></div>
+          <div class="prow" style="--d:3"><span class="pdot ok"></span><span class="pn">Berlin Citytrip</span><span class="pbadge ok" data-t="proj_safe">Backed up ×2</span></div>
         </div>
       </div></div>
       <div class="sc-text">
-        <span class="sc-eb">Project Manager</span>
-        <h3>Know what's safely backed up.</h3>
-        <p>Every project scored — backed up twice, only once, or still at risk — with a “really done?” check before you archive a finished job.</p>
+        <span class="sc-eb" data-t="proj_eb">Project Manager</span>
+        <h3 data-t="proj_h">Know it's safe — before you wipe the card.</h3>
+        <p data-t="proj_p">Every project scored at a glance: safe on two drives, clinging to one, or a single failure from gone. With a last “really done?” check before a finished job leaves your hands.</p>
       </div>
     </article>
   </div>
-  <p class="feats-more">… and more to come.</p>
+  <p class="feats-more rev" data-t="pwr_more">And this is just the start.</p>
 </div></section>
 
 <!-- PRIVACY -->
@@ -962,6 +981,10 @@ const I18N={
   pv_eb:"Privacy by design",pv_cred:"Native Apple Silicon · Notarized & signed by Apple · Read-only by design",
   end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Notify me at launch →",end_note:"One email the day Disky ships. No spam, unsubscribe anytime.",end_done:"You're on the list — watch for the launch email. ✓",end_done_mail:"Opened your mail — hit send to confirm.",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
+  pwr_eb:"More than a catalog",pwr_h:"Your whole archive, finally under control.",pwr_sub:"The offline catalog is just the beginning. Every tool below ships in the app today — built for the messy reality of a hundred drives.",pwr_more:"And this is just the start.",
+  sm_eb:"Storage Map",sm_h:"See what's eating your space.",sm_p:"Every drive becomes one interactive map — its biggest folders and files at a glance. Hunt down the space hogs in seconds, even with the disk sealed in the drawer.",sm_tag:"Storage Map · T9",sm_total:"T9 · total",
+  dup_eb:"Duplicate Finder",dup_h:"Reclaim the space you forgot you lost.",dup_p:"Disky matches files by checksum, not by name — so it catches the same footage hiding under five different names. See what's safe to delete, and how many gigs you'll win back.",dup_tag:"Duplicate Finder",dup_groups:"duplicate groups",dup_reclaim:"reclaimable",
+  proj_eb:"Project Manager",proj_h:"Know it's safe — before you wipe the card.",proj_p:"Every project scored at a glance: safe on two drives, clinging to one, or a single failure from gone. With a last “really done?” check before a finished job leaves your hands.",proj_tag:"Project Manager",proj_safe:"Backed up ×2",proj_once:"Only once",proj_risk:"At risk",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
   rl_q:"underwater",rl_search_n:"8 clips · 4 drives",rl_map_n:"Reclaim 80 GB",rl_dup_n:"same file · ×3 · 46 GB",rl_world_n:"14 locations",
   feats:[
@@ -1021,6 +1044,10 @@ const I18N={
   pv_eb:"Datenschutz von Grund auf",pv_cred:"Nativ für Apple Silicon · Von Apple notarisiert & signiert · Nur-Lesen by Design",
   end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Zum Start benachrichtigen →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, jederzeit abbestellbar.",end_done:"Du bist auf der Liste — die Launch-Mail kommt. ✓",end_done_mail:"Mail-App geöffnet — abschicken zum Bestätigen.",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
+  pwr_eb:"Mehr als ein Katalog",pwr_h:"Dein ganzes Archiv — endlich im Griff.",pwr_sub:"Der Offline-Katalog ist erst der Anfang. Jedes Werkzeug hier unten steckt schon in der App — gebaut fürs echte Chaos aus hundert Platten.",pwr_more:"Und das ist erst der Anfang.",
+  sm_eb:"Speicher-Karte",sm_h:"Sieh, was deinen Platz frisst.",sm_p:"Jede Platte wird zu einer interaktiven Karte — die größten Ordner und Dateien auf einen Blick. Finde die Platzfresser in Sekunden, selbst wenn die Platte längst im Schrank liegt.",sm_tag:"Speicher-Karte · T9",sm_total:"T9 · gesamt",
+  dup_eb:"Duplikat-Finder",dup_h:"Hol dir den Platz zurück, den du längst verloren hast.",dup_p:"Disky vergleicht per Prüfsumme statt per Name — und findet dieselbe Aufnahme auch unter fünf verschiedenen Namen. Sieh, was weg kann und wie viele Gigabyte du zurückholst.",dup_tag:"Duplikat-Finder",dup_groups:"Duplikat-Gruppen",dup_reclaim:"frei machbar",
+  proj_eb:"Projekt-Manager",proj_h:"Wisse, dass es sicher ist — bevor du die Karte löschst.",proj_p:"Jedes Projekt auf einen Blick bewertet: doppelt gesichert, nur einmal, oder einen Plattenausfall von weg. Mit einem letzten „wirklich fertig?“-Check, bevor ein fertiger Job aus der Hand geht.",proj_tag:"Projekt-Manager",proj_safe:"2× gesichert",proj_once:"Nur einmal",proj_risk:"Gefährdet",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
   rl_q:"unter Wasser",rl_search_n:"8 Clips · 4 Platten",rl_map_n:"80 GB frei",rl_dup_n:"gleiche Datei · ×3 · 46 GB",rl_world_n:"14 Orte",
   feats:[
@@ -1152,6 +1179,17 @@ document.querySelectorAll('.rev').forEach(e=>io.observe(e));
 /* feature-card mini-animations run ONLY while the card is in view (perf) */
 const featLiveIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('live',e.isIntersecting)),{threshold:.25});
 document.querySelectorAll('#featGrid .feat-card').forEach(c=>featLiveIO.observe(c));
+/* Showcase: .live nur im Viewport (Risk-Dot-Ping) + Zahlen zählen beim Erscheinen hoch */
+const scLiveIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('live',e.isIntersecting)),{threshold:.18});
+document.querySelectorAll('.sc-row').forEach(r=>scLiveIO.observe(r));
+const _rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function countUp(el){ const t=parseFloat(el.dataset.count); if(isNaN(t))return; const dec=+(el.dataset.dec||0), suf=el.dataset.suf||'';
+  if(_rm){ el.textContent=t.toFixed(dec)+suf; return; }
+  const dur=1100; let st=null;
+  function step(ts){ if(!st)st=ts; const p=Math.min(1,(ts-st)/dur), e=1-Math.pow(1-p,3); el.textContent=(t*e).toFixed(dec)+suf; if(p<1)requestAnimationFrame(step); else el.textContent=t.toFixed(dec)+suf; }
+  requestAnimationFrame(step); }
+const countIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ countUp(e.target); countIO.unobserve(e.target); } }),{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
 
 /* pause the hero X-ray loop once it's scrolled out of view (saves continuous paint) */
 (function(){const xr=document.querySelector('.xray');if(!xr)return;
