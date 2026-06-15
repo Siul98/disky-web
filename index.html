@@ -226,7 +226,7 @@ a{color:inherit;text-decoration:none}
 /* how it works */
 .how-sub{font-size:16px;color:var(--mut);max-width:560px;margin:14px auto 0;line-height:1.55;text-align:center}
 .how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,26px);margin-top:clamp(40px,5vh,64px)}
-.how-card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:18px;padding:26px 24px 24px}
+.how-card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02)),rgba(9,12,19,.82);border:1px solid var(--line);border-radius:18px;padding:26px 24px 24px}
 .how-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;border:1px solid rgba(74,158,255,.4);color:var(--acc);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
 .how-ic{position:absolute;top:25px;right:22px}
 .how-ic svg{width:26px;height:26px;opacity:.85}
@@ -240,16 +240,21 @@ a{color:inherit;text-decoration:none}
 .how-num{position:relative;z-index:6;transition:border-color .3s,color .3s,background .3s,box-shadow .3s}
 .how-num.lit{border-color:rgba(132,186,255,.95);color:#dcebff;background:rgba(74,158,255,.18);box-shadow:0 0 16px rgba(74,158,255,.55),inset 0 0 8px rgba(120,180,255,.35)}
 .how-ic{z-index:6}
-.how-wire{position:absolute;left:0;right:0;top:0;height:0;z-index:4;pointer-events:none}
-.hw-seg{position:absolute;top:-1.5px;height:3px;border-radius:2px;background:rgba(150,185,255,.13)}
-.hw-segfill{position:absolute;left:0;top:0;height:100%;width:0;border-radius:2px;background:linear-gradient(90deg,rgba(95,155,255,.45),#74b4ff);box-shadow:0 0 8px rgba(95,165,255,.85),0 0 18px rgba(80,150,255,.4)}
-.hw-plug{position:absolute;top:-7.5px;left:0;width:20px;height:15px;border-radius:3px;transform:translateX(-58%);opacity:0;background:linear-gradient(180deg,#eef3fb,#aeb9ca);box-shadow:0 0 14px rgba(120,185,255,.95),0 2px 6px rgba(0,0,0,.55)}
-.hw-plug::before{content:"";position:absolute;right:-6px;top:4px;width:6px;height:7px;border-radius:1.5px;background:linear-gradient(180deg,#d3dcea,#8c98ab)}
-.how-drive{position:absolute;top:0;right:-112px;width:222px;transform:translateY(-50%);filter:drop-shadow(0 18px 34px rgba(0,0,0,.55));transition:transform .4s cubic-bezier(.2,.9,.3,1.25)}
+.how>.wrap{position:relative;z-index:2}                 /* Karten ÜBER dem Kabel */
+.how-wire{position:absolute;left:0;right:0;top:0;height:0;z-index:1;pointer-events:none}   /* Kabel läuft HINTER den Karten durch ihre Mitte */
+.how-card{transition:transform .45s cubic-bezier(.2,.8,.3,1.1),box-shadow .45s ease,border-color .45s ease}
+.how-card.lit{transform:scale(1.05);border-color:rgba(122,182,255,.6);box-shadow:0 0 44px rgba(74,158,255,.32),0 0 0 1px rgba(122,182,255,.4)}   /* Karte reagiert: leuchtet + wird größer, wenn das Kabel sie erreicht */
+.hw-track{position:absolute;top:-2.5px;height:5px;border-radius:3px;background:rgba(150,185,255,.13)}   /* dickeres Kabel */
+.hw-fill{position:absolute;left:0;top:0;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,rgba(95,155,255,.5),#7cb8ff);box-shadow:0 0 12px rgba(95,165,255,.9),0 0 26px rgba(80,150,255,.5)}
+/* USB-C-Stecker am Kabelkopf — Overmold + Metall-Tip, korrekte Kabel-zu-Stecker-Proportionen */
+.hw-plug{position:absolute;left:0;top:-9px;width:26px;height:18px;transform:translateX(-60%);opacity:0;border-radius:4px;background:linear-gradient(180deg,#3b424f,#1f232b);box-shadow:0 0 16px rgba(120,185,255,.8),inset 0 1px 0 rgba(255,255,255,.18),0 2px 6px rgba(0,0,0,.55)}
+.hw-plug::before{content:"";position:absolute;left:-7px;top:5.5px;width:8px;height:7px;border-radius:2px 1px 1px 2px;background:linear-gradient(180deg,#2a2f38,#171a20)}   /* Kabel-Knickschutz links */
+.hw-plug::after{content:"";position:absolute;right:-9px;top:4.5px;width:11px;height:9px;border-radius:1.5px;background:linear-gradient(180deg,#e8edf3,#9aa3b1);box-shadow:inset 0 0 2px rgba(0,0,0,.45)}   /* Metall-Tip (USB-C) → steckt in die Platte */
+.how-drive{position:absolute;top:0;right:-150px;width:218px;transform:translateY(-50%) rotate(-90deg);transform-origin:50% 50%;filter:drop-shadow(0 18px 34px rgba(0,0,0,.55));transition:transform .4s cubic-bezier(.2,.9,.3,1.25)}
 .how-drive img{width:100%;display:block}
-.how-drive.plugged{transform:translateY(-50%) translateX(-8px)}
-.how-led{position:absolute;left:31%;bottom:20%;width:9px;height:9px;border-radius:50%;background:#283142;box-shadow:inset 0 0 3px rgba(0,0,0,.6);transition:background .25s,box-shadow .25s}
-.how-led.lit{background:#a7dcff;box-shadow:0 0 8px 1px rgba(125,200,255,.95),0 0 22px 5px rgba(90,170,255,.6)}
+.how-drive.plugged{transform:translateY(-50%) translateX(-8px) rotate(-90deg)}
+.how-led{position:absolute;left:46%;top:20%;width:10px;height:10px;border-radius:50%;background:#283142;box-shadow:inset 0 0 3px rgba(0,0,0,.6);transition:background .25s,box-shadow .25s}
+.how-led.lit{background:#a7dcff;box-shadow:0 0 9px 1px rgba(125,200,255,.95),0 0 24px 5px rgba(90,170,255,.6)}
 @media(max-width:900px){.how-wire{display:none}}
 
 /* closing intent-capture */
@@ -413,6 +418,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-mswipe{position:absolute;top:0;bottom:0;width:60%;left:-60%;pointer-events:none;opacity:0;
   background:linear-gradient(105deg,transparent,rgba(150,200,255,.65) 50%,transparent);mix-blend-mode:screen}
 /* lebendiges Atom („Universum" der Disk-Mindmap) — animiert über den statischen Screenshot, NICHT bedienbar */
+.hf-atom-mask{position:absolute;left:57.5%;top:62.3%;width:23%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;z-index:1;background:radial-gradient(closest-side,#070a10 0%,#070a10 30%,rgba(7,10,16,0) 72%)}
 .hf-atom{position:absolute;left:57.5%;top:62.3%;width:15.5%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:screen;overflow:visible;z-index:2}
 .hf-atom .orb{fill:none;stroke:rgba(125,193,255,.5);stroke-width:.8}
 .hf-atom .el{fill:#e7f4ff;filter:drop-shadow(0 0 2.6px rgba(150,205,255,.95))}
@@ -657,6 +663,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
           <span class="hf-mcam" aria-hidden="true"></span>
           <div class="hf-mscr">
             <img class="hf-shot" data-i="0" data-src="assets/screen-overview.webp" alt="Disky — overview" decoding="async">
+            <div class="hf-atom-mask" aria-hidden="true"></div>
             <svg class="hf-atom" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs><radialGradient id="atomHalo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7ec3ff" stop-opacity=".5"/><stop offset=".55" stop-color="#4f9bff" stop-opacity=".18"/><stop offset="1" stop-color="#3f8cff" stop-opacity="0"/></radialGradient></defs>
               <circle class="hf-atom-halo" cx="50" cy="50" r="48" fill="url(#atomHalo)"/>
@@ -1341,35 +1348,31 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
 (function(){
   const sec=document.getElementById('how'); if(!sec) return;
   const wire=document.getElementById('howWire'), drive=document.getElementById('howDrive'), led=document.getElementById('howLed');
-  const nums=[].slice.call(sec.querySelectorAll('.how-num'));
-  if(!wire||!drive||!led||!nums.length) return;
-  const clamp=v=>v<0?0:v>1?1:v, R=15, NSEG=nums.length+1;   // R = Badge-Radius → Lücke an jedem Knoten
-  let segs=[], plug=null;
-  function build(){   // DOM einmal anlegen (feste Segmentanzahl), Positionen kommen live in update()
-    wire.querySelectorAll('.hw-seg,.hw-plug').forEach(e=>e.remove()); segs=[];
-    for(let i=0;i<NSEG;i++){ const seg=document.createElement('div'); seg.className='hw-seg';
-      const f=document.createElement('div'); f.className='hw-segfill'; seg.appendChild(f);
-      seg._f=f; segs.push(seg); wire.appendChild(seg); }
+  const cards=[].slice.call(sec.querySelectorAll('.how-card'));
+  if(!wire||!drive||!led||!cards.length) return;
+  const clamp=v=>v<0?0:v>1?1:v;
+  let track=null, fill=null, plug=null;
+  function build(){   // durchgehendes Kabel hinter den Karten — DOM einmal anlegen, Positionen live in update()
+    wire.querySelectorAll('.hw-track,.hw-fill,.hw-plug').forEach(e=>e.remove());
+    track=document.createElement('div'); track.className='hw-track'; wire.appendChild(track);
+    fill=document.createElement('div'); fill.className='hw-fill'; wire.appendChild(fill);
     plug=document.createElement('div'); plug.className='hw-plug'; wire.appendChild(plug);
     update();
   }
   function update(){
     const H=innerHeight, sr=sec.getBoundingClientRect();
-    const b0=nums[0].getBoundingClientRect();
-    const lineTopRel=(b0.top-sr.top)+b0.height/2;       // Kabel-Y = Badge-Reihe (live gemessen, robust ggü. Reveal-Shift)
+    const c0=cards[0].getBoundingClientRect();
+    const lineTopRel=(c0.top-sr.top)+c0.height/2;        // Kabel-Y = MITTE der Karten (live gemessen)
     wire.style.top=lineTopRel+'px';
     const dr=drive.getBoundingClientRect();
-    const portX=(dr.left-sr.left)+16;                   // Steck-Punkt = linke Kante der Platte (leicht in den Bumper)
-    const nodeXs=nums.map(n=>{const r=n.getBoundingClientRect(); return (r.left-sr.left)+r.width/2;});
-    const pts=[0]; nodeXs.forEach(x=>{pts.push(x-R);pts.push(x+R);}); pts.push(portX);
-    const p=clamp((H*0.84-(sr.top+lineTopRel))/(H*0.42));   // füllt sich während die Step-Reihe ins Bild scrollt
+    const portX=(dr.left-sr.left)+14;                    // Steck-Punkt = linke Kante der (gedrehten) Platte
+    const reach=cards.map(c=>{const r=c.getBoundingClientRect(); return (r.left-sr.left)+r.width*0.5;});   // „erreicht" = Mitte der Karte
+    const p=clamp((H*0.84-(sr.top+lineTopRel))/(H*0.42));
     const x=p*portX;
-    for(let i=0;i<NSEG;i++){ const s=pts[i*2], e=pts[i*2+1], seg=segs[i]; if(!seg) continue;
-      if(e<=s){ seg.style.display='none'; continue; } seg.style.display='';
-      seg.style.left=s+'px'; seg.style.width=(e-s)+'px';
-      seg._f.style.width=Math.max(0,Math.min(e,x)-s)+'px'; }
-    if(plug){ plug.style.left=x+'px'; plug.style.opacity=p>0.004?1:0; }
-    nums.forEach((n,i)=>n.classList.toggle('lit', x>=nodeXs[i]));
+    track.style.width=portX+'px';
+    fill.style.width=Math.max(0,x)+'px';
+    plug.style.left=x+'px'; plug.style.opacity=p>0.004?1:0;
+    cards.forEach((c,i)=>c.classList.toggle('lit', x>=reach[i]));   // Karte leuchtet + wächst, sobald das Kabel ihre Mitte erreicht
     const plugged=p>=0.985; led.classList.toggle('lit',plugged); drive.classList.toggle('plugged',plugged);
   }
   let t=false;
