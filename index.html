@@ -1180,10 +1180,13 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);
   // ECHTE App live im MacBook-Screen (screen-app.html) — lazy geladen, damit der Seiten-Boot nicht blockiert
   const liveFrame=mac.querySelector('.hf-liveapp'), mscr=mac.querySelector('.hf-mscr');
+  let liveReady=false, searchSent=false;
   function sizeLive(){ if(!liveFrame||!mscr) return; const w=mscr.getBoundingClientRect().width; if(w) liveFrame.style.setProperty('--liveS',(w/1320).toFixed(4)); }   // 1320er-Build auf die Screen-Breite skalieren
+  function liveMsg(m){ try{ liveFrame.contentWindow.postMessage(m,'*'); }catch(_){} }
+  function triggerSearch(){ if(searchSent||!liveReady) return; searchSent=true; liveMsg({diskyDemo:'search', q:'Nordsee', lens:'all'}); }   // beim Landen: Deep Search öffnen + Projekt live eintippen → zeigt die Platte
   function loadLive(){ if(!liveFrame||liveFrame.dataset.loaded) return; liveFrame.dataset.loaded='1';
     sizeLive();
-    addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); try{ liveFrame.contentWindow.postMessage({diskyView:'overview'},'*'); }catch(_){} } });
+    addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
     liveFrame.src='screen-app.html?lang='+(typeof LANG!=='undefined'?LANG:'en'); }
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
@@ -1272,6 +1275,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
     const macTY = GAP - pan + MAC_DROP;   // wartet GAP+DROP tiefer → landet bei DROP (etwas unter Mitte)
     mac.style.opacity = easeIO(clamp(p2/0.14)).toFixed(3);   // sanft einfaden während es hochsteigt (kein hartes Aufploppen)
+    if(p2>0.45) triggerSearch();   // beim Landen: Live-App öffnet Deep Search und tippt das Projekt ein
     mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
     macSwipe.style.opacity='0'; macGlow.style.opacity=(0.5*react).toFixed(3);   // Screen leuchtet auf, während die Ordner reinströmen (reagiert)
     shots[0].style.opacity='1';                               // Overview-Screen ist von Anfang an da

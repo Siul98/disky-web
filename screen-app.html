@@ -10,11 +10,25 @@
     localStorage.setItem('disky_autoscan','0');
   }catch(e){}
   var curView=null;
+  function waitFor(sel,cb,tries){ tries=tries||0; var el=document.querySelector(sel); if(el){ cb(el); } else if(tries<50){ setTimeout(function(){ waitFor(sel,cb,tries+1); },120); } }
+  function gotoView(v){ if(v===curView) return; curView=v; waitFor('.nav[data-v="'+v+'"]',function(el){ el.click(); }); }
+  function typeInto(inp,query,done){ inp.focus(); inp.value=''; var i=0;
+    (function step(){ if(i>query.length){ done&&done(); return; } inp.value=query.slice(0,i);
+      inp.dispatchEvent(new Event('input',{bubbles:true})); i++; setTimeout(step, i<3?260:90); })(); }
+  // Demo: Deep Search öffnen, „Alle"-Linse, Query live eintippen → Treffer zeigen die Platte (auch abgesteckt)
+  function demoSearch(query,lens){
+    curView='search';
+    waitFor('.nav[data-v="search"]',function(nav){ nav.click();
+      waitFor('.deep-pill[data-mode="'+(lens||'all')+'"]',function(pill){
+        if(!pill.classList.contains('on')) pill.click();
+        setTimeout(function(){ waitFor('#deepQ',function(inp){ typeInto(inp,query); }); }, 220);
+      });
+    });
+  }
   window.addEventListener('message', function(e){
-    var d=e&&e.data; if(!d||!d.diskyView) return;
-    var v=d.diskyView; if(v===curView) return; curView=v;
-    var tries=0;
-    (function go(){ var el=document.querySelector('.nav[data-v="'+v+'"]'); if(el){ el.click(); } else if(tries++<30){ setTimeout(go,120); } })();
+    var d=e&&e.data; if(!d) return;
+    if(d.diskyDemo==='search'){ demoSearch(d.q||'Nordsee', d.lens||'all'); return; }
+    if(d.diskyView){ gotoView(d.diskyView); }
   });
   // Handshake: dem Parent melden, sobald die geseedete App-Navigation gerendert ist (NICHT vor dem Seed-Reload)
   function pingReady(){ (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })(); }
