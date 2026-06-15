@@ -1281,7 +1281,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     head.style.opacity=(1-0.82*spread).toFixed(3);
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
     const macTY = GAP - pan + MAC_DROP;   // wartet GAP+DROP tiefer → landet bei DROP (etwas unter Mitte)
-    mac.style.opacity = (p2>0.001?1:0).toString();
+    mac.style.opacity = easeIO(clamp(p2/0.14)).toFixed(3);   // sanft einfaden während es hochsteigt (kein hartes Aufploppen)
     mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
     macSwipe.style.opacity='0'; macGlow.style.opacity=(0.5*react).toFixed(3);   // Screen leuchtet auf, während die Ordner reinströmen (reagiert)
     shots[0].style.opacity='1';                               // Overview-Screen ist von Anfang an da
