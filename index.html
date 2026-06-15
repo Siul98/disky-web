@@ -636,6 +636,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <a class="hide-sm" href="#features" data-t="nav_features">Features</a>
     <a class="hide-sm" href="#privacy" data-t="nav_privacy">Privacy</a>
     <a class="hide-sm" href="#faq" data-t="nav_faq">FAQ</a>
+    <a class="hide-sm" id="navSignin" href="#" style="display:none">Sign in</a>
     <a class="soon" href="#download"><i aria-hidden="true"></i><span data-t="soon_short">Coming soon</span></a>
   </div>
 </div></nav>
@@ -1375,6 +1376,31 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   addEventListener('resize',update);
   const img=drive.querySelector('img'); if(img&&!img.complete) img.addEventListener('load',update);
   build(); setTimeout(update,300); setTimeout(update,1000);
+})();
+</script>
+<script>
+/* Website-Account (Supabase) — lazy + gated: erscheint nur, wenn konfiguriert; lädt Supabase erst bei Bedarf. Magic-Link-Login → zeigt Plan. */
+const SUPABASE_WEB = { URL:"https://DEIN-PROJEKT.supabase.co", ANON_KEY:"DEIN-ANON-KEY", READY:false };  // ← URL+ANON_KEY eintragen, READY:true (siehe BACKEND-SETUP.md)
+(function(){
+  const link=document.getElementById("navSignin"); if(!link) return;
+  const ready=SUPABASE_WEB.READY && !/DEIN-/.test(SUPABASE_WEB.URL+SUPABASE_WEB.ANON_KEY);
+  if(!ready) return;                                  // inert bis konfiguriert → kein Effekt/kein Laden auf der Live-Seite
+  let _sb=null;
+  async function sb(){ if(_sb)return _sb; const m=await import("https://esm.sh/@supabase/supabase-js@2"); _sb=m.createClient(SUPABASE_WEB.URL,SUPABASE_WEB.ANON_KEY,{auth:{persistSession:true,detectSessionInUrl:true,storageKey:"disky_supa_web"}}); return _sb; }
+  async function paint(){ try{ const c=await sb(); const { data:{session} }=await c.auth.getSession();
+      if(!session){ link.textContent="Sign in"; return; }
+      let ent={}; try{ ent=(await c.rpc("get_my_entitlement")).data||{}; }catch(e){}
+      link.textContent=(ent.pro?"Pro · ":"")+session.user.email.split("@")[0];
+    }catch(e){ link.textContent="Sign in"; } }
+  link.onclick=async(e)=>{ e.preventDefault(); const c=await sb(); const { data:{session} }=await c.auth.getSession();
+    if(session){ let ent={}; try{ ent=(await c.rpc("get_my_entitlement")).data||{}; }catch(_){}
+      if(confirm((ent.pro?("Pro"+(ent.plan?(" · "+ent.plan):"")):"Free")+"\n"+session.user.email+"\n\nSign out?")){ await c.auth.signOut(); paint(); } return; }
+    const email=prompt("Sign in — we'll email you a magic link:"); if(!email) return;
+    const { error }=await c.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin+location.pathname } });
+    alert(error? error.message : "Check your email for the sign-in link."); };
+  link.style.display="";
+  const hasSession=(()=>{ try{ return Object.keys(localStorage).some(k=>k.indexOf("disky_supa_web")===0); }catch(e){ return false; } })();
+  if(location.hash.indexOf("access_token")>=0){ sb().then(()=>setTimeout(paint,300)); } else if(hasSession){ paint(); }  // sonst lädt Supabase erst beim Klick
 })();
 </script>
 </body>
