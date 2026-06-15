@@ -15,7 +15,11 @@
 <meta property="og:url" content="https://disky.app/">
 <meta property="og:site_name" content="Disky">
 <meta property="og:type" content="website">
+<meta property="og:image:alt" content="Disky — search every external drive at once, while the disks stay unplugged in the drawer.">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Disky — See inside sealed drives.">
+<meta name="twitter:description" content="Index each drive once. Search all of them — by name, project, or what's inside the footage — every disk unplugged. 100% local, read-only.">
+<meta name="twitter:image" content="https://disky.app/og.png">
 <meta name="theme-color" content="#08090c">
 <meta name="color-scheme" content="dark">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Disky","operatingSystem":"macOS","applicationCategory":"UtilitiesApplication","description":"Index every external drive once, then search all of them offline — by name, project, or what's inside the footage — without plugging a drive in. 100% local, read-only, no subscription.","url":"https://disky.app/"}</script>
@@ -263,7 +267,7 @@ a{color:inherit;text-decoration:none}
 .notify-in::placeholder{color:var(--mut2)}
 .notify-in:focus{outline:none;border-color:var(--acc);background:rgba(74,158,255,.06)}
 .notify .btn{flex:0 0 auto}
-.notify.sent{justify-content:center}
+.notify.sent{justify-content:center;min-height:50px;align-items:center}
 .notify.sent .notify-in,.notify.sent .btn{display:none}
 .notify-note{margin:15px auto 0;font-size:12.5px;color:var(--mut2)}
 
@@ -336,6 +340,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-floor{position:absolute;left:50%;bottom:-40px;width:min(1040px,94vw);height:250px;transform:translateX(-50%);z-index:1;pointer-events:none;background:radial-gradient(ellipse 46% 50% at 50% 60%,rgba(0,0,0,.72),rgba(0,0,0,.34) 45%,transparent 72%);filter:blur(26px)}
 .hf-head{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px 250px;will-change:transform,filter,opacity}
 .hf-eb{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:22px;opacity:0;animation:hf-ebIn 1.2s .15s ease both}
+@media(max-width:700px){.hf-head{justify-content:flex-start;padding-top:88px;padding-bottom:40px}}   /* Eyebrow/Headline unter die fixe Nav (64px) schieben — sonst Überlappung auf dem Handy */
 .hf-head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(50px,8.2vw,98px)}
 .hf-t3d{display:block;color:var(--ink);text-shadow:0 10px 30px rgba(244,247,251,.16),0 2px 4px rgba(244,247,251,.1);opacity:0;animation:hf-txtReveal 1.7s .25s cubic-bezier(.16,1,.3,1) both}
 .hf-silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);-webkit-background-clip:text;background-clip:text;transform:translateZ(0);filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));clip-path:inset(0 100% 0 0);animation:hf-txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
@@ -652,12 +657,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="hf-floor" id="hf-floor"></div>
       <div class="hf-head" id="hf-head">
         <span class="hf-eb" data-t="hero_eb">Drive catalog for Mac</span>
-        <h1><span class="hf-t3d" data-t="hero_l1">Five tries.</span><span class="hf-silver" data-t="hero_l2">Or five seconds.</span></h1>
+        <h1><span class="hf-t3d" data-t="hero_l1">Find anything.</span><span class="hf-silver" data-t="hero_l2">Connect nothing.</span></h1>
         <p class="hf-sub" data-t="hero_sub">Disky remembers every drive you own — search by name or what's inside, reclaim space, catch duplicates, see everywhere you've shot. All on your Mac, nothing plugged in.</p>
         <div class="hf-cta">
-          <a class="btn btn-primary" href="#features" data-t="cta_how">See it find a file in seconds ›</a>
-          <span class="soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
+          <a class="btn btn-primary" href="#download" data-t="cta_join">Get early access →</a>
+          <a class="btn btn-ghost" href="#features" data-t="cta_how">See it find a file in seconds ›</a>
         </div>
+        <span class="soon hf-soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
         <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
       </div>
       <div class="hf-stage" id="hf-stage"><div class="hf-fan" id="hf-fan">
@@ -845,7 +851,7 @@ const I18N={
   nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",nav_pricing:"Pricing",nav_dl:"Download",
   hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",
   hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
-  cta_dl:"Download for Mac — free to start",cta_how:"See it find a file in seconds ›",
+  cta_dl:"Download for Mac — free to start",cta_join:"Get early access →",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
   trustline:"Free to start · macOS, Apple Silicon · Read-only · 100% local",
   heroproof:"Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.",
@@ -857,7 +863,7 @@ const I18N={
   how_c2_h:"Disky builds the catalog — on your Mac.",how_c2_p:"It records every file: names, folders, projects — and reads what's inside your footage and photos, so you can find a shot by what it shows. All of it stays on your Mac.",how_c2_pr:"On-device · 0 bytes uploaded",
   how_c3_h:"Unplug it. Search anytime.",how_c3_p:"Put the drive back in the drawer. The catalog lives in Disky, so every search after that finds the exact drive and path with nothing connected — across all of them at once.",how_c3_pr:"Nothing plugged in · the whole drawer, searchable",
   pv_eb:"Privacy by design",pv_cred:"Native Apple Silicon · Notarized & signed by Apple · Read-only by design",
-  end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Notify me at launch →",end_note:"One email the day Disky ships. No spam, unsubscribe anytime.",end_done:"Opened your mail — send it and you're on the list.",
+  end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Notify me at launch →",end_note:"One email the day Disky ships. No spam, unsubscribe anytime.",end_done:"You're on the list — watch for the launch email. ✓",end_done_mail:"Opened your mail — hit send to confirm.",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
   rl_q:"underwater",rl_search_n:"8 clips · 4 drives",rl_map_n:"Reclaim 80 GB",rl_dup_n:"same file · ×3 · 46 GB",rl_world_n:"14 locations",
@@ -904,7 +910,7 @@ const I18N={
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",nav_pricing:"Preise",nav_dl:"Laden",
   hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",
   hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
-  cta_dl:"Für Mac laden — kostenlos starten",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
+  cta_dl:"Für Mac laden — kostenlos starten",cta_join:"Frühzugang sichern →",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
   trustline:"Kostenlos starten · macOS, Apple Silicon · Nur-Lesen · 100% lokal",
   heroproof:"1 Mio.+ Dateien über 22+ Platten in Sekunden durchsuchen — jede Disk in der Schublade.",
@@ -916,7 +922,7 @@ const I18N={
   how_c2_h:"Disky baut den Katalog — auf deinem Mac.",how_c2_p:"Es erfasst jede Datei: Namen, Ordner, Projekte — und liest, was in deinem Material und deinen Fotos steckt, damit du eine Aufnahme über ihren Inhalt findest. Alles bleibt auf deinem Mac.",how_c2_pr:"On-device · 0 Byte hochgeladen",
   how_c3_h:"Abziehen. Jederzeit suchen.",how_c3_p:"Leg die Platte zurück in die Schublade. Der Katalog lebt in Disky — jede Suche danach findet die exakte Platte und den Pfad, ohne dass etwas angesteckt ist. Über alle auf einmal.",how_c3_pr:"Nichts angesteckt · die ganze Schublade, durchsuchbar",
   pv_eb:"Datenschutz von Grund auf",pv_cred:"Nativ für Apple Silicon · Von Apple notarisiert & signiert · Nur-Lesen by Design",
-  end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Zum Start benachrichtigen →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, jederzeit abbestellbar.",end_done:"Mail-App geöffnet — abschicken und du bist auf der Liste.",
+  end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Zum Start benachrichtigen →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, jederzeit abbestellbar.",end_done:"Du bist auf der Liste — die Launch-Mail kommt. ✓",end_done_mail:"Mail-App geöffnet — abschicken zum Bestätigen.",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
   rl_q:"unter Wasser",rl_search_n:"8 Clips · 4 Platten",rl_map_n:"80 GB frei",rl_dup_n:"gleiche Datei · ×3 · 46 GB",rl_world_n:"14 Orte",
@@ -1015,17 +1021,27 @@ function applyLang(l){
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
 buildReel(); applyLang();
 
-/* Launch notify — composes a real email (no backend needed on static hosting) */
+/* Launch notify — postet an ein echtes Endpoint (WAITLIST.ENDPOINT), sonst ehrlicher Mail-Fallback */
+const WAITLIST = { ENDPOINT: "" };   // ← Formspree/Buttondown-POST-URL hier eintragen → echtes E-Mail-Capture (z. B. "https://formspree.io/f/xxxxxx")
 (function(){ const f=document.getElementById('notify'); if(!f)return;
   const inp=document.getElementById('notifyEmail'), note=document.getElementById('notifyNote');
-  f.addEventListener('submit',e=>{ e.preventDefault();
-    const v=(inp.value||'').trim();
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ inp.focus(); inp.style.borderColor='#ff6b6b'; return; }
-    const subj=encodeURIComponent('Disky — notify me at launch');
+  const valid=v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+  inp.addEventListener('input',()=>{ inp.style.borderColor=''; });            // roten Fehler-Rand löschen, sobald getippt wird
+  const markSent=key=>{ f.classList.add('sent'); if(note) note.textContent=tt(key); };
+  const mailtoFallback=v=>{ const subj=encodeURIComponent('Disky — notify me at launch');
     const body=encodeURIComponent('Please add me to the Disky launch list: '+v);
-    location.href='mailto:hallo@disky.app?subject='+subj+'&body='+body;
-    f.classList.add('sent'); if(note) note.textContent=tt('end_done');
+    location.href='mailto:hallo@disky.app?subject='+subj+'&body='+body; markSent('end_done_mail'); };
+  f.addEventListener('submit',async e=>{ e.preventDefault();
+    const v=(inp.value||'').trim();
+    if(!valid(v)){ inp.focus(); inp.style.borderColor='#ff6b6b'; return; }
+    if(WAITLIST.ENDPOINT){
+      try{ const res=await fetch(WAITLIST.ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({email:v})});
+        if(res.ok){ markSent('end_done'); return; } }catch(_){}
+      mailtoFallback(v); return;                                             // Endpoint-Fehler → Mail-Fallback, kein verlorener Lead
+    }
+    mailtoFallback(v);                                                       // noch kein Endpoint konfiguriert → ehrlicher Mail-Fallback
   });
+  addEventListener('pageshow',e=>{ if(e.persisted){ f.classList.remove('sent'); if(note) note.textContent=tt('end_note'); inp.style.borderColor=''; } });  // bfcache/Zurück-Button: nicht fälschlich „gesendet" zeigen
 })();
 
 /* nav blur */
@@ -1186,7 +1202,9 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   function sizeLive(){ if(!liveFrame||!mscr) return; const w=mscr.getBoundingClientRect().width; if(w) liveFrame.style.setProperty('--liveS',(w/1320).toFixed(4)); }   // 1320er-Build auf die Screen-Breite skalieren
   function liveMsg(m){ try{ liveFrame.contentWindow.postMessage(m,'*'); }catch(_){} }
   function triggerSearch(){ if(searchSent||!liveReady) return; searchSent=true; liveMsg({diskyDemo:'search', q:'Nordsee', lens:'all'}); }   // beim Landen: Deep Search öffnen + Projekt live eintippen → zeigt die Platte
-  function loadLive(){ if(!liveFrame||liveFrame.dataset.loaded) return; liveFrame.dataset.loaded='1';
+  function loadLive(){ if(!liveFrame||liveFrame.dataset.loaded) return;
+    if(matchMedia('(max-width:768px)').matches){ liveFrame.dataset.loaded='skip'; return; }   // Mobile: Live-iframe nicht laden — der Poster-Screenshot zeigt sich (spart ~370KB, bessere LCP)
+    liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
     liveFrame.src='screen-app.html?v=3&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
