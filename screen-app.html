@@ -983,6 +983,7 @@ select.txt{cursor:pointer}
 .deep-bar input:focus{border-color:rgba(74,158,255,.55);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
 .deep-hint{color:var(--mut);font-size:13.5px;padding:16px 4px;line-height:1.5}.deep-hint b{color:#cdd5e0}
 .deep-res{display:flex;flex-direction:column;gap:9px}
+.deep-sum{font-size:12px;font-weight:600;letter-spacing:.01em;color:#7f8ca0;margin:0 2px -2px}
 /* ── Treffer nach Platte gruppiert: jede Platte ein aufklappbarer Block ── */
 .dgroup{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.012)}
 .dg-head{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font:inherit;color:var(--txt);background:linear-gradient(180deg,rgba(74,158,255,.10),rgba(74,158,255,.025));border:0;border-bottom:1px solid transparent;padding:12px 15px;cursor:pointer;transition:background .14s}
@@ -2069,7 +2070,7 @@ const I18N = {
    deep_ph:"Suche über alle Platten — Projekt, Ordner, Dateiname, Pfad…", deep_clear:"Leeren",
    deep_hint:n=>`Tippen Sie oben los — <b>${n}</b> Dateien über alle Platten durchsuchbar, auch wenn die Platte im Schrank liegt.`,
    deep_grp_folders:n=>`Ordner · ${n}`, deep_grp_files:n=>`Dateien · ${n}`, deep_fold_t:"Ordner in der Speicher-Karte öffnen",
-   deep_file_show:"Im Finder zeigen", deep_file_noshow:"Im Speicher öffnen (Platte nicht angeschlossen)", deep_in_closet:" · im Schrank", deep_closet_tag:"im Schrank", deep_grp_matches:"Treffer", deep_no_hits:q=>`Keine Treffer für „${q}".`,
+   deep_file_show:"Im Finder zeigen", deep_file_noshow:"Im Speicher öffnen (Platte nicht angeschlossen)", deep_in_closet:" · im Schrank", deep_closet_tag:"im Schrank", deep_grp_matches:"Treffer", deep_summary:(n,d)=>`${n} Treffer auf ${d} ${d===1?"Platte":"Platten"}`, deep_no_hits:q=>`Keine Treffer für „${q}".`,
    // KI-Suche
    ki_badge:"KI-Suche · 100% lokal", ki_title:"Suchen Sie nach Inhalt, nicht nur nach Namen.", ki_desc:`Tippen Sie, was Sie suchen — <i>„underwater", „sunset", „drone", „interview"</i> — und Disky findet die passenden Clips über alle Platten. Ohne Upload.`,
    ki_q_ph:"Wonach suchen Sie?", ki_search:"Suchen", ki_indexed:n=>`${n} Clips im KI-Index durchsuchbar`, ki_noindex:n=>`Noch kein KI-Index. ${n} Medien im Katalog.`, ki_scan_first:"Scannen Sie zuerst eine Platte mit Fotos/Videos.",
@@ -2194,7 +2195,7 @@ const I18N = {
    deep_ph:"Search across all drives — project, folder, file name, path…", deep_clear:"Clear",
    deep_hint:n=>`Start typing above — <b>${n}</b> files searchable across all drives, even when the drive is in the closet.`,
    deep_grp_folders:n=>`Folders · ${n}`, deep_grp_files:n=>`Files · ${n}`, deep_fold_t:"Open folder in Storage Map",
-   deep_file_show:"Show in Finder", deep_file_noshow:"Open in storage (drive not connected)", deep_in_closet:" · in the closet", deep_closet_tag:"in the closet", deep_grp_matches:"matches", deep_no_hits:q=>`No matches for “${q}”.`,
+   deep_file_show:"Show in Finder", deep_file_noshow:"Open in storage (drive not connected)", deep_in_closet:" · in the closet", deep_closet_tag:"in the closet", deep_grp_matches:"matches", deep_summary:(n,d)=>`${n} ${n===1?"match":"matches"} across ${d} ${d===1?"drive":"drives"}`, deep_no_hits:q=>`No matches for “${q}”.`,
    ki_badge:"AI search · 100% local", ki_title:"Search by content, not just by name.", ki_desc:`Type what you're looking for — <i>“underwater”, “sunset”, “drone”, “interview”</i> — and Disky finds the matching clips across all drives. No upload.`,
    ki_q_ph:"What are you looking for?", ki_search:"Search", ki_indexed:n=>`${n} clips searchable in the AI index`, ki_noindex:n=>`No AI index yet. ${n} media in the catalog.`, ki_scan_first:"Scan a drive with photos/videos first.",
    ki_build:n=>`Build AI index (${n})`, ki_later:n=>`${n} more will be indexed once the drive is connected.`, ki_module_loading:"AI module still loading…", ki_searching:"Searching…", ki_results:(n,q,ind)=>`${n} results for “${q}” · ${ind} clips searched`,
@@ -3742,7 +3743,8 @@ async function deepNameBody(host){
   const list=[...grps.values()].sort((a,b)=>b.bytes-a.bytes);
   if(!list.length){ res.innerHTML=`<div class="deep-hint">${t("deep_no_hits",esc(qq))}</div>`; return; }
   const chevSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
-  res.innerHTML=list.map(G=>{
+  const totMatches=list.reduce((s,g)=>s+g.n,0);
+  res.innerHTML=`<div class="deep-sum">${t("deep_summary",totMatches,list.length)}</div>`+list.map(G=>{
     const on=!!mountOfDrive(G.did);
     const foldRows=G.fold.map(g=>
       `<button class="dhit dfold" data-did="${g.did}" data-path="${esc(g.path)}" title="${t("deep_fold_t")}">
