@@ -784,12 +784,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="rev">
     <span class="eyebrow" data-t="pv_eb">Privacy by design</span>
     <h2 data-t="pv_h">Your work never leaves your Mac.</h2>
-    <p class="sub" data-t="pv_sub">Disky catalogs your drives entirely on your Mac. The content-search AI is the only piece that touches the internet, and only once: it downloads the model on first use, then runs fully on-device — after that, zero bytes of your footage ever leave the machine. No cloud, no account, no upload.</p>
+    <p class="sub" data-t="pv_sub">Disky catalogs your drives entirely on your Mac. The content-search AI is the only piece that touches the internet, and only once: it downloads the model on first use, then runs fully on-device — after that, zero bytes of your footage ever leave the machine. Your account only carries your license, never your files.</p>
   </div>
   <div class="marks rev">
     <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><b data-t="pm1_t">On-device</b><span data-t="pm1_d">The search model downloads once, then runs entirely on your Mac. Your footage is never uploaded — not previews, not thumbnails, not a single frame.</span></div>
     <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg><b data-t="pm2_t">Read-only</b><span data-t="pm2_d">Disky only ever reads your drives. It never moves, renames, or deletes a file — your originals stay exactly where you put them.</span></div>
-    <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15a4 4 0 0 1 4-4 5 5 0 0 1 9.6-1.3A3.5 3.5 0 0 1 18 18H7a4 4 0 0 1-4-3z"/><path d="M3 3l18 18"/></svg><b data-t="pm3_t">No account, no cloud</b><span data-t="pm3_d">No sign-up, no login, no cloud to lock you in. Your catalog is a plain file on your Mac — yours to keep, even offline.</span></div>
+    <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15a4 4 0 0 1 4-4 5 5 0 0 1 9.6-1.3A3.5 3.5 0 0 1 18 18H7a4 4 0 0 1-4-3z"/><path d="M3 3l18 18"/></svg><b data-t="pm3_t">Your data stays local</b><span data-t="pm3_d">Your catalog and footage live on your Mac — never uploaded to the cloud. Your account only carries your license, never your files.</span></div>
   </div>
   <p class="trustline rev" data-t="pv_cred">Native Apple Silicon · Notarized &amp; signed by Apple · Read-only by design</p>
 </div></section>
@@ -818,8 +818,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <input type="email" id="notifyEmail" class="notify-in" required autocomplete="email" data-tp="end_ph" placeholder="you@studio.com" aria-label="Email">
     <button type="submit" class="btn btn-primary" data-t="end_cta">Notify me at launch →</button>
   </form>
-  <p class="notify-note rev" id="notifyNote" data-t="end_note">One email the day Disky ships. No spam, no account.</p>
-  <p class="trustline rev" data-t="trustline">Free to start · macOS, Apple Silicon · Read-only · No account</p>
+  <p class="notify-note rev" id="notifyNote" data-t="end_note">One email the day Disky ships. No spam, unsubscribe anytime.</p>
+  <p class="trustline rev" data-t="trustline">Free to start · macOS, Apple Silicon · Read-only · 100% local</p>
 </div></section>
 
 </main>
@@ -846,17 +846,17 @@ const I18N={
   hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
   cta_dl:"Download for Mac — free to start",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
-  trustline:"Free to start · macOS, Apple Silicon · Read-only · No account",
+  trustline:"Free to start · macOS, Apple Silicon · Read-only · 100% local",
   heroproof:"Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.",
   hs_q:"wedding tegernsee",hs_tag:"in the drawer",
-  t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"No account",
+  t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"Local-first",
   pa_eb:"For editors, photographers & creatives",pa_h:"A drawer full of drives.",pa_h2:"One clip you can't find.",pa_sub:"You own ten, twenty, more — black bricks with no labels, and the shot lives on exactly one of them. Right now the only way to find it is to plug them in, one cable at a time, until you get lucky.",pa_tag:"Drive 1 of 18 · still searching…",
   how_eb:"Plug in once. Search forever.",how_h:"How Disky works.",how_sub:"Three steps, then you never plug a drive in to search again.",
   how_c1_h:"Plug a drive in — once.",how_c1_p:"Connect an external drive a single time. Disky opens it strictly read-only: it looks, it never touches. Nothing is moved, renamed, copied off, or deleted.",how_c1_pr:"Read-only · your files are never altered",
   how_c2_h:"Disky builds the catalog — on your Mac.",how_c2_p:"It records every file: names, folders, projects — and reads what's inside your footage and photos, so you can find a shot by what it shows. All of it stays on your Mac.",how_c2_pr:"On-device · 0 bytes uploaded",
   how_c3_h:"Unplug it. Search anytime.",how_c3_p:"Put the drive back in the drawer. The catalog lives in Disky, so every search after that finds the exact drive and path with nothing connected — across all of them at once.",how_c3_pr:"Nothing plugged in · the whole drawer, searchable",
   pv_eb:"Privacy by design",pv_cred:"Native Apple Silicon · Notarized & signed by Apple · Read-only by design",
-  end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Notify me at launch →",end_note:"One email the day Disky ships. No spam, no account.",end_done:"Opened your mail — send it and you're on the list.",
+  end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Notify me at launch →",end_note:"One email the day Disky ships. No spam, unsubscribe anytime.",end_done:"Opened your mail — send it and you're on the list.",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
   rl_q:"underwater",rl_search_n:"8 clips · 4 drives",rl_map_n:"Reclaim 80 GB",rl_dup_n:"same file · ×3 · 46 GB",rl_world_n:"14 locations",
@@ -876,8 +876,8 @@ const I18N={
    {eb:"Duplicate Finder",h:"Stop storing the same file twice.",p:"Disky matches files by checksum, not by name, so renamed and moved copies can't hide across drives. That 46 GB master sitting on three drives? It catches every copy — and shows the exact space you'd reclaim before you touch a thing.",pr:"80.4 GB reclaimable across 5 duplicate groups"},
    {eb:"Worldmap",h:"See where your geotagged clips were shot.",p:"For footage that carries a GPS stamp, Disky reads it straight from the embedded metadata and drops a quiet pin on a world map — including drives you haven't opened in years. Read-only: the location is shown, never moved or changed.",pr:"Pulled straight from embedded GPS metadata — read-only, never moved"}
   ],
-  pv_h:"Your work never leaves your Mac.",pv_sub:"Disky catalogs your drives entirely on your Mac. The content-search AI is the only piece that touches the internet, and only once: it downloads the model on first use, then runs fully on-device — after that, zero bytes of your footage ever leave the machine. No cloud, no account, no upload.",
-  pm1_t:"On-device",pm1_d:"The search model downloads once, then runs entirely on your Mac. Your footage is never uploaded — not previews, not thumbnails, not a single frame.",pm2_t:"Read-only",pm2_d:"Disky only ever reads your drives. It never moves, renames, or deletes a file — your originals stay exactly where you put them.",pm3_t:"No account, no cloud",pm3_d:"No sign-up, no login, no cloud to lock you in. Your catalog is a plain file on your Mac — yours to keep, even offline.",
+  pv_h:"Your work never leaves your Mac.",pv_sub:"Disky catalogs your drives entirely on your Mac. The content-search AI is the only piece that touches the internet, and only once: it downloads the model on first use, then runs fully on-device — after that, zero bytes of your footage ever leave the machine. Your account only carries your license, never your files.",
+  pm1_t:"On-device",pm1_d:"The search model downloads once, then runs entirely on your Mac. Your footage is never uploaded — not previews, not thumbnails, not a single frame.",pm2_t:"Read-only",pm2_d:"Disky only ever reads your drives. It never moves, renames, or deletes a file — your originals stay exactly where you put them.",pm3_t:"Your data stays local",pm3_d:"Your catalog and footage live on your Mac — never uploaded to the cloud. Your account only carries your license, never your files.",
   pr_h:"Free to start. Yours to keep.",pr_sub:"A one-time Mac app — not a subscription, no cloud lock-in. Catalog your first drives free, then own it for good. Pricing is announced at launch — early users keep the launch price.",
   sp1:"Platform",sp2:"Intelligence",sp2v:"On-device",sp3:"License",sp3v:"One-time",sp4:"Network",sp4v:"Works offline",
   faq_h:"Questions, answered.",
@@ -886,7 +886,7 @@ const I18N={
   foot_tm:"Drive names, designs and logos are trademarks of their respective owners. Disky is independent and is not affiliated with, endorsed by, or sponsored by Samsung, LaCie, SanDisk/Western Digital, or any other manufacturer shown.",
   faq:[
    ["Do I have to plug in my drives to search?","No — that's the whole point. You index each drive once. After that, every filename, folder, and project lives in Disky and stays searchable while the disk sits unplugged in the drawer. Disky names the exact drive and the exact path without mounting anything."],
-   ["Is my footage uploaded anywhere?","Never. Disky runs on your Mac, the drives are read-only, and there's no account to create. Not one byte of your footage is ever uploaded — your work simply doesn't leave the machine."],
+   ["Is my footage uploaded anywhere?","Never. Disky runs on your Mac and the drives are read-only. Your account only holds your license — not one byte of your footage is ever uploaded. Your work simply doesn't leave the machine."],
    ["Does the AI work offline?","Yes — with one honest caveat. The content-search model downloads once, from us, the first time you use it. After that it runs entirely on your Mac, with no connection needed and 0 bytes of your footage ever leaving the device. So: a one-time download to set it up, then fully on-device for good."],
    ["Will Disky change my files?","No. Disky is strictly read-only. It catalogs, maps, and flags what you could reclaim — but it never moves, renames, or deletes a thing. You release space yourself, in Finder. Disky just shows you the gigabytes and waits. The only thing it ever writes is its own catalog, on your Mac."],
    ["How does the content search actually work?","Disky reads what's in your clips and photos, so you can search by what the footage shows — type “underwater” and it surfaces every clip with water, across all drives, even ones unplugged and misnamed. The model runs on-device."],
@@ -905,17 +905,17 @@ const I18N={
   hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
   cta_dl:"Für Mac laden — kostenlos starten",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
-  trustline:"Kostenlos starten · macOS, Apple Silicon · Nur-Lesen · Kein Konto",
+  trustline:"Kostenlos starten · macOS, Apple Silicon · Nur-Lesen · 100% lokal",
   heroproof:"1 Mio.+ Dateien über 22+ Platten in Sekunden durchsuchen — jede Disk in der Schublade.",
   hs_q:"hochzeit tegernsee",hs_tag:"im Schrank",
-  t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Kein Konto",
+  t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Local-first",
   pa_eb:"Für Editoren, Fotografen & Kreative",pa_h:"Eine Schublade voller Platten.",pa_h2:"Ein Clip, den du nicht findest.",pa_sub:"Du hast zehn, zwanzig, mehr — schwarze Klötze ohne Beschriftung, und die Aufnahme liegt auf genau einer davon. Im Moment hilft nur eins: anstecken, Kabel für Kabel, bis du Glück hast.",pa_tag:"Platte 1 von 18 · suche noch…",
   how_eb:"Einmal anstecken. Für immer suchen.",how_h:"So funktioniert Disky.",how_sub:"Drei Schritte — danach steckst du nie wieder eine Platte an, um zu suchen.",
   how_c1_h:"Eine Platte anstecken — einmal.",how_c1_p:"Schließe eine externe Platte ein einziges Mal an. Disky öffnet sie strikt nur lesend: schaut hin, fasst nie an. Nichts wird verschoben, umbenannt, kopiert oder gelöscht.",how_c1_pr:"Nur-Lesen · deine Dateien bleiben unangetastet",
   how_c2_h:"Disky baut den Katalog — auf deinem Mac.",how_c2_p:"Es erfasst jede Datei: Namen, Ordner, Projekte — und liest, was in deinem Material und deinen Fotos steckt, damit du eine Aufnahme über ihren Inhalt findest. Alles bleibt auf deinem Mac.",how_c2_pr:"On-device · 0 Byte hochgeladen",
   how_c3_h:"Abziehen. Jederzeit suchen.",how_c3_p:"Leg die Platte zurück in die Schublade. Der Katalog lebt in Disky — jede Suche danach findet die exakte Platte und den Pfad, ohne dass etwas angesteckt ist. Über alle auf einmal.",how_c3_pr:"Nichts angesteckt · die ganze Schublade, durchsuchbar",
   pv_eb:"Datenschutz von Grund auf",pv_cred:"Nativ für Apple Silicon · Von Apple notarisiert & signiert · Nur-Lesen by Design",
-  end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Zum Start benachrichtigen →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, kein Konto.",end_done:"Mail-App geöffnet — abschicken und du bist auf der Liste.",
+  end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Zum Start benachrichtigen →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, jederzeit abbestellbar.",end_done:"Mail-App geöffnet — abschicken und du bist auf der Liste.",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
   rl_q:"unter Wasser",rl_search_n:"8 Clips · 4 Platten",rl_map_n:"80 GB frei",rl_dup_n:"gleiche Datei · ×3 · 46 GB",rl_world_n:"14 Orte",
@@ -935,8 +935,8 @@ const I18N={
    {eb:"Duplicate Finder",h:"Schluss damit, dieselbe Datei zweimal zu speichern.",p:"Disky gleicht Dateien per Prüfsumme ab, nicht per Name — umbenannte und verschobene Kopien können sich über Platten hinweg nicht verstecken. Das 46-GB-Master auf drei Platten? Es erkennt jede Kopie — und zeigt den exakten Platz, den du zurückgewinnst, bevor du irgendetwas anfasst.",pr:"80,4 GB rückgewinnbar über 5 Duplikat-Gruppen"},
    {eb:"Weltkarte",h:"Sieh, wo deine Clips mit Geo-Stempel gedreht wurden.",p:"Bei Material mit GPS-Stempel liest Disky ihn direkt aus den eingebetteten Metadaten und setzt einen stillen Pin auf eine Weltkarte — auch von Platten, die du seit Jahren nicht geöffnet hast. Nur-Lesen: Der Ort wird gezeigt, nie bewegt oder verändert.",pr:"Direkt aus eingebetteten GPS-Metadaten — nur gelesen, nie bewegt"}
   ],
-  pv_h:"Deine Arbeit verlässt nie deinen Mac.",pv_sub:"Disky katalogisiert deine Platten komplett auf deinem Mac. Die Inhalts-KI ist das Einzige, was überhaupt ins Netz geht – und nur ein einziges Mal: Sie lädt das Modell beim ersten Start herunter und läuft danach vollständig on-device. Ab da verlässt kein einziges Byte deines Materials den Rechner. Keine Cloud, kein Konto, kein Upload.",
-  pm1_t:"On-device",pm1_d:"Das Such-Modell lädt einmal herunter, danach läuft alles auf deinem Mac. Dein Material wird nie hochgeladen – keine Vorschauen, keine Thumbnails, kein einziges Bild.",pm2_t:"Nur-Lesen",pm2_d:"Disky liest deine Platten ausschließlich. Es verschiebt, benennt oder löscht nie eine Datei – deine Originale bleiben exakt dort, wo du sie abgelegt hast.",pm3_t:"Kein Konto, keine Cloud",pm3_d:"Keine Anmeldung, kein Login, keine Cloud, die dich bindet. Dein Katalog ist eine einfache Datei auf deinem Mac – dir gehörend, auch offline.",
+  pv_h:"Deine Arbeit verlässt nie deinen Mac.",pv_sub:"Disky katalogisiert deine Platten komplett auf deinem Mac. Die Inhalts-KI ist das Einzige, was überhaupt ins Netz geht – und nur ein einziges Mal: Sie lädt das Modell beim ersten Start herunter und läuft danach vollständig on-device. Ab da verlässt kein einziges Byte deines Materials den Rechner. Dein Konto trägt nur deine Lizenz, nie deine Dateien.",
+  pm1_t:"On-device",pm1_d:"Das Such-Modell lädt einmal herunter, danach läuft alles auf deinem Mac. Dein Material wird nie hochgeladen – keine Vorschauen, keine Thumbnails, kein einziges Bild.",pm2_t:"Nur-Lesen",pm2_d:"Disky liest deine Platten ausschließlich. Es verschiebt, benennt oder löscht nie eine Datei – deine Originale bleiben exakt dort, wo du sie abgelegt hast.",pm3_t:"Deine Daten bleiben lokal",pm3_d:"Katalog und Material liegen auf deinem Mac – nie in der Cloud. Dein Konto trägt nur deine Lizenz, nie deine Dateien.",
   pr_h:"Kostenlos starten. Dir gehörend.",pr_sub:"Eine einmalige Mac-App — kein Abo, kein Cloud-Zwang. Katalogisiere deine ersten Platten gratis, dann gehört sie für immer dir. Den Preis nennen wir zum Launch — Early-User behalten den Launch-Preis.",
   sp1:"Plattform",sp2:"Intelligenz",sp2v:"On-device",sp3:"Lizenz",sp3v:"Einmalig",sp4:"Netzwerk",sp4v:"Offline-fähig",
   faq_h:"Fragen, beantwortet.",
@@ -945,7 +945,7 @@ const I18N={
   foot_tm:"Plattennamen, Designs und Logos sind Marken der jeweiligen Inhaber. Disky ist unabhängig und steht in keiner Verbindung zu Samsung, LaCie, SanDisk/Western Digital oder einem anderen gezeigten Hersteller und wird von diesen nicht unterstützt oder gesponsert.",
   faq:[
    ["Muss ich meine Platten anstecken, um zu suchen?","Nein — genau das ist der Punkt. Du katalogisierst jede Platte einmal. Danach liegt jeder Dateiname, Ordner und jedes Projekt in Disky und bleibt durchsuchbar, während die Disk ungesteckt in der Schublade liegt. Disky nennt dir die exakte Platte und den exakten Pfad, ohne etwas zu mounten."],
-   ["Wird mein Material irgendwo hochgeladen?","Nie. Disky läuft auf deinem Mac, die Platten sind nur-lesend, und es gibt kein Konto anzulegen. Kein einziges Byte deines Materials wird je hochgeladen — deine Arbeit verlässt die Maschine schlicht nicht."],
+   ["Wird mein Material irgendwo hochgeladen?","Nie. Disky läuft auf deinem Mac und die Platten sind nur-lesend. Dein Konto hält nur deine Lizenz — kein einziges Byte deines Materials wird je hochgeladen. Deine Arbeit verlässt die Maschine schlicht nicht."],
    ["Funktioniert die KI offline?","Ja — mit einer ehrlichen Einschränkung. Das Modell für die Inhalts-Suche lädt sich einmalig herunter, von uns, beim ersten Mal, wenn du es nutzt. Danach läuft es komplett auf deinem Mac, ohne Verbindung, und 0 Byte deines Materials verlassen je das Gerät. Also: ein einmaliger Download zum Einrichten, dann für immer on-device."],
    ["Verändert Disky meine Dateien?","Nein. Disky ist strikt nur-lesend. Es katalogisiert, kartiert und markiert, was du freiräumen könntest — aber es verschiebt, benennt oder löscht nie etwas. Du gibst Platz selbst frei, im Finder. Disky zeigt dir nur die Gigabyte und wartet. Das Einzige, was es je schreibt, ist sein eigener Katalog, auf deinem Mac."],
    ["Wie funktioniert die Inhalts-Suche eigentlich?","Disky liest, was in deinen Clips und Fotos ist — du suchst nach dem, was das Material zeigt. Tippe „unter Wasser“ und es findet jeden Clip mit Wasser, über alle Platten, selbst ungesteckte und falsch benannte. Das Modell läuft on-device."],
