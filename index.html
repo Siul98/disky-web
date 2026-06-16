@@ -408,7 +408,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-awhead{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 .hf-files{position:absolute;inset:0;z-index:12;pointer-events:none}
 .hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:50% 14px}
-.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6))}
+.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6));transition:filter .45s ease}
+.hf-files.lit .hf-ic{filter:drop-shadow(0 5px 11px rgba(0,0,0,.6)) drop-shadow(0 0 11px rgba(110,170,255,.6))}
 .hf-fitem .hf-nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
 .hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
@@ -1390,7 +1391,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     if(p2>0){ hDy=-pan; }   // gescannte SSD bleibt VOLL da (kein Fade, kein Shrink) und scrollt mit der Szene nach oben raus
     hero.style.transform=heroT(g,hDy,hSc);
     hero.style.opacity=Math.max(0,hOp).toFixed(3);
-    hero.style.filter = flash>0.01 ? `brightness(${(1+0.9*flash).toFixed(3)}) drop-shadow(0 0 ${(46*flash).toFixed(0)}px rgba(95,175,255,${(0.95*flash).toFixed(2)}))` : 'none';
+    hero.style.filter = finish>0.01 ? `brightness(${(1+0.5*finish+0.4*flash).toFixed(3)}) drop-shadow(0 0 ${(26*finish+34*flash).toFixed(0)}px rgba(95,175,255,${(0.42*finish+0.7*flash).toFixed(2)}))` : 'none';   // finish bleibt nach dem Scan auf 1 → SSD glowt weiter (flash = zusätzlicher Blitz im Moment des Abschlusses)
     hero.style.zIndex = 11;
     hero.classList.toggle('hf-resting',resting);
     const bx=scan*100, ft=6;
@@ -1404,8 +1405,8 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
       if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
     }
     const dyC=(cyC-innerHeight*0.5).toFixed(0);   // Welle/Bloom auf den SSD-Mittelpunkt schieben
-    bloom.style.opacity=clamp(0.08*lift*(1-pullE) + 0.85*flash).toFixed(3);
-    bloom.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.66+0.12*lift+0.55*flash).toFixed(3)})`;
+    bloom.style.opacity=clamp(0.08*lift*(1-pullE) + 0.42*finish + 0.5*flash).toFixed(3);   // 0.42*finish = bleibender Halo nach dem Scan
+    bloom.style.transform=`translate(-50%,-50%) translateY(${(+dyC-pan).toFixed(0)}px) scale(${(0.66+0.12*lift+0.2*finish+0.45*flash).toFixed(3)})`;   // folgt der SSD beim Hochscrollen (−pan)
     shock.style.opacity=(clamp(finish/0.08)*(1-finish)*0.62*(1-pullE)).toFixed(3);   // Ring erscheint, expandiert nach außen, fadet beim Wachsen
     shock.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.4+waveR/250).toFixed(3)})`;
     head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
@@ -1422,6 +1423,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     if(tour) tour.style.opacity='0';
     // Dateien fliegen NACH UNTEN in den MacBook-Screen (Szene-Koordinaten, dann Kamera-Schwenk -pan oben drauf) und werden aufgesaugt
     const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*0.46+GAP+MAC_DROP;   // MacBook-Screen (tiefer gelandet) liegt in Szene GAP+DROP+0.46h unten
+    filesWrap.classList.toggle('lit', finish>0.4);   // Ordner-Icons glowen nach dem Scan weiter (Klassen-Toggle statt Pro-Frame-Filter → perf-schonend)
     fitems.forEach((el,i)=>{ const f=FILES[i];
       const appear=ease(clamp((scan-emitRank[i]*0.55-0.05)/0.16));
       const flow=easeIO(clamp((p2-i/N*0.05-0.02)/0.5)), fm=flow*flow;
