@@ -353,6 +353,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @keyframes hf-txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 .hf-beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
 #hf-cap1,#hf-cap2{top:19%;font-size:clamp(60px,8.4vw,100px)}   /* „Scan once" & „Remembered forever" gleiche Position + Größe */
+.hf-cap2sub{display:block;margin:.52em auto 0;max-width:min(560px,86vw);font-size:clamp(14.5px,1.7vw,19px);font-weight:500;letter-spacing:-.005em;line-height:1.45;white-space:normal;background:none;-webkit-text-fill-color:rgba(244,247,251,.68);color:rgba(244,247,251,.68);text-shadow:0 2px 10px rgba(0,0,0,.55)}
 .hf-dots{display:inline-flex;align-items:flex-end;gap:.15em;margin-left:.28em;vertical-align:baseline}
 .hf-dots i{width:.15em;height:.15em;border-radius:50%;background:#dbe8f7;display:block;margin-bottom:.2em;opacity:.4;animation:hf-dotp 1.3s ease-in-out infinite}
 .hf-dots i:nth-child(2){animation-delay:.18s}.hf-dots i:nth-child(3){animation-delay:.36s}
@@ -366,7 +367,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-fan:not(.hf-resting) .hf-drv{filter:none}   /* Schatten-Filter nur im Ruhezustand → kein teures Repaint während der Bewegung */
 .hf-t9{position:absolute;left:50%;top:50%;width:520px;z-index:11;pointer-events:none;will-change:transform}
 .hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
-.hf-t9 .hf-dimg{display:block;width:100%;height:auto;border-radius:28px}   /* rundet das X-Ray-Rechteck auf die Plattenform → keine schwarzen Ecken */
+.hf-t9 .hf-dimg{display:block;width:100%;height:auto;border-radius:56px}   /* rundet das X-Ray-Rechteck auf die Plattenform → keine schwarzen Ecken */
 .hf-t9 .hf-front{filter:drop-shadow(0 34px 56px rgba(0,0,0,.7));will-change:mask}
 .hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .hf-scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
@@ -758,7 +759,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       </div>
       <div class="hf-files" id="hf-files"></div>
       <div class="hf-beatcap" id="hf-cap1"><span data-t="hero_cap1">Scan once</span><span class="hf-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
-      <div class="hf-beatcap" id="hf-cap2" data-t="hero_cap2">Remembered forever.</div>
+      <div class="hf-beatcap" id="hf-cap2"><span data-t="hero_cap2">Remembered forever.</span><span class="hf-cap2sub" data-t="hero_cap2sub">Type a project — and see exactly which drive each file lives on, even unplugged.</span></div>
       <div class="hf-scrollhint" id="hf-hint" data-t="hero_scroll">Scroll to watch it scan ↓</div>
     </div>
   </div>
@@ -950,7 +951,7 @@ const I18N={
   meta_title:"Disky — See inside sealed drives.",
   meta_desc:"Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.",
   nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",nav_pricing:"Pricing",nav_dl:"Download",
-  hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",
+  hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",hero_cap2sub:"Type a project — and see exactly which drive each file lives on, even unplugged.",
   hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
   cta_dl:"Download for Mac",cta_join:"Get early access →",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
@@ -1013,7 +1014,7 @@ const I18N={
   meta_title:"Disky — Schau in versiegelte Platten.",
   meta_desc:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt. Native Mac-App. 100% lokal.",
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",nav_pricing:"Preise",nav_dl:"Laden",
-  hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",
+  hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",hero_cap2sub:"Tipp ein Projekt ein — und sieh genau, auf welcher Platte jede Datei liegt. Auch abgesteckt.",
   hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
   cta_dl:"Für Mac herunterladen",cta_join:"Frühzugang sichern →",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
