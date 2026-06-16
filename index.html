@@ -366,7 +366,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-fan:not(.hf-resting) .hf-drv{filter:none}   /* Schatten-Filter nur im Ruhezustand → kein teures Repaint während der Bewegung */
 .hf-t9{position:absolute;left:50%;top:50%;width:520px;z-index:11;pointer-events:none;will-change:transform}
 .hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
-.hf-t9 .hf-dimg{display:block;width:100%;height:auto}
+.hf-t9 .hf-dimg{display:block;width:100%;height:auto;border-radius:28px}   /* rundet das X-Ray-Rechteck auf die Plattenform → keine schwarzen Ecken */
 .hf-t9 .hf-front{filter:drop-shadow(0 34px 56px rgba(0,0,0,.7));will-change:mask}
 .hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .hf-scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
