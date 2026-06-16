@@ -346,6 +346,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);-webkit-background-clip:text;background-clip:text;transform:translateZ(0);filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));clip-path:inset(0 100% 0 0);animation:hf-txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
 .hf-sub{margin:28px auto 0;max-width:600px;font-size:clamp(16px,1.7vw,19px);line-height:1.5;color:var(--mut);opacity:0;animation:hf-ebIn 1.2s .9s ease both}
 .hf-cta{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:32px;opacity:0;animation:hf-ebIn 1.2s 1.05s ease both}
+.hf-dl{padding:17px 40px;font-size:16.5px}
 .hf-tl{margin-top:18px;font-size:12.5px;color:var(--mut2);opacity:0;animation:hf-ebIn 1.2s 1.2s ease both}
 @keyframes hf-ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
@@ -725,10 +726,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <h1><span class="hf-t3d" data-t="hero_l1">Find anything.</span><span class="hf-silver" data-t="hero_l2">Connect nothing.</span></h1>
         <p class="hf-sub" data-t="hero_sub">Disky remembers every drive you own — search by name or what's inside, reclaim space, catch duplicates, see everywhere you've shot. All on your Mac, nothing plugged in.</p>
         <div class="hf-cta">
-          <a class="btn btn-primary" href="#download" data-t="cta_join">Get early access →</a>
-          <a class="btn btn-ghost" href="#features" data-t="cta_how">See it find a file in seconds ›</a>
+          <a class="btn btn-primary hf-dl" href="#download" data-t="cta_dl">Download for Mac</a>
         </div>
-        <span class="soon hf-soon"><i aria-hidden="true"></i><span data-t="soon">Coming soon for Mac</span></span>
         <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
       </div>
       <div class="hf-stage" id="hf-stage"><div class="hf-fan" id="hf-fan">
@@ -967,7 +966,7 @@ const I18N={
   nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",nav_pricing:"Pricing",nav_dl:"Download",
   hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",
   hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
-  cta_dl:"Download for Mac — free to start",cta_join:"Get early access →",cta_how:"See it find a file in seconds ›",
+  cta_dl:"Download for Mac",cta_join:"Get early access →",cta_how:"See it find a file in seconds ›",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
   trustline:"Free to start · macOS, Apple Silicon · Read-only · 100% local",
   heroproof:"Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.",
@@ -1030,7 +1029,7 @@ const I18N={
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",nav_pricing:"Preise",nav_dl:"Laden",
   hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",
   hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
-  cta_dl:"Für Mac laden — kostenlos starten",cta_join:"Frühzugang sichern →",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
+  cta_dl:"Für Mac herunterladen",cta_join:"Frühzugang sichern →",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
   trustline:"Kostenlos starten · macOS, Apple Silicon · Nur-Lesen · 100% lokal",
   heroproof:"1 Mio.+ Dateien über 22+ Platten in Sekunden durchsuchen — jede Disk in der Schublade.",
