@@ -352,8 +352,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes hf-txtWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 .hf-beatcap{position:absolute;left:50%;top:8%;transform:translateX(-50%);z-index:14;pointer-events:none;text-align:center;white-space:nowrap;font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,4.2vw,50px);opacity:0;will-change:opacity,transform;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 8px 24px rgba(120,160,220,.25)) drop-shadow(0 2px 6px rgba(0,0,0,.5))}
-#hf-cap1,#hf-cap2{top:19%;font-size:clamp(60px,8.4vw,100px)}   /* „Scan once" & „Remembered forever" gleiche Position + Größe */
-.hf-cap2sub{display:block;margin:.52em auto 0;max-width:min(560px,86vw);font-size:clamp(14.5px,1.7vw,19px);font-weight:500;letter-spacing:-.005em;line-height:1.45;white-space:normal;background:none;-webkit-text-fill-color:rgba(244,247,251,.68);color:rgba(244,247,251,.68);text-shadow:0 2px 10px rgba(0,0,0,.55)}
+#hf-cap1{top:19%;font-size:clamp(60px,8.4vw,100px)}            /* „Scan once" — voller Beat */
+#hf-cap2{top:19%;font-size:clamp(46px,6.2vw,80px)}            /* „Remembered forever." — etwas kleiner, weil Sub drunter → Block passt mit Luft übers MacBook */
+.hf-cap2sub{display:block;margin:.5em auto 0;max-width:min(600px,88vw);font-size:clamp(14px,1.5vw,17px);font-weight:500;letter-spacing:-.005em;line-height:1.4;white-space:normal;background:none;-webkit-text-fill-color:rgba(244,247,251,.68);color:rgba(244,247,251,.68);text-shadow:0 2px 10px rgba(0,0,0,.55)}
 .hf-dots{display:inline-flex;align-items:flex-end;gap:.15em;margin-left:.28em;vertical-align:baseline}
 .hf-dots i{width:.15em;height:.15em;border-radius:50%;background:#dbe8f7;display:block;margin-bottom:.2em;opacity:.4;animation:hf-dotp 1.3s ease-in-out infinite}
 .hf-dots i:nth-child(2){animation-delay:.18s}.hf-dots i:nth-child(3){animation-delay:.36s}
@@ -420,7 +421,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
 .hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
 /* Hero MacBook — catches the files, then the app reacts (real screenshot, no iframe → no boot lag) */
-.hf-mac{position:absolute;left:50%;top:50%;z-index:6;width:min(1160px,86vw);opacity:0;
+.hf-mac{position:absolute;left:50%;top:50%;z-index:6;width:min(1160px,86vw,90vh);opacity:0;   /* 90vh-Cap: MacBook darf nie die ganze Viewport-Höhe fressen → Text behält oben Luft */
   transform:translate(-50%,-50%);pointer-events:none;will-change:transform,opacity;
   filter:drop-shadow(0 44px 70px rgba(0,0,0,.6))}
 .hf-mlid{position:relative;padding:10px 10px 11px;border-radius:17px 17px 6px 6px;
@@ -1373,7 +1374,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const pull=clamp(p2/0.82), pullE=pull*pull;
     const resting=p<0.03;
     const GAP=innerHeight*0.66;   // Abstand SSD↔MacBook bewusst <1 Viewport, damit keine tote Strecke in der Mitte klafft
-    const MAC_DROP=innerHeight*0.055;   // großes MacBook landet etwas unter der Mitte → Platz für den Text oben
+    const MAC_DROP=innerHeight*0.09;    // MacBook landet klar unter der Mitte → sicherer Abstand zum Text oben (auch bei kurzen Viewports), Base bleibt im Bild
     const react=Math.sin(clamp((p2-0.24)/0.52)*Math.PI);   // Puls synchron zu den einströmenden Ordnern (Text + MacBook-Screen reagieren)
     const sd=clamp(p2), pan=sd*GAP;   // ECHTE Runter-Scroll-Fahrt: Szene fährt linear (1:1 zum Scroll) um GAP hoch (Kamera nach unten)
     cards.forEach(c=>{
@@ -1447,7 +1448,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const cap1Op=clamp((p1-0.4)/0.15);   // „Scan once" erscheint im Scan und scrollt dann mit der Szene hoch raus (KEIN Fade)
     cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(-pan).toFixed(0)}px)`;
     // „Remembered forever" — Apple-Style: blurt + fadet + steigt rein; landet höher (Abstand zum großen MacBook); reagiert auf die einströmenden Ordner
-    const cap2Land=-innerHeight*0.145;                       // Landeposition (Text-Oberkante hoch über das MacBook)
+    const cap2Land=-innerHeight*0.15;                        // Landeposition (Text-Oberkante hoch über das MacBook)
     const rev=ease(clamp((p2-0.10)/0.40));                   // Apple-Reveal-Fortschritt
     const cap2TY=cap2Land + (GAP-pan);                       // steigt von unten hoch und landet bei cap2Land
     cap2.style.opacity=rev.toFixed(3);
