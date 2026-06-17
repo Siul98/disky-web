@@ -1151,14 +1151,19 @@ function decorateAnything(){
   const el=document.querySelector('.hf-t3d'); if(!el) return;
   const WORD=(LANG==='de')?'Alles':'anything';
   const txt=el.textContent, i=txt.indexOf(WORD); if(i<0) return;
+  let wend=i+WORD.length; if('.!?,'.indexOf(txt[wend])>=0) wend++;   // direkt folgenden Punkt/Satzzeichen mit in die Box nehmen
   const PTR='<svg class="ph-ptr" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor"><path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z"/></svg>';
-  el.innerHTML=txt.slice(0,i)+'<span class="ph-wrap">'+txt.slice(i,i+WORD.length)
-    +'<span class="ph-fx" aria-hidden="true"><span class="ph-rect"></span>'+PTR+'</span></span>'+txt.slice(i+WORD.length);
+  el.innerHTML=txt.slice(0,i)+'<span class="ph-wrap">'+txt.slice(i,wend)
+    +'<span class="ph-fx" aria-hidden="true"><span class="ph-rect"></span>'+PTR+'</span></span>'+txt.slice(wend);
   const rect=el.querySelector('.ph-rect'), ptr=el.querySelector('.ph-ptr'), wrap=el.querySelector('.ph-wrap');
   if(!rect||!ptr||!wrap) return;
-  const PADX=8,PADY=5, w=wrap.offsetWidth, h=wrap.offsetHeight;   // offsetWidth erzwingt Layout → synchron messbar, kein rAF nötig
+  const w=wrap.offsetWidth, h=wrap.offsetHeight;   // offsetWidth erzwingt Layout → synchron messbar, kein rAF nötig
   if(!w||!h) return;
-  const fw=w+PADX*2, fh=h+PADY*2, px=w+PADX+2, py=h+PADY+2;
+  // line-height .96 der Headline → Zeilenbox enger als die Glyphen; Padding proportional zur Schriftgröße, UNTEN mehr → Unterlängen (y, g) + Punkt voll umschlossen
+  const F=parseFloat(getComputedStyle(wrap).fontSize)||60;
+  const PADX=Math.round(F*0.10), PADT=Math.round(F*0.07), PADB=Math.round(F*0.20);
+  const fw=w+PADX*2, fh=h+PADT+PADB, px=w+PADX+2, py=h+PADB+2;
+  rect.style.left=(-PADX)+'px'; rect.style.top=(-PADT)+'px';
   // Animiert IMMER (wie 21st-dev): bewusst NICHT an prefers-reduced-motion gekoppelt — sanfte, einmalige Zeichnung (~1s).
   const D=_phDone?250:600; _phDone=true;   // erstes Laden: kurz Text antippen lassen; bei Sprachwechsel schneller
   rect.style.opacity='1';
