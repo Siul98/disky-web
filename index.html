@@ -1155,16 +1155,15 @@ function decorateAnything(){
   el.innerHTML=txt.slice(0,i)+'<span class="ph-wrap">'+txt.slice(i,i+WORD.length)
     +'<span class="ph-fx" aria-hidden="true"><span class="ph-rect"></span>'+PTR+'</span></span>'+txt.slice(i+WORD.length);
   const rect=el.querySelector('.ph-rect'), ptr=el.querySelector('.ph-ptr'), wrap=el.querySelector('.ph-wrap');
-  requestAnimationFrame(()=>{ if(!rect||!ptr||!wrap) return;
-    const PADX=8,PADY=5, w=wrap.offsetWidth, h=wrap.offsetHeight, fw=w+PADX*2, fh=h+PADY*2, px=w+PADX+2, py=h+PADY+2;
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){
-      rect.style.cssText+=';width:'+fw+'px;height:'+fh+'px;opacity:1';
-      ptr.style.cssText+=';opacity:1;transform:translate('+px+'px,'+py+'px) rotate(-90deg)'; return; }
-    const D=_phDone?250:1150;   // erstes Laden: Text-Reveal abwarten; bei Sprachwechsel schneller
-    rect.style.opacity='1'; _phDone=true;
-    rect.animate([{width:'0px',height:'0px'},{width:fw+'px',height:fh+'px'}],{duration:900,delay:D,easing:'cubic-bezier(.65,0,.35,1)',fill:'forwards'});
-    ptr.animate([{opacity:0,transform:'translate(0,0) rotate(-90deg)'},{opacity:1,offset:.12},{opacity:1,transform:'translate('+px+'px,'+py+'px) rotate(-90deg)'}],{duration:1000,delay:D,easing:'cubic-bezier(.65,0,.35,1)',fill:'forwards'});
-  });
+  if(!rect||!ptr||!wrap) return;
+  const PADX=8,PADY=5, w=wrap.offsetWidth, h=wrap.offsetHeight;   // offsetWidth erzwingt Layout → synchron messbar, kein rAF nötig
+  if(!w||!h) return;
+  const fw=w+PADX*2, fh=h+PADY*2, px=w+PADX+2, py=h+PADY+2;
+  // Animiert IMMER (wie 21st-dev): bewusst NICHT an prefers-reduced-motion gekoppelt — sanfte, einmalige Zeichnung (~1s).
+  const D=_phDone?250:600; _phDone=true;   // erstes Laden: kurz Text antippen lassen; bei Sprachwechsel schneller
+  rect.style.opacity='1';
+  rect.animate([{width:'0px',height:'0px'},{width:fw+'px',height:fh+'px'}],{duration:1000,delay:D,easing:'ease-in-out',fill:'both'});
+  ptr.animate([{opacity:0,transform:'translate(0,0) rotate(-90deg)'},{opacity:1,offset:.1},{opacity:1,transform:'translate('+px+'px,'+py+'px) rotate(-90deg)'}],{duration:1000,delay:D,easing:'ease-in-out',fill:'both'});
 }
 function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
