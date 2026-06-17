@@ -285,6 +285,22 @@ a{color:inherit;text-decoration:none}
 /* faq */
 .faq h2{font-size:clamp(28px,3.4vw,40px);text-align:center;margin-bottom:46px}
 .faqlist{max-width:760px;margin:0 auto}
+/* Testimonials („Wall of love") — gated über TESTI.READY, bis echte Zitate da sind */
+.testi .eyebrow{display:block;margin-bottom:16px;text-align:center}
+.testi-title{text-align:center;max-width:20ch;margin:0 auto 56px;font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.06}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1080px;margin:0 auto}
+@media(max-width:900px){.testi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.testi-grid{grid-template-columns:1fr}}
+.testi-card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid var(--line);border-radius:16px;padding:24px 24px 22px;display:flex;flex-direction:column;opacity:0;animation:testiIn .6s cubic-bezier(.16,1,.3,1) both}
+.testi-card:nth-child(2){animation-delay:.06s}.testi-card:nth-child(3){animation-delay:.12s}.testi-card:nth-child(4){animation-delay:.18s}.testi-card:nth-child(5){animation-delay:.24s}.testi-card:nth-child(6){animation-delay:.3s}
+@keyframes testiIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.testi-q{margin:0;color:var(--ink);font-size:15.5px;line-height:1.58;letter-spacing:-.01em;flex:1}
+.testi-by{display:flex;align-items:center;gap:12px;margin-top:20px}
+.testi-av{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px rgba(74,158,255,.28)}
+.testi-meta{display:flex;flex-direction:column;gap:2px;min-width:0}
+.testi-name{font-weight:600;color:var(--ink);font-size:14px;line-height:1.2}
+.testi-role{color:var(--mut2);font-size:12.5px;line-height:1.2}
+@media(prefers-reduced-motion:reduce){.testi-card{animation:none;opacity:1}}
 .qa{border-top:1px solid var(--line);padding:4px 0}
 .qa:last-child{border-bottom:1px solid var(--line)}
 .qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;
@@ -921,6 +937,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="faqlist" id="faqlist"></div>
 </div></section>
 
+<!-- TESTIMONIALS — versteckt bis echte Zitate da sind: in TESTI.READY=true setzen (keine Fake-Stimmen live) -->
+<section class="sec bord testi" id="loved" hidden><div class="wrap">
+  <span class="eyebrow rev" data-t="testi_eb">Loved by people with too many drives</span>
+  <h2 class="testi-title rev" data-t="testi_h">People who finally stopped digging.</h2>
+  <div class="testi-grid" id="testiGrid"></div>
+</div></section>
+
 <!-- CLOSING -->
 <!-- CO-BUILD — invite feature requests -->
 <section class="sec bord cobuild" id="cobuild"><div class="wrap">
@@ -1006,6 +1029,16 @@ const I18N={
   pr_h:"Free to start. Yours to keep.",pr_sub:"A one-time Mac app — not a subscription, no cloud lock-in. Catalog your first drives free, then own it for good. Pricing is announced at launch — early users keep the launch price.",
   sp1:"Platform",sp2:"Intelligence",sp2v:"On-device",sp3:"License",sp3v:"One-time",sp4:"Network",sp4v:"Works offline",
   faq_h:"Questions, answered.",
+  testi_eb:"Loved by people with too many drives",testi_h:"People who finally stopped digging.",
+  // PLATZHALTER — durch ECHTE Zitate ersetzen, dann TESTI.READY=true setzen. Keine Fake-Stimmen live.
+  testi:[
+   {q:"Found a wedding from 2019 in about four seconds — without getting up to find the drive. That used to be my whole afternoon.",n:"Lena Brandt",r:"Wedding filmmaker"},
+   {q:"I keep 30-odd drives in a drawer. Disky is the first thing that actually knows what's on every one of them.",n:"Marco Tillmann",r:"Documentary editor"},
+   {q:"Typed “drone sunset” and it pulled the exact clip off a drive that had been unplugged for a year. Slightly magic.",n:"Priya Nair",r:"DP & colorist"},
+   {q:"It flagged 200+ GB of duplicate masters I'd been paying to store twice. Paid for itself before lunch.",n:"Tom Berger",r:"Studio owner"},
+   {q:"Read-only, exactly as promised — it never touched a single file. That's why I trust it on client work.",n:"Sofia Almeida",r:"Commercial photographer"},
+   {q:"The storage map alone talked me out of buying another SSD this quarter.",n:"Jonas Velden",r:"Motion designer"}
+  ],
   end_h:"Stop digging through the drawer.",end_sub:"One catalog of every drive you own — searchable in seconds, on your Mac, while the drawer stays shut. Catalog once. Never dig again.",
   foot_legal:"Legal",foot_contact:"Contact",
   cb_eb:"Built with you",cb_h:"Let's build your ultimate data manager.",cb_sub:"That's the goal — and it's just getting started. Any feature you wish existed? Hit us up, and we'll make it happen.",cb_cta:"Suggest a feature →",cb_note:"Real people read every message — the best ideas ship.",
@@ -1075,6 +1108,16 @@ const I18N={
   pr_h:"Kostenlos starten. Dir gehörend.",pr_sub:"Eine einmalige Mac-App — kein Abo, kein Cloud-Zwang. Katalogisiere deine ersten Platten gratis, dann gehört sie für immer dir. Den Preis nennen wir zum Launch — Early-User behalten den Launch-Preis.",
   sp1:"Plattform",sp2:"Intelligenz",sp2v:"On-device",sp3:"Lizenz",sp3v:"Einmalig",sp4:"Netzwerk",sp4v:"Offline-fähig",
   faq_h:"Fragen, beantwortet.",
+  testi_eb:"Geliebt von Leuten mit zu vielen Platten",testi_h:"Leute, die aufgehört haben zu wühlen.",
+  // PLATZHALTER — durch ECHTE Zitate ersetzen, dann TESTI.READY=true setzen. Keine Fake-Stimmen live.
+  testi:[
+   {q:"Eine Hochzeit von 2019 in vier Sekunden gefunden — ohne aufzustehen und die Platte zu suchen. Früher war das mein halber Nachmittag.",n:"Lena Brandt",r:"Hochzeitsfilmerin"},
+   {q:"Ich hab gut 30 Platten in einer Schublade. Disky ist das Erste, das wirklich weiß, was auf jeder einzelnen liegt.",n:"Marco Tillmann",r:"Dokumentar-Editor"},
+   {q:"„Drohne Sonnenuntergang“ getippt — und es holte den exakten Clip von einer Platte, die ein Jahr abgesteckt war. Schon fast magisch.",n:"Priya Nair",r:"DP & Coloristin"},
+   {q:"Es hat über 200 GB doppelte Master gefunden, die ich doppelt gespeichert (und bezahlt) hatte. Hat sich vor dem Mittag amortisiert.",n:"Tom Berger",r:"Studio-Inhaber"},
+   {q:"Nur-Lesen, genau wie versprochen — keine einzige Datei angefasst. Deshalb vertrau ich ihm bei Kundenprojekten.",n:"Sofia Almeida",r:"Werbefotografin"},
+   {q:"Allein die Speicher-Karte hat mir dieses Quartal eine weitere SSD erspart.",n:"Jonas Velden",r:"Motion Designer"}
+  ],
   end_h:"Hör auf, die Schublade zu durchwühlen.",end_sub:"Ein Katalog für jede Platte, die du besitzt — in Sekunden durchsuchbar, auf deinem Mac, während die Schublade zu bleibt. Einmal katalogisieren. Nie wieder wühlen.",
   foot_legal:"Impressum",foot_contact:"Kontakt",
   cb_eb:"Mit dir gebaut",cb_h:"Lass uns deinen ultimativen Daten-Manager bauen.",cb_sub:"Das ist das Ziel — und es fängt gerade erst an. Du wünschst dir ein Feature? Schreib uns, und wir machen's möglich.",cb_cta:"Feature vorschlagen →",cb_note:"Echte Menschen lesen jede Nachricht — die besten Ideen werden gebaut.",
@@ -1147,6 +1190,13 @@ function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval
 /* PointerHighlight: Box ums Schlüsselwort der Headline (en „anything" / de „Alles") + blauer Cursor in die Ecke.
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
 let _phDone=false;
+/* Testimonials-Sektion: erscheint erst, wenn ECHTE Zitate da sind → READY:true setzen (sonst keine Fake-Stimmen live) */
+const TESTI={READY:false};
+function renderTesti(){ const el=document.getElementById('testiGrid'); if(!el)return;
+  const list=(I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[];
+  el.innerHTML=list.map(t=>{ const ini=String(t.n||'').trim().split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase();
+    return `<figure class="testi-card"><blockquote class="testi-q">${t.q}</blockquote><figcaption class="testi-by"><span class="testi-av" aria-hidden="true">${ini}</span><span class="testi-meta"><span class="testi-name">${t.n}</span><span class="testi-role">${t.r}</span></span></figcaption></figure>`;
+  }).join(''); }
 function decorateAnything(){
   const el=document.querySelector('.hf-t3d'); if(!el) return;
   const WORD=(LANG==='de')?'Alles':'anything';
@@ -1176,7 +1226,8 @@ function applyLang(l){
   document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
   document.querySelectorAll('[data-tp]').forEach(e=>{ e.setAttribute('placeholder', tt(e.getAttribute('data-tp'))); });
   decorateAnything();
-  renderCaps(); renderFAQ(); renderReel(); if(window.__hfRefreshTour)window.__hfRefreshTour();
+  renderCaps(); renderFAQ(); renderTesti(); renderReel(); if(window.__hfRefreshTour)window.__hfRefreshTour();
+  { const lv=document.getElementById('loved'); if(lv) lv.hidden=!TESTI.READY; }   // Sektion nur zeigen, wenn echte Zitate freigeschaltet
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
