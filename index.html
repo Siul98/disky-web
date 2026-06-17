@@ -6,6 +6,11 @@
 <title>Disky — See inside sealed drives.</title>
 <meta name="description" content="Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.">
 <link rel="icon" href="favicon.svg">
+<!-- LCP: First-Paint-Hero-Platten sofort laden (vor dem HTML-Parse-Ende) -->
+<link rel="preload" as="image" href="assets/drives/lacie-rugged.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/drives/gdrive.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/drives/t5.webp">
+<link rel="preload" as="image" href="assets/drives/lacie-silver.webp">
 <link rel="canonical" href="https://disky.app/">
 <meta property="og:title" content="Disky — See inside sealed drives.">
 <meta property="og:description" content="Index each drive once. Search all of them — by name, project, or what's inside the footage — every disk unplugged in the drawer. 100% local, read-only, no subscription.">
@@ -766,16 +771,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
       </div>
       <div class="hf-stage" id="hf-stage"><div class="hf-fan" id="hf-fan">
-        <div class="hf-fcard" data-i="-2"><img class="hf-drv" src="assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async"></div>
-        <div class="hf-fcard" data-i="-1"><img class="hf-drv" src="assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async"></div>
-        <div class="hf-fcard" data-i="1"><img class="hf-drv" src="assets/drives/t5.webp" alt="Samsung T5" decoding="async"></div>
-        <div class="hf-fcard" data-i="2"><img class="hf-drv" src="assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async"></div>
+        <div class="hf-fcard" data-i="-2"><img class="hf-drv" src="assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="-1"><img class="hf-drv" src="assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="1"><img class="hf-drv" src="assets/drives/t5.webp" alt="Samsung T5" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="2"><img class="hf-drv" src="assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async" fetchpriority="high"></div>
       </div></div>
       <div class="hf-bloom" id="hf-bloom"></div>
       <div class="hf-shock" id="hf-shock"></div>
       <div class="hf-t9" id="hf-t9">
         <div class="hf-t9glow" aria-hidden="true"></div>
-        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp?v=3" alt="Samsung T9" decoding="async">
+        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp?v=3" alt="Samsung T9" decoding="async" fetchpriority="high">
         <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp?v=3" alt="" decoding="async">
         <div class="hf-scanline" id="hf-scanline"><i class="hf-bm"></i><div class="hf-warp"></div></div>
       </div>
@@ -783,7 +788,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <div class="hf-mlid">
           <span class="hf-mcam" aria-hidden="true"></span>
           <div class="hf-mscr">
-            <img class="hf-shot" data-i="0" data-src="assets/screen-overview.webp" alt="Disky — overview" decoding="async">
+            <img class="hf-shot" data-i="0" data-src="assets/screen-overview.webp" alt="Disky — overview" decoding="async" fetchpriority="low">
             <iframe class="hf-liveapp" id="hf-liveapp" title="Disky — live demo" tabindex="-1" aria-hidden="true" scrolling="no" loading="lazy"></iframe>
             <div class="hf-mglow" aria-hidden="true"></div>
             <div class="hf-mswipe" aria-hidden="true"></div>
@@ -802,7 +807,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 <!-- HOW IT WORKS — direkt unter dem Hero: der Unplugged-Katalog-Mechanismus mit der Kabel-Animation -->
 <section class="sec bord how" id="how">
   <div class="how-wire" id="howWire" aria-hidden="true">
-    <div class="how-drive" id="howDrive"><img src="assets/drives/lacie-rugged.webp" alt="" decoding="async"><span class="how-led" id="howLed"></span></div>
+    <div class="how-drive" id="howDrive"><img src="assets/drives/lacie-rugged.webp" alt="" decoding="async" loading="lazy"><span class="how-led" id="howLed"></span></div>
   </div>
   <div class="wrap">
   <div class="feat2-intro">
@@ -983,8 +988,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <span class="sp"></span>
   <div class="lang"><button data-lang="en" class="on">EN</button><button data-lang="de">DE</button></div>
 </div><div class="wrap"><p class="tm" data-t="foot_tm"></p></div></footer>
-
-<script src="_demoseed.js"></script>
 <script>
 /* ─────────── i18n ─────────── */
 const I18N={
