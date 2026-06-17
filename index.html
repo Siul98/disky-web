@@ -1398,9 +1398,10 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   const starCv=$('hf-stars'), starCtx=starCv.getContext('2d');
   let stars3=[],rotY=0,rotX=0,FOCAL=800,starsOn=true,running=false;
   function sizeStars(){ starCv.width=innerWidth; starCv.height=innerHeight; FOCAL=Math.max(640,innerHeight*0.92);
-    const n=Math.min(820,Math.round(innerWidth*innerHeight/2700)); stars3=[];
+    const n=Math.min(520,Math.round(innerWidth*innerHeight/4200)); stars3=[];   // PERF: weniger Sterne → günstigere Per-Frame-Projektion (kaum sichtbarer Unterschied)
     for(let i=0;i<n;i++) stars3.push({x:(Math.random()-0.5)*2000,y:(Math.random()-0.5)*2000,z:(Math.random()-0.5)*2000}); }
   function frame(){ if(!starsOn){running=false;return;}
+    if(scrolling){ requestAnimationFrame(frame); return; }   // PERF: während aktivem Scroll KEIN Canvas-Render (Sterne rotieren eh kaum) → ganzes Frame-Budget fürs Scroll-Tick
     rotY+=0.0001; rotX+=0.00005;
     const cyA=Math.cos(rotY),syA=Math.sin(rotY),cxA=Math.cos(rotX),sxA=Math.sin(rotX);
     const w=starCv.width,h=starCv.height,ox=w/2,oy=h/2;
@@ -1582,8 +1583,8 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
   let _settleT=0;
   function settleLive(){ scrolling=false; updateLive(); if(targetP>0.72) triggerSearch(); }   // ~200ms nach dem letzten Scroll: iframe-Loop wieder an + (am MacBook) Deep Search tippen — rAF-unabhängig, robust
-  function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.1; apply(curP); requestAnimationFrame(tick); }
-  addEventListener('scroll',()=>{ readTarget(); if(!scrolling){ scrolling=true; updateLive(); } clearTimeout(_settleT); _settleT=setTimeout(settleLive,200); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
+  function tick(){ readTarget(); const d=targetP-curP; if(Math.abs(d)<0.0008){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.16; apply(curP); requestAnimationFrame(tick); }   // readTarget 1×/Frame statt pro Scroll-Event (kein Layout-Thrash); 0.16 → fasst schneller nach (mithalten unter Druck)
+  addEventListener('scroll',()=>{ if(!scrolling){ scrolling=true; updateLive(); } clearTimeout(_settleT); _settleT=setTimeout(settleLive,200); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
   addEventListener('resize',()=>{ dockBox=null; sizeStars(); layout(); readTarget(); apply(curP); sizeLive(); },{passive:true});
   layout(); readTarget(); curP=targetP; apply(curP);
 })();
