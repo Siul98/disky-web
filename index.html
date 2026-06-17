@@ -1418,12 +1418,13 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   }
   function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
   sizeStars();
-  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; rail.classList.toggle('hf-inview',e.isIntersecting); liveMsg({diskyVis:e.isIntersecting}); if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);   // iframe-App pausieren, wenn der Hero aus dem Bild ist
+  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; rail.classList.toggle('hf-inview',e.isIntersecting); updateLive(); if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);   // iframe-App pausieren, wenn der Hero aus dem Bild ist (oder aktiv gescrollt wird)
   // ECHTE App live im MacBook-Screen (screen-app.html) — lazy geladen, damit der Seiten-Boot nicht blockiert
   const liveFrame=mac.querySelector('.hf-liveapp'), mscr=mac.querySelector('.hf-mscr');
-  let liveReady=false, searchSent=false;
+  let liveReady=false, searchSent=false, scrolling=false, liveVis=null;
   function sizeLive(){ if(!liveFrame||!mscr) return; const w=mscr.getBoundingClientRect().width; if(w) liveFrame.style.setProperty('--liveS',(w/1320).toFixed(4)); }   // 1320er-Build auf die Screen-Breite skalieren
   function liveMsg(m){ try{ liveFrame.contentWindow.postMessage(m,'*'); }catch(_){} }
+  function updateLive(){ const v = starsOn && !scrolling; if(v!==liveVis){ liveVis=v; liveMsg({diskyVis:v}); } }   // iframe-Animations-Loop nur laufen lassen, wenn sichtbar UND nicht aktiv gescrollt → keine Main-Thread-Contention im kritischen Scroll-Fenster
   function triggerSearch(){ if(searchSent||!liveReady) return; searchSent=true; liveMsg({diskyDemo:'search', q:'Nordsee', lens:'all'}); }   // beim Landen: Deep Search öffnen + Projekt live eintippen → zeigt die Platte
   function loadLive(){ if(!liveFrame||liveFrame.dataset.loaded) return;
     if(matchMedia('(max-width:768px)').matches){ liveFrame.dataset.loaded='skip'; return; }   // Mobile: Live-iframe nicht laden — der Poster-Screenshot zeigt sich (spart ~370KB, bessere LCP)
@@ -1495,7 +1496,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     if(p2>0){ hDy=-pan; }   // gescannte SSD bleibt VOLL da (kein Fade, kein Shrink) und scrollt mit der Szene nach oben raus
     hero.style.transform=heroT(g,hDy,hSc);
     hero.style.opacity=Math.max(0,hOp).toFixed(3);
-    wr(hero,'filter', finish>0.01 ? `brightness(${(1+0.5*finish+0.4*flash).toFixed(3)}) drop-shadow(0 0 ${(26*finish+34*flash).toFixed(0)}px rgba(95,175,255,${(0.42*finish+0.7*flash).toFixed(2)}))` : 'none');   // finish bleibt nach dem Scan auf 1 → SSD glowt weiter; wr() spart Re-Writes wenn statisch
+    wr(hero,'filter', finish>0.01 ? `brightness(${(1+0.45*finish+0.4*flash).toFixed(3)})` : 'none');   // PERF: kein per-frame drop-shadow-Blur mehr (rasterte die ~520px-SSD jeden Frame neu) — der blaue Halo kommt vom bloom-Element + .hf-t9glow-Puls (beide nur Opacity/Transform = Compositor)
     hero.classList.toggle('lit', finish>0.5);   // nach dem Scan: lebendiger Puls-Glow (CSS-Animation, pausiert wenn Hero außer Sicht)
     wr(hero,'zIndex', 11);
     hero.classList.toggle('hf-resting',resting);
@@ -1504,8 +1505,8 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     else if(scan>=0.985){ xray.style.opacity=1; wr(xray,'webkitMaskImage','none'); wr(xray,'maskImage','none'); front.style.opacity=0; scanline.classList.remove('hf-on','hf-appear'); }
     else {
       xray.style.opacity=1; front.style.opacity=1;
-      xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-ft).toFixed(2)}%,transparent ${(bx+ft).toFixed(2)}%)`;
-      front.style.webkitMaskImage=front.style.maskImage=`linear-gradient(to right,transparent ${(bx-ft).toFixed(2)}%,#000 ${(bx+ft).toFixed(2)}%)`;
+      const xm=`linear-gradient(to right,#000 ${(bx-ft).toFixed(1)}%,transparent ${(bx+ft).toFixed(1)}%)`; wr(xray,'webkitMaskImage',xm); wr(xray,'maskImage',xm);
+      const fmask=`linear-gradient(to right,transparent ${(bx-ft).toFixed(1)}%,#000 ${(bx+ft).toFixed(1)}%)`; wr(front,'webkitMaskImage',fmask); wr(front,'maskImage',fmask);   // wr()+1 Dezimale → weniger redundante Mask-Re-Raster im Scan
       scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('hf-on');
       if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
     }
@@ -1520,7 +1521,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
     const macTY = GAP - pan + MAC_DROP;   // wartet GAP+DROP tiefer → landet bei DROP (etwas unter Mitte)
     mac.style.opacity = easeIO(clamp(p2/0.14)).toFixed(3);   // sanft einfaden während es hochsteigt (kein hartes Aufploppen)
-    if(p2>0.45) triggerSearch();   // beim Landen: Live-App öffnet Deep Search und tippt das Projekt ein
+    // triggerSearch NICHT mehr mitten im Scroll feuern (Main-Thread-Contention mit der iframe-App) → erst beim Settle, siehe tick()/settleLive()
     mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
     macSwipe.style.opacity='0'; macGlow.style.opacity=(0.5*react).toFixed(3);   // Screen leuchtet auf, während die Ordner reinströmen (reagiert)
     shots[0].style.opacity='1';                               // Overview-Screen ist von Anfang an da
@@ -1548,7 +1549,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const cap2TY=cap2Land + (GAP-pan);                       // steigt von unten hoch und landet bei cap2Land
     cap2.style.opacity=rev.toFixed(3);
     cap2.style.transform=`translateX(-50%) translateY(${cap2TY.toFixed(0)}px) scale(${((1.05-0.05*rev)*(1+0.02*react)).toFixed(3)})`;
-    cap2.style.filter=`blur(${((1-rev)*13).toFixed(2)}px) drop-shadow(0 0 ${(8+34*react).toFixed(0)}px rgba(130,185,255,${(0.16+0.55*react).toFixed(2)})) drop-shadow(0 8px 24px rgba(120,160,220,.22)) drop-shadow(0 2px 6px rgba(0,0,0,.5))`;
+    wr(cap2,'filter',`blur(${((1-rev)*13).toFixed(1)}px) drop-shadow(0 8px 24px rgba(120,160,220,.22)) drop-shadow(0 2px 6px rgba(0,0,0,.5))`);   // PERF: Blur-Reveal bleibt (der „materialisierende" Look); react-Puls-drop-shadow raus + wr()-guard → kein per-frame Text-Re-Raster mehr
     if(hint) hint.style.opacity=P>0.05?0:1;
   }
   function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
@@ -1579,8 +1580,10 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   layout(); setRest();
   let targetP=0,curP=0,looping=false;
   function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
+  let _settleT=0;
+  function settleLive(){ scrolling=false; updateLive(); if(targetP>0.72) triggerSearch(); }   // ~200ms nach dem letzten Scroll: iframe-Loop wieder an + (am MacBook) Deep Search tippen — rAF-unabhängig, robust
   function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.1; apply(curP); requestAnimationFrame(tick); }
-  addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
+  addEventListener('scroll',()=>{ readTarget(); if(!scrolling){ scrolling=true; updateLive(); } clearTimeout(_settleT); _settleT=setTimeout(settleLive,200); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
   addEventListener('resize',()=>{ dockBox=null; sizeStars(); layout(); readTarget(); apply(curP); sizeLive(); },{passive:true});
   layout(); readTarget(); curP=targetP; apply(curP);
 })();
