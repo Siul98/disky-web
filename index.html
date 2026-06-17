@@ -344,6 +344,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(50px,8.2vw,98px)}
 .hf-t3d{display:block;color:var(--ink);text-shadow:0 10px 30px rgba(244,247,251,.16),0 2px 4px rgba(244,247,251,.1);opacity:0;animation:hf-txtReveal 1.7s .25s cubic-bezier(.16,1,.3,1) both}
 .hf-silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);-webkit-background-clip:text;background-clip:text;transform:translateZ(0);filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));clip-path:inset(0 100% 0 0);animation:hf-txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
+/* PointerHighlight: zeichnet eine Box um „anything"/„Alles" + blauer Cursor fährt in die Ecke. Einmalige Animation (WAAPI) — kein Dauer-Render, GPU-leicht. */
+.ph-wrap{position:relative;display:inline-block;vertical-align:baseline}
+.ph-fx{position:absolute;inset:0;pointer-events:none;z-index:2}
+.ph-rect{position:absolute;left:-8px;top:-5px;width:0;height:0;box-sizing:border-box;border:1.7px solid rgba(255,255,255,.74);border-radius:3px;opacity:0}
+.ph-ptr{position:absolute;left:0;top:0;width:22px;height:22px;color:#3b82f6;opacity:0;transform:rotate(-90deg);filter:drop-shadow(0 2px 7px rgba(59,130,246,.55))}
 .hf-sub{margin:28px auto 0;max-width:600px;font-size:clamp(16px,1.7vw,19px);line-height:1.5;color:var(--mut);opacity:0;animation:hf-ebIn 1.2s .9s ease both}
 .hf-cta{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:32px;opacity:0;animation:hf-ebIn 1.2s 1.05s ease both}
 .hf-dl{padding:17px 40px;font-size:16.5px}
@@ -1131,11 +1136,34 @@ function renderReel(){ const cps=I18N[LANG].caps||I18N.en.caps;
   renderReelCopy(); }
 function advanceReel(){ setReel(rlIdx+1,false); }
 function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval(advanceReel,RL_DUR); }
+/* PointerHighlight: Box ums Schlüsselwort der Headline (en „anything" / de „Alles") + blauer Cursor in die Ecke.
+   Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
+let _phDone=false;
+function decorateAnything(){
+  const el=document.querySelector('.hf-t3d'); if(!el) return;
+  const WORD=(LANG==='de')?'Alles':'anything';
+  const txt=el.textContent, i=txt.indexOf(WORD); if(i<0) return;
+  const PTR='<svg class="ph-ptr" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor"><path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z"/></svg>';
+  el.innerHTML=txt.slice(0,i)+'<span class="ph-wrap">'+txt.slice(i,i+WORD.length)
+    +'<span class="ph-fx" aria-hidden="true"><span class="ph-rect"></span>'+PTR+'</span></span>'+txt.slice(i+WORD.length);
+  const rect=el.querySelector('.ph-rect'), ptr=el.querySelector('.ph-ptr'), wrap=el.querySelector('.ph-wrap');
+  requestAnimationFrame(()=>{ if(!rect||!ptr||!wrap) return;
+    const PADX=8,PADY=5, w=wrap.offsetWidth, h=wrap.offsetHeight, fw=w+PADX*2, fh=h+PADY*2, px=w+PADX+2, py=h+PADY+2;
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+      rect.style.cssText+=';width:'+fw+'px;height:'+fh+'px;opacity:1';
+      ptr.style.cssText+=';opacity:1;transform:translate('+px+'px,'+py+'px) rotate(-90deg)'; return; }
+    const D=_phDone?250:1150;   // erstes Laden: Text-Reveal abwarten; bei Sprachwechsel schneller
+    rect.style.opacity='1'; _phDone=true;
+    rect.animate([{width:'0px',height:'0px'},{width:fw+'px',height:fh+'px'}],{duration:900,delay:D,easing:'cubic-bezier(.65,0,.35,1)',fill:'forwards'});
+    ptr.animate([{opacity:0,transform:'translate(0,0) rotate(-90deg)'},{opacity:1,offset:.12},{opacity:1,transform:'translate('+px+'px,'+py+'px) rotate(-90deg)'}],{duration:1000,delay:D,easing:'cubic-bezier(.65,0,.35,1)',fill:'forwards'});
+  });
+}
 function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
   document.title=tt('meta_title'); const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute('content',tt('meta_desc'));
   document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
   document.querySelectorAll('[data-tp]').forEach(e=>{ e.setAttribute('placeholder', tt(e.getAttribute('data-tp'))); });
+  decorateAnything();
   renderCaps(); renderFAQ(); renderReel(); if(window.__hfRefreshTour)window.__hfRefreshTour();
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
