@@ -360,11 +360,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-head h1{margin:0;line-height:.96;font-weight:800;letter-spacing:-.04em;font-size:clamp(50px,8.2vw,98px)}
 .hf-t3d{display:block;color:var(--ink);text-shadow:0 10px 30px rgba(244,247,251,.16),0 2px 4px rgba(244,247,251,.1);opacity:0;animation:hf-txtReveal 1.7s .25s cubic-bezier(.16,1,.3,1) both}
 .hf-silver{display:block;-webkit-text-fill-color:transparent;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.42) 100%);-webkit-background-clip:text;background-clip:text;transform:translateZ(0);filter:drop-shadow(0 10px 20px rgba(120,160,220,.18)) drop-shadow(0 2px 4px rgba(0,0,0,.45));clip-path:inset(0 100% 0 0);animation:hf-txtWipe 1.4s .55s cubic-bezier(.7,0,.2,1) both}
-/* PointerHighlight: zeichnet eine Box um „anything"/„Alles" + blauer Cursor fährt in die Ecke. Einmalige Animation (WAAPI) — kein Dauer-Render, GPU-leicht. */
-.ph-wrap{position:relative;display:inline-block;vertical-align:baseline}
-.ph-fx{position:absolute;inset:0;pointer-events:none;z-index:2}
-.ph-rect{position:absolute;left:-8px;top:-5px;width:0;height:0;box-sizing:border-box;border:1.7px solid rgba(255,255,255,.74);border-radius:3px;opacity:0}
-.ph-ptr{position:absolute;left:0;top:0;width:22px;height:22px;color:#3b82f6;opacity:0;transform:rotate(-90deg);filter:drop-shadow(0 2px 7px rgba(59,130,246,.55))}
+/* „anything"/„Alles" wird in eine Such-Leiste getippt — wie eine echte Suche. Einmaliges Tippen, danach blinkt der Cursor. Größen in em → skaliert mit der Headline. */
+.ph-search{display:inline-flex;align-items:center;gap:.2em;vertical-align:baseline;line-height:1;white-space:nowrap;overflow:hidden;justify-content:flex-start;
+  padding:.07em .32em .07em .26em;border-radius:.2em;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.17);
+  box-shadow:0 .05em .4em rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06);
+  opacity:0;animation:phIn .42s ease-out both}
+@keyframes phIn{from{opacity:0;transform:translateY(.05em) scale(.975)}to{opacity:1;transform:none}}
+.ph-sicon{width:.58em;height:.58em;flex:none;color:var(--acc)}
+.ph-typed{color:var(--ink)}
+.ph-caret{display:inline-block;flex:none;width:.05em;height:.72em;margin-left:.04em;border-radius:1px;background:var(--acc);animation:phBlink 1.05s step-end infinite}
+@keyframes phBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
 .hf-sub{margin:28px auto 0;max-width:600px;font-size:clamp(16px,1.7vw,19px);line-height:1.5;color:var(--mut);opacity:0;animation:hf-ebIn 1.2s .9s ease both}
 .hf-cta{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:32px;opacity:0;animation:hf-ebIn 1.2s 1.05s ease both}
 .hf-dl{padding:17px 40px;font-size:16.5px}
@@ -1189,7 +1195,7 @@ function advanceReel(){ setReel(rlIdx+1,false); }
 function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval(advanceReel,RL_DUR); }
 /* PointerHighlight: Box ums Schlüsselwort der Headline (en „anything" / de „Alles") + blauer Cursor in die Ecke.
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
-let _phDone=false;
+let _phDone=false, _phTimer=0;
 /* Testimonials-Sektion: erscheint erst, wenn ECHTE Zitate da sind → READY:true setzen (sonst keine Fake-Stimmen live) */
 const TESTI={READY:false};
 function renderTesti(){ const el=document.getElementById('testiGrid'); if(!el)return;
@@ -1201,24 +1207,17 @@ function decorateAnything(){
   const el=document.querySelector('.hf-t3d'); if(!el) return;
   const WORD=(LANG==='de')?'Alles':'anything';
   const txt=el.textContent, i=txt.indexOf(WORD); if(i<0) return;
-  let wend=i+WORD.length; if('.!?,'.indexOf(txt[wend])>=0) wend++;   // direkt folgenden Punkt/Satzzeichen mit in die Box nehmen
-  const PTR='<svg class="ph-ptr" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor"><path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z"/></svg>';
-  el.innerHTML=txt.slice(0,i)+'<span class="ph-wrap">'+txt.slice(i,wend)
-    +'<span class="ph-fx" aria-hidden="true"><span class="ph-rect"></span>'+PTR+'</span></span>'+txt.slice(wend);
-  const rect=el.querySelector('.ph-rect'), ptr=el.querySelector('.ph-ptr'), wrap=el.querySelector('.ph-wrap');
-  if(!rect||!ptr||!wrap) return;
-  const w=wrap.offsetWidth, h=wrap.offsetHeight;   // offsetWidth erzwingt Layout → synchron messbar, kein rAF nötig
-  if(!w||!h) return;
-  // line-height .96 der Headline → Zeilenbox enger als die Glyphen; Padding proportional zur Schriftgröße, UNTEN mehr → Unterlängen (y, g) + Punkt voll umschlossen
-  const F=parseFloat(getComputedStyle(wrap).fontSize)||60;
-  const PADX=Math.round(F*0.10), PADT=Math.round(F*0.07), PADB=Math.round(F*0.20);
-  const fw=w+PADX*2, fh=h+PADT+PADB, px=w+PADX+2, py=h+PADB+2;
-  rect.style.left=(-PADX)+'px'; rect.style.top=(-PADT)+'px';
-  // Animiert IMMER (wie 21st-dev): bewusst NICHT an prefers-reduced-motion gekoppelt — sanfte, einmalige Zeichnung (~1s).
-  const D=_phDone?250:600; _phDone=true;   // erstes Laden: kurz Text antippen lassen; bei Sprachwechsel schneller
-  rect.style.opacity='1';
-  rect.animate([{width:'0px',height:'0px'},{width:fw+'px',height:fh+'px'}],{duration:1000,delay:D,easing:'ease-in-out',fill:'both'});
-  ptr.animate([{opacity:0,transform:'translate(0,0) rotate(-90deg)'},{opacity:1,offset:.1},{opacity:1,transform:'translate('+px+'px,'+py+'px) rotate(-90deg)'}],{duration:1000,delay:D,easing:'ease-in-out',fill:'both'});
+  const ICON='<svg class="ph-sicon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2"/></svg>';
+  el.innerHTML=txt.slice(0,i)
+    +'<span class="ph-search" role="img" aria-label="'+WORD+'">'+ICON+'<span class="ph-typed" aria-hidden="true"></span><span class="ph-caret" aria-hidden="true"></span></span>'
+    +txt.slice(i+WORD.length);   // nur das Wort kommt in die Suchleiste; ein evtl. Punkt bleibt außerhalb
+  const bar=el.querySelector('.ph-search'), typed=el.querySelector('.ph-typed');
+  if(!bar||!typed) return;
+  typed.textContent=WORD; const fullW=bar.offsetWidth; bar.style.width=fullW+'px'; typed.textContent='';   // Breite auf das volle Wort fixieren → kein Umbruch/Ruckeln beim Tippen
+  if(_phTimer) clearTimeout(_phTimer);
+  let k=0; const D=_phDone?250:650; _phDone=true;   // erstes Laden: kurz nach dem Reveal lostippen; bei Sprachwechsel schneller
+  const step=()=>{ typed.textContent=WORD.slice(0,k); if(k++<WORD.length) _phTimer=setTimeout(step, 62+Math.round(Math.random()*55)); };   // Zeichen für Zeichen tippen (leicht variabler Rhythmus)
+  _phTimer=setTimeout(step, D);
 }
 function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
