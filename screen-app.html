@@ -27,6 +27,7 @@
   }
   window.addEventListener('message', function(e){
     var d=e&&e.data; if(!d) return;
+    if('diskyVis' in d){ window.__diskyPaused = !d.diskyVis; }   // Parent meldet Sichtbarkeit → off-screen das Starfield pausieren (spart CPU)
     if(d.diskyDemo==='search'){ demoSearch(d.q||'Nordsee', d.lens||'all'); return; }
     if(d.diskyView){ gotoView(d.diskyView); }
   });
@@ -2675,7 +2676,8 @@ function startStarfield(host){
     ctx.globalAlpha=1; }
   function drawStatic(){ ctx.fillStyle=BG; ctx.fillRect(0,0,w,h); ctx.fillStyle=STAR;
     for(const s of arr){ project(s); if(s[3]>0&&s[3]<w&&s[4]>0&&s[4]<h){ const r=(1-colorRatio*s[2])*1.4; ctx.globalAlpha=Math.max(.15,1-colorRatio*s[2]); ctx.fillRect(s[3],s[4],r,r); } } ctx.globalAlpha=1; }
-  function frame(){ if(!w){ measure(); if(!w){ raf=requestAnimationFrame(frame); return; } spawn(); }
+  function frame(){ if(window.__diskyPaused){ raf=requestAnimationFrame(frame); return; }   // off-screen: rAF am Leben halten, aber Canvas-Arbeit überspringen → ~0 CPU
+    if(!w){ measure(); if(!w){ raf=requestAnimationFrame(frame); return; } spawn(); }
     if(host.clientWidth!==w||host.clientHeight!==h){ const ow=w,oh=h; measure(); if(arr.length&&ow&&oh){ const rw=w/ow,rh=h/oh; for(const s of arr){ s[0]*=rw; s[1]*=rh; } } }
     update(); draw(); raf=requestAnimationFrame(frame); }
   measure(); if(w) spawn();

@@ -369,6 +369,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
 .hf-t9 .hf-dimg{display:block;width:100%;height:auto;border-radius:56px}   /* rundet das X-Ray-Rechteck auf die Plattenform → keine schwarzen Ecken */
 .hf-t9 .hf-front{filter:drop-shadow(0 34px 56px rgba(0,0,0,.7));will-change:mask}
+/* Lebendiger Puls-Glow nach dem Scan — fertige Radial-Ebene, nur opacity+scale animiert (GPU-Compositor, ~gratis); pausiert wenn der Hero aus dem Bild ist */
+.hf-t9glow{position:absolute;inset:-24% -16%;border-radius:50%;z-index:-1;pointer-events:none;opacity:0;background:radial-gradient(closest-side,rgba(95,175,255,.55),rgba(95,175,255,.16) 56%,transparent 72%);will-change:opacity,transform}
+.hf-rail.hf-inview .hf-t9.lit .hf-t9glow{animation:t9pulse 2.7s ease-in-out infinite}
+@keyframes t9pulse{0%,100%{opacity:.30;transform:scale(.95)}50%{opacity:.62;transform:scale(1.08)}}
+@media(prefers-reduced-motion:reduce){.hf-t9glow{animation:none!important}.hf-t9.lit .hf-t9glow{opacity:.4}}
 .hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}
 .hf-scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .hf-scanline.hf-on{opacity:1}
@@ -741,6 +746,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="hf-bloom" id="hf-bloom"></div>
       <div class="hf-shock" id="hf-shock"></div>
       <div class="hf-t9" id="hf-t9">
+        <div class="hf-t9glow" aria-hidden="true"></div>
         <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
         <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp" alt="" decoding="async">
         <div class="hf-scanline" id="hf-scanline"><i class="hf-bm"></i><div class="hf-warp"></div></div>
@@ -1316,7 +1322,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   }
   function startStars(){ if(starsOn&&!running){ running=true; requestAnimationFrame(frame); } }
   sizeStars();
-  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);
+  new IntersectionObserver(es=>es.forEach(e=>{ starsOn=e.isIntersecting; rail.classList.toggle('hf-inview',e.isIntersecting); liveMsg({diskyVis:e.isIntersecting}); if(starsOn) startStars(); }),{threshold:0.01}).observe(rail);   // iframe-App pausieren, wenn der Hero aus dem Bild ist
   // ECHTE App live im MacBook-Screen (screen-app.html) — lazy geladen, damit der Seiten-Boot nicht blockiert
   const liveFrame=mac.querySelector('.hf-liveapp'), mscr=mac.querySelector('.hf-mscr');
   let liveReady=false, searchSent=false;
@@ -1328,7 +1334,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
-    liveFrame.src='screen-app.html?v=3&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
+    liveFrame.src='screen-app.html?v=4&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
   sizeLive();
@@ -1353,6 +1359,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     heroTyRest=restCenterY-innerHeight/2;
   }
 
+  const wr=(el,p,v)=>{ if(el['_w'+p]!==v){ el.style[p]=v; el['_w'+p]=v; } };   // skip-if-unchanged: spart konstante/statische Per-Frame-Style-Writes (z-index, Filter, Mask)
   function apply(P){
     const A=1, sp=clamp(P), pe=0, p=sp;   // ganze Rail = Scan+Land+Wake; keine gepinnte Tool-Tour mehr → danach normaler Scroll
     const p1=clamp(p/0.5), p2=clamp((p-0.5)/0.5);
@@ -1383,8 +1390,8 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
         blur += 5*part; op -= 0.5*part; }
       c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(0.18,scl).toFixed(3)})`;
       c.style.opacity=Math.max(0,op).toFixed(3);
-      c.style.filter = blur>0.1 ? `blur(${blur.toFixed(1)}px)` : 'none';
-      c.style.zIndex = baseZ(i);
+      wr(c,'filter', blur>0.1 ? `blur(${blur.toFixed(1)}px)` : 'none');
+      wr(c,'zIndex', baseZ(i));
     });
     fan.classList.toggle('hf-resting',resting);
     floor.style.opacity=((1-0.7*spread)*(1-pullE)).toFixed(3);
@@ -1392,12 +1399,13 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     if(p2>0){ hDy=-pan; }   // gescannte SSD bleibt VOLL da (kein Fade, kein Shrink) und scrollt mit der Szene nach oben raus
     hero.style.transform=heroT(g,hDy,hSc);
     hero.style.opacity=Math.max(0,hOp).toFixed(3);
-    hero.style.filter = finish>0.01 ? `brightness(${(1+0.5*finish+0.4*flash).toFixed(3)}) drop-shadow(0 0 ${(26*finish+34*flash).toFixed(0)}px rgba(95,175,255,${(0.42*finish+0.7*flash).toFixed(2)}))` : 'none';   // finish bleibt nach dem Scan auf 1 → SSD glowt weiter (flash = zusätzlicher Blitz im Moment des Abschlusses)
-    hero.style.zIndex = 11;
+    wr(hero,'filter', finish>0.01 ? `brightness(${(1+0.5*finish+0.4*flash).toFixed(3)}) drop-shadow(0 0 ${(26*finish+34*flash).toFixed(0)}px rgba(95,175,255,${(0.42*finish+0.7*flash).toFixed(2)}))` : 'none');   // finish bleibt nach dem Scan auf 1 → SSD glowt weiter; wr() spart Re-Writes wenn statisch
+    hero.classList.toggle('lit', finish>0.5);   // nach dem Scan: lebendiger Puls-Glow (CSS-Animation, pausiert wenn Hero außer Sicht)
+    wr(hero,'zIndex', 11);
     hero.classList.toggle('hf-resting',resting);
     const bx=scan*100, ft=6;
-    if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; front.style.webkitMaskImage=front.style.maskImage='none'; scanline.classList.remove('hf-on','hf-appear'); }
-    else if(scan>=0.985){ xray.style.opacity=1; xray.style.webkitMaskImage=xray.style.maskImage='none'; front.style.opacity=0; scanline.classList.remove('hf-on','hf-appear'); }
+    if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; wr(front,'webkitMaskImage','none'); wr(front,'maskImage','none'); scanline.classList.remove('hf-on','hf-appear'); }
+    else if(scan>=0.985){ xray.style.opacity=1; wr(xray,'webkitMaskImage','none'); wr(xray,'maskImage','none'); front.style.opacity=0; scanline.classList.remove('hf-on','hf-appear'); }
     else {
       xray.style.opacity=1; front.style.opacity=1;
       xray.style.webkitMaskImage=xray.style.maskImage=`linear-gradient(to right,#000 ${(bx-ft).toFixed(2)}%,transparent ${(bx+ft).toFixed(2)}%)`;
@@ -1410,7 +1418,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     bloom.style.transform=`translate(-50%,-50%) translateY(${(+dyC-pan).toFixed(0)}px) scale(${(0.66+0.12*lift+0.2*finish+0.45*flash).toFixed(3)})`;   // folgt der SSD beim Hochscrollen (−pan)
     shock.style.opacity=(clamp(finish/0.08)*(1-finish)*0.62*(1-pullE)).toFixed(3);   // Ring erscheint, expandiert nach außen, fadet beim Wachsen
     shock.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.4+waveR/250).toFixed(3)})`;
-    head.style.filter=`blur(${(20*spread).toFixed(1)}px)`;
+    wr(head,'filter',`blur(${(20*spread).toFixed(1)}px)`);
     head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
     head.style.opacity=(1-0.82*spread).toFixed(3);
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
@@ -1452,21 +1460,23 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
 
   /* Hover: nur über dem Stapel, dezent */
   const DOCK_SIG=110, DOCK_AMP=0.07, DOCK_LIFT=7;
-  function clusterBox(){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
-    for(const c of cards){ const r=c.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom; }
-    const r=hero.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom;
-    return {x0,y0,x1,y1}; }
-  let docked=false;
-  function dock(e){
-    if(curP>=0.03){ if(docked) docked=false; return; }
-    const mx=e.clientX,my=e.clientY, b=clusterBox(), m=18;
+  // Rects EINMAL cachen (Stapel ist im Rest-Zustand statisch) statt pro mousemove zu messen → kein Layout-Thrash
+  let dockBox=null, dockCx=null, heroCx=0;
+  function dockMeasure(){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+    dockCx=cards.map(c=>{ const r=c.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom; return r.left+r.width/2; });
+    const r=hero.getBoundingClientRect(); if(r.left<x0)x0=r.left; if(r.top<y0)y0=r.top; if(r.right>x1)x1=r.right; if(r.bottom>y1)y1=r.bottom; heroCx=r.left+r.width/2;
+    dockBox={x0,y0,x1,y1}; }
+  let docked=false, _dockRAF=0, _mx=0, _my=0;
+  function dockApply(){ _dockRAF=0;
+    if(curP>=0.03){ if(docked){ setRest(); docked=false; } return; }
+    if(!dockBox) dockMeasure();
+    const mx=_mx,my=_my, b=dockBox, m=18;
     if(mx<b.x0-m||mx>b.x1+m||my<b.y0-m||my>b.y1+m){ if(docked){ setRest(); docked=false; } return; }
     docked=true;
-    cards.forEach(c=>{ const r=c.getBoundingClientRect(); const d=mx-(r.left+r.width/2); const fct=Math.exp(-(d*d)/(2*DOCK_SIG*DOCK_SIG));
-      c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });   // kein zIndex → keine Tiefenänderung
-    const r=hero.getBoundingClientRect(); const dH=mx-(r.left+r.width/2); const fH=Math.exp(-(dH*dH)/(2*DOCK_SIG*DOCK_SIG));
-    const g=heroGeom(0); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
+    cards.forEach((c,idx)=>{ const d=mx-dockCx[idx]; const fct=Math.exp(-(d*d)/(2*DOCK_SIG*DOCK_SIG)); c.style.transform=cardT(+c.dataset.i,-DOCK_LIFT*fct,1+DOCK_AMP*fct); });
+    const dH=mx-heroCx, fH=Math.exp(-(dH*dH)/(2*DOCK_SIG*DOCK_SIG)); const g=heroGeom(0); hero.style.transform=heroT(g,-DOCK_LIFT*fH,1+DOCK_AMP*fH);
   }
+  function dock(e){ _mx=e.clientX; _my=e.clientY; if(!_dockRAF) _dockRAF=requestAnimationFrame(dockApply); }   // höchstens 1× pro Frame, ohne Messung
   addEventListener('mousemove',dock,{passive:true});
   document.addEventListener('mouseleave',()=>{ if(curP<0.03&&docked){ setRest(); docked=false; } },{passive:true});
 
@@ -1475,7 +1485,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   function readTarget(){ const r=rail.getBoundingClientRect(); const span=rail.offsetHeight-innerHeight; targetP=clamp(span>0?(-r.top)/span:0); }
   function tick(){ const d=targetP-curP; if(Math.abs(d)<0.0006){ curP=targetP; apply(curP); looping=false; return; } curP+=d*0.1; apply(curP); requestAnimationFrame(tick); }
   addEventListener('scroll',()=>{ readTarget(); if(!looping){ looping=true; requestAnimationFrame(tick); } },{passive:true});
-  addEventListener('resize',()=>{ sizeStars(); layout(); readTarget(); apply(curP); sizeLive(); },{passive:true});
+  addEventListener('resize',()=>{ dockBox=null; sizeStars(); layout(); readTarget(); apply(curP); sizeLive(); },{passive:true});
   layout(); readTarget(); curP=targetP; apply(curP);
 })();
 </script>
