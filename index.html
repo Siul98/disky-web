@@ -367,14 +367,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-fan:not(.hf-resting) .hf-drv{filter:none}   /* Schatten-Filter nur im Ruhezustand → kein teures Repaint während der Bewegung */
 .hf-t9{position:absolute;left:50%;top:50%;width:520px;z-index:11;pointer-events:none;will-change:transform}
 .hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
-.hf-t9 .hf-dimg{display:block;width:100%;height:auto;border-radius:36px}   /* Front: ~echter Plattenradius → kappt das dunkle Alpha-Halo in den Ecken, ohne zu überrunden (0=Halo sichtbar, 56=überrundet) */
+.hf-t9 .hf-dimg{display:block;width:100%;height:auto}   /* KEIN border-radius mehr — die runden Ecken sind jetzt transparent ins webp gebacken (Front + X-Ray gleicher Radius), kein Clip-Artefakt im Scan */
 .hf-t9 .hf-front{filter:drop-shadow(0 34px 56px rgba(0,0,0,.7));will-change:mask}
 /* Lebendiger Puls-Glow nach dem Scan — fertige Radial-Ebene, nur opacity+scale animiert (GPU-Compositor, ~gratis); pausiert wenn der Hero aus dem Bild ist */
 .hf-t9glow{position:absolute;inset:-24% -16%;border-radius:50%;z-index:-1;pointer-events:none;opacity:0;background:radial-gradient(closest-side,rgba(95,175,255,.55),rgba(95,175,255,.16) 56%,transparent 72%);will-change:opacity,transform}
 .hf-rail.hf-inview .hf-t9.lit .hf-t9glow{animation:t9pulse 2.7s ease-in-out infinite}
 @keyframes t9pulse{0%,100%{opacity:.30;transform:scale(.95)}50%{opacity:.62;transform:scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.hf-t9glow{animation:none!important}.hf-t9.lit .hf-t9glow{opacity:.4}}
-.hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity;border-radius:56px}   /* X-Ray ist opak mit mehr schwarzem Rand → stärker clippen (nur dieses Bild) */
+.hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}   /* X-Ray ist opak mit mehr schwarzem Rand → stärker clippen (nur dieses Bild) */
 .hf-scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .hf-scanline.hf-on{opacity:1}
 .hf-scanline .hf-bm{position:absolute;top:-30%;bottom:-30%;left:-1.4px;width:2.8px;border-radius:3px;background:linear-gradient(180deg,transparent 0%,rgba(205,238,255,.5) 16%,#cdeeff 40%,#37cfe0 50%,#cdeeff 60%,rgba(205,238,255,.5) 84%,transparent 100%);box-shadow:0 0 30px 10px rgba(74,158,255,.72)}
@@ -747,8 +747,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="hf-shock" id="hf-shock"></div>
       <div class="hf-t9" id="hf-t9">
         <div class="hf-t9glow" aria-hidden="true"></div>
-        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp" alt="Samsung T9" decoding="async">
-        <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp" alt="" decoding="async">
+        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp?v=2" alt="Samsung T9" decoding="async">
+        <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp?v=2" alt="" decoding="async">
         <div class="hf-scanline" id="hf-scanline"><i class="hf-bm"></i><div class="hf-warp"></div></div>
       </div>
       <div class="hf-mac" id="hf-mac">
