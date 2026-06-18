@@ -1199,8 +1199,8 @@ function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval
 /* PointerHighlight: Box ums Schlüsselwort der Headline (en „anything" / de „Alles") + blauer Cursor in die Ecke.
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
 let _phDone=false, _phTimer=0;
-/* Testimonials-Sektion: erscheint erst, wenn ECHTE Zitate da sind → READY:true setzen (sonst keine Fake-Stimmen live) */
-const TESTI={READY:false};
+/* Testimonials-Sektion. ACHTUNG: aktuell PLATZHALTER-Zitate (für Layout/Aufbau) — VOR dem echten Launch durch echte ersetzen (DE: UWG!). Zum Verstecken READY:false. */
+const TESTI={READY:true};
 function renderTesti(){ const el=document.getElementById('testiGrid'); if(!el)return;
   const list=(I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[];
   el.innerHTML=list.map(t=>{ const ini=String(t.n||'').trim().split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase();
