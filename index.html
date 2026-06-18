@@ -293,19 +293,37 @@ a{color:inherit;text-decoration:none}
 /* Testimonials („Wall of love") — gated über TESTI.READY, bis echte Zitate da sind */
 .testi .eyebrow{display:block;margin-bottom:16px;text-align:center}
 .testi-title{text-align:center;max-width:20ch;margin:0 auto 56px;font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.06}
-.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1080px;margin:0 auto}
-@media(max-width:900px){.testi-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:620px){.testi-grid{grid-template-columns:1fr}}
-.testi-card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid var(--line);border-radius:16px;padding:24px 24px 22px;display:flex;flex-direction:column;opacity:0;animation:testiIn .6s cubic-bezier(.16,1,.3,1) both}
-.testi-card:nth-child(2){animation-delay:.06s}.testi-card:nth-child(3){animation-delay:.12s}.testi-card:nth-child(4){animation-delay:.18s}.testi-card:nth-child(5){animation-delay:.24s}.testi-card:nth-child(6){animation-delay:.3s}
-@keyframes testiIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.testi-q{margin:0;color:var(--ink);font-size:15.5px;line-height:1.58;letter-spacing:-.01em;flex:1}
-.testi-by{display:flex;align-items:center;gap:12px;margin-top:20px}
-.testi-av{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px rgba(74,158,255,.28)}
-.testi-meta{display:flex;flex-direction:column;gap:2px;min-width:0}
-.testi-name{font-weight:600;color:var(--ink);font-size:14px;line-height:1.2}
-.testi-role{color:var(--mut2);font-size:12.5px;line-height:1.2}
-@media(prefers-reduced-motion:reduce){.testi-card{animation:none;opacity:1}}
+/* Gestapelte X/Twitter-Karten (Vanilla-Port von 21st-dev): Hover fächert die vorderen Karten weg + Grayscale→Farbe. Nur Hover/Transform = kein Dauer-Render. */
+.tw-stack{display:grid;grid-template-areas:"stack";place-items:start center;min-height:410px;max-width:760px;margin:0 auto}
+.tw-card{grid-area:stack;position:relative;width:min(380px,84vw);min-height:184px;display:flex;flex-direction:column;padding:15px 18px 14px;border-radius:18px;
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(21,25,33,.97),rgba(12,15,21,.97));box-shadow:0 26px 64px -20px rgba(0,0,0,.72);
+  transition:transform .55s cubic-bezier(.2,.75,.25,1),filter .55s ease,opacity .5s ease,border-color .4s;filter:grayscale(1);opacity:.5;will-change:transform}
+.tw-c0{transform:skewY(-8deg) translate(0,0);z-index:1}
+.tw-c1{transform:skewY(-8deg) translate(58px,40px);z-index:2}
+.tw-c2{transform:skewY(-8deg) translate(116px,80px);z-index:3;filter:none;opacity:1}
+.tw-c0::after,.tw-c1::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(255deg,var(--bg) 2%,transparent 48%);transition:opacity .5s}
+.tw-card:hover{filter:none;opacity:1;border-color:rgba(255,255,255,.18);z-index:9}
+.tw-card:hover::after{opacity:0}
+.tw-c0:hover{transform:skewY(-8deg) translate(0,-12px)}
+.tw-c1:hover{transform:skewY(-8deg) translate(58px,28px)}
+.tw-c2:hover{transform:skewY(-8deg) translate(116px,68px)}
+.tw-c0:hover ~ .tw-c1{transform:skewY(-8deg) translate(150px,160px)}
+.tw-c0:hover ~ .tw-c2{transform:skewY(-8deg) translate(232px,224px)}
+.tw-c1:hover ~ .tw-c2{transform:skewY(-8deg) translate(232px,214px)}
+.tw-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.tw-av{flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2))}
+.tw-id{flex:1;min-width:0}
+.tw-name{display:flex;align-items:center;gap:4px;font-weight:700;color:var(--ink);font-size:15px;line-height:1.2}
+.tw-vb{flex:none;width:16px;height:16px;color:#1d9bf0}
+.tw-handle{color:var(--mut2);font-size:13px}
+.tw-x{flex:none;width:18px;height:18px;color:var(--ink);opacity:.9}
+.tw-content{margin:0;color:var(--ink);font-size:15px;line-height:1.5;letter-spacing:-.01em}
+.tw-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px;color:var(--mut2);font-size:12.5px}
+.tw-stats{display:flex;gap:16px}.tw-stat{display:flex;align-items:center;gap:5px}.tw-stat svg{width:15px;height:15px}
+@media(max-width:700px){.tw-stack{display:flex;flex-direction:column;gap:14px;min-height:0;align-items:stretch}
+  .tw-card,.tw-c0,.tw-c1,.tw-c2{transform:none!important;filter:none!important;opacity:1!important;width:100%}
+  .tw-c0::after,.tw-c1::after{display:none}}
+@media(prefers-reduced-motion:reduce){.tw-card{transition:none}}
 .qa{border-top:1px solid var(--line);padding:4px 0}
 .qa:last-child{border-bottom:1px solid var(--line)}
 .qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;
@@ -952,7 +970,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 <section class="sec bord testi" id="loved" hidden><div class="wrap">
   <span class="eyebrow rev" data-t="testi_eb">Loved by people with too many drives</span>
   <h2 class="testi-title rev" data-t="testi_h">People who finally stopped digging.</h2>
-  <div class="testi-grid" id="testiGrid"></div>
+  <div class="tw-stack" id="testiGrid" aria-label="Testimonials"></div>
 </div></section>
 
 <!-- CLOSING -->
@@ -1041,12 +1059,9 @@ const I18N={
   testi_eb:"Loved by people with too many drives",testi_h:"People who finally stopped digging.",
   // PLATZHALTER — durch ECHTE Zitate ersetzen, dann TESTI.READY=true setzen. Keine Fake-Stimmen live.
   testi:[
-   {q:"Found a wedding from 2019 in about four seconds — without getting up to find the drive. That used to be my whole afternoon.",n:"Lena Brandt",r:"Wedding filmmaker"},
-   {q:"I keep 30-odd drives in a drawer. Disky is the first thing that actually knows what's on every one of them.",n:"Marco Tillmann",r:"Documentary editor"},
-   {q:"Typed “drone sunset” and it pulled the exact clip off a drive that had been unplugged for a year. Slightly magic.",n:"Priya Nair",r:"DP & colorist"},
-   {q:"It flagged 200+ GB of duplicate masters I'd been paying to store twice. Paid for itself before lunch.",n:"Tom Berger",r:"Studio owner"},
-   {q:"Read-only, exactly as promised — it never touched a single file. That's why I trust it on client work.",n:"Sofia Almeida",r:"Commercial photographer"},
-   {q:"The storage map alone talked me out of buying another SSD this quarter.",n:"Jonas Velden",r:"Motion designer"}
+   {q:"Found a wedding from 2019 in about four seconds — without even getting up to find the drive. Disky just searches every drive in my drawer 🤯",n:"Lena Brandt",h:"@lenabrandt",d:"Jan 3, 2026",likes:142,rt:18},
+   {q:"I keep 30+ drives in a drawer. Disky is the first thing that actually knows what's on every single one. Archive work finally makes sense.",n:"Marco Tillmann",h:"@marco_edits",d:"Jan 2, 2026",likes:89,rt:12},
+   {q:"typed 'drone sunset' and it pulled the exact clip off a drive that's been unplugged for a YEAR. on-device AI, nothing leaves my mac. wild 🔥",n:"Priya Nair",h:"@priyashoots",d:"Jan 1, 2026",likes:156,rt:23}
   ],
   end_h:"Stop digging through the drawer.",end_sub:"One catalog of every drive you own — searchable in seconds, on your Mac, while the drawer stays shut. Catalog once. Never dig again.",
   foot_legal:"Legal",foot_contact:"Contact",
@@ -1120,12 +1135,9 @@ const I18N={
   testi_eb:"Geliebt von Leuten mit zu vielen Platten",testi_h:"Leute, die aufgehört haben zu wühlen.",
   // PLATZHALTER — durch ECHTE Zitate ersetzen, dann TESTI.READY=true setzen. Keine Fake-Stimmen live.
   testi:[
-   {q:"Eine Hochzeit von 2019 in vier Sekunden gefunden — ohne aufzustehen und die Platte zu suchen. Früher war das mein halber Nachmittag.",n:"Lena Brandt",r:"Hochzeitsfilmerin"},
-   {q:"Ich hab gut 30 Platten in einer Schublade. Disky ist das Erste, das wirklich weiß, was auf jeder einzelnen liegt.",n:"Marco Tillmann",r:"Dokumentar-Editor"},
-   {q:"„Drohne Sonnenuntergang“ getippt — und es holte den exakten Clip von einer Platte, die ein Jahr abgesteckt war. Schon fast magisch.",n:"Priya Nair",r:"DP & Coloristin"},
-   {q:"Es hat über 200 GB doppelte Master gefunden, die ich doppelt gespeichert (und bezahlt) hatte. Hat sich vor dem Mittag amortisiert.",n:"Tom Berger",r:"Studio-Inhaber"},
-   {q:"Nur-Lesen, genau wie versprochen — keine einzige Datei angefasst. Deshalb vertrau ich ihm bei Kundenprojekten.",n:"Sofia Almeida",r:"Werbefotografin"},
-   {q:"Allein die Speicher-Karte hat mir dieses Quartal eine weitere SSD erspart.",n:"Jonas Velden",r:"Motion Designer"}
+   {q:"Eine Hochzeit von 2019 in vier Sekunden gefunden — ohne aufzustehen und die Platte zu suchen. Disky durchsucht einfach jede Platte in der Schublade 🤯",n:"Lena Brandt",h:"@lenabrandt",d:"3. Jan 2026",likes:142,rt:18},
+   {q:"Ich hab 30+ Platten in einer Schublade. Disky ist das Erste, das wirklich weiß, was auf jeder einzelnen liegt. Archiv-Arbeit ergibt endlich Sinn.",n:"Marco Tillmann",h:"@marco_edits",d:"2. Jan 2026",likes:89,rt:12},
+   {q:"„Drohne Sonnenuntergang“ getippt — und es holte den exakten Clip von einer Platte, die ein JAHR abgesteckt war. On-device-KI, nichts verlässt den Mac. Wahnsinn 🔥",n:"Priya Nair",h:"@priyashoots",d:"1. Jan 2026",likes:156,rt:23}
   ],
   end_h:"Hör auf, die Schublade zu durchwühlen.",end_sub:"Ein Katalog für jede Platte, die du besitzt — in Sekunden durchsuchbar, auf deinem Mac, während die Schublade zu bleibt. Einmal katalogisieren. Nie wieder wühlen.",
   foot_legal:"Impressum",foot_contact:"Kontakt",
@@ -1202,9 +1214,17 @@ let _phDone=false, _phTimer=0;
 /* Testimonials-Sektion. ACHTUNG: aktuell PLATZHALTER-Zitate (für Layout/Aufbau) — VOR dem echten Launch durch echte ersetzen (DE: UWG!). Zum Verstecken READY:false. */
 const TESTI={READY:true};
 function renderTesti(){ const el=document.getElementById('testiGrid'); if(!el)return;
-  const list=(I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[];
-  el.innerHTML=list.map(t=>{ const ini=String(t.n||'').trim().split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase();
-    return `<figure class="testi-card"><blockquote class="testi-q">${t.q}</blockquote><figcaption class="testi-by"><span class="testi-av" aria-hidden="true">${ini}</span><span class="testi-meta"><span class="testi-name">${t.n}</span><span class="testi-role">${t.r}</span></span></figcaption></figure>`;
+  const list=(((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[])).slice(0,3);
+  const VB='<svg class="tw-vb" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true"><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/></svg>';
+  const XI='<svg class="tw-x" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
+  const HEART='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>';
+  const RT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>';
+  el.innerHTML=list.map((t,i)=>{ const ini=String(t.n||'').trim().split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase();
+    return `<div class="tw-card tw-c${i}">`
+      +`<div class="tw-head"><span class="tw-av" aria-hidden="true">${ini}</span><span class="tw-id"><span class="tw-name">${t.n}${VB}</span><span class="tw-handle">${t.h||''}</span></span>${XI}</div>`
+      +`<p class="tw-content">${t.q}</p>`
+      +`<div class="tw-foot"><span>${t.d||''}</span><span class="tw-stats"><span class="tw-stat">${HEART}${t.likes||0}</span><span class="tw-stat">${RT}${t.rt||0}</span></span></div>`
+      +`</div>`;
   }).join(''); }
 function decorateAnything(){
   const el=document.querySelector('.hf-t3d'); if(!el) return;
