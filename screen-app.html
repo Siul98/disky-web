@@ -33,7 +33,7 @@
   });
   // Handshake: dem Parent melden, sobald die geseedete App-Navigation gerendert ist (NICHT vor dem Seed-Reload)
   function pingReady(){ (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })(); }
-  if(sessionStorage.getItem('diskyDemoSeeded')==='5'){ pingReady(); return; }
+  var SEED_VER='6';   // bei Änderung der Seed-Daten hochzählen → erzwingt Re-Seed
   var TB=1e12, GB=1e9;
   var drives=[
     {label:'T9', driveType:'t9', bytes:2.3*TB, capacityBytes:3.6*TB, fileCount:18000, volumeName:'T9'},
@@ -88,12 +88,15 @@
     for(i=1;i<=4;i++) add(5,'Wedding Mai 2026','Footage','A001_C0'+(10+i),'mov',GBy(1.4),'DUPW'+i,MIDR);
     return F;
   }
-  function done(){ try{sessionStorage.setItem('diskyDemoSeeded','5');}catch(e){} }
-  try{
+  function ensureStores(db){
+    if(!db.objectStoreNames.contains('drives')) db.createObjectStore('drives',{keyPath:'id',autoIncrement:true});
+    if(!db.objectStoreNames.contains('files')){ var f=db.createObjectStore('files',{keyPath:'id',autoIncrement:true}); f.createIndex('driveId','driveId'); f.createIndex('hash','hash'); }
+  }
+  function done(){ try{sessionStorage.setItem('diskyDemoSeeded',SEED_VER);}catch(e){} }   // NUR bei erfolgreichem Seed
+  function runSeed(){
+   try{
     var r=indexedDB.open('drivecat',1);
-    r.onupgradeneeded=function(e){ var db=e.target.result;
-      if(!db.objectStoreNames.contains('drives')) db.createObjectStore('drives',{keyPath:'id',autoIncrement:true});
-      if(!db.objectStoreNames.contains('files')){ var f=db.createObjectStore('files',{keyPath:'id',autoIncrement:true}); f.createIndex('driveId','driveId'); f.createIndex('hash','hash'); } };
+    r.onupgradeneeded=function(e){ ensureStores(e.target.result); };
     r.onsuccess=function(){ var db=r.result;
       try{
         var t=db.transaction(['drives','files'],'readwrite'); var ds=t.objectStore('drives'); var fs=t.objectStore('files');
@@ -104,15 +107,36 @@
           try{
             var t2=db.transaction(['files'],'readwrite'); var fs2=t2.objectStore('files');
             genFiles(ids).forEach(function(f){ fs2.add(f); });
-            t2.oncomplete=function(){ done(); location.reload(); };
-            t2.onerror=function(){ done(); location.reload(); };
-          }catch(err2){ done(); location.reload(); }
+            t2.oncomplete=function(){ done(); location.reload(); };   // erst JETZT als geseedet markieren + neu laden
+            t2.onerror=function(){ pingReady(); };                    // Fehler → NICHT als done markieren, App trotzdem zeigen
+          }catch(err2){ pingReady(); }
         };
-        t.onerror=function(){ done(); };
-      }catch(err){ done(); }
+        t.onerror=function(){ pingReady(); };
+      }catch(err){ pingReady(); }
     };
-    r.onerror=function(){ done(); };
-  }catch(e){ done(); }
+    r.onerror=function(){ pingReady(); };
+   }catch(e){ pingReady(); }
+  }
+  // Gate: nur überspringen, wenn der Katalog WIRKLICH da ist (genug Dateien + aktuelle Seed-Version). Sonst neu seeden — loop-sicher.
+  (function gate(){
+    var TRY_KEY='diskySeedTry';
+    function attempt(){
+      if(sessionStorage.getItem(TRY_KEY)===SEED_VER){ pingReady(); return; }   // pro Session/Version nur EIN Seed-Versuch → kein Reload-Loop
+      try{ sessionStorage.setItem(TRY_KEY,SEED_VER); }catch(e){}
+      runSeed();
+    }
+    var o; try{ o=indexedDB.open('drivecat',1); }catch(e){ attempt(); return; }
+    o.onupgradeneeded=function(e){ ensureStores(e.target.result); };
+    o.onerror=function(){ attempt(); };
+    o.onsuccess=function(){ var db=o.result;
+      if(!db.objectStoreNames.contains('files')){ db.close(); attempt(); return; }
+      var c; try{ c=db.transaction(['files'],'readonly').objectStore('files').count(); }catch(e){ db.close(); attempt(); return; }
+      c.onsuccess=function(){ var n=c.result; db.close();
+        if(n>=100 && sessionStorage.getItem('diskyDemoSeeded')===SEED_VER) pingReady();   // Daten vorhanden + aktuell → los
+        else attempt(); };
+      c.onerror=function(){ db.close(); attempt(); };
+    };
+  })();
 })();
 </script>
 

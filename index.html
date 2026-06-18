@@ -1455,7 +1455,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
-    liveFrame.src='screen-app.html?v=4&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
+    liveFrame.src='screen-app.html?v=5&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
   sizeLive();
