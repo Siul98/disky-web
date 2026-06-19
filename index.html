@@ -401,6 +401,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-cta{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:32px;opacity:0;animation:hf-ebIn 1.2s 1.05s ease both}
 .hf-dl{padding:17px 40px;font-size:16.5px}
 .hf-tl{margin-top:18px;font-size:12.5px;color:var(--mut2);opacity:0;animation:hf-ebIn 1.2s 1.2s ease both}
+.hf-dlmeta{margin-top:11px;font-size:12px;color:var(--mut2);font-variant-numeric:tabular-nums}
+.hf-dlhint{color:var(--mut)}
 @keyframes hf-ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes hf-silverIn{from{opacity:0;transform:translateZ(0) translateY(.18em)}to{opacity:1;transform:translateZ(0)}}   /* Fade+Rise statt clip-path-Wipe → KEIN Clip mehr, kann unter keinem Browser (auch Safari) eine Unterlänge schneiden */
@@ -805,6 +807,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <div class="hf-cta">
           <a class="btn btn-primary hf-dl" href="#download" data-t="cta_dl">Get early access →</a>
         </div>
+        <p class="hf-dlmeta" id="hfDlMeta" hidden></p>
         <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
       </div>
       <div class="hf-stage" id="hf-stage"><div class="hf-fan" id="hf-fan">
@@ -1068,7 +1071,7 @@ const I18N={
   nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",nav_pricing:"Pricing",nav_dl:"Download",
   hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",hero_cap2sub:"Type a project name — and see the exact drive every file lives on. Even unplugged.",
   hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
-  cta_dl:"Download for Mac",cta_join:"Get early access →",cta_how:"See it find a file in seconds ›",
+  cta_dl:"Download for Mac",cta_join:"Get early access →",cta_how:"See it find a file in seconds ›",dl_firstopen:"first open: right-click → Open",
   soon:"Coming soon for Mac",soon_short:"Coming soon",
   trustline:"Free to start · macOS, Apple Silicon · Read-only · 100% local",
   heroproof:"Search 1M+ files across 22+ drives in seconds — every disk still in the drawer.",
@@ -1144,7 +1147,7 @@ const I18N={
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",nav_pricing:"Preise",nav_dl:"Laden",
   hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",hero_cap2sub:"Tipp einen Projektnamen — und sieh die genaue Platte, auf der jede Datei liegt. Auch abgesteckt.",
   hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
-  cta_dl:"Für Mac herunterladen",cta_join:"Frühzugang sichern →",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",
+  cta_dl:"Für Mac herunterladen",cta_join:"Frühzugang sichern →",cta_how:"Sieh, wie eine Datei in Sekunden auftaucht ›",dl_firstopen:"erstes Öffnen: Rechtsklick → Öffnen",
   soon:"Bald verfügbar für Mac",soon_short:"Bald verfügbar",
   trustline:"Kostenlos starten · macOS, Apple Silicon · Nur-Lesen · 100% lokal",
   heroproof:"1 Mio.+ Dateien über 22+ Platten in Sekunden durchsuchen — jede Disk in der Schublade.",
@@ -1265,7 +1268,7 @@ function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
 let _phDone=false, _phTimer=0;
 /* Testimonials-Sektion. ACHTUNG: aktuell PLATZHALTER-Zitate (für Layout/Aufbau) — VOR dem echten Launch durch echte ersetzen (DE: UWG!). Zum Verstecken READY:false. */
-const TESTI={READY:true};
+const TESTI={READY:false};   // Fake-Platzhalter-Zitate vor dem Launch versteckt (UWG §5) — auf true, sobald echte, konsentierte Beta-Stimmen drin sind
 function renderTesti(){ const el=document.getElementById('testiGrid'); if(!el)return;
   const list=(((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[])).slice(0,3);
   const VB='<svg class="tw-vb" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true"><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/></svg>';
@@ -1299,7 +1302,10 @@ function decorateAnything(){
 /* Download-Status. Solange kein gehostetes .dmg existiert, führt der Haupt-CTA ehrlich zur Waitlist
    („Frühzugang"), NICHT zu einem „Download", der nur ein E-Mail-Formular zeigt. Sobald das .dmg
    gehostet ist: URL eintragen + READY:true → derselbe Button wird zum echten Download (1 Zeile zum Launch). */
-const DOWNLOAD = { URL:"", VERSION:"", SIZE:"", READY:false };   // ← .dmg hosten (GitHub Releases / disky.app/download/…), URL + READY:true setzen
+/* Beta-Download. Zum Scharfschalten NUR: .dmg hosten (GitHub Release o.ä.) → URL eintragen + READY:true.
+   VERSION/SIZE = Anzeige unter dem Button. SIGNED:false → zeigt die „erstes Öffnen"-Anleitung (unsigniert,
+   Gatekeeper). Sobald du mit Apple-Developer-ID signierst+notarisierst → SIGNED:true (Anleitung verschwindet). */
+const DOWNLOAD = { URL:"", VERSION:"0.1.0", SIZE:"102 MB", REQ:"macOS 11+ · Apple Silicon", SIGNED:false, READY:false };
 function downloadReady(){ return DOWNLOAD.READY && /^https?:\/\//.test(DOWNLOAD.URL); }
 function applyDownloadState(){
   const ready=downloadReady();
@@ -1312,6 +1318,14 @@ function applyDownloadState(){
   if(soon){
     if(ready){ soon.setAttribute('href',DOWNLOAD.URL); soon.setAttribute('download',''); if(sp) sp.textContent=tt('cta_dl'); }
     else { soon.setAttribute('href','#download'); soon.removeAttribute('download'); if(sp) sp.textContent=tt('soon_short'); }
+  }
+  const meta=document.getElementById('hfDlMeta');
+  if(meta){
+    if(ready){
+      const bits=[DOWNLOAD.VERSION&&('v'+DOWNLOAD.VERSION), DOWNLOAD.SIZE, DOWNLOAD.REQ].filter(Boolean).join(' · ');   // nur vertrauenswürdige Config-Werte → kein esc nötig
+      meta.innerHTML = bits + (DOWNLOAD.SIGNED ? '' : ' <span class="hf-dlhint">· '+tt('dl_firstopen')+'</span>');
+      meta.hidden=false;
+    } else meta.hidden=true;
   }
 }
 function applyLang(l){
@@ -1754,9 +1768,12 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     cards.forEach((c,i)=>c.classList.toggle('lit', x>=reach[i]));   // Karte leuchtet + wächst, sobald das Kabel ihre Mitte erreicht
     const plugged=p>=0.985; led.classList.toggle('lit',plugged); drive.classList.toggle('plugged',plugged);
   }
-  let t=false;
-  addEventListener('scroll',()=>{ if(t)return; t=true; requestAnimationFrame(()=>{t=false;update();}); },{passive:true});
-  addEventListener('resize',update);
+  let t=false, near=false;
+  // PERF: update() (mehrere getBoundingClientRect) NUR rechnen, wenn die Sektion in der Nähe ist —
+  // sonst läuft die Messung jeden Scroll-Frame WÄHREND des Hero-Scrolls leer (weit off-screen) mit.
+  new IntersectionObserver(es=>{ near=es[0].isIntersecting; if(near) update(); },{rootMargin:'220px 0px 220px 0px'}).observe(sec);
+  addEventListener('scroll',()=>{ if(!near||t)return; t=true; requestAnimationFrame(()=>{t=false;update();}); },{passive:true});
+  addEventListener('resize',()=>{ if(near) update(); });
   const img=drive.querySelector('img'); if(img&&!img.complete) img.addEventListener('load',update);
   build(); setTimeout(update,300); setTimeout(update,1000);
 })();
