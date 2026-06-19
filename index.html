@@ -531,32 +531,33 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .el-dot{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(74,158,255,.85)}
 /* Storage Map — Sunburst-Rad (entfächert aus der Mitte, Ring für Ring — wie in der App) */
 .sm-body{display:flex;align-items:center;gap:clamp(16px,3vw,38px);flex:1;flex-wrap:wrap}
-.sm-wheel{position:relative;flex:0 0 auto;width:clamp(158px,19vw,208px);height:clamp(158px,19vw,208px)}
+.sm-wheel{position:relative;flex:0 0 auto;width:clamp(176px,21vw,236px);height:clamp(176px,21vw,236px);container-type:inline-size}
 .sm-glow{position:absolute;inset:16%;border-radius:50%;background:radial-gradient(circle,rgba(74,158,255,.4),transparent 70%);opacity:0;filter:blur(11px);pointer-events:none}
 .sc-row.in .sm-glow{animation:smGlow 1.7s ease .55s}
 @keyframes smGlow{0%{opacity:0;transform:scale(.7)}45%{opacity:.85}100%{opacity:0;transform:scale(1.06)}}
 .sun{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 18px rgba(74,158,255,.2))}
 /* Entfächerung wie in der App: das Rad blüht aus der Mitte auf (federnde Skala + Fade) — hier zusätzlich Ring für Ring (innen→außen) gestaffelt */
-.sring{opacity:0;transform-box:view-box;transform-origin:100px 100px;will-change:transform,opacity}
+.sring{opacity:0;transform-box:view-box;transform-origin:260px 260px;will-change:transform,opacity}
 .sc-row.in .sring{animation:sunSpread .6s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(.08s + var(--ri,0) * .13s)}
 @keyframes sunSpread{from{opacity:0;transform:scale(.45)}to{opacity:1;transform:scale(1)}}
-.sun path{stroke:#0b0f17;stroke-width:.7;stroke-linejoin:round}   /* gefüllte Keile (Multi-Ring-Sunburst wie die App) mit feiner Trennlinie */
+.sun path{stroke:#0a0e16;stroke-width:1.4;stroke-linejoin:round}   /* dünne Trennlinien zwischen den Keilen — wie in der App (var(--bg)) */
 .sm-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;opacity:0}
 .sc-row.in .sm-center{opacity:1;transition:opacity .5s ease .82s}
-.sm-center b{font-size:clamp(18px,2.1vw,22px);color:var(--ink);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.sm-center span{font-size:10.5px;color:var(--mut2);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
-.sm-legend{flex:1 1 170px;min-width:155px;display:flex;flex-direction:column;gap:16px}
-.sm-legend .lg{opacity:0;transform:translateY(8px)}   /* „klappt auf" wie die App-Legende (legIn), gestaffelt nach dem Rad */
+/* Center skaliert mit dem Rad (cqw) → „33.9 GB" passt immer ins Loch, egal wie groß das Rad gerendert wird */
+.sm-center .sc-name{font-size:4.6cqw;color:var(--ink);font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.sm-center b{font-size:6cqw;color:var(--acc);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:1px}
+.sm-center .sc-sub{font-size:3.4cqw;color:var(--mut2);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+.sm-legend{flex:1 1 200px;min-width:175px;display:flex;flex-direction:column;gap:15px}
+/* App-Legende: Punkt · Ordner-Icon+Name · % · Größe (legIn, gestaffelt nach dem Rad) */
+.sm-legend .lg{opacity:0;transform:translateY(8px);display:flex;align-items:center;gap:11px;font-size:13.5px}
 .sc-row.in .sm-legend .lg{opacity:1;transform:none;transition:opacity .45s ease,transform .45s cubic-bezier(.22,1,.36,1)}
 .sc-row.in .sm-legend .lg:nth-child(1){transition-delay:.9s}
 .sc-row.in .sm-legend .lg:nth-child(2){transition-delay:1.02s}
-.lg-top{display:flex;align-items:center;gap:10px;font-size:13.5px}
-.lg-top i{flex:0 0 auto;width:9px;height:9px;border-radius:3px;background:var(--c)}
-.lgn{flex:1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lgm{color:var(--ink);font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-.lg-bar{height:4px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:8px}
-.lg-bar span{display:block;height:100%;width:var(--w);border-radius:3px;background:var(--c);transform:scaleX(0);transform-origin:left}
-.sc-row.in .lg-bar span{transform:scaleX(1);transition:transform .9s cubic-bezier(.3,.7,.25,1) 1.05s}
+.sm-legend .ldot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+.sm-legend .lname{flex:1;display:flex;align-items:center;gap:7px;min-width:0;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sm-legend .lname svg{width:14px;height:14px;flex:0 0 auto;color:var(--mut);opacity:.75}
+.sm-legend .lpct{color:var(--mut2);font-size:11.5px;width:34px;text-align:right;font-variant-numeric:tabular-nums;flex:0 0 auto}
+.sm-legend .lsize{color:var(--ink);font-size:13px;font-weight:600;min-width:62px;text-align:right;font-variant-numeric:tabular-nums;flex:0 0 auto}
 /* Duplicate Finder — Karten (staffeln nacheinander rein) */
 .dup-stat{font-size:14px;color:var(--mut);margin-bottom:18px}
 .dup-stat b{color:var(--ink);font-weight:700;font-size:16.5px;font-variant-numeric:tabular-nums}
@@ -874,48 +875,54 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <div class="el-head"><span class="el-dot"></span><span data-t="sm_tag">Storage Map · T9</span></div>
         <div class="sm-body">
           <div class="sm-wheel">
-            <svg class="sun" viewBox="0 0 200 200" aria-hidden="true">
+            <svg class="sun" viewBox="0 0 520 520" aria-hidden="true">
               <g class="sring" style="--ri:0">
-                <path d="M100.00 54.60A45.4 45.4 0 0 1 122.94 139.18L115.66 126.75A31 31 0 0 0 100.00 69.00Z" fill="hsl(210 56% 57%)"/>
-                <path d="M122.15 139.63A45.4 45.4 0 0 1 60.30 122.03L72.89 115.04A31 31 0 0 0 115.13 127.06Z" fill="hsl(190 56% 57%)"/>
-                <path d="M59.87 121.23A45.4 45.4 0 0 1 58.90 80.71L71.94 86.83A31 31 0 0 0 72.60 114.49Z" fill="hsl(168 56% 57%)"/>
-                <path d="M59.29 79.90A45.4 45.4 0 0 1 78.16 60.20L85.09 72.82A31 31 0 0 0 72.20 86.27Z" fill="hsl(202 56% 57%)"/>
-                <path d="M78.96 59.77A45.4 45.4 0 0 1 92.40 55.24L94.81 69.44A31 31 0 0 0 85.63 72.53Z" fill="hsl(150 56% 57%)"/>
-                <path d="M93.29 55.10A45.4 45.4 0 0 1 99.09 54.61L99.38 69.01A31 31 0 0 0 95.42 69.34Z" fill="hsl(224 56% 57%)"/>
+                <path d="M260.00 154.00 A106 106 0 1 1 159.37 293.32 L197.34 280.74 A66 66 0 1 0 260.00 194.00 Z" fill="hsl(210 63% 53%)"/>
+                <path d="M159.37 293.32 A106 106 0 0 1 261.96 154.02 L261.22 194.01 A66 66 0 0 0 197.34 280.74 Z" fill="hsl(172 63% 53%)"/>
               </g>
               <g class="sring" style="--ri:1">
-                <path d="M100.00 39.10A60.9 60.9 0 0 1 157.59 80.21L143.98 84.89A46.5 46.5 0 0 0 100.00 53.50Z" fill="hsl(210 52% 64%)"/>
-                <path d="M157.81 80.84A60.9 60.9 0 0 1 155.53 125.01L142.40 119.09A46.5 46.5 0 0 0 144.14 85.37Z" fill="hsl(210 52% 64%)"/>
-                <path d="M155.25 125.61A60.9 60.9 0 0 1 139.52 146.33L130.18 135.38A46.5 46.5 0 0 0 142.19 119.56Z" fill="hsl(210 52% 64%)"/>
-                <path d="M139.01 146.77A60.9 60.9 0 0 1 131.35 152.21L123.94 139.87A46.5 46.5 0 0 0 129.79 135.71Z" fill="hsl(210 52% 64%)"/>
-                <path d="M129.71 153.16A60.9 60.9 0 0 1 71.56 153.85L78.28 141.12A46.5 46.5 0 0 0 122.69 140.59Z" fill="hsl(190 52% 64%)"/>
-                <path d="M70.97 153.53A60.9 60.9 0 0 1 53.44 139.26L64.45 129.98A46.5 46.5 0 0 0 77.83 140.88Z" fill="hsl(190 52% 64%)"/>
-                <path d="M53.01 138.74A60.9 60.9 0 0 1 47.08 130.13L59.59 123.01A46.5 46.5 0 0 0 64.12 129.58Z" fill="hsl(190 52% 64%)"/>
-                <path d="M46.17 128.47A60.9 60.9 0 0 1 41.22 84.08L55.12 87.85A46.5 46.5 0 0 0 58.90 121.74Z" fill="hsl(168 52% 64%)"/>
-                <path d="M41.40 83.44A60.9 60.9 0 0 1 44.59 74.74L57.69 80.71A46.5 46.5 0 0 0 55.25 87.35Z" fill="hsl(168 52% 64%)"/>
-                <path d="M45.40 73.03A60.9 60.9 0 0 1 62.83 51.76L71.62 63.16A46.5 46.5 0 0 0 58.31 79.41Z" fill="hsl(202 52% 64%)"/>
-                <path d="M63.36 51.35A60.9 60.9 0 0 1 70.12 46.94L77.18 59.48A46.5 46.5 0 0 0 72.03 62.85Z" fill="hsl(202 52% 64%)"/>
-                <path d="M71.78 46.04A60.9 60.9 0 0 1 82.95 41.54L86.98 55.36A46.5 46.5 0 0 0 78.45 58.80Z" fill="hsl(150 52% 64%)"/>
-                <path d="M83.59 41.35A60.9 60.9 0 0 1 89.14 40.08L91.71 54.25A46.5 46.5 0 0 0 87.47 55.22Z" fill="hsl(150 52% 64%)"/>
+                <path d="M260.00 114.00 A146 146 0 0 1 400.58 220.58 L362.06 231.38 A106 106 0 0 0 260.00 154.00 Z" fill="hsl(210 60% 58%)"/>
+                <path d="M400.58 220.58 A146 146 0 0 1 347.12 377.15 L323.26 345.06 A106 106 0 0 0 362.06 231.38 Z" fill="hsl(210 60% 58%)"/>
+                <path d="M347.12 377.15 A146 146 0 0 1 239.77 404.59 L245.31 364.98 A106 106 0 0 0 323.26 345.06 Z" fill="hsl(210 60% 58%)"/>
+                <path d="M239.77 404.59 A146 146 0 0 1 156.52 363.00 L184.87 334.78 A106 106 0 0 0 245.31 364.98 Z" fill="hsl(210 60% 58%)"/>
+                <path d="M156.52 363.00 A146 146 0 0 1 121.40 305.89 L159.37 293.32 A106 106 0 0 0 184.87 334.78 Z" fill="hsl(210 60% 58%)"/>
+                <path d="M121.40 305.89 A146 146 0 0 1 122.73 210.28 L160.34 223.90 A106 106 0 0 0 159.37 293.32 Z" fill="hsl(172 60% 58%)"/>
+                <path d="M122.73 210.28 A146 146 0 0 1 173.96 142.04 L197.54 174.36 A106 106 0 0 0 160.34 223.90 Z" fill="hsl(172 60% 58%)"/>
+                <path d="M173.96 142.04 A146 146 0 0 1 222.54 118.89 L232.80 157.55 A106 106 0 0 0 197.54 174.36 Z" fill="hsl(172 60% 58%)"/>
+                <path d="M222.54 118.89 A146 146 0 0 1 262.71 114.03 L261.96 154.02 A106 106 0 0 0 232.80 157.55 Z" fill="hsl(172 60% 58%)"/>
               </g>
               <g class="sring" style="--ri:2">
-                <path d="M100.00 23.60A76.4 76.4 0 0 1 145.95 38.96L137.29 50.47A62 62 0 0 0 100.00 38.00Z" fill="hsl(210 48% 71%)"/>
-                <path d="M146.62 39.47A76.4 76.4 0 0 1 171.97 74.38L158.41 79.21A62 62 0 0 0 137.83 50.88Z" fill="hsl(210 48% 71%)"/>
-                <path d="M172.52 75.96A76.4 76.4 0 0 1 176.22 105.17L161.86 104.20A62 62 0 0 0 158.85 80.50Z" fill="hsl(210 48% 71%)"/>
-                <path d="M176.16 106.01A76.4 76.4 0 0 1 170.00 130.60L156.81 124.83A62 62 0 0 0 161.81 104.88Z" fill="hsl(210 48% 71%)"/>
-                <path d="M137.28 166.69A76.4 76.4 0 0 1 98.29 176.38L98.61 161.98A62 62 0 0 0 130.25 154.12Z" fill="hsl(190 48% 71%)"/>
-                <path d="M97.45 176.36A76.4 76.4 0 0 1 65.07 167.95L71.65 155.14A62 62 0 0 0 97.93 161.97Z" fill="hsl(190 48% 71%)"/>
-                <path d="M32.47 135.72A76.4 76.4 0 0 1 23.78 105.22L38.14 104.24A62 62 0 0 0 45.19 128.99Z" fill="hsl(168 48% 71%)"/>
-                <path d="M23.73 104.38A76.4 76.4 0 0 1 26.04 80.84L39.98 84.45A62 62 0 0 0 38.10 103.56Z" fill="hsl(168 48% 71%)"/>
+                <path d="M260.00 74.00 A186 186 0 0 1 358.17 102.02 L337.06 135.99 A146 146 0 0 0 260.00 114.00 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M358.17 102.02 A186 186 0 0 1 418.43 162.56 L384.36 183.51 A146 146 0 0 0 337.06 135.99 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M418.43 162.56 A186 186 0 0 1 439.09 209.78 L400.58 220.58 A146 146 0 0 0 384.36 183.51 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M439.09 209.78 A186 186 0 0 1 433.05 328.18 L395.84 313.52 A146 146 0 0 0 400.58 220.58 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M433.05 328.18 A186 186 0 0 1 370.99 409.25 L347.12 377.15 A146 146 0 0 0 395.84 313.52 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M370.99 409.25 A186 186 0 0 1 302.71 441.03 L293.52 402.10 A146 146 0 0 0 347.12 377.15 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M302.71 441.03 A186 186 0 0 1 234.23 444.21 L239.77 404.59 A146 146 0 0 0 293.52 402.10 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M234.23 444.21 A186 186 0 0 1 154.61 413.26 L177.28 380.30 A146 146 0 0 0 239.77 404.59 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M154.61 413.26 A186 186 0 0 1 128.17 391.22 L156.52 363.00 A146 146 0 0 0 177.28 380.30 Z" fill="hsl(210 57% 63%)"/>
+                <path d="M83.43 318.46 A186 186 0 0 1 74.24 250.52 L114.19 252.56 A146 146 0 0 0 121.40 305.89 Z" fill="hsl(172 57% 63%)"/>
+                <path d="M74.24 250.52 A186 186 0 0 1 85.12 196.65 L122.73 210.28 A146 146 0 0 0 114.19 252.56 Z" fill="hsl(172 57% 63%)"/>
+                <path d="M85.12 196.65 A186 186 0 0 1 150.39 109.73 L173.96 142.04 A146 146 0 0 0 122.73 210.28 Z" fill="hsl(172 57% 63%)"/>
               </g>
-              <circle cx="100" cy="100" r="29.5" fill="#0a0e16"></circle>
+              <g class="sring" style="--ri:3">
+                <path d="M260.00 34.00 A226 226 0 0 1 326.04 43.86 L314.35 82.12 A186 186 0 0 0 260.00 74.00 Z" fill="hsl(210 54% 67%)"/>
+                <path d="M326.04 43.86 A226 226 0 0 1 379.29 68.05 L358.17 102.02 A186 186 0 0 0 314.35 82.12 Z" fill="hsl(210 54% 67%)"/>
+                <path d="M379.29 68.05 A226 226 0 0 1 452.50 141.60 L418.43 162.56 A186 186 0 0 0 358.17 102.02 Z" fill="hsl(210 54% 67%)"/>
+                <path d="M477.61 198.98 A226 226 0 0 1 485.59 273.61 L445.66 271.20 A186 186 0 0 0 439.09 209.78 Z" fill="hsl(210 54% 67%)"/>
+                <path d="M485.59 273.61 A226 226 0 0 1 470.27 342.85 L433.05 328.18 A186 186 0 0 0 445.66 271.20 Z" fill="hsl(210 54% 67%)"/>
+                <path d="M45.45 331.03 A226 226 0 0 1 34.29 248.49 L74.24 250.52 A186 186 0 0 0 83.43 318.46 Z" fill="hsl(172 54% 67%)"/>
+                <path d="M47.51 183.03 A226 226 0 0 1 81.82 120.97 L113.36 145.58 A186 186 0 0 0 85.12 196.65 Z" fill="hsl(172 54% 67%)"/>
+                <path d="M81.82 120.97 A226 226 0 0 1 126.82 77.41 L150.39 109.73 A186 186 0 0 0 113.36 145.58 Z" fill="hsl(172 54% 67%)"/>
+              </g>
+              <circle cx="260" cy="260" r="62" fill="#0a0e16"></circle>
             </svg>
             <div class="sm-glow" aria-hidden="true"></div>
-            <div class="sm-center"><b data-count="33.9" data-dec="1" data-suf=" GB">33.9 GB</b><span data-t="sm_total">T9 · total</span></div>
+            <div class="sm-center"><span class="sc-name">T9</span><b data-count="33.9" data-dec="1" data-suf=" GB">33.9 GB</b><span class="sc-sub" data-t="sm_total">total</span></div>
           </div>
           <div class="sm-legend">
-            <div class="lg" style="--c:#4a9eff;--w:100%"><div class="lg-top"><i></i><span class="lgn">Wedding Mai 2026</span><span class="lgm">14.2 GB</span></div><div class="lg-bar"><span></span></div></div>
-            <div class="lg" style="--c:#37cfe0;--w:61%"><div class="lg-top"><i></i><span class="lgn">Doku Nordsee</span><span class="lgm">8.6 GB</span></div><div class="lg-bar"><span></span></div></div>
+            <div class="lg"><span class="ldot" style="background:hsl(210 60% 56%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Wedding Mai 2026</span><span class="lpct">70%</span><span class="lsize">23.7 GB</span></div>
+            <div class="lg"><span class="ldot" style="background:hsl(172 60% 56%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Berlin Citytrip</span><span class="lpct">30%</span><span class="lsize">10.3 GB</span></div>
           </div>
         </div>
       </div></div>
@@ -1061,7 +1068,7 @@ const I18N={
   end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Get early access →",end_note:"One email at launch — that's it. No spam.",end_consent:"By joining you agree we may email you once about the Disky launch.",end_privacy:"Privacy",end_done:"You're in. Watch for the launch day email. ✓",end_done_already:"You're already on the list — see you at launch. ✓",end_done_mail:"Mail open — send to confirm your spot. ✓",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   pwr_eb:"But that's not it",pwr_h:"There's more — and even more to come.",pwr_sub:"Finding any file offline is just the start. Everything below ships in the app today — and we're building more all the time.",pwr_more:"And this is just the start.",
-  sm_eb:"Storage Map",sm_h:"See what's eating your space.",sm_p:"Every drive becomes one interactive map — its biggest folders and files at a glance. Hunt down the space hogs in seconds, even with the disk sealed in the drawer.",sm_tag:"Storage Map · T9",sm_total:"T9 · total",
+  sm_eb:"Storage Map",sm_h:"See what's eating your space.",sm_p:"Every drive becomes one interactive map — its biggest folders and files at a glance. Hunt down the space hogs in seconds, even with the disk sealed in the drawer.",sm_tag:"Storage Map · T9",sm_total:"total",
   dup_eb:"Duplicate Finder",dup_h:"Reclaim the space you forgot you lost.",dup_p:"Disky matches files by checksum, not by name — so it catches the same footage hiding under five different names. See what's safe to delete, and how many gigs you'll win back.",dup_tag:"Duplicate Finder",dup_groups:"duplicate groups",dup_reclaim:"reclaimable",
   proj_eb:"Project Manager",proj_h:"Know which projects are down to one copy.",proj_p:"Every project scored at a glance: backed up on two drives, or one failure from gone. With a last “really done?” check before a finished job leaves your hands.",proj_tag:"Project Manager",proj_safe:"Backed up",proj_risk:"At risk",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
@@ -1137,7 +1144,7 @@ const I18N={
   end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Frühzugang sichern →",end_note:"Eine E-Mail zum Launch — mehr nicht. Kein Spam.",end_consent:"Mit der Anmeldung erlaubst du uns, dich einmalig zum Disky-Launch zu mailen.",end_privacy:"Datenschutz",end_done:"Du bist dabei. Die Mail kommt am Launch-Tag. ✓",end_done_already:"Du stehst schon auf der Liste — bis zum Launch. ✓",end_done_mail:"Mail offen — abschicken zum Bestätigen deines Platzes. ✓",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   pwr_eb:"Aber das ist noch nicht alles",pwr_h:"Da ist mehr — und es kommt noch viel mehr.",pwr_sub:"Jede Datei offline finden ist erst der Anfang. Alles hier unten steckt schon in der App — und wir bauen ständig weiter.",pwr_more:"Und das ist erst der Anfang.",
-  sm_eb:"Speicher-Karte",sm_h:"Sieh, was deinen Platz frisst.",sm_p:"Jede Platte wird zu einer interaktiven Karte — die größten Ordner und Dateien auf einen Blick. Finde die Platzfresser in Sekunden, selbst wenn die Platte längst im Schrank liegt.",sm_tag:"Speicher-Karte · T9",sm_total:"T9 · gesamt",
+  sm_eb:"Speicher-Karte",sm_h:"Sieh, was deinen Platz frisst.",sm_p:"Jede Platte wird zu einer interaktiven Karte — die größten Ordner und Dateien auf einen Blick. Finde die Platzfresser in Sekunden, selbst wenn die Platte längst im Schrank liegt.",sm_tag:"Speicher-Karte · T9",sm_total:"gesamt",
   dup_eb:"Duplikat-Finder",dup_h:"Hol dir den Platz zurück, den du längst verloren hast.",dup_p:"Disky vergleicht per Prüfsumme statt per Name — und findet dieselbe Aufnahme auch unter fünf verschiedenen Namen. Sieh, was weg kann und wie viele Gigabyte du zurückholst.",dup_tag:"Duplikat-Finder",dup_groups:"Duplikat-Gruppen",dup_reclaim:"frei machbar",
   proj_eb:"Projekt-Manager",proj_h:"Sieh, welche Projekte nur noch einmal existieren.",proj_p:"Jedes Projekt auf einen Blick bewertet: gesichert auf zwei Platten, oder einen Plattenausfall von weg. Mit einem letzten „wirklich fertig?“-Check, bevor ein fertiger Job aus der Hand geht.",proj_tag:"Projekt-Manager",proj_safe:"Gesichert",proj_risk:"Gefährdet",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
