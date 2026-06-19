@@ -276,6 +276,8 @@ a{color:inherit;text-decoration:none}
 .notify.sent{justify-content:center;min-height:50px;align-items:center}
 .notify.sent .notify-in,.notify.sent .btn{display:none}
 .notify-note{margin:15px auto 0;font-size:12.5px;color:var(--mut2)}
+.notify-consent{margin:11px auto 0;font-size:11.5px;color:var(--mut2);max-width:440px;line-height:1.5}
+.notify-consent a{color:var(--mut);text-decoration:underline;text-underline-offset:2px}
 
 /* pricing */
 .pricing .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;
@@ -784,7 +786,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <h1><span class="hf-t3d" data-t="hero_l1">Find anything.</span><span class="hf-silver" data-t="hero_l2">Connect nothing.</span></h1>
         <p class="hf-sub" data-t="hero_sub">Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.</p>
         <div class="hf-cta">
-          <a class="btn btn-primary hf-dl" href="#download" data-t="cta_dl">Download for Mac</a>
+          <a class="btn btn-primary hf-dl" href="#download" data-t="cta_dl">Get early access →</a>
         </div>
         <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
       </div>
@@ -947,10 +949,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="sc-shot"><div class="sc-el proj-el">
         <div class="el-head"><span class="el-dot"></span><span data-t="proj_tag">Project Manager</span></div>
         <div class="proj-rows">
-          <div class="prow" style="--d:0"><span class="pdot ok"></span><span class="pn">Wedding Mai 2026</span><span class="pbadge ok" data-t="proj_safe">Backed up ×2</span></div>
-          <div class="prow" style="--d:1"><span class="pdot warn"></span><span class="pn">Client Nova Ad</span><span class="pbadge warn" data-t="proj_once">Only once</span></div>
+          <div class="prow" style="--d:0"><span class="pdot ok"></span><span class="pn">Wedding Mai 2026</span><span class="pbadge ok" data-t="proj_safe">Backed up</span></div>
+          <div class="prow" style="--d:1"><span class="pdot risk pulse"></span><span class="pn">Client Nova Ad</span><span class="pbadge risk" data-t="proj_risk">At risk</span></div>
           <div class="prow" style="--d:2"><span class="pdot risk pulse"></span><span class="pn">Doku Nordsee</span><span class="pbadge risk" data-t="proj_risk">At risk</span></div>
-          <div class="prow" style="--d:3"><span class="pdot ok"></span><span class="pn">Berlin Citytrip</span><span class="pbadge ok" data-t="proj_safe">Backed up ×2</span></div>
+          <div class="prow" style="--d:3"><span class="pdot ok"></span><span class="pn">Berlin Citytrip</span><span class="pbadge ok" data-t="proj_safe">Backed up</span></div>
         </div>
       </div></div>
       <div class="sc-text">
@@ -1005,12 +1007,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <span class="eyebrow rev" data-t="end_eb">From drawer to done.</span>
   <h2 class="rev" data-t="end_h">Stop digging through the drawer.</h2>
   <p class="sub rev" data-t="end_sub">One catalog of every drive you own — searchable in seconds, on your Mac, while the drawer stays shut. Catalog once. Never dig again.</p>
-  <form class="notify rev" id="notify" novalidate>
+  <form class="notify rev" id="notify" data-src="endcta" novalidate>
     <label for="notifyEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">E-Mail</label>
     <input type="email" id="notifyEmail" class="notify-in" required autocomplete="email" data-tp="end_ph" placeholder="you@studio.com" aria-label="Email">
+    <input type="text" id="notifyHp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
     <button type="submit" class="btn btn-primary" data-t="end_cta">Notify me at launch →</button>
   </form>
-  <p class="notify-note rev" id="notifyNote" data-t="end_note">One email the day Disky ships. No spam, unsubscribe anytime.</p>
+  <p class="notify-consent rev"><span data-t="end_consent">By joining you agree we may email you once about the Disky launch.</span> <a href="rechtliches.html" data-t="end_privacy">Privacy</a></p>
+  <p class="notify-note rev" id="notifyNote" data-t="end_note">One email at launch — that's it. No spam.</p>
   <p class="trustline rev" data-t="trustline">Free to start · macOS, Apple Silicon · Read-only · 100% local</p>
 </div></section>
 
@@ -1046,12 +1050,12 @@ const I18N={
   how_c2_h:"Disky builds the catalog — on your Mac.",how_c2_p:"Disky catalogs every file — names, folders, projects — and reads what's in your footage and photos, so you search by what you see. Everything stays on your Mac.",how_c2_pr:"On-device · 0 bytes uploaded",
   how_c3_h:"Unplug it. Search anytime.",how_c3_p:"Put the drive back in the drawer. The catalog lives in Disky, so every search after that finds the exact drive and path with nothing connected — across all of them at once.",how_c3_pr:"Nothing plugged in · the whole drawer, searchable",
   pv_eb:"Privacy by design",pv_cred:"Native Apple Silicon · Read-only by design · Works fully offline",
-  end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Get early access →",end_note:"One email the day Disky ships. No spam, unsubscribe anytime.",end_done:"You're in. Watch for the launch day email. ✓",end_done_mail:"Mail open — send to confirm your spot. ✓",
+  end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Get early access →",end_note:"One email at launch — that's it. No spam.",end_consent:"By joining you agree we may email you once about the Disky launch.",end_privacy:"Privacy",end_done:"You're in. Watch for the launch day email. ✓",end_done_already:"You're already on the list — see you at launch. ✓",end_done_mail:"Mail open — send to confirm your spot. ✓",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   pwr_eb:"But that's not it",pwr_h:"There's more — and even more to come.",pwr_sub:"Finding any file offline is just the start. Everything below ships in the app today — and we're building more all the time.",pwr_more:"And this is just the start.",
   sm_eb:"Storage Map",sm_h:"See what's eating your space.",sm_p:"Every drive becomes one interactive map — its biggest folders and files at a glance. Hunt down the space hogs in seconds, even with the disk sealed in the drawer.",sm_tag:"Storage Map · T9",sm_total:"T9 · total",
   dup_eb:"Duplicate Finder",dup_h:"Reclaim the space you forgot you lost.",dup_p:"Disky matches files by checksum, not by name — so it catches the same footage hiding under five different names. See what's safe to delete, and how many gigs you'll win back.",dup_tag:"Duplicate Finder",dup_groups:"duplicate groups",dup_reclaim:"reclaimable",
-  proj_eb:"Project Manager",proj_h:"Know which projects are down to one copy.",proj_p:"Every project scored at a glance: safe on two drives, clinging to one, or a single failure from gone. With a last “really done?” check before a finished job leaves your hands.",proj_tag:"Project Manager",proj_safe:"Backed up ×2",proj_once:"Only once",proj_risk:"At risk",
+  proj_eb:"Project Manager",proj_h:"Know which projects are down to one copy.",proj_p:"Every project scored at a glance: backed up on two drives, or one failure from gone. With a last “really done?” check before a finished job leaves your hands.",proj_tag:"Project Manager",proj_safe:"Backed up",proj_risk:"At risk",
   feats_eb:"Six tools. One catalog.",feats_h:"Everything Disky does, at a glance.",
   rl_q:"underwater",rl_search_n:"8 clips · 4 drives",rl_map_n:"Reclaim 80 GB",rl_dup_n:"same file · ×3 · 46 GB",rl_world_n:"14 locations",
   feats:[
@@ -1066,7 +1070,7 @@ const I18N={
    {eb:"Index once",h:"Plug in once. Find it forever.",p:"Scan each drive a single time. Disky remembers every file, folder and project — then pulls any one of them up a year later while that drive sits powered-off in the drawer. No mounting, no eject-and-repeat, no wear.",pr:"Search 1M+ files across 22+ drives in seconds — every disk still in the drawer"},
    {eb:"Deep Search",h:"Find the shot you can't name.",p:"Forget what you called it. Type “underwater” and Disky surfaces clips with water in them — searching what's visible in the frame, not the filename. The on-device model runs on your Mac, across every drive at once, even the misnamed DJI_0423.mov.",pr:"On-device AI · 0 bytes uploaded · 100% local"},
    {eb:"Storage Map",h:"See what's eating your drives.",p:"Every folder becomes a ring, sized by what it weighs. The cache bloat and dead exports hogging half your SSD light up at a glance. Disky reads and shows — you release only what you choose, yourself, in Finder.",pr:"Reclaim estimates to the gigabyte — Disky reads, you decide"},
-   {eb:"Project Radar",h:"See which projects have no backup.",p:"Every project sorts itself into backed-up, partial, or needs-backup. The jobs still living on a single drive surface to the top — so you can copy them somewhere safe while it's a quiet decision, not an emergency.",pr:"44 GB flagged as single-copy in a typical first scan"},
+   {eb:"Project Radar",h:"See which projects have no backup.",p:"Every project sorts itself into backed-up or at-risk. The jobs still living on a single drive surface to the top — so you can copy them somewhere safe while it's a quiet decision, not an emergency.",pr:"44 GB flagged as single-copy in a typical first scan"},
    {eb:"Duplicate Finder",h:"Stop storing the same file twice.",p:"Disky matches files by checksum, not by name, so renamed and moved copies can't hide across drives. That 46 GB master sitting on three drives? It catches every copy — and shows the exact space you'd reclaim before you touch a thing.",pr:"80.4 GB reclaimable across 5 duplicate groups"},
    {eb:"Worldmap",h:"See where your geotagged clips were shot.",p:"For footage that carries a GPS stamp, Disky reads it straight from the embedded metadata and drops a quiet pin on a world map — including drives you haven't opened in years. Read-only: the location is shown, never moved or changed.",pr:"Pulled straight from embedded GPS metadata — read-only, never moved"}
   ],
@@ -1122,12 +1126,12 @@ const I18N={
   how_c2_h:"Disky baut den Katalog — auf deinem Mac.",how_c2_p:"Disky erfasst jede Datei: Namen, Ordner, Projekte — und liest, was in deinem Material und deinen Fotos steckt, damit du findest, was du siehst. Alles bleibt auf deinem Mac.",how_c2_pr:"On-device · 0 Byte hochgeladen",
   how_c3_h:"Abziehen. Jederzeit suchen.",how_c3_p:"Leg die Platte zurück in die Schublade. Der Katalog lebt in Disky — jede Suche danach findet die exakte Platte und den Pfad, ohne dass etwas angesteckt ist. Über alle auf einmal.",how_c3_pr:"Nichts angesteckt · die ganze Schublade, durchsuchbar",
   pv_eb:"Datenschutz von Grund auf",pv_cred:"Nativ für Apple Silicon · Nur-Lesen by Design · Komplett offline",
-  end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Frühzugang sichern →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, jederzeit abbestellbar.",end_done:"Du bist dabei. Die Mail kommt am Launch-Tag. ✓",end_done_mail:"Mail offen — abschicken zum Bestätigen deines Platzes. ✓",
+  end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Frühzugang sichern →",end_note:"Eine E-Mail zum Launch — mehr nicht. Kein Spam.",end_consent:"Mit der Anmeldung erlaubst du uns, dich einmalig zum Disky-Launch zu mailen.",end_privacy:"Datenschutz",end_done:"Du bist dabei. Die Mail kommt am Launch-Tag. ✓",end_done_already:"Du stehst schon auf der Liste — bis zum Launch. ✓",end_done_mail:"Mail offen — abschicken zum Bestätigen deines Platzes. ✓",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   pwr_eb:"Aber das ist noch nicht alles",pwr_h:"Da ist mehr — und es kommt noch viel mehr.",pwr_sub:"Jede Datei offline finden ist erst der Anfang. Alles hier unten steckt schon in der App — und wir bauen ständig weiter.",pwr_more:"Und das ist erst der Anfang.",
   sm_eb:"Speicher-Karte",sm_h:"Sieh, was deinen Platz frisst.",sm_p:"Jede Platte wird zu einer interaktiven Karte — die größten Ordner und Dateien auf einen Blick. Finde die Platzfresser in Sekunden, selbst wenn die Platte längst im Schrank liegt.",sm_tag:"Speicher-Karte · T9",sm_total:"T9 · gesamt",
   dup_eb:"Duplikat-Finder",dup_h:"Hol dir den Platz zurück, den du längst verloren hast.",dup_p:"Disky vergleicht per Prüfsumme statt per Name — und findet dieselbe Aufnahme auch unter fünf verschiedenen Namen. Sieh, was weg kann und wie viele Gigabyte du zurückholst.",dup_tag:"Duplikat-Finder",dup_groups:"Duplikat-Gruppen",dup_reclaim:"frei machbar",
-  proj_eb:"Projekt-Manager",proj_h:"Sieh, welche Projekte nur noch einmal existieren.",proj_p:"Jedes Projekt auf einen Blick bewertet: doppelt gesichert, nur einmal, oder einen Plattenausfall von weg. Mit einem letzten „wirklich fertig?“-Check, bevor ein fertiger Job aus der Hand geht.",proj_tag:"Projekt-Manager",proj_safe:"2× gesichert",proj_once:"Nur einmal",proj_risk:"Gefährdet",
+  proj_eb:"Projekt-Manager",proj_h:"Sieh, welche Projekte nur noch einmal existieren.",proj_p:"Jedes Projekt auf einen Blick bewertet: gesichert auf zwei Platten, oder einen Plattenausfall von weg. Mit einem letzten „wirklich fertig?“-Check, bevor ein fertiger Job aus der Hand geht.",proj_tag:"Projekt-Manager",proj_safe:"Gesichert",proj_risk:"Gefährdet",
   feats_eb:"Sechs Tools. Ein Katalog.",feats_h:"Alles was Disky kann, auf einen Blick.",
   rl_q:"unter Wasser",rl_search_n:"8 Clips · 4 Platten",rl_map_n:"80 GB frei",rl_dup_n:"gleiche Datei · ×3 · 46 GB",rl_world_n:"14 Orte",
   feats:[
@@ -1142,7 +1146,7 @@ const I18N={
    {eb:"Einmal indexieren",h:"Einmal anstecken. Für immer finden.",p:"Scanne jede Platte ein einziges Mal. Disky merkt sich jede Datei, jeden Ordner, jedes Projekt — und holt ein Jahr später jedes davon hervor, während die Platte ausgeschaltet im Schrank liegt. Kein Mounten, kein Auswerfen-und-wieder, kein Verschleiß.",pr:"1 Mio.+ Dateien über 22+ Platten in Sekunden — jede Disk noch in der Schublade"},
    {eb:"Deep Search",h:"Finde die Aufnahme, die du nicht benennen kannst.",p:"Vergiss, wie du sie genannt hast. Tippe „unter Wasser“, und Disky holt Clips mit Wasser hervor — gesucht wird, was im Bild sichtbar ist, nicht der Dateiname. Das Modell läuft on-device auf deinem Mac, über alle Platten auf einmal, auch die falsch benannte DJI_0423.mov.",pr:"KI on-device · 0 Byte hochgeladen · 100% lokal"},
    {eb:"Storage Map",h:"Sieh, was deine Platten frisst.",p:"Jeder Ordner wird zum Ring, skaliert nach seinem Gewicht. Cache-Müll und tote Exporte, die deine halbe SSD belegen, leuchten sofort auf. Disky liest und zeigt — du gibst nur frei, was du willst, selbst, im Finder.",pr:"Freigabe-Schätzungen aufs Gigabyte genau — Disky liest, du entscheidest"},
-   {eb:"Projekt-Radar",h:"Sieh, welche Projekte kein Backup haben.",p:"Jedes Projekt sortiert sich selbst in gesichert, teilweise oder Backup nötig. Die Jobs, die nur auf einer einzigen Platte liegen, rutschen nach oben — damit du sie in Ruhe irgendwohin Sicheres kopierst, nicht im Notfall.",pr:"44 GB beim ersten Scan typischerweise als Einzelkopie markiert"},
+   {eb:"Projekt-Radar",h:"Sieh, welche Projekte kein Backup haben.",p:"Jedes Projekt sortiert sich selbst in gesichert oder gefährdet. Die Jobs, die nur auf einer einzigen Platte liegen, rutschen nach oben — damit du sie in Ruhe irgendwohin Sicheres kopierst, nicht im Notfall.",pr:"44 GB beim ersten Scan typischerweise als Einzelkopie markiert"},
    {eb:"Duplicate Finder",h:"Schluss damit, dieselbe Datei zweimal zu speichern.",p:"Disky gleicht Dateien per Prüfsumme ab, nicht per Name — umbenannte und verschobene Kopien können sich über Platten hinweg nicht verstecken. Das 46-GB-Master auf drei Platten? Es erkennt jede Kopie — und zeigt den exakten Platz, den du zurückgewinnst, bevor du irgendetwas anfasst.",pr:"80,4 GB rückgewinnbar über 5 Duplikat-Gruppen"},
    {eb:"Weltkarte",h:"Sieh, wo deine Clips mit Geo-Stempel gedreht wurden.",p:"Bei Material mit GPS-Stempel liest Disky ihn direkt aus den eingebetteten Metadaten und setzt einen stillen Pin auf eine Weltkarte — auch von Platten, die du seit Jahren nicht geöffnet hast. Nur-Lesen: Der Ort wird gezeigt, nie bewegt oder verändert.",pr:"Direkt aus eingebetteten GPS-Metadaten — nur gelesen, nie bewegt"}
   ],
@@ -1262,6 +1266,24 @@ function decorateAnything(){
   const step=()=>{ typed.textContent=WORD.slice(0,k); if(k++<WORD.length) _phTimer=setTimeout(step, 62+Math.round(Math.random()*55)); };   // Zeichen für Zeichen tippen (leicht variabler Rhythmus)
   _phTimer=setTimeout(step, D);
 }
+/* Download-Status. Solange kein gehostetes .dmg existiert, führt der Haupt-CTA ehrlich zur Waitlist
+   („Frühzugang"), NICHT zu einem „Download", der nur ein E-Mail-Formular zeigt. Sobald das .dmg
+   gehostet ist: URL eintragen + READY:true → derselbe Button wird zum echten Download (1 Zeile zum Launch). */
+const DOWNLOAD = { URL:"", VERSION:"", SIZE:"", READY:false };   // ← .dmg hosten (GitHub Releases / disky.app/download/…), URL + READY:true setzen
+function downloadReady(){ return DOWNLOAD.READY && /^https?:\/\//.test(DOWNLOAD.URL); }
+function applyDownloadState(){
+  const ready=downloadReady();
+  const dl=document.querySelector('.hf-dl');
+  if(dl){
+    if(ready){ dl.setAttribute('href',DOWNLOAD.URL); dl.setAttribute('download',''); dl.textContent=tt('cta_dl'); }
+    else { dl.setAttribute('href','#download'); dl.removeAttribute('download'); dl.textContent=tt('cta_join'); }   // ehrlich: Frühzugang/Waitlist statt totem „Download"
+  }
+  const soon=document.querySelector('.nav .soon'); const sp=soon&&soon.querySelector('span');
+  if(soon){
+    if(ready){ soon.setAttribute('href',DOWNLOAD.URL); soon.setAttribute('download',''); if(sp) sp.textContent=tt('cta_dl'); }
+    else { soon.setAttribute('href','#download'); soon.removeAttribute('download'); if(sp) sp.textContent=tt('soon_short'); }
+  }
+}
 function applyLang(l){
   if(l)LANG=l; store.set('diskyLang',LANG); document.documentElement.lang=LANG;
   document.title=tt('meta_title'); const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute('content',tt('meta_desc'));
@@ -1270,16 +1292,24 @@ function applyLang(l){
   decorateAnything();
   renderCaps(); renderFAQ(); renderTesti(); renderReel(); if(window.__hfRefreshTour)window.__hfRefreshTour();
   { const lv=document.getElementById('loved'); if(lv) lv.hidden=!TESTI.READY; }   // Sektion nur zeigen, wenn echte Zitate freigeschaltet
+  applyDownloadState();   // CTA spiegelt den echten Zustand (Waitlist vs. echter Download)
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
 buildReel(); applyLang();
 
-/* Launch notify — postet an ein echtes Endpoint (WAITLIST.ENDPOINT), sonst ehrlicher Mail-Fallback */
-const WAITLIST = { ENDPOINT: "" };   // ← Formspree/Buttondown-POST-URL hier eintragen → echtes E-Mail-Capture (z. B. "https://formspree.io/f/xxxxxx")
-if(!WAITLIST.ENDPOINT) console.warn('⚠️ Disky: WAITLIST.ENDPOINT ist leer — Anmeldungen fallen auf mailto zurück und werden NICHT erfasst. Vor dem Launch ein echtes Endpoint eintragen.');
+/* Launch-Waitlist — bevorzugt die Supabase-eigene join-waitlist-Funktion (kein Fremddienst nötig),
+   sonst ein optionales externes WAITLIST.ENDPOINT (Formspree o.ä.), sonst ehrlicher Mail-Fallback. */
+const WAITLIST = { ENDPOINT: "" };   // optional: externe Form-POST-URL. Leer lassen → nutzt Supabase (SUPABASE_WEB unten), sonst Mail-Fallback.
+function waitlistEndpoint(){
+  if(WAITLIST.ENDPOINT) return { url: WAITLIST.ENDPOINT, supa:false };
+  try{ if(typeof SUPABASE_WEB!=='undefined' && SUPABASE_WEB && SUPABASE_WEB.URL && SUPABASE_WEB.ANON_KEY && !/DEIN-/.test(SUPABASE_WEB.URL+SUPABASE_WEB.ANON_KEY))
+        return { url: SUPABASE_WEB.URL.replace(/\/+$/,'')+'/functions/v1/join-waitlist', supa:true }; }catch(_){}
+  return null;   // nichts konfiguriert
+}
+setTimeout(()=>{ if(!waitlistEndpoint()) console.warn('⚠️ Disky: Kein Waitlist-Backend konfiguriert (SUPABASE_WEB leer und WAITLIST.ENDPOINT leer) — Anmeldungen fallen auf mailto zurück und werden NICHT erfasst.'); },0);
 (function(){ const f=document.getElementById('notify'); if(!f)return;
-  const inp=document.getElementById('notifyEmail'), note=document.getElementById('notifyNote');
+  const inp=document.getElementById('notifyEmail'), note=document.getElementById('notifyNote'), hp=document.getElementById('notifyHp');
   const valid=v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
   inp.addEventListener('input',()=>{ inp.style.borderColor=''; });            // roten Fehler-Rand löschen, sobald getippt wird
   const markSent=key=>{ f.classList.add('sent'); if(note) note.textContent=tt(key); };
@@ -1289,12 +1319,20 @@ if(!WAITLIST.ENDPOINT) console.warn('⚠️ Disky: WAITLIST.ENDPOINT ist leer �
   f.addEventListener('submit',async e=>{ e.preventDefault();
     const v=(inp.value||'').trim();
     if(!valid(v)){ inp.focus(); inp.style.borderColor='#ff6b6b'; return; }
-    if(WAITLIST.ENDPOINT){
-      try{ const res=await fetch(WAITLIST.ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({email:v})});
-        if(res.ok){ markSent('end_done'); return; } }catch(_){}
+    const ep=waitlistEndpoint();
+    if(ep){
+      const headers={'Accept':'application/json','Content-Type':'application/json'};
+      let payload={ email:v };
+      if(ep.supa){
+        payload={ email:v, source:(f.getAttribute('data-src')||'site'), locale:(typeof LANG!=='undefined'?LANG:'en'), referrer:(document.referrer||null), hp:(hp&&hp.value)||'' };
+        try{ headers.apikey=SUPABASE_WEB.ANON_KEY; headers.Authorization='Bearer '+SUPABASE_WEB.ANON_KEY; }catch(_){}   // funktioniert mit und ohne JWT-Prüfung
+      }
+      try{ const res=await fetch(ep.url,{method:'POST',headers,body:JSON.stringify(payload)});
+        if(res.ok){ let j={}; try{ j=await res.json(); }catch(_){}
+          markSent(j&&j.already ? 'end_done_already' : 'end_done'); return; } }catch(_){}
       mailtoFallback(v); return;                                             // Endpoint-Fehler → Mail-Fallback, kein verlorener Lead
     }
-    mailtoFallback(v);                                                       // noch kein Endpoint konfiguriert → ehrlicher Mail-Fallback
+    mailtoFallback(v);                                                       // nichts konfiguriert → ehrlicher Mail-Fallback
   });
   addEventListener('pageshow',e=>{ if(e.persisted){ f.classList.remove('sent'); if(note) note.textContent=tt('end_note'); inp.style.borderColor=''; } });  // bfcache/Zurück-Button: nicht fälschlich „gesendet" zeigen
 })();
