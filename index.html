@@ -422,13 +422,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-t9{position:absolute;left:50%;top:50%;width:520px;z-index:11;pointer-events:none;will-change:transform}
 .hf-t9.hf-resting{transition:transform .2s cubic-bezier(.2,.8,.3,1),filter .2s ease}
 .hf-t9 .hf-dimg{display:block;width:100%;height:auto}   /* KEIN border-radius mehr — die runden Ecken sind jetzt transparent ins webp gebacken (Front + X-Ray gleicher Radius), kein Clip-Artefakt im Scan */
-.hf-t9 .hf-front{filter:drop-shadow(0 34px 56px rgba(0,0,0,.7));will-change:mask}
+.hf-t9 .hf-front{filter:drop-shadow(0 26px 42px rgba(0,0,0,.72))}   /* PERF: kleinerer Blur-Radius → günstigeres Re-Raster, während die Scan-Maske jeden Frame wandert; will-change:mask raus (Maske ist nicht Compositor-beschleunigt) */
 /* Lebendiger Puls-Glow nach dem Scan — fertige Radial-Ebene, nur opacity+scale animiert (GPU-Compositor, ~gratis); pausiert wenn der Hero aus dem Bild ist */
 .hf-t9glow{position:absolute;inset:-24% -16%;border-radius:50%;z-index:-1;pointer-events:none;opacity:0;background:radial-gradient(closest-side,rgba(95,175,255,.55),rgba(95,175,255,.16) 56%,transparent 72%);will-change:opacity,transform}
 .hf-rail.hf-inview .hf-t9.lit .hf-t9glow{animation:t9pulse 2.7s ease-in-out infinite}
 @keyframes t9pulse{0%,100%{opacity:.30;transform:scale(.95)}50%{opacity:.62;transform:scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.hf-t9glow{animation:none!important}.hf-t9.lit .hf-t9glow{opacity:.4}}
-.hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:mask,opacity}   /* X-Ray ist opak mit mehr schwarzem Rand → stärker clippen (nur dieses Bild) */
+.hf-t9 .hf-xray{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;will-change:opacity}   /* X-Ray opak; screen nur während des Scans (vor dem Glow). will-change:mask raus — Maske ist nicht Compositor-beschleunigt */
 .hf-scanline{position:absolute;top:0;bottom:0;left:0;width:0;z-index:6;opacity:0;transition:opacity .15s}
 .hf-scanline.hf-on{opacity:1}
 .hf-scanline .hf-bm{position:absolute;top:-30%;bottom:-30%;left:-1.4px;width:2.8px;border-radius:3px;background:linear-gradient(180deg,transparent 0%,rgba(205,238,255,.5) 16%,#cdeeff 40%,#37cfe0 50%,#cdeeff 60%,rgba(205,238,255,.5) 84%,transparent 100%);box-shadow:0 0 30px 10px rgba(74,158,255,.72)}
@@ -436,7 +436,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-scanline .hf-warp{position:absolute;top:-16%;bottom:-16%;left:50%;width:70px;transform:translateX(-50%);pointer-events:none;mix-blend-mode:screen;background:linear-gradient(90deg,transparent,rgba(120,180,255,.16) 42%,rgba(150,235,255,.34) 50%,rgba(120,180,255,.16) 58%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)}
 .hf-scanline.hf-appear .hf-bm{animation:hf-bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
 @keyframes hf-bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
-.hf-bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
+.hf-bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;will-change:opacity,transform;background:radial-gradient(circle,rgba(255,255,255,.92) 0%,rgba(130,190,255,.62) 18%,rgba(74,158,255,.34) 36%,transparent 62%)}   /* PERF: kein mix-blend-mode:screen mehr — der 1150px-Glow musste sonst beim Aufleuchten jeden Frame den ganzen Hintergrund neu durchblenden (DER Lag-Spike nach dem Glow). Auf fast-schwarzem BG ist normaler Blend praktisch identisch; nur Opacity = Compositor */
 .hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;will-change:opacity,transform;border:1.5px solid rgba(175,210,255,.5);box-shadow:0 0 36px rgba(110,180,255,.32),inset 0 0 34px rgba(74,158,255,.16)}   /* PERF: kein mix-blend-mode:screen mehr — der skalierende Ring musste sonst jeden Frame den Hintergrund neu durchblenden (Haupt-Jank-Quelle im Glow); auf fast-schwarzem BG sieht normaler Blend identisch aus */
 .hf-appwin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:min(920px,93vw);height:min(680px,82vh);opacity:0;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
 .hf-awbar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
@@ -468,17 +468,19 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-awhead{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 .hf-files{position:absolute;inset:0;z-index:12;pointer-events:none}
 .hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:50% 14px}
-.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6));transition:filter .22s ease}
+.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6))}   /* PERF: keine filter-Transition mehr — der .22s drop-shadow-Tween rasterte jedes Icon über die ganze Dauer neu; jetzt schnappt der Glow (1× Raster) */
 .hf-files.lit .hf-ic{filter:drop-shadow(0 5px 11px rgba(0,0,0,.6)) drop-shadow(0 0 11px rgba(110,170,255,.6))}
 .hf-fitem .hf-nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
 .hf-fitem .hf-sz{margin-left:auto;padding-left:18px;font-size:11px;color:var(--mut2);font-family:var(--fmono)}
 /* Hero MacBook — catches the files, then the app reacts (real screenshot, no iframe → no boot lag) */
 .hf-mac{position:absolute;left:50%;top:50%;z-index:6;width:min(1160px,86vw,90vh);opacity:0;   /* 90vh-Cap: MacBook darf nie die ganze Viewport-Höhe fressen → Text behält oben Luft */
-  transform:translate(-50%,-50%);pointer-events:none;will-change:transform,opacity;
-  filter:drop-shadow(0 44px 70px rgba(0,0,0,.6))}
+  transform:translate(-50%,-50%);pointer-events:none;will-change:transform,opacity}
+/* PERF: Schatten als box-shadow am Lid (Compositor-gezeichnet) statt filter:drop-shadow am .hf-mac.
+   Der drop-shadow rasterte sonst den ganzen ~1100px-MacBook jeden Frame neu, weil das macGlow-Kind
+   pro Frame seine Opacity ändert (= Filter-Input ändert sich). box-shadow ist unabhängig vom Kind-Inhalt. */
 .hf-mlid{position:relative;padding:10px 10px 11px;border-radius:17px 17px 6px 6px;
-  background:linear-gradient(158deg,#0d0f13,#050608 62%);box-shadow:inset 0 0 0 2px #1a1e24,inset 0 1px 0 rgba(255,255,255,.06)}
+  background:linear-gradient(158deg,#0d0f13,#050608 62%);box-shadow:0 40px 64px -6px rgba(0,0,0,.6),inset 0 0 0 2px #1a1e24,inset 0 1px 0 rgba(255,255,255,.06)}
 .hf-mlid::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
   background:linear-gradient(180deg,rgba(196,202,210,.55),rgba(120,126,135,.2) 32%,rgba(54,58,64,.5));
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
@@ -487,10 +489,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-mscr{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:1320/812;
   background:radial-gradient(120% 140% at 50% 0%,#0a0e16,#05070b)}
 .hf-mscr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;opacity:0;will-change:opacity,transform}
-.hf-mglow{position:absolute;inset:0;pointer-events:none;opacity:0;mix-blend-mode:screen;
-  background:radial-gradient(80% 90% at 50% 42%,rgba(86,160,255,.55),transparent 70%)}
+.hf-mglow{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:radial-gradient(80% 90% at 50% 42%,rgba(86,160,255,.5),transparent 70%)}   /* PERF: ohne screen-Blend — leuchtet beim Ordner-Einströmen ohne Per-Frame-Backdrop-Blend */
 .hf-mswipe{position:absolute;top:0;bottom:0;width:60%;left:-60%;pointer-events:none;opacity:0;
-  background:linear-gradient(105deg,transparent,rgba(150,200,255,.65) 50%,transparent);mix-blend-mode:screen}
+  background:linear-gradient(105deg,transparent,rgba(150,200,255,.65) 50%,transparent)}
 /* ECHTE App live im Screen (screen-app.html), lazy geladen — NICHT bedienbar. Poster-Screenshot bleibt, bis die App bereit ist, dann Crossfade. */
 .hf-liveapp{position:absolute;top:0;left:0;width:1320px;height:812px;border:0;transform-origin:top left;transform:scale(var(--liveS,1));pointer-events:none;opacity:0;transition:opacity .55s ease;background:#06080d}
 .hf-mscr.live-ready .hf-liveapp{opacity:1}
@@ -1541,7 +1543,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
-    liveFrame.src='screen-app.html?v=8&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
+    liveFrame.src='screen-app.html?v=9&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
   sizeLive();
@@ -1612,16 +1614,16 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     hero.classList.toggle('hf-resting',resting);
     const bx=scan*100, ft=6;
     if(scan<=0.002){ xray.style.opacity=0; front.style.opacity=1; wr(front,'webkitMaskImage','none'); wr(front,'maskImage','none'); scanline.classList.remove('hf-on','hf-appear'); }
-    else if(scan>=0.985){ xray.style.opacity=1; wr(xray,'webkitMaskImage','none'); wr(xray,'maskImage','none'); front.style.opacity=0; scanline.classList.remove('hf-on','hf-appear'); }
+    else if(scan>=0.985){ xray.style.opacity=1; wr(xray,'mixBlendMode','normal'); wr(xray,'webkitMaskImage','none'); wr(xray,'maskImage','none'); front.style.opacity=0; scanline.classList.remove('hf-on','hf-appear'); }   // PERF: nach dem Scan steht der X-Ray über fast-schwarzem BG → screen==normal optisch, aber normal liest NICHT jeden Frame den Hintergrund (kein Backdrop-Read auf der hochscrollenden SSD im Post-Glow-Fenster)
     else {
-      xray.style.opacity=1; front.style.opacity=1;
+      xray.style.opacity=1; wr(xray,'mixBlendMode','screen'); front.style.opacity=1;   // screen nur WÄHREND des Scans (X-Ray additiv über die Schale)
       const xm=`linear-gradient(to right,#000 ${(bx-ft).toFixed(1)}%,transparent ${(bx+ft).toFixed(1)}%)`; wr(xray,'webkitMaskImage',xm); wr(xray,'maskImage',xm);
       const fmask=`linear-gradient(to right,transparent ${(bx-ft).toFixed(1)}%,#000 ${(bx+ft).toFixed(1)}%)`; wr(front,'webkitMaskImage',fmask); wr(front,'maskImage',fmask);   // wr()+1 Dezimale → weniger redundante Mask-Re-Raster im Scan
       scanline.style.left=bx.toFixed(2)+'%'; scanline.classList.add('hf-on');
       if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
     }
     const dyC=(cyC-innerHeight*0.5).toFixed(0);   // Welle/Bloom auf den SSD-Mittelpunkt schieben
-    bloom.style.opacity=clamp(0.08*lift*(1-pullE) + 0.5*finish + 0.7*flash).toFixed(3);   // 0.5*finish = bleibender Halo nach dem Scan; 0.7*flash = kräftigerer Puls, der den entfernten Subtree-brightness-Flash ersetzt (nur Opacity = günstig)
+    bloom.style.opacity=clamp((0.08*lift + 0.5*finish)*(1-pullE) + 0.7*flash).toFixed(3);   // PERF: Halo (0.5*finish) blendet jetzt mit (1-pullE) AUS, sobald das MacBook übernimmt → der 1150px-Layer compositet nicht mehr jeden p2-Frame über die bewegte Szene. flash bleibt als kurzer Glow-Puls.
     bloom.style.transform=`translate(-50%,-50%) translateY(${(+dyC-pan).toFixed(0)}px) scale(${(0.66+0.12*lift+0.2*finish+0.45*flash).toFixed(3)})`;   // folgt der SSD beim Hochscrollen (−pan)
     shock.style.opacity=(clamp(finish/0.08)*(1-finish)*0.62*(1-pullE)).toFixed(3);   // Ring erscheint, expandiert nach außen, fadet beim Wachsen
     shock.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.4+waveR/250).toFixed(3)})`;
@@ -1634,9 +1636,9 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     // triggerSearch NICHT mehr mitten im Scroll feuern (Main-Thread-Contention mit der iframe-App) → erst beim Settle, siehe tick()/settleLive()
     mac.style.transform=`translate(-50%,calc(-50% + ${macTY.toFixed(0)}px)) scale(1)`;
     macSwipe.style.opacity='0'; macGlow.style.opacity=(0.5*react).toFixed(3);   // Screen leuchtet auf, während die Ordner reinströmen (reagiert)
-    shots[0].style.opacity='1';                               // Overview-Screen ist von Anfang an da
-    for(let i=1;i<NS;i++) shots[i].style.opacity='0';
-    if(tour) tour.style.opacity='0';
+    wr(shots[0],'opacity','1');                               // Overview-Screen ist von Anfang an da (wr → kein redundanter Per-Frame-Write)
+    for(let i=1;i<NS;i++) wr(shots[i],'opacity','0');
+    if(tour) wr(tour,'opacity','0');
     // Dateien fliegen NACH UNTEN in den MacBook-Screen (Szene-Koordinaten, dann Kamera-Schwenk -pan oben drauf) und werden aufgesaugt
     const W=innerWidth,H=innerHeight, tgx=W/2, sceneTgy=H*0.46+GAP+MAC_DROP;   // MacBook-Screen (tiefer gelandet) liegt in Szene GAP+DROP+0.46h unten
     filesWrap.classList.toggle('lit', finish>0.4);   // Ordner-Icons glowen nach dem Scan weiter (Klassen-Toggle statt Pro-Frame-Filter → perf-schonend)

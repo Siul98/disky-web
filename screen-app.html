@@ -27,7 +27,7 @@
   }
   window.addEventListener('message', function(e){
     var d=e&&e.data; if(!d) return;
-    if('diskyVis' in d){ window.__diskyPaused = !d.diskyVis; }   // Parent meldet Sichtbarkeit → off-screen das Starfield pausieren (spart CPU)
+    if('diskyVis' in d){ window.__diskyPaused = !d.diskyVis; try{ document.documentElement.classList.toggle('disky-paused', !d.diskyVis); }catch(_){}; }   // Parent meldet Sichtbarkeit → Starfield UND alle CSS-Animationen pausieren, während der Parent scrollt (kein Cross-Process-Paint im kritischen Scroll-Fenster)
     if(d.diskyDemo==='search'){ demoSearch(d.q||'Nordsee', d.lens||'all'); return; }
     if(d.diskyView){ gotoView(d.diskyView); }
   });
@@ -173,6 +173,8 @@
 @keyframes growx{from{width:0}}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
+/* PERF: während der Parent scrollt (diskyVis:false) ALLE Animationen/Transitions im iframe einfrieren → kein Cross-Process-Paint (z.B. ovHelloSheen background-position, cpitPulse box-shadow) im kritischen Scroll-Fenster */
+html.disky-paused *,html.disky-paused *::before,html.disky-paused *::after{animation-play-state:paused!important;transition:none!important}
 body{font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;position:relative}
 /* Native-App-Gefühl: UI-Text nicht markierbar; nur echte Inhalte (Eingaben, Datei-Namen/Pfade) erlauben Auswahl */
