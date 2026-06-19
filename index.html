@@ -435,7 +435,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-scanline.hf-appear .hf-bm{animation:hf-bmAppear .62s cubic-bezier(.2,.85,.25,1) both}
 @keyframes hf-bmAppear{0%{clip-path:inset(47% 0 47% 0);opacity:.12;filter:brightness(2.4)}55%{opacity:1}100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}}
 .hf-bloom{position:absolute;left:50%;top:50%;width:1150px;height:1150px;transform:translate(-50%,-50%);z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:opacity,transform;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(130,190,255,.6) 18%,rgba(74,158,255,.32) 36%,transparent 62%)}
-.hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;mix-blend-mode:screen;will-change:opacity,transform;border:1.5px solid rgba(175,210,255,.5);box-shadow:0 0 36px rgba(110,180,255,.32),inset 0 0 34px rgba(74,158,255,.16)}
+.hf-shock{position:absolute;left:50%;top:50%;width:500px;height:500px;transform:translate(-50%,-50%);z-index:8;pointer-events:none;opacity:0;border-radius:50%;will-change:opacity,transform;border:1.5px solid rgba(175,210,255,.5);box-shadow:0 0 36px rgba(110,180,255,.32),inset 0 0 34px rgba(74,158,255,.16)}   /* PERF: kein mix-blend-mode:screen mehr — der skalierende Ring musste sonst jeden Frame den Hintergrund neu durchblenden (Haupt-Jank-Quelle im Glow); auf fast-schwarzem BG sieht normaler Blend identisch aus */
 .hf-appwin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:min(920px,93vw);height:min(680px,82vh);opacity:0;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0e1320,#0a0d15);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 50px 120px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);will-change:opacity}
 .hf-awbar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
 .hf-awbar .hf-tl{width:11px;height:11px;border-radius:50%}
@@ -466,7 +466,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-awhead{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut2);font-weight:700}
 .hf-files{position:absolute;inset:0;z-index:12;pointer-events:none}
 .hf-fitem{position:absolute;left:0;top:0;display:flex;align-items:center;gap:11px;height:28px;will-change:transform,opacity;opacity:0;transform-origin:50% 14px}
-.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6));transition:filter .45s ease}
+.hf-fitem .hf-ic{width:66px;height:79px;flex:0 0 auto;filter:drop-shadow(0 5px 11px rgba(0,0,0,.6));transition:filter .22s ease}
 .hf-files.lit .hf-ic{filter:drop-shadow(0 5px 11px rgba(0,0,0,.6)) drop-shadow(0 0 11px rgba(110,170,255,.6))}
 .hf-fitem .hf-nm{font-size:13px;font-weight:560;color:#e9f1fb;white-space:nowrap;letter-spacing:-.01em}
 .hf-fitem.folder .hf-nm{font-weight:700;color:#fff}
@@ -1540,7 +1540,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     if(p2>0){ hDy=-pan; }   // gescannte SSD bleibt VOLL da (kein Fade, kein Shrink) und scrollt mit der Szene nach oben raus
     hero.style.transform=heroT(g,hDy,hSc);
     hero.style.opacity=Math.max(0,hOp).toFixed(3);
-    wr(hero,'filter', finish>0.01 ? `brightness(${(1+0.45*finish+0.4*flash).toFixed(3)})` : 'none');   // PERF: kein per-frame drop-shadow-Blur mehr (rasterte die ~520px-SSD jeden Frame neu) — der blaue Halo kommt vom bloom-Element + .hf-t9glow-Puls (beide nur Opacity/Transform = Compositor)
+    wr(hero,'filter','none');   // PERF: GAR KEIN per-frame Filter auf der ~520px-SSD-Subtree mehr (brightness() rasterte den ganzen Teilbaum jeden Frame im Glow neu = der harte Lag-Spike). Der Scan-Abschluss-Flash kommt komplett vom bloom (nur Opacity = Compositor)
     hero.classList.toggle('lit', finish>0.5);   // nach dem Scan: lebendiger Puls-Glow (CSS-Animation, pausiert wenn Hero außer Sicht)
     wr(hero,'zIndex', 11);
     hero.classList.toggle('hf-resting',resting);
@@ -1555,13 +1555,13 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
       if(!scanline.classList.contains('hf-appear')) scanline.classList.add('hf-appear');
     }
     const dyC=(cyC-innerHeight*0.5).toFixed(0);   // Welle/Bloom auf den SSD-Mittelpunkt schieben
-    bloom.style.opacity=clamp(0.08*lift*(1-pullE) + 0.42*finish + 0.5*flash).toFixed(3);   // 0.42*finish = bleibender Halo nach dem Scan
+    bloom.style.opacity=clamp(0.08*lift*(1-pullE) + 0.5*finish + 0.7*flash).toFixed(3);   // 0.5*finish = bleibender Halo nach dem Scan; 0.7*flash = kräftigerer Puls, der den entfernten Subtree-brightness-Flash ersetzt (nur Opacity = günstig)
     bloom.style.transform=`translate(-50%,-50%) translateY(${(+dyC-pan).toFixed(0)}px) scale(${(0.66+0.12*lift+0.2*finish+0.45*flash).toFixed(3)})`;   // folgt der SSD beim Hochscrollen (−pan)
     shock.style.opacity=(clamp(finish/0.08)*(1-finish)*0.62*(1-pullE)).toFixed(3);   // Ring erscheint, expandiert nach außen, fadet beim Wachsen
     shock.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.4+waveR/250).toFixed(3)})`;
     wr(head,'filter','none');   // PERF: kein per-frame blur() auf der großen Headline (rasterte jeden Frame) — fadet + skaliert raus (Compositor)
     head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
-    head.style.opacity=(1-0.92*spread).toFixed(3);   // etwas stärker ausfaden (ersetzt die Blur-Auflösung)
+    head.style.opacity=clamp(1-spread/0.66).toFixed(3);   // VOLLSTÄNDIG auf 0 ausfaden, BEVOR der Scan dominiert (vorher blurte der Blur den Rest weg; ohne Blur muss die Opacity selbst echte 0 erreichen, sonst geistert die Headline durch)
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
     const macTY = GAP - pan + MAC_DROP;   // wartet GAP+DROP tiefer → landet bei DROP (etwas unter Mitte)
     mac.style.opacity = easeIO(clamp(p2/0.14)).toFixed(3);   // sanft einfaden während es hochsteigt (kein hartes Aufploppen)
