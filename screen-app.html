@@ -1026,8 +1026,8 @@ select.txt{cursor:pointer}
 .dg-chev{flex:0 0 auto;width:13px;height:13px;color:#7fb0ec;transition:transform .2s ease}
 .dg-chev svg{width:100%;height:100%;display:block}
 .dgroup.open .dg-chev{transform:rotate(90deg)}
-.dg-disk{flex:0 0 auto;width:30px;height:22px;border-radius:5px;background:linear-gradient(180deg,rgba(74,158,255,.30),rgba(74,158,255,.14));border:1px solid rgba(120,180,255,.5);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
-.dg-disk::before{content:"";width:15px;height:11px;border-radius:2.5px;background:linear-gradient(180deg,#a9ccff,#5a93e6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0 -2px 2px rgba(0,0,0,.15)}
+.dg-disk{flex:0 0 auto;width:34px;height:26px;display:grid;place-items:center}
+.dg-disk svg{width:100%;height:100%;display:block}
 .dg-name{font-weight:700;font-size:14.5px;color:#eaf2ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
 .dg-closet{flex:0 0 auto;font-size:10.5px;font-weight:600;letter-spacing:.02em;color:#9aa7b8;background:rgba(148,163,184,.14);border:1px solid rgba(148,163,184,.22);border-radius:6px;padding:2px 8px}
 .dg-meta{margin-left:auto;flex:0 0 auto;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -2057,7 +2057,7 @@ const I18N = {
    tip_partial:n=>`<b>${n} ${n===1?"Projekt":"Projekte"}</b>: Rohmaterial gesichert, aber Projektdateien & Co. fehlen.`,
    tip_reclaim:s=>`<b>~${s}</b> sind doppelt belegt — freiräumbar.`,
    stat_drives:n=>n===1?"Platte":"Platten", stat_connected:n=>` · ${n} verbunden`, stat_files:"Dateien", stat_used:"belegt", stat_dupgroups:n=>n===1?"Duplikat-Gruppe":"Duplikate",
-   dc_open:"Speicher-Karte öffnen", dc_connected:"verbunden", dc_closet:"im Schrank", dc_files:n=>`${n} Dateien`,
+   dc_open:"Speicher-Karte öffnen", dc_connected:"verbunden", dc_closet:"offline", dc_files:n=>`${n} Dateien`,
    // Sidebar-Platten
    sb_int_connect:"Interne Mac-Platte · verbunden — zum Scannen anklicken", sb_int_storage:"Interner Mac-Speicher", sb_not_connected:"nicht angeschlossen (im Schrank)", sb_used:"belegt",
    // Angeschlossene Laufwerke (nativ)
@@ -2104,7 +2104,7 @@ const I18N = {
    deep_ph:"Suche über alle Platten — Projekt, Ordner, Dateiname, Pfad…", deep_clear:"Leeren",
    deep_hint:n=>`Tippen Sie oben los — <b>${n}</b> Dateien über alle Platten durchsuchbar, auch wenn die Platte im Schrank liegt.`,
    deep_grp_folders:n=>`Ordner · ${n}`, deep_grp_files:n=>`Dateien · ${n}`, deep_fold_t:"Ordner in der Speicher-Karte öffnen",
-   deep_file_show:"Im Finder zeigen", deep_file_noshow:"Im Speicher öffnen (Platte nicht angeschlossen)", deep_in_closet:" · im Schrank", deep_closet_tag:"im Schrank", deep_grp_matches:"Treffer", deep_summary:(n,d)=>`${n} Treffer auf ${d} ${d===1?"Platte":"Platten"}`, deep_no_hits:q=>`Keine Treffer für „${q}".`,
+   deep_file_show:"Im Finder zeigen", deep_file_noshow:"Im Speicher öffnen (Platte nicht angeschlossen)", deep_in_closet:" · offline", deep_closet_tag:"offline", deep_grp_matches:"Treffer", deep_summary:(n,d)=>`${n} Treffer auf ${d} ${d===1?"Platte":"Platten"}`, deep_no_hits:q=>`Keine Treffer für „${q}".`,
    // KI-Suche
    ki_badge:"KI-Suche · 100% lokal", ki_title:"Suchen Sie nach Inhalt, nicht nur nach Namen.", ki_desc:`Tippen Sie, was Sie suchen — <i>„underwater", „sunset", „drone", „interview"</i> — und Disky findet die passenden Clips über alle Platten. Ohne Upload.`,
    ki_q_ph:"Wonach suchen Sie?", ki_search:"Suchen", ki_indexed:n=>`${n} Clips im KI-Index durchsuchbar`, ki_noindex:n=>`Noch kein KI-Index. ${n} Medien im Katalog.`, ki_scan_first:"Scannen Sie zuerst eine Platte mit Fotos/Videos.",
@@ -2191,7 +2191,7 @@ const I18N = {
    tip_partial:n=>`<b>${n} ${n===1?"project":"projects"}</b>: footage backed up, but project files & co. are missing.`,
    tip_reclaim:s=>`<b>~${s}</b> stored twice — reclaimable.`,
    stat_drives:n=>n===1?"drive":"drives", stat_connected:n=>` · ${n} connected`, stat_files:"files", stat_used:"used", stat_dupgroups:n=>n===1?"duplicate group":"duplicates",
-   dc_open:"Open Storage Map", dc_connected:"connected", dc_closet:"in the closet", dc_files:n=>`${n} files`,
+   dc_open:"Open Storage Map", dc_connected:"connected", dc_closet:"offline", dc_files:n=>`${n} files`,
    sb_int_connect:"Internal Mac drive · connected — click to scan", sb_int_storage:"Internal Mac storage", sb_not_connected:"not connected (in the closet)", sb_used:"used",
    conn_head:"Connected drives", conn_auto:"Keep up to date automatically", conn_auto_t:"Plug in a drive and Disky keeps the catalog up to date automatically (read-only).",
    conn_usage:(u,g)=>`${u} of ${g} used`, conn_updating:"Updating…", conn_incat:"✓ in catalog", conn_scan:"Scan", bg_updating:n=>`Updating “${n}”…`,
@@ -2229,7 +2229,7 @@ const I18N = {
    deep_ph:"Search across all drives — project, folder, file name, path…", deep_clear:"Clear",
    deep_hint:n=>`Start typing above — <b>${n}</b> files searchable across all drives, even when the drive is in the closet.`,
    deep_grp_folders:n=>`Folders · ${n}`, deep_grp_files:n=>`Files · ${n}`, deep_fold_t:"Open folder in Storage Map",
-   deep_file_show:"Show in Finder", deep_file_noshow:"Open in storage (drive not connected)", deep_in_closet:" · in the closet", deep_closet_tag:"in the closet", deep_grp_matches:"matches", deep_summary:(n,d)=>`${n} ${n===1?"match":"matches"} across ${d} ${d===1?"drive":"drives"}`, deep_no_hits:q=>`No matches for “${q}”.`,
+   deep_file_show:"Show in Finder", deep_file_noshow:"Open in storage (drive not connected)", deep_in_closet:" · offline", deep_closet_tag:"offline", deep_grp_matches:"matches", deep_summary:(n,d)=>`${n} ${n===1?"match":"matches"} across ${d} ${d===1?"drive":"drives"}`, deep_no_hits:q=>`No matches for “${q}”.`,
    ki_badge:"AI search · 100% local", ki_title:"Search by content, not just by name.", ki_desc:`Type what you're looking for — <i>“underwater”, “sunset”, “drone”, “interview”</i> — and Disky finds the matching clips across all drives. No upload.`,
    ki_q_ph:"What are you looking for?", ki_search:"Search", ki_indexed:n=>`${n} clips searchable in the AI index`, ki_noindex:n=>`No AI index yet. ${n} media in the catalog.`, ki_scan_first:"Scan a drive with photos/videos first.",
    ki_build:n=>`Build AI index (${n})`, ki_later:n=>`${n} more will be indexed once the drive is connected.`, ki_module_loading:"AI module still loading…", ki_searching:"Searching…", ki_results:(n,q,ind)=>`${n} results for “${q}” · ${ind} clips searched`,
@@ -3781,6 +3781,7 @@ async function deepNameBody(host){
   const totMatches=list.reduce((s,g)=>s+g.n,0);
   res.innerHTML=`<div class="deep-sum">${t("deep_summary",totMatches,list.length)}</div>`+list.map(G=>{
     const on=!!mountOfDrive(G.did);
+    const dType=(drives.find(d=>d.id===G.did)||{}).driveType;   // echtes Platten-Icon je Typ statt generischem Block
     const foldRows=G.fold.map(g=>
       `<button class="dhit dfold" data-did="${g.did}" data-path="${esc(g.path)}" title="${t("deep_fold_t")}">
         <span class="dh-ic">${IC.folder}</span>
@@ -3796,7 +3797,7 @@ async function deepNameBody(host){
     return `<div class="dgroup open">
       <button class="dg-head" aria-expanded="true">
         <span class="dg-chev">${chevSvg}</span>
-        <span class="dg-disk"></span>
+        <span class="dg-disk">${driveImg(dType)}</span>
         <span class="dg-name">${esc(dById[G.did]||"?")}</span>
         ${on?"":`<span class="dg-closet">${t("deep_closet_tag")}</span>`}
         <span class="dg-meta">${nloc(G.n)} ${t("deep_grp_matches")} · ${human(G.bytes)}</span>
