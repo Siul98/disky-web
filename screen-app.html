@@ -33,7 +33,7 @@
   });
   // Handshake: dem Parent melden, sobald die geseedete App-Navigation gerendert ist (NICHT vor dem Seed-Reload)
   function pingReady(){ (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })(); }
-  var SEED_VER='6';   // bei Änderung der Seed-Daten hochzählen → erzwingt Re-Seed
+  var SEED_VER='7';   // bei Änderung der Seed-Daten/-Logik hochzählen → erzwingt sauberen Re-Seed
   var TB=1e12, GB=1e9;
   var drives=[
     {label:'T9', driveType:'t9', bytes:2.3*TB, capacityBytes:3.6*TB, fileCount:18000, volumeName:'T9'},
@@ -100,7 +100,7 @@
     r.onsuccess=function(){ var db=r.result;
       try{
         var t=db.transaction(['drives','files'],'readwrite'); var ds=t.objectStore('drives'); var fs=t.objectStore('files');
-        ds.clear(); fs.clear();
+        ds.clear(); fs.clear();   // alte Demo-Daten weg (gleiche Transaktion wie das Re-Add der Drives → atomar)
         var ids=[];
         drives.forEach(function(d,idx){ var req=ds.add(d); req.onsuccess=function(){ ids[idx]=req.result; }; });
         t.oncomplete=function(){
@@ -121,20 +121,29 @@
   (function gate(){
     var TRY_KEY='diskySeedTry';
     function attempt(){
-      if(sessionStorage.getItem(TRY_KEY)===SEED_VER){ pingReady(); return; }   // pro Session/Version nur EIN Seed-Versuch → kein Reload-Loop
-      try{ sessionStorage.setItem(TRY_KEY,SEED_VER); }catch(e){}
+      var raw=sessionStorage.getItem(TRY_KEY)||'', parts=raw.split(':'),
+          n=(parts[0]===SEED_VER)?(parseInt(parts[1],10)||0):0;   // andere Version → Zähler zurücksetzen
+      if(n>=3){ pingReady(); return; }   // max 3 Re-Seed-Versuche/Version → heilt Korrupt-Fälle, aber kein Endlos-Reload
+      try{ sessionStorage.setItem(TRY_KEY,SEED_VER+':'+(n+1)); }catch(e){}
       runSeed();
     }
     var o; try{ o=indexedDB.open('drivecat',1); }catch(e){ attempt(); return; }
     o.onupgradeneeded=function(e){ ensureStores(e.target.result); };
     o.onerror=function(){ attempt(); };
     o.onsuccess=function(){ var db=o.result;
-      if(!db.objectStoreNames.contains('files')){ db.close(); attempt(); return; }
-      var c; try{ c=db.transaction(['files'],'readonly').objectStore('files').count(); }catch(e){ db.close(); attempt(); return; }
-      c.onsuccess=function(){ var n=c.result; db.close();
-        if(n>=100 && sessionStorage.getItem('diskyDemoSeeded')===SEED_VER) pingReady();   // Daten vorhanden + aktuell → los
-        else attempt(); };
-      c.onerror=function(){ db.close(); attempt(); };
+      if(!db.objectStoreNames.contains('files')||!db.objectStoreNames.contains('drives')){ db.close(); attempt(); return; }
+      if(sessionStorage.getItem('diskyDemoSeeded')!==SEED_VER){ db.close(); attempt(); return; }   // andere/keine Seed-Version → sauber neu seeden
+      try{
+        var tx=db.transaction(['drives','files'],'readonly');
+        var dg=tx.objectStore('drives').getAll(), fg=tx.objectStore('files').getAll();
+        tx.oncomplete=function(){ db.close();
+          var dr=dg.result||[], fl=fg.result||[], ids={}; dr.forEach(function(d){ ids[d.id]=1; });
+          var orphan=false; for(var i=0;i<fl.length;i++){ if(!ids[fl[i].driveId]){ orphan=true; break; } }   // Datei mit toter driveId → würde als „?" erscheinen
+          if(fl.length>=100 && !orphan) pingReady();   // genug Daten + ALLE driveIds gültig → los
+          else attempt();                                // leer / verwaist / inkonsistent → sauber neu seeden (Selbstheilung)
+        };
+        tx.onerror=function(){ db.close(); attempt(); };
+      }catch(e){ db.close(); attempt(); }
     };
   })();
 })();

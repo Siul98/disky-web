@@ -536,8 +536,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .sun{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 18px rgba(74,158,255,.2));-webkit-mask:conic-gradient(from -90deg,#000 var(--sweep),transparent 0);mask:conic-gradient(from -90deg,#000 var(--sweep),transparent 0)}
 .sc-row.in .sun{animation:sunSweep 1.05s cubic-bezier(.35,.6,.25,1) .15s both}
 @keyframes sunSweep{from{--sweep:0deg}to{--sweep:360deg}}
-.sun .seg{fill:none;stroke-width:23}
-.sun .seg.inner{stroke-width:21}
+.sun path{stroke:#0b0f17;stroke-width:.7;stroke-linejoin:round}   /* gefüllte Keile (Multi-Ring-Sunburst wie die App) mit feiner Trennlinie */
 .sm-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;opacity:0}
 .sc-row.in .sm-center{opacity:1;transition:opacity .5s ease .72s}
 .sm-center b{font-size:clamp(18px,2.1vw,22px);color:var(--ink);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -871,23 +870,41 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <div class="el-head"><span class="el-dot"></span><span data-t="sm_tag">Storage Map · T9</span></div>
         <div class="sm-body">
           <div class="sm-wheel">
-            <svg class="sun" viewBox="0 0 200 200" aria-hidden="true"><g transform="rotate(-90 100 100)">
-              <circle class="seg" cx="100" cy="100" r="80" pathLength="100" stroke="#37cfe0" stroke-dasharray="26.6 73.4" stroke-dashoffset="0"></circle>
-              <circle class="seg" cx="100" cy="100" r="80" pathLength="100" stroke="#4a9eff" stroke-dasharray="20.6 79.4" stroke-dashoffset="-28"></circle>
-              <circle class="seg" cx="100" cy="100" r="80" pathLength="100" stroke="#5fa0ee" stroke-dasharray="16.6 83.4" stroke-dashoffset="-50"></circle>
-              <circle class="seg" cx="100" cy="100" r="80" pathLength="100" stroke="#6fb4ff" stroke-dasharray="12.6 87.4" stroke-dashoffset="-68"></circle>
-              <circle class="seg" cx="100" cy="100" r="80" pathLength="100" stroke="#2c86d8" stroke-dasharray="8.6 91.4" stroke-dashoffset="-82"></circle>
-              <circle class="seg" cx="100" cy="100" r="80" pathLength="100" stroke="#8fd6e6" stroke-dasharray="6.6 93.4" stroke-dashoffset="-92"></circle>
-              <circle class="seg inner" cx="100" cy="100" r="52" pathLength="100" stroke="#4a9eff" stroke-dasharray="48.6 51.4" stroke-dashoffset="0"></circle>
-              <circle class="seg inner" cx="100" cy="100" r="52" pathLength="100" stroke="#37cfe0" stroke-dasharray="28.6 71.4" stroke-dashoffset="-50"></circle>
-              <circle class="seg inner" cx="100" cy="100" r="52" pathLength="100" stroke="#3a6fb0" stroke-dasharray="18.6 81.4" stroke-dashoffset="-80"></circle>
-            </g><circle cx="100" cy="100" r="37" fill="#0a0e16"></circle></svg>
+            <svg class="sun" viewBox="0 0 200 200" aria-hidden="true">
+              <path d="M100.00 54.60A45.4 45.4 0 0 1 122.94 139.18L115.66 126.75A31 31 0 0 0 100.00 69.00Z" fill="hsl(210 56% 57%)"/>
+              <path d="M100.00 39.10A60.9 60.9 0 0 1 157.59 80.21L143.98 84.89A46.5 46.5 0 0 0 100.00 53.50Z" fill="hsl(210 52% 64%)"/>
+              <path d="M100.00 23.60A76.4 76.4 0 0 1 145.95 38.96L137.29 50.47A62 62 0 0 0 100.00 38.00Z" fill="hsl(210 48% 71%)"/>
+              <path d="M146.62 39.47A76.4 76.4 0 0 1 171.97 74.38L158.41 79.21A62 62 0 0 0 137.83 50.88Z" fill="hsl(210 48% 71%)"/>
+              <path d="M157.81 80.84A60.9 60.9 0 0 1 155.53 125.01L142.40 119.09A46.5 46.5 0 0 0 144.14 85.37Z" fill="hsl(210 52% 64%)"/>
+              <path d="M172.52 75.96A76.4 76.4 0 0 1 176.22 105.17L161.86 104.20A62 62 0 0 0 158.85 80.50Z" fill="hsl(210 48% 71%)"/>
+              <path d="M176.16 106.01A76.4 76.4 0 0 1 170.00 130.60L156.81 124.83A62 62 0 0 0 161.81 104.88Z" fill="hsl(210 48% 71%)"/>
+              <path d="M155.25 125.61A60.9 60.9 0 0 1 139.52 146.33L130.18 135.38A46.5 46.5 0 0 0 142.19 119.56Z" fill="hsl(210 52% 64%)"/>
+              <path d="M139.01 146.77A60.9 60.9 0 0 1 131.35 152.21L123.94 139.87A46.5 46.5 0 0 0 129.79 135.71Z" fill="hsl(210 52% 64%)"/>
+              <path d="M122.15 139.63A45.4 45.4 0 0 1 60.30 122.03L72.89 115.04A31 31 0 0 0 115.13 127.06Z" fill="hsl(190 56% 57%)"/>
+              <path d="M129.71 153.16A60.9 60.9 0 0 1 71.56 153.85L78.28 141.12A46.5 46.5 0 0 0 122.69 140.59Z" fill="hsl(190 52% 64%)"/>
+              <path d="M137.28 166.69A76.4 76.4 0 0 1 98.29 176.38L98.61 161.98A62 62 0 0 0 130.25 154.12Z" fill="hsl(190 48% 71%)"/>
+              <path d="M97.45 176.36A76.4 76.4 0 0 1 65.07 167.95L71.65 155.14A62 62 0 0 0 97.93 161.97Z" fill="hsl(190 48% 71%)"/>
+              <path d="M70.97 153.53A60.9 60.9 0 0 1 53.44 139.26L64.45 129.98A46.5 46.5 0 0 0 77.83 140.88Z" fill="hsl(190 52% 64%)"/>
+              <path d="M53.01 138.74A60.9 60.9 0 0 1 47.08 130.13L59.59 123.01A46.5 46.5 0 0 0 64.12 129.58Z" fill="hsl(190 52% 64%)"/>
+              <path d="M59.87 121.23A45.4 45.4 0 0 1 58.90 80.71L71.94 86.83A31 31 0 0 0 72.60 114.49Z" fill="hsl(168 56% 57%)"/>
+              <path d="M46.17 128.47A60.9 60.9 0 0 1 41.22 84.08L55.12 87.85A46.5 46.5 0 0 0 58.90 121.74Z" fill="hsl(168 52% 64%)"/>
+              <path d="M32.47 135.72A76.4 76.4 0 0 1 23.78 105.22L38.14 104.24A62 62 0 0 0 45.19 128.99Z" fill="hsl(168 48% 71%)"/>
+              <path d="M23.73 104.38A76.4 76.4 0 0 1 26.04 80.84L39.98 84.45A62 62 0 0 0 38.10 103.56Z" fill="hsl(168 48% 71%)"/>
+              <path d="M41.40 83.44A60.9 60.9 0 0 1 44.59 74.74L57.69 80.71A46.5 46.5 0 0 0 55.25 87.35Z" fill="hsl(168 52% 64%)"/>
+              <path d="M59.29 79.90A45.4 45.4 0 0 1 78.16 60.20L85.09 72.82A31 31 0 0 0 72.20 86.27Z" fill="hsl(202 56% 57%)"/>
+              <path d="M45.40 73.03A60.9 60.9 0 0 1 62.83 51.76L71.62 63.16A46.5 46.5 0 0 0 58.31 79.41Z" fill="hsl(202 52% 64%)"/>
+              <path d="M63.36 51.35A60.9 60.9 0 0 1 70.12 46.94L77.18 59.48A46.5 46.5 0 0 0 72.03 62.85Z" fill="hsl(202 52% 64%)"/>
+              <path d="M78.96 59.77A45.4 45.4 0 0 1 92.40 55.24L94.81 69.44A31 31 0 0 0 85.63 72.53Z" fill="hsl(150 56% 57%)"/>
+              <path d="M71.78 46.04A60.9 60.9 0 0 1 82.95 41.54L86.98 55.36A46.5 46.5 0 0 0 78.45 58.80Z" fill="hsl(150 52% 64%)"/>
+              <path d="M83.59 41.35A60.9 60.9 0 0 1 89.14 40.08L91.71 54.25A46.5 46.5 0 0 0 87.47 55.22Z" fill="hsl(150 52% 64%)"/>
+              <path d="M93.29 55.10A45.4 45.4 0 0 1 99.09 54.61L99.38 69.01A31 31 0 0 0 95.42 69.34Z" fill="hsl(224 56% 57%)"/>
+              <circle cx="100" cy="100" r="29.5" fill="#0a0e16"></circle></svg>
             <div class="sm-glow" aria-hidden="true"></div>
             <div class="sm-center"><b data-count="33.9" data-dec="1" data-suf=" GB">33.9 GB</b><span data-t="sm_total">T9 · total</span></div>
           </div>
           <div class="sm-legend">
-            <div class="lg" style="--c:#4a9eff;--w:70%"><div class="lg-top"><i></i><span class="lgn">Wedding Mai 2026</span><span class="lgm">23.7 GB</span></div><div class="lg-bar"><span></span></div></div>
-            <div class="lg" style="--c:#37cfe0;--w:30%"><div class="lg-top"><i></i><span class="lgn">Berlin Citytrip</span><span class="lgm">10.3 GB</span></div><div class="lg-bar"><span></span></div></div>
+            <div class="lg" style="--c:#4a9eff;--w:100%"><div class="lg-top"><i></i><span class="lgn">Wedding Mai 2026</span><span class="lgm">14.2 GB</span></div><div class="lg-bar"><span></span></div></div>
+            <div class="lg" style="--c:#37cfe0;--w:61%"><div class="lg-top"><i></i><span class="lgn">Doku Nordsee</span><span class="lgm">8.6 GB</span></div><div class="lg-bar"><span></span></div></div>
           </div>
         </div>
       </div></div>
@@ -957,7 +974,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg><b data-t="pm2_t">Read-only</b><span data-t="pm2_d">Disky only ever reads your drives. It never moves, renames, or deletes a file — your originals stay exactly where you put them.</span></div>
     <div class="pmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15a4 4 0 0 1 4-4 5 5 0 0 1 9.6-1.3A3.5 3.5 0 0 1 18 18H7a4 4 0 0 1-4-3z"/><path d="M3 3l18 18"/></svg><b data-t="pm3_t">Your data stays local</b><span data-t="pm3_d">Your catalog and footage live on your Mac — never uploaded to the cloud. Your account only carries your license, never your files.</span></div>
   </div>
-  <p class="trustline rev" data-t="pv_cred">Native Apple Silicon · Notarized &amp; signed by Apple · Read-only by design</p>
+  <p class="trustline rev" data-t="pv_cred">Native Apple Silicon · Read-only by design · Works fully offline</p>
 </div></section>
 
 <!-- FAQ -->
@@ -988,6 +1005,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <h2 class="rev" data-t="end_h">Stop digging through the drawer.</h2>
   <p class="sub rev" data-t="end_sub">One catalog of every drive you own — searchable in seconds, on your Mac, while the drawer stays shut. Catalog once. Never dig again.</p>
   <form class="notify rev" id="notify" novalidate>
+    <label for="notifyEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">E-Mail</label>
     <input type="email" id="notifyEmail" class="notify-in" required autocomplete="email" data-tp="end_ph" placeholder="you@studio.com" aria-label="Email">
     <button type="submit" class="btn btn-primary" data-t="end_cta">Notify me at launch →</button>
   </form>
@@ -1026,7 +1044,7 @@ const I18N={
   how_c1_h:"Plug a drive in — once.",how_c1_p:"Connect an external drive a single time. Disky opens it strictly read-only: it looks, it never touches. Nothing is moved, renamed, copied off, or deleted.",how_c1_pr:"Read-only · your files are never altered",
   how_c2_h:"Disky builds the catalog — on your Mac.",how_c2_p:"Disky catalogs every file — names, folders, projects — and reads what's in your footage and photos, so you search by what you see. Everything stays on your Mac.",how_c2_pr:"On-device · 0 bytes uploaded",
   how_c3_h:"Unplug it. Search anytime.",how_c3_p:"Put the drive back in the drawer. The catalog lives in Disky, so every search after that finds the exact drive and path with nothing connected — across all of them at once.",how_c3_pr:"Nothing plugged in · the whole drawer, searchable",
-  pv_eb:"Privacy by design",pv_cred:"Native Apple Silicon · Notarized & signed by Apple · Read-only by design",
+  pv_eb:"Privacy by design",pv_cred:"Native Apple Silicon · Read-only by design · Works fully offline",
   end_eb:"From drawer to done.",end_ph:"you@studio.com",end_cta:"Get early access →",end_note:"One email the day Disky ships. No spam, unsubscribe anytime.",end_done:"You're in. Watch for the launch day email. ✓",end_done_mail:"Mail open — send to confirm your spot. ✓",
   live_lbl:"Live",xray_cap:"Reading every project and file inside — while the drive stays in the drawer.",
   pwr_eb:"But that's not it",pwr_h:"There's more — and even more to come.",pwr_sub:"Finding any file offline is just the start. Everything below ships in the app today — and we're building more all the time.",pwr_more:"And this is just the start.",
@@ -1102,7 +1120,7 @@ const I18N={
   how_c1_h:"Eine Platte anstecken — einmal.",how_c1_p:"Schließe eine externe Platte ein einziges Mal an. Disky öffnet sie strikt nur lesend: schaut hin, fasst nie an. Nichts wird verschoben, umbenannt, kopiert oder gelöscht.",how_c1_pr:"Nur-Lesen · deine Dateien bleiben unangetastet",
   how_c2_h:"Disky baut den Katalog — auf deinem Mac.",how_c2_p:"Disky erfasst jede Datei: Namen, Ordner, Projekte — und liest, was in deinem Material und deinen Fotos steckt, damit du findest, was du siehst. Alles bleibt auf deinem Mac.",how_c2_pr:"On-device · 0 Byte hochgeladen",
   how_c3_h:"Abziehen. Jederzeit suchen.",how_c3_p:"Leg die Platte zurück in die Schublade. Der Katalog lebt in Disky — jede Suche danach findet die exakte Platte und den Pfad, ohne dass etwas angesteckt ist. Über alle auf einmal.",how_c3_pr:"Nichts angesteckt · die ganze Schublade, durchsuchbar",
-  pv_eb:"Datenschutz von Grund auf",pv_cred:"Nativ für Apple Silicon · Von Apple signiert & beglaubigt · Nur-Lesen by Design",
+  pv_eb:"Datenschutz von Grund auf",pv_cred:"Nativ für Apple Silicon · Nur-Lesen by Design · Komplett offline",
   end_eb:"Aus der Schublade. Erledigt.",end_ph:"du@studio.com",end_cta:"Frühzugang sichern →",end_note:"Eine E-Mail am Tag des Starts. Kein Spam, jederzeit abbestellbar.",end_done:"Du bist dabei. Die Mail kommt am Launch-Tag. ✓",end_done_mail:"Mail offen — abschicken zum Bestätigen deines Platzes. ✓",
   live_lbl:"Live",xray_cap:"Liest jedes Projekt und jede Datei darin — während die Platte in der Schublade bleibt.",
   pwr_eb:"Aber das ist noch nicht alles",pwr_h:"Da ist mehr — und es kommt noch viel mehr.",pwr_sub:"Jede Datei offline finden ist erst der Anfang. Alles hier unten steckt schon in der App — und wir bauen ständig weiter.",pwr_more:"Und das ist erst der Anfang.",
@@ -1455,7 +1473,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
-    liveFrame.src='screen-app.html?v=5&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
+    liveFrame.src='screen-app.html?v=7&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
   sizeLive();
@@ -1511,7 +1529,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
         blur += 5*part; op -= 0.5*part; }
       c.style.transform=`translate(calc(-50% + ${tx.toFixed(1)}px), ${ty.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(0.18,scl).toFixed(3)})`;
       c.style.opacity=Math.max(0,op).toFixed(3);
-      wr(c,'filter', blur>0.1 ? `blur(${blur.toFixed(1)}px)` : 'none');
+      wr(c,'filter','none');   // PERF: kein per-frame blur() mehr (rasterte jede Karte neu) — Tiefe kommt über Opacity + Scale (Compositor)
       wr(c,'zIndex', baseZ(i));
     });
     fan.classList.toggle('hf-resting',resting);
@@ -1539,9 +1557,9 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     bloom.style.transform=`translate(-50%,-50%) translateY(${(+dyC-pan).toFixed(0)}px) scale(${(0.66+0.12*lift+0.2*finish+0.45*flash).toFixed(3)})`;   // folgt der SSD beim Hochscrollen (−pan)
     shock.style.opacity=(clamp(finish/0.08)*(1-finish)*0.62*(1-pullE)).toFixed(3);   // Ring erscheint, expandiert nach außen, fadet beim Wachsen
     shock.style.transform=`translate(-50%,-50%) translateY(${dyC}px) scale(${(0.4+waveR/250).toFixed(3)})`;
-    wr(head,'filter',`blur(${(20*spread).toFixed(1)}px)`);
+    wr(head,'filter','none');   // PERF: kein per-frame blur() auf der großen Headline (rasterte jeden Frame) — fadet + skaliert raus (Compositor)
     head.style.transform=`translateY(${(-pan).toFixed(0)}px) scale(${(1+0.15*spread).toFixed(3)})`;   // Text scrollt mit der Szene nach oben raus
-    head.style.opacity=(1-0.82*spread).toFixed(3);
+    head.style.opacity=(1-0.92*spread).toFixed(3);   // etwas stärker ausfaden (ersetzt die Blur-Auflösung)
     // MacBook wartet eine Viewport-Höhe TIEFER und scrollt mit der Szene hoch ins Bild (kein Wake-Fade — Screen ist an)
     const macTY = GAP - pan + MAC_DROP;   // wartet GAP+DROP tiefer → landet bei DROP (etwas unter Mitte)
     mac.style.opacity = easeIO(clamp(p2/0.14)).toFixed(3);   // sanft einfaden während es hochsteigt (kein hartes Aufploppen)
@@ -1573,7 +1591,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const cap2TY=cap2Land + (GAP-pan);                       // steigt von unten hoch und landet bei cap2Land
     cap2.style.opacity=rev.toFixed(3);
     cap2.style.transform=`translateX(-50%) translateY(${cap2TY.toFixed(0)}px) scale(${((1.05-0.05*rev)*(1+0.02*react)).toFixed(3)})`;
-    wr(cap2,'filter',`blur(${((1-rev)*13).toFixed(1)}px) drop-shadow(0 8px 24px rgba(120,160,220,.22)) drop-shadow(0 2px 6px rgba(0,0,0,.5))`);   // PERF: Blur-Reveal bleibt (der „materialisierende" Look); react-Puls-drop-shadow raus + wr()-guard → kein per-frame Text-Re-Raster mehr
+    wr(cap2,'filter',`drop-shadow(0 8px 24px rgba(120,160,220,.22)) drop-shadow(0 2px 6px rgba(0,0,0,.5))`);   // PERF: STATISCHER Schatten (1× geschrieben) statt per-frame blur() — Reveal kommt über Opacity (rev) + Scale (Compositor), kein Text-Re-Raster mehr
     if(hint) hint.style.opacity=P>0.05?0:1;
   }
   function setRest(){ cards.forEach(c=>{ c.style.zIndex=baseZ(+c.dataset.i); c.style.transform=cardT(+c.dataset.i,0,1); c.style.filter=''; });
