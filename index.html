@@ -6,6 +6,7 @@
 <title>Disky — See inside sealed drives.</title>
 <meta name="description" content="Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.">
 <link rel="icon" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <!-- LCP: First-Paint-Hero-Platten sofort laden (vor dem HTML-Parse-Ende) -->
 <link rel="preload" as="image" href="assets/drives/lacie-rugged.webp" fetchpriority="high">
 <link rel="preload" as="image" href="assets/drives/gdrive.webp" fetchpriority="high">
@@ -1276,6 +1277,7 @@ buildReel(); applyLang();
 
 /* Launch notify — postet an ein echtes Endpoint (WAITLIST.ENDPOINT), sonst ehrlicher Mail-Fallback */
 const WAITLIST = { ENDPOINT: "" };   // ← Formspree/Buttondown-POST-URL hier eintragen → echtes E-Mail-Capture (z. B. "https://formspree.io/f/xxxxxx")
+if(!WAITLIST.ENDPOINT) console.warn('⚠️ Disky: WAITLIST.ENDPOINT ist leer — Anmeldungen fallen auf mailto zurück und werden NICHT erfasst. Vor dem Launch ein echtes Endpoint eintragen.');
 (function(){ const f=document.getElementById('notify'); if(!f)return;
   const inp=document.getElementById('notifyEmail'), note=document.getElementById('notifyNote');
   const valid=v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
