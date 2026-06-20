@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Disky — See inside sealed drives.</title>
-<meta name="description" content="Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.">
+<title>Disky — Find anything. Connect nothing.</title>
+<meta name="description" content="Index every external drive once — then search them all on your Mac by name, project, or what's inside the footage, even while the disk sits unplugged in the drawer. Native Mac app, 100% local, read-only. Free beta out now.">
 <link rel="icon" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <!-- LCP: First-Paint-Hero-Platten sofort laden (vor dem HTML-Parse-Ende) -->
@@ -13,19 +13,19 @@
 <link rel="preload" as="image" href="assets/drives/t5.webp">
 <link rel="preload" as="image" href="assets/drives/lacie-silver.webp">
 <link rel="canonical" href="https://disky.app/">
-<meta property="og:title" content="Disky — See inside sealed drives.">
-<meta property="og:description" content="Index each drive once. Search all of them — by name, project, or what's inside the footage — every disk unplugged in the drawer. 100% local, read-only, no subscription.">
-<meta property="og:image" content="https://disky.app/og.png">
+<meta property="og:title" content="Disky — Find anything. Connect nothing.">
+<meta property="og:description" content="Index every drive once, then search them all on your Mac — by name, project, or what's inside the footage, even unplugged in the drawer. 100% local, read-only. Free beta out now.">
+<meta property="og:image" content="https://disky.app/og.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://disky.app/">
 <meta property="og:site_name" content="Disky">
 <meta property="og:type" content="website">
-<meta property="og:image:alt" content="Disky — search every external drive at once, while the disks stay unplugged in the drawer.">
+<meta property="og:image:alt" content="Disky — find anything across every drive, even unplugged in the drawer. Free Mac beta.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Disky — See inside sealed drives.">
-<meta name="twitter:description" content="Index each drive once. Search all of them — by name, project, or what's inside the footage — every disk unplugged. 100% local, read-only.">
-<meta name="twitter:image" content="https://disky.app/og.png">
+<meta name="twitter:title" content="Disky — Find anything. Connect nothing.">
+<meta name="twitter:description" content="Search every external drive at once — even unplugged in the drawer. Native Mac app, 100% local, read-only. Free beta out now.">
+<meta name="twitter:image" content="https://disky.app/og.png?v=2">
 <meta name="theme-color" content="#08090c">
 <meta name="color-scheme" content="dark">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Disky","operatingSystem":"macOS","applicationCategory":"UtilitiesApplication","description":"Index every external drive once, then search all of them offline — by name, project, or what's inside the footage — without plugging a drive in. 100% local, read-only, no subscription.","url":"https://disky.app/"}</script>
@@ -1051,8 +1051,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 /* ─────────── i18n ─────────── */
 const I18N={
  en:{
-  meta_title:"Disky — See inside sealed drives.",
-  meta_desc:"Index each external drive once. Then search all of them at once — by name, by project, or by what's inside the footage — while every disk stays unplugged in the drawer. A native Mac app. 100% local.",
+  meta_title:"Disky — Find anything. Connect nothing.",
+  meta_desc:"Index every external drive once — then search them all on your Mac by name, project, or what's inside the footage, even while the disk sits unplugged in the drawer. Native Mac app, 100% local, read-only. Free beta out now.",
   nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",nav_pricing:"Pricing",nav_dl:"Download",
   hero_eb:"Drive catalog for Mac",hero_l1:"Find anything.",hero_l2:"Connect nothing.",hero_scroll:"Scroll to watch it scan",hero_cap1:"Scan once",hero_cap2:"Remembered forever.",hero_cap2sub:"Type a project name — and see the exact drive every file lives on. Even unplugged.",
   hero_sub:"Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.",
@@ -1127,8 +1127,8 @@ const I18N={
   ]
  },
  de:{
-  meta_title:"Disky — Schau in versiegelte Platten.",
-  meta_desc:"Jede externe Platte einmal indexieren. Danach durchsuchst du alle auf einmal — nach Name, nach Projekt oder nach dem, was im Material steckt — während jede Disk ungesteckt in der Schublade liegt. Native Mac-App. 100% lokal.",
+  meta_title:"Disky — Alles finden. Nichts anstecken.",
+  meta_desc:"Jede externe Platte einmal indexieren — dann durchsuchst du alle auf deinem Mac nach Name, Projekt oder dem, was im Material steckt, auch wenn die Platte abgesteckt in der Schublade liegt. Native Mac-App, 100% lokal, nur-lesen. Gratis-Beta jetzt da.",
   nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",nav_pricing:"Preise",nav_dl:"Laden",
   hero_eb:"Platten-Katalog für Mac",hero_l1:"Alles finden.",hero_l2:"Nichts anstecken.",hero_scroll:"Scroll und sieh den Scan",hero_cap1:"Einmal scannen",hero_cap2:"Für immer gemerkt.",hero_cap2sub:"Tipp einen Projektnamen — und sieh die genaue Platte, auf der jede Datei liegt. Auch abgesteckt.",
   hero_sub:"Na ja — nicht ganz nichts. Steck jede Platte einmal an, dann such für immer, während sie im Schrank liegt.",
@@ -1204,7 +1204,7 @@ const I18N={
  }
 };
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
-let LANG=(store.get('diskyLang')||(navigator.language||'en').slice(0,2)); if(LANG!=='de')LANG='en';
+let LANG=(store.get('diskyLang')==='de')?'de':'en';   // STANDARD = Englisch (egal welche Browser-Sprache); Deutsch nur, wenn der Besucher aktiv umschaltet (gespeichert)
 function tt(k){return (I18N[LANG]&&I18N[LANG][k])!=null?I18N[LANG][k]:(I18N.en[k]||k);}
 function renderCaps(){
   document.querySelectorAll('#caps .cap').forEach((el,i)=>{ const c=(I18N[LANG].caps||I18N.en.caps)[i]; if(!c)return;
