@@ -1336,7 +1336,7 @@ function waitlistEndpoint(){
         return { url: SUPABASE_WEB.URL.replace(/\/+$/,'')+'/functions/v1/join-waitlist', supa:true }; }catch(_){}
   return null;   // nichts konfiguriert
 }
-setTimeout(()=>{ if(!waitlistEndpoint()) console.warn('⚠️ Disky: Kein Waitlist-Backend konfiguriert (SUPABASE_WEB leer und WAITLIST.ENDPOINT leer) — Anmeldungen fallen auf mailto zurück und werden NICHT erfasst.'); },0);
+/* Waitlist-Formular entfernt (Direkt-Download ist live) — der Handler bleibt inert, falls je wieder ein #notify-Formular existiert. */
 (function(){ const f=document.getElementById('notify'); if(!f)return;
   const inp=document.getElementById('notifyEmail'), note=document.getElementById('notifyNote'), hp=document.getElementById('notifyHp');
   const valid=v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
