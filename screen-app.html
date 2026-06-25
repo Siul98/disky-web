@@ -12,7 +12,7 @@
   var curView=null;
   function waitFor(sel,cb,tries){ tries=tries||0; var el=document.querySelector(sel); if(el){ cb(el); } else if(tries<50){ setTimeout(function(){ waitFor(sel,cb,tries+1); },120); } }
   function gotoView(v){ if(v===curView) return; curView=v; waitFor('.nav[data-v="'+v+'"]',function(el){ el.click(); }); }
-  function typeInto(inp,query,done){ inp.focus(); inp.value=''; var i=0;
+  function typeInto(inp,query,done){ inp.focus({preventScroll:true}); inp.value=''; var i=0;   // preventScroll: Fokus im iframe darf den Eltern-Scroll NICHT zum iframe springen lassen (Zurückspringen-Bug, Defense-in-Depth)
     (function step(){ if(i>query.length){ done&&done(); return; } inp.value=query.slice(0,i);
       inp.dispatchEvent(new Event('input',{bubbles:true})); i++; setTimeout(step, i<3?260:90); })(); }
   // Demo: Deep Search öffnen, „Alle"-Linse, Query live eintippen → Treffer zeigen die Platte (auch abgesteckt)

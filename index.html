@@ -1671,13 +1671,15 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   function sizeLive(){ if(!liveFrame||!mscr) return; const w=mscr.getBoundingClientRect().width; if(w) liveFrame.style.setProperty('--liveS',(w/1320).toFixed(4)); }   // 1320er-Build auf die Screen-Breite skalieren
   function liveMsg(m){ try{ liveFrame.contentWindow.postMessage(m,'*'); }catch(_){} }
   function updateLive(){ const v = starsOn && !scrolling; if(v!==liveVis){ liveVis=v; liveMsg({diskyVis:v}); } }   // iframe-Animations-Loop nur laufen lassen, wenn sichtbar UND nicht aktiv gescrollt → keine Main-Thread-Contention im kritischen Scroll-Fenster
-  function triggerSearch(){ if(searchSent||!liveReady) return; searchSent=true; liveMsg({diskyDemo:'search', q:'Nordsee', lens:'all'}); }   // beim Landen: Deep Search öffnen + Projekt live eintippen → zeigt die Platte
+  function triggerSearch(){ if(searchSent||!liveReady) return;
+    if(rail.getBoundingClientRect().bottom < innerHeight*0.85) return;   // NUR am MacBook (Hero noch im Bild) tippen. Sonst fokussiert die Such-Demo das iframe-Eingabefeld → der Browser scrollt das (oben liegende) iframe ins Bild → „Zurückspringen zum MacBook"-Bug. searchSent NICHT setzen → späterer Versuch, wenn man wirklich am MacBook ist.
+    searchSent=true; liveMsg({diskyDemo:'search', q:'Nordsee', lens:'all'}); }   // beim Landen: Deep Search öffnen + Projekt live eintippen → zeigt die Platte
   function loadLive(){ if(!liveFrame||liveFrame.dataset.loaded) return;
     if(matchMedia('(max-width:768px)').matches){ liveFrame.dataset.loaded='skip'; return; }   // Mobile: Live-iframe nicht laden — der Poster-Screenshot zeigt sich (spart ~370KB, bessere LCP)
     liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
-    liveFrame.src='screen-app.html?v=9&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
+    liveFrame.src='screen-app.html?v=10&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
   sizeLive();
