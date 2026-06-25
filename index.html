@@ -298,12 +298,13 @@ a{color:inherit;text-decoration:none}
 .testi-title{text-align:center;max-width:20ch;margin:0 auto 44px;font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.06}
 .cs{max-width:1040px;margin:0 auto;user-select:none}
 .cs-stage{--cw:440px;--ch:300px;position:relative;height:clamp(390px,46vw,480px);perspective:1300px;touch-action:pan-y}   /* Clipping + Rand-Maske jetzt auf .cs-track, damit die Pfeile nicht mitmaskiert werden */
+.cs-stage:focus,.cs-stage:focus-visible{outline:none}   /* kein hässliches Fokus-Rechteck um die Bühne (tabIndex für Pfeiltasten); Pfeile/Dots bleiben eigenständig fokussierbar */
 .cs-track{position:absolute;inset:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 13%,#000 87%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 13%,#000 87%,transparent 100%)}   /* weiches Ausblenden an den Rändern statt harter Schnittkante; clippt zugleich die Off-Screen-Karten (kein H-Scroll). Pfeile liegen auf .cs-stage → bleiben sichtbar */
 .cs-card{position:absolute;left:50%;top:50%;width:min(var(--cw),86vw);height:var(--ch);margin:0;
   border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.10);
   background:linear-gradient(158deg,rgba(28,38,62,.94),rgba(11,15,23,.97));
   box-shadow:0 30px 70px -28px rgba(0,0,0,.82);
-  transition:transform .52s cubic-bezier(.33,1,.68,1),opacity .45s ease,box-shadow .45s ease,border-color .4s ease;
+  transition:opacity .4s ease,box-shadow .45s ease,border-color .4s ease;   /* transform NICHT mehr per CSS-Tween — die JS-Feder-Engine treibt es pro Frame (sonst kämpfen beide → Wackeln) */
   will-change:transform,opacity;cursor:pointer;display:flex;flex-direction:column;padding:30px 32px;backface-visibility:hidden}
 .cs-card::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
   background:radial-gradient(120% 92% at 10% 0%,hsla(var(--hue,210),85%,60%,.22),transparent 55%),radial-gradient(130% 120% at 100% 102%,hsla(var(--hue2,188),75%,55%,.13),transparent 60%)}
@@ -1274,34 +1275,54 @@ const TESTI={READY:true};   // Card-Stack mit PLATZHALTER-Stimmen sichtbar. VOR 
 /* Testimonials als Fächer / Card-Stack (Vanilla-Port des 21st.dev card-stack). Nur transform/opacity animiert → Compositor-smooth. */
 let _csActive=0, _csInit=false;
 function _csList(){ return ((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[]); }
-function csGeom(){ const mob=innerWidth<700; return { spacing:0.5, spreadDeg:mob?0:34, depth:120, tiltX:mob?0:6, maxOffset:mob?0:2, activeScale:mob?1:1.035, inactiveScale:.92, lift:mob?12:22 }; }
-function csLayout(){
-  const track=document.getElementById('csTrack'); if(!track)return; const cards=track.children, len=cards.length; if(!len)return;
-  const g=csGeom(); const cw=(cards[0]&&cards[0].offsetWidth)||parseFloat(getComputedStyle(document.getElementById('csStage')).getPropertyValue('--cw'))||440;
-  const sp=cw*g.spacing, step=g.maxOffset>0?g.spreadDeg/g.maxOffset:0;
-  for(let i=0;i<len;i++){ const c=cards[i]; let off=i-_csActive;
-    const alt=off>0?off-len:off+len; if(Math.abs(alt)<Math.abs(off))off=alt;   // kürzester Weg (Loop)
-    const abs=Math.abs(off), active=off===0;
-    if(abs>g.maxOffset){ c.style.opacity='0'; c.style.pointerEvents='none'; c.style.zIndex='0'; c.style.transform=`translate(-50%,-50%) translate(${off*sp}px,40px) scale(.8)`; c.classList.remove('is-active'); continue; }
-    const x=off*sp, y=abs*6+(active?-g.lift:0), z=-abs*g.depth, rz=off*step, rx=active?0:g.tiltX, sc=active?g.activeScale:g.inactiveScale;
-    c.style.transform=`translate(-50%,-50%) translate(${x}px,${y}px) rotateZ(${rz}deg) rotateX(${rx}deg) translateZ(${z}px) scale(${sc})`;
-    c.style.opacity=active?'1':(abs===1?'.9':'.66'); c.style.zIndex=String(100-abs); c.style.pointerEvents='auto';
-    c.classList.toggle('is-active',active);
+function csGeom(){ const mob=innerWidth<700; return { spacing:0.52, spreadDeg:mob?0:46, depth:140, tiltX:mob?0:12, maxOffset:mob?0:2, activeScale:mob?1:1.03, inactiveScale:.94, lift:mob?14:22 }; }
+// ── Feder-Engine (framer-motion-äquivalent: stiffness 280, damping 28) — physikalisches, weiches Einschwingen wie im OG-Component, kein CSS-Tween-Wackeln ──
+let _csRaf=null, _csLast=0;
+function csApply(c,s){ c.style.transform=`translate(-50%,-50%) translate(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px) rotateZ(${s.rz.toFixed(3)}deg) rotateX(${s.rx.toFixed(3)}deg) translateZ(${s.z.toFixed(1)}px) scale(${s.sc.toFixed(4)})`; }
+function csTargets(){
+  const track=document.getElementById('csTrack'); if(!track)return null; const cards=track.children, len=cards.length; if(!len)return null;
+  const g=csGeom(); const cw=(cards[0]&&cards[0].offsetWidth)||440; const sp=cw*g.spacing, step=g.maxOffset>0?g.spreadDeg/g.maxOffset:0;
+  const out=[];
+  for(let i=0;i<len;i++){ let off=i-_csActive; const alt=off>0?off-len:off+len; if(Math.abs(alt)<Math.abs(off))off=alt;
+    const abs=Math.abs(off), active=off===0, vis=abs<=g.maxOffset;
+    out.push({ c:cards[i], vis, active, x:off*sp, y:abs*8+(active?-g.lift:0), z:-abs*g.depth, rz:off*step, rx:active?0:g.tiltX,
+      sc:active?g.activeScale:(vis?g.inactiveScale:.84), op:vis?(active?1:(abs===1?.94:.7)):0, zi:100-abs });
   }
+  return out;
+}
+function csUpdate(animate){
+  const targets=csTargets(); if(!targets)return;
+  for(const t of targets){ const c=t.c;
+    if(!c._s) c._s={x:t.x,y:t.y,z:t.z,rz:t.rz,rx:t.rx,sc:t.sc,vx:0,vy:0,vz:0,vrz:0,vrx:0,vsc:0};
+    c._t=t; c.style.opacity=String(t.op); c.style.zIndex=String(t.zi); c.style.pointerEvents=t.vis?'auto':'none'; c.classList.toggle('is-active',t.active);
+  }
+  if(!animate){ for(const t of targets){ const s=t.c._s; s.x=t.x;s.y=t.y;s.z=t.z;s.rz=t.rz;s.rx=t.rx;s.sc=t.sc; csApply(t.c,s); } return; }
+  if(!_csRaf){ _csLast=0; _csRaf=requestAnimationFrame(csTick); }
+}
+function csTick(now){
+  const track=document.getElementById('csTrack'); if(!track){ _csRaf=null; return; }
+  if(!_csLast)_csLast=now; let dt=(now-_csLast)/1000; _csLast=now; if(dt>0.05)dt=0.05; if(!(dt>0))dt=0.016;
+  const K=280, D=28, cards=track.children, keys=['x','y','z','rz','rx','sc']; let moving=false;
+  for(let i=0;i<cards.length;i++){ const c=cards[i], s=c._s, t=c._t; if(!s||!t)continue; let any=false;
+    for(let p=0;p<6;p++){ const k=keys[p], vk='v'+k; const f=-K*(s[k]-t[k])-D*s[vk]; s[vk]+=f*dt; s[k]+=s[vk]*dt;
+      const tol=k==='sc'?0.0008:0.05; if(Math.abs(s[k]-t[k])>tol||Math.abs(s[vk])>tol) any=true; }
+    if(!any){ s.x=t.x;s.y=t.y;s.z=t.z;s.rz=t.rz;s.rx=t.rx;s.sc=t.sc; } else moving=true; csApply(c,s);
+  }
+  _csRaf = moving ? requestAnimationFrame(csTick) : null;
 }
 function csDots(){ const d=document.getElementById('csDots'); if(!d)return; const len=_csList().length;
   if(d.childElementCount!==len){ let h=''; for(let i=0;i<len;i++)h+=`<button class="cs-dot" data-i="${i}" aria-label="Testimonial ${i+1}"></button>`; d.innerHTML=h;
     d.querySelectorAll('.cs-dot').forEach(b=>b.onclick=()=>csGo(+b.dataset.i)); }
   const dots=d.children; for(let i=0;i<dots.length;i++)dots[i].classList.toggle('on',i===_csActive);
 }
-function csGo(i){ const len=_csList().length; if(!len)return; _csActive=((i%len)+len)%len; csLayout(); csDots(); }
+function csGo(i){ const len=_csList().length; if(!len)return; _csActive=((i%len)+len)%len; csUpdate(true); csDots(); }
 function csNext(){ csGo(_csActive+1); } function csPrev(){ csGo(_csActive-1); }
 function csBindDrag(track){ let sx=0,down=false;
   track.addEventListener('pointerdown',e=>{ const c=track.querySelector('.cs-card.is-active'); if(!c)return; sx=e.clientX; down=true; track._drag=false; c.classList.add('cs-grabbing'); });
   window.addEventListener('pointermove',e=>{ if(!down)return; const dx=e.clientX-sx; if(Math.abs(dx)>6)track._drag=true;
-    if(track._drag){ const c=track.querySelector('.cs-card.is-active'); const g=csGeom(); if(c){ c.style.transition='none'; c.style.transform=`translate(-50%,-50%) translate(${dx}px,${-g.lift}px) scale(${g.activeScale})`; } } });
-  window.addEventListener('pointerup',e=>{ if(!down)return; down=false; const c=track.querySelector('.cs-card.is-active'); if(c){ c.classList.remove('cs-grabbing'); c.style.transition=''; }
-    const dx=e.clientX-sx; if(dx>70)csPrev(); else if(dx<-70)csNext(); else csLayout(); setTimeout(()=>{track._drag=false;},20); });
+    if(track._drag){ const c=track.querySelector('.cs-card.is-active'); if(c&&c._s){ c._s.x=dx; c._s.vx=0; csApply(c,c._s); } } });   // Drag speist die Feder → kein Sprung beim Loslassen
+  window.addEventListener('pointerup',e=>{ if(!down)return; down=false; const c=track.querySelector('.cs-card.is-active'); if(c) c.classList.remove('cs-grabbing');
+    const dx=e.clientX-sx; if(dx>70)csPrev(); else if(dx<-70)csNext(); else csUpdate(true); setTimeout(()=>{track._drag=false;},20); });
 }
 function renderTesti(){
   const track=document.getElementById('csTrack'); if(!track)return; const list=_csList(); if(!list.length)return;
@@ -1321,12 +1342,12 @@ function renderTesti(){
     const cards=track.children; for(let i=0;i<cards.length;i++){ const t=list[i]; if(!t)continue;
       cards[i].querySelector('.cs-quote').textContent=t.q; cards[i].querySelector('.cs-name').textContent=t.n; cards[i].querySelector('.cs-role').textContent=t.r||''; }
   }
-  csLayout(); csDots();
+  csUpdate(false); csDots();
   if(!_csInit){ _csInit=true;
     const pv=document.getElementById('csPrev'), nx=document.getElementById('csNext'), stage=document.getElementById('csStage');
     if(pv)pv.onclick=csPrev; if(nx)nx.onclick=csNext;
     if(stage){ stage.tabIndex=0; stage.addEventListener('keydown',e=>{ if(e.key==='ArrowLeft')csPrev(); else if(e.key==='ArrowRight')csNext(); }); }
-    window.addEventListener('resize',()=>{ if(document.getElementById('csTrack'))csLayout(); });
+    window.addEventListener('resize',()=>{ if(document.getElementById('csTrack'))csUpdate(false); });
     // Kein Auto-Advance: rotierte sonst ungefragt durch (vom Nutzer als störend empfunden). Navigation nur via Pfeile/Dots/Drag/Tastatur.
   }
 }
