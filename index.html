@@ -788,7 +788,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .a-world .pin{fill:#4a9eff;opacity:0;transform-box:fill-box;transform-origin:center bottom;animation:pinpop 3.2s ease infinite}
 .a-world .p2{animation-delay:.4s}.a-world .p3{animation-delay:.8s}
 @keyframes pinpop{0%,8%{opacity:0;transform:translateY(7px) scale(.3)}24%{opacity:1;transform:translateY(0) scale(1)}82%{opacity:1}100%{opacity:0}}
-@media(prefers-reduced-motion:reduce){.fc-anim *{animation:none!important;opacity:1!important}}
+@media(prefers-reduced-motion:reduce){html:not(.fm) .fc-anim *{animation:none!important;opacity:1!important}}
 </style>
 </head>
 <body>
@@ -1496,10 +1496,10 @@ document.querySelectorAll('.rev:not(.sc-row)').forEach(e=>io.observe(e));   // S
    (nicht nur einmal verpasst beim schnellen Scrollen). Reduced-Motion bleibt via @media respektiert. */
 const scLiveIO=new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; e.target.classList.toggle('live',on); e.target.classList.toggle('in',on); }),{threshold:.14,rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.sc-row').forEach(r=>scLiveIO.observe(r));
-const FORCE_MOTION=/[?&]motion=1\b/.test(location.search); if(FORCE_MOTION)document.documentElement.classList.add('fm');   // ?motion=1 → volle Animationen trotz System-„Bewegung reduzieren" (Owner-Preview)
+document.documentElement.classList.add('fm');   // Owner-Entscheidung: Feature-/Showcase-Animationen IMMER zeigen — auch bei System-„Bewegung reduzieren". Die reduced-motion-Gates für Showcase/Reveal/„There's more" sind mit html:not(.fm) entschärft. Smooth-Scroll (Lenis) respektiert die Einstellung weiterhin.
 /* ?animdbg=1 → Overlay oben rechts: zeigt was DER Browser meldet (reduce-motion an/aus, ob die Reihen .in kriegen, ob die Sunburst-Animation aktiv ist) */
-if(/[?&]animdbg=1\b/.test(location.search)){const box=document.createElement('div');box.style.cssText='position:fixed;top:10px;right:10px;z-index:99999;background:#0b1220ee;color:#cfe3ff;font:12px/1.5 ui-monospace,monospace;padding:10px 12px;border:1px solid #1f8a4c;border-radius:8px;white-space:pre;pointer-events:none';document.body.appendChild(box);const upd=()=>{const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;const rows=[...document.querySelectorAll('.sc-row')];const inN=rows.filter(r=>r.classList.contains('in')).length;const ring=document.querySelector('.sring');const an=ring?getComputedStyle(ring).animationName:'—';box.textContent='ANIM-DEBUG\nreduce-motion: '+(rm?'AN ⚠':'aus ✓')+'\n?motion=1: '+(document.documentElement.classList.contains('fm')?'AN':'aus')+'\nrows .in: '+inN+'/'+rows.length+'\nsring anim: '+an+'\nviewport: '+innerWidth+'×'+innerHeight;};upd();setInterval(upd,300);}
-const _rm=!FORCE_MOTION && matchMedia('(prefers-reduced-motion:reduce)').matches;
+if(/[?&]animdbg=1\b/.test(location.search)){const box=document.createElement('div');box.style.cssText='position:fixed;top:10px;right:10px;z-index:99999;background:#0b1220ee;color:#cfe3ff;font:12px/1.5 ui-monospace,monospace;padding:10px 12px;border:1px solid #1f8a4c;border-radius:8px;white-space:pre;pointer-events:none';document.body.appendChild(box);const upd=()=>{const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;const rows=[...document.querySelectorAll('.sc-row')];const inN=rows.filter(r=>r.classList.contains('in')).length;const ring=document.querySelector('.sring');const an=ring?getComputedStyle(ring).animationName:'—';box.textContent='ANIM-DEBUG\nreduce-motion(System): '+(rm?'AN':'aus')+'\nforce-motion(fm): '+(document.documentElement.classList.contains('fm')?'AN (immer) ✓':'aus')+'\nrows .in: '+inN+'/'+rows.length+'\nsring anim: '+an+'\nviewport: '+innerWidth+'×'+innerHeight;};upd();setInterval(upd,300);}
+const _rm=false;   // Count-up zählt immer hoch (Teil der Feature-Animationen)
 function countUp(el){ const t=parseFloat(el.dataset.count); if(isNaN(t))return; const dec=+(el.dataset.dec||0), suf=el.dataset.suf||'';
   if(_rm){ el.textContent=t.toFixed(dec)+suf; return; }
   const dur=1100; let st=null;
@@ -1515,7 +1515,7 @@ document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
 /* hero search resolve */
 
 /* ─────────── smooth scroll (Lenis) ─────────── */
-const reduced=!FORCE_MOTION && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;   // Lenis bleibt a11y-respektierend (Smooth-Scroll kann Bewegungsempfindliche stören) — die Feature-Animationen laufen via html.fm trotzdem für alle
 let lenisInst=null;
 function glideTo(target,offset){ // unified scroll that respects Lenis if active
   if(lenisInst){ lenisInst.scrollTo(target,{offset:offset||0,duration:1.1}); }
