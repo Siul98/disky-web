@@ -1431,13 +1431,13 @@ function applyLang(l){
   document.querySelectorAll('[data-t]').forEach(e=>{ e.textContent=tt(e.getAttribute('data-t')); });
   document.querySelectorAll('[data-tp]').forEach(e=>{ e.setAttribute('placeholder', tt(e.getAttribute('data-tp'))); });
   decorateAnything();
-  renderCaps(); renderFAQ(); renderTesti(); renderReel(); if(window.__hfRefreshTour)window.__hfRefreshTour();
+  renderFAQ(); renderTesti(); if(window.__hfRefreshTour)window.__hfRefreshTour();   // renderCaps/renderReel/renderFeats raus: tote Sektionen (#caps/#rl-pills/#featGrid existieren nicht mehr) — liefen bei jedem Sprachwechsel ins Leere
   { const lv=document.getElementById('loved'); if(lv) lv.hidden=!TESTI.READY; }   // Sektion nur zeigen, wenn echte Zitate freigeschaltet
   applyDownloadState();   // CTA spiegelt den echten Zustand (Waitlist vs. echter Download)
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
-buildReel(); applyLang();
+applyLang();   // buildReel raus (tote Reel-Sektion)
 addEventListener('resize',fitHero,{passive:true});                 // Headline bei jeder Größenänderung/Zoom neu einpassen
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitHero);   // nach dem Laden der Webfont neu messen (Textbreite ändert sich)
 requestAnimationFrame(fitHero);                                     // ein Frame nach dem ersten Layout sicher einpassen
@@ -1680,7 +1680,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     liveFrame.dataset.loaded='1';
     sizeLive();
     addEventListener('message',e=>{ if(e&&e.data&&e.data.diskyReady){ mscr.classList.add('live-ready'); liveReady=true; liveMsg({diskyView:'overview'}); if(curP>0.72) triggerSearch(); } });
-    liveFrame.src='screen-app.html?v=10&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
+    liveFrame.src='screen-app.html?v=11&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
   sizeLive();

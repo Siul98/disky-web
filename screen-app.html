@@ -1784,7 +1784,7 @@ function loadSplineRobot(host){ mountRobot(host); upgradeRobotToSpline(host); } 
 function mountRobot(host){
   if(!host) return;
   // 100% zuverlässig: vorgerendertes NEXBOT-Bild (kein WebGL, kein Laden, offline). STILL — keine Maus-/Bewegungs-Animation.
-  host.innerHTML = `<img class="nexbot-img" src="assets/nexbot.png" alt="" draggable="false">`;
+  host.innerHTML = `<img class="nexbot-img" src="assets/nexbot.webp" alt="" draggable="false" loading="lazy" decoding="async">`;   // webp (29KB statt 202KB) + lazy → spart ~173KB beim Laden des Hero-Embeds
   const img = host.querySelector("img");
   if(img) img.onerror = ()=>{ host.innerHTML = robotSVG(); };   // Sicherheitsnetz, falls das Bild fehlt
   // alte Bewegungs-Listener/Loops sicher abräumen (falls von früher aktiv)
