@@ -618,7 +618,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .pbadge.ok{color:#6fe6b4;background:rgba(61,220,151,.13);border:1px solid rgba(61,220,151,.32)}
 .pbadge.warn{color:#ffc873;background:rgba(255,180,84,.13);border:1px solid rgba(255,180,84,.32)}
 .pbadge.risk{color:#ff9a9a;background:rgba(255,107,107,.13);border:1px solid rgba(255,107,107,.34)}
-@media(prefers-reduced-motion:reduce){.sc-el *,.sc-el *::after{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}.sring{opacity:1;transform:none}.lg-bar span{transform:scaleX(1)}}
+/* Reduced-Motion: KEIN Spread/Spin/Scale/Pulse (a11y) — aber der Demo-Block fadet als Einheit sanft rein
+   (Opacity-Fade gilt als bewegungsarm/zulässig), statt komplett statisch zu sein. */
+@media(prefers-reduced-motion:reduce){.sc-el *,.sc-el *::after{animation:none!important;transition:none!important;transform:none!important;opacity:1!important}.sc-el{opacity:0;transition:opacity .55s ease!important}.sc-row.in .sc-el{opacity:1}.sm-glow{opacity:0!important}.lg-bar span{transform:scaleX(1)!important}}
 .feat2-list{display:flex;flex-direction:column;gap:clamp(46px,8vh,120px)}
 .feat2{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(36px,5vw,84px);align-items:center}
 .feat2:nth-child(even) .feat2-media{order:2}
