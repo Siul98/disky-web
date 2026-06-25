@@ -1470,12 +1470,11 @@ addEventListener('scroll',navState,{passive:true}); navState();
 
 /* reveal */
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.12});
-document.querySelectorAll('.rev').forEach(e=>io.observe(e));
-/* feature-card mini-animations run ONLY while the card is in view (perf) */
-const featLiveIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('live',e.isIntersecting)),{threshold:.25});
-document.querySelectorAll('#featGrid .feat-card').forEach(c=>featLiveIO.observe(c));
-/* Showcase: .live nur im Viewport (Risk-Dot-Ping) + Zahlen zählen beim Erscheinen hoch */
-const scLiveIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('live',e.isIntersecting)),{threshold:.18});
+document.querySelectorAll('.rev:not(.sc-row)').forEach(e=>io.observe(e));   // Showcase-Reihen NICHT hier (einmaliges Reveal) — die laufen über scLiveIO und spielen bei JEDEM Sichtbarwerden neu
+/* Showcase-Feature-Demos: Entrance-Animationen (Sunburst-Entfächern, Dup-Karten, Projekt-Zeilen, Risk-Ping)
+   spielen JEDES MAL neu, wenn die Reihe in den Viewport kommt — so sieht man sie auf dem Desktop zuverlässig
+   (nicht nur einmal verpasst beim schnellen Scrollen). Reduced-Motion bleibt via @media respektiert. */
+const scLiveIO=new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; e.target.classList.toggle('live',on); e.target.classList.toggle('in',on); }),{threshold:.2,rootMargin:'0px 0px -12% 0px'});
 document.querySelectorAll('.sc-row').forEach(r=>scLiveIO.observe(r));
 const _rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function countUp(el){ const t=parseFloat(el.dataset.count); if(isNaN(t))return; const dec=+(el.dataset.dec||0), suf=el.dataset.suf||'';
