@@ -40,7 +40,7 @@
   --maxw:1200px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+html{scroll-padding-top:80px;-webkit-text-size-adjust:100%}   /* KEIN scroll-behavior:smooth — kollidiert mit Lenis (zwei Smooth-Scroll-Systeme → Zurückspringen/Ruckeln, v.a. direkt nach dem Laden während Lenis initialisiert). Anker scrollen via Lenis bzw. explizit smooth. */
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fdisp);
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;overflow-x:hidden}
@@ -1474,7 +1474,7 @@ document.querySelectorAll('.rev:not(.sc-row)').forEach(e=>io.observe(e));   // S
 /* Showcase-Feature-Demos: Entrance-Animationen (Sunburst-Entfächern, Dup-Karten, Projekt-Zeilen, Risk-Ping)
    spielen JEDES MAL neu, wenn die Reihe in den Viewport kommt — so sieht man sie auf dem Desktop zuverlässig
    (nicht nur einmal verpasst beim schnellen Scrollen). Reduced-Motion bleibt via @media respektiert. */
-const scLiveIO=new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; e.target.classList.toggle('live',on); e.target.classList.toggle('in',on); }),{threshold:.2,rootMargin:'0px 0px -12% 0px'});
+const scLiveIO=new IntersectionObserver(es=>es.forEach(e=>{ const on=e.isIntersecting; e.target.classList.toggle('live',on); e.target.classList.toggle('in',on); }),{threshold:.14,rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.sc-row').forEach(r=>scLiveIO.observe(r));
 const _rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function countUp(el){ const t=parseFloat(el.dataset.count); if(isNaN(t))return; const dec=+(el.dataset.dec||0), suf=el.dataset.suf||'';
