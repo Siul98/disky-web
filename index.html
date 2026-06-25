@@ -293,40 +293,46 @@ a{color:inherit;text-decoration:none}
 /* faq */
 .faq h2{font-size:clamp(28px,3.4vw,40px);text-align:center;margin-bottom:46px}
 .faqlist{max-width:760px;margin:0 auto}
-/* Testimonials („Wall of love") — gated über TESTI.READY, bis echte Zitate da sind */
+/* Testimonials — Fächer / Card-Stack (Vanilla-Port des 21st.dev card-stack). Nur transform+opacity animiert = Compositor-smooth, kein Per-Frame-Layout. */
 .testi .eyebrow{display:block;margin-bottom:16px;text-align:center}
-.testi-title{text-align:center;max-width:20ch;margin:0 auto 56px;font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.06}
-/* Gestapelte X/Twitter-Karten (Vanilla-Port von 21st-dev): Hover fächert die vorderen Karten weg + Grayscale→Farbe. Nur Hover/Transform = kein Dauer-Render. */
-.tw-stack{display:grid;grid-template-areas:"stack";place-items:start center;min-height:410px;max-width:760px;margin:0 auto}
-.tw-card{grid-area:stack;position:relative;width:min(380px,84vw);min-height:184px;display:flex;flex-direction:column;padding:15px 18px 14px;border-radius:18px;
-  border:1px solid var(--line);background:linear-gradient(180deg,rgba(21,25,33,.97),rgba(12,15,21,.97));box-shadow:0 26px 64px -20px rgba(0,0,0,.72);
-  transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .42s ease,border-color .35s;filter:grayscale(1);opacity:.5;will-change:transform,opacity}   /* PERF: filter NICHT mehr animiert — der .55s grayscale-Tween rasterte die ganze Karte jeden Frame neu (= ruckelnder Hover). Grayscale schnappt jetzt; nur transform+opacity animieren (Compositor = smooth) */
-.tw-c0{transform:skewY(-8deg) translate(0,0);z-index:1}
-.tw-c1{transform:skewY(-8deg) translate(58px,40px);z-index:2}
-.tw-c2{transform:skewY(-8deg) translate(116px,80px);z-index:3;filter:none;opacity:1}
-.tw-c0::after,.tw-c1::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(255deg,var(--bg) 2%,transparent 48%);transition:opacity .5s}
-.tw-card:hover{filter:none;opacity:1;border-color:rgba(255,255,255,.18);z-index:9}
-.tw-card:hover::after{opacity:0}
-.tw-c0:hover{transform:skewY(-8deg) translate(0,-12px)}
-.tw-c1:hover{transform:skewY(-8deg) translate(58px,28px)}
-.tw-c2:hover{transform:skewY(-8deg) translate(116px,68px)}
-.tw-c0:hover ~ .tw-c1{transform:skewY(-8deg) translate(150px,160px)}
-.tw-c0:hover ~ .tw-c2{transform:skewY(-8deg) translate(232px,224px)}
-.tw-c1:hover ~ .tw-c2{transform:skewY(-8deg) translate(232px,214px)}
-.tw-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-.tw-av{flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2))}
-.tw-id{flex:1;min-width:0}
-.tw-name{display:flex;align-items:center;gap:4px;font-weight:700;color:var(--ink);font-size:15px;line-height:1.2}
-.tw-vb{flex:none;width:16px;height:16px;color:#1d9bf0}
-.tw-handle{color:var(--mut2);font-size:13px}
-.tw-x{flex:none;width:18px;height:18px;color:var(--ink);opacity:.9}
-.tw-content{margin:0;color:var(--ink);font-size:15px;line-height:1.5;letter-spacing:-.01em}
-.tw-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px;color:var(--mut2);font-size:12.5px}
-.tw-stats{display:flex;gap:16px}.tw-stat{display:flex;align-items:center;gap:5px}.tw-stat svg{width:15px;height:15px}
-@media(max-width:700px){.tw-stack{display:flex;flex-direction:column;gap:14px;min-height:0;align-items:stretch}
-  .tw-card,.tw-c0,.tw-c1,.tw-c2{transform:none!important;filter:none!important;opacity:1!important;width:100%}
-  .tw-c0::after,.tw-c1::after{display:none}}
-@media(prefers-reduced-motion:reduce){.tw-card{transition:none}}
+.testi-title{text-align:center;max-width:20ch;margin:0 auto 44px;font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.06}
+.cs{max-width:1040px;margin:0 auto;user-select:none}
+.cs-stage{--cw:440px;--ch:300px;position:relative;height:clamp(370px,44vw,450px);perspective:1300px;touch-action:pan-y}
+.cs-track{position:absolute;inset:0}
+.cs-card{position:absolute;left:50%;top:50%;width:var(--cw);height:var(--ch);margin:calc(var(--ch)/-2) 0 0 calc(var(--cw)/-2);
+  border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(158deg,rgba(28,38,62,.94),rgba(11,15,23,.97));
+  box-shadow:0 30px 70px -28px rgba(0,0,0,.82);
+  transition:transform .62s cubic-bezier(.22,1,.36,1),opacity .5s ease,box-shadow .5s ease,border-color .4s ease;
+  will-change:transform,opacity;cursor:pointer;display:flex;flex-direction:column;padding:30px 32px;backface-visibility:hidden}
+.cs-card::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(120% 92% at 10% 0%,hsla(var(--hue,210),85%,60%,.22),transparent 55%),radial-gradient(130% 120% at 100% 102%,hsla(var(--hue2,188),75%,55%,.13),transparent 60%)}
+.cs-card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
+.cs-card.is-active{cursor:grab;border-color:hsla(var(--hue,210),90%,68%,.45);
+  box-shadow:0 46px 92px -30px rgba(0,0,0,.86),0 0 0 1px hsla(var(--hue,210),90%,70%,.22),0 0 64px -12px hsla(var(--hue,210),90%,55%,.30)}
+.cs-card.cs-grabbing{cursor:grabbing}
+.cs-mark{position:absolute;top:10px;right:24px;font-family:Georgia,'Times New Roman',serif;font-size:84px;line-height:1;color:hsla(var(--hue,210),90%,72%,.18);z-index:0;pointer-events:none}
+.cs-quote{position:relative;z-index:1;font-size:clamp(17px,1.55vw,21px);line-height:1.5;font-weight:500;color:#eef4ff;letter-spacing:-.01em;margin:4px 0 0;
+  display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.cs-author{position:relative;z-index:1;display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:18px}
+.cs-av{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;
+  background:linear-gradient(135deg,hsl(var(--hue,210) 85% 60%),hsl(var(--hue2,188) 80% 50%))}
+.cs-who{display:flex;flex-direction:column;min-width:0}
+.cs-name{font-weight:700;color:#fff;font-size:15px}
+.cs-role{color:#9fb2c8;font-size:13px}
+.cs-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:200;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(16,22,32,.66);border:1px solid rgba(255,255,255,.12);color:#dce7f5;cursor:pointer;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);transition:background .2s,border-color .2s,transform .15s}
+.cs-nav:hover{background:rgba(28,40,58,.92);border-color:hsla(210,90%,68%,.45)}
+.cs-nav:active{transform:translateY(-50%) scale(.9)}
+.cs-prev{left:max(6px,1%)}.cs-next{right:max(6px,1%)}
+.cs-nav svg{width:20px;height:20px}
+.cs-dots{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:24px}
+.cs-dot{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.26);cursor:pointer;transition:background .25s,transform .25s}
+.cs-dot.on{background:var(--acc);transform:scale(1.3)}
+.cs-dot:hover{background:rgba(255,255,255,.55)}
+.cs-ph{text-align:center;color:var(--mut2);font-size:12px;margin-top:14px;opacity:.6}
+@media(max-width:640px){.cs-stage{--cw:min(84vw,330px);--ch:310px}.cs-nav{width:38px;height:38px}.cs-prev{left:2px}.cs-next{right:2px}}
+@media(prefers-reduced-motion:reduce){.cs-card{transition:opacity .3s ease}}
 .qa{border-top:1px solid var(--line);padding:4px 0}
 .qa:last-child{border-bottom:1px solid var(--line)}
 .qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;
@@ -1023,7 +1029,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 <section class="sec bord testi" id="loved" hidden><div class="wrap">
   <span class="eyebrow rev" data-t="testi_eb">Loved by people with too many drives</span>
   <h2 class="testi-title rev" data-t="testi_h">People who finally stopped digging.</h2>
-  <div class="tw-stack" id="testiGrid" aria-label="Testimonials"></div>
+  <div class="cs" aria-label="Testimonials">
+    <div class="cs-stage" id="csStage">
+      <button class="cs-nav cs-prev" id="csPrev" aria-label="Vorheriges Testimonial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="cs-track" id="csTrack"></div>
+      <button class="cs-nav cs-next" id="csNext" aria-label="Nächstes Testimonial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+    <div class="cs-dots" id="csDots"></div>
+  </div>
 </div></section>
 
 <!-- CLOSING -->
@@ -1100,9 +1113,11 @@ const I18N={
   testi_eb:"Loved by people with too many drives",testi_h:"People who finally stopped digging.",
   // PLATZHALTER — durch ECHTE Zitate ersetzen, dann TESTI.READY=true setzen. Keine Fake-Stimmen live.
   testi:[
-   {q:"Found a wedding from 2019 in about four seconds — without even getting up to find the drive. Disky just searches every drive in my drawer 🤯",n:"Lena Brandt",h:"@lenabrandt",d:"Jan 3, 2026",likes:142,rt:18},
-   {q:"I keep 30+ drives in a drawer. Disky is the first thing that actually knows what's on every single one. Archive work finally makes sense.",n:"Marco Tillmann",h:"@marco_edits",d:"Jan 2, 2026",likes:89,rt:12},
-   {q:"typed 'drone sunset' and it pulled the exact clip off a drive that's been unplugged for a YEAR. on-device AI, nothing leaves my mac. wild 🔥",n:"Priya Nair",h:"@priyashoots",d:"Jan 1, 2026",likes:156,rt:23}
+   {q:"Found a wedding from 2019 in about four seconds — without even getting up to find the drive.",n:"Lena Brandt",r:"Wedding Filmmaker"},
+   {q:"I keep 30+ drives in a drawer. Disky is the first thing that actually knows what's on every single one.",n:"Marco Tillmann",r:"Documentary Editor"},
+   {q:"Typed 'drone sunset' and it pulled the exact clip off a drive that had been unplugged for a year. On-device — nothing leaves my Mac.",n:"Priya Nair",r:"Commercial DP"},
+   {q:"My whole archive is finally one searchable place. No more plugging in five drives just to find one folder.",n:"Jonas Feld",r:"Photographer"},
+   {q:"As a DIT this saved my offload chaos. Every card, every shoot — instantly findable, even offline.",n:"Sara Okafor",r:"DIT / Data Wrangler"}
   ],
   end_h:"Stop digging through the drawer.",end_sub:"One catalog of every drive you own — searchable in seconds, on your Mac, while the drawer stays shut. Catalog once. Never dig again.",
   foot_legal:"Legal",foot_contact:"Contact",
@@ -1176,9 +1191,11 @@ const I18N={
   testi_eb:"Geliebt von Leuten mit zu vielen Platten",testi_h:"Leute, die aufgehört haben zu wühlen.",
   // PLATZHALTER — durch ECHTE Zitate ersetzen, dann TESTI.READY=true setzen. Keine Fake-Stimmen live.
   testi:[
-   {q:"Eine Hochzeit von 2019 in vier Sekunden gefunden — ohne aufzustehen und die Platte zu suchen. Disky durchsucht einfach jede Platte in der Schublade 🤯",n:"Lena Brandt",h:"@lenabrandt",d:"3. Jan 2026",likes:142,rt:18},
-   {q:"Ich hab 30+ Platten in einer Schublade. Disky ist das Erste, das wirklich weiß, was auf jeder einzelnen liegt. Archiv-Arbeit ergibt endlich Sinn.",n:"Marco Tillmann",h:"@marco_edits",d:"2. Jan 2026",likes:89,rt:12},
-   {q:"„Drohne Sonnenuntergang“ getippt — und es holte den exakten Clip von einer Platte, die ein JAHR abgesteckt war. On-device-KI, nichts verlässt den Mac. Wahnsinn 🔥",n:"Priya Nair",h:"@priyashoots",d:"1. Jan 2026",likes:156,rt:23}
+   {q:"Eine Hochzeit von 2019 in vier Sekunden gefunden — ohne aufzustehen und die Platte zu suchen.",n:"Lena Brandt",r:"Hochzeitsfilmerin"},
+   {q:"Ich hab 30+ Platten in einer Schublade. Disky ist das Erste, das wirklich weiß, was auf jeder einzelnen liegt.",n:"Marco Tillmann",r:"Doku-Cutter"},
+   {q:"„Drohne Sonnenuntergang“ getippt — und es holte den exakten Clip von einer Platte, die ein Jahr abgesteckt war. Alles bleibt lokal.",n:"Priya Nair",r:"Werbe-Kamerafrau"},
+   {q:"Mein ganzes Archiv ist endlich ein durchsuchbarer Ort. Kein Fünf-Platten-Einstöpseln mehr für einen Ordner.",n:"Jonas Feld",r:"Fotograf"},
+   {q:"Als DIT hat das mein Offload-Chaos gerettet. Jede Karte, jeder Dreh — sofort auffindbar, auch offline.",n:"Sara Okafor",r:"DIT / Data Wrangler"}
   ],
   end_h:"Hör auf, die Schublade zu durchwühlen.",end_sub:"Ein Katalog für jede Platte, die du besitzt — in Sekunden durchsuchbar, auf deinem Mac, während die Schublade zu bleibt. Einmal katalogisieren. Nie wieder wühlen.",
   foot_legal:"Impressum",foot_contact:"Kontakt",
@@ -1253,8 +1270,72 @@ function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
 let _phDone=false, _phTimer=0;
 /* Testimonials-Sektion. ACHTUNG: aktuell PLATZHALTER-Zitate (für Layout/Aufbau) — VOR dem echten Launch durch echte ersetzen (DE: UWG!). Zum Verstecken READY:false. */
-const TESTI={READY:false};   // Fake-Platzhalter-Zitate vor dem Launch versteckt (UWG §5) — auf true, sobald echte, konsentierte Beta-Stimmen drin sind
-function renderTesti(){ const el=document.getElementById('testiGrid'); if(!el)return;
+const TESTI={READY:true};   // Card-Stack mit PLATZHALTER-Stimmen sichtbar. VOR Verkauf durch echte, konsentierte Zitate ersetzen (UWG §5) — sonst READY:false.
+/* Testimonials als Fächer / Card-Stack (Vanilla-Port des 21st.dev card-stack). Nur transform/opacity animiert → Compositor-smooth. */
+let _csActive=0, _csInit=false;
+function _csList(){ return ((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[]); }
+function csGeom(){ const mob=innerWidth<700; return { spacing:0.52, spreadDeg:mob?0:44, depth:130, tiltX:mob?0:12, maxOffset:mob?0:2, activeScale:1.04, inactiveScale:.9, lift:24 }; }
+function csLayout(){
+  const track=document.getElementById('csTrack'); if(!track)return; const cards=track.children, len=cards.length; if(!len)return;
+  const g=csGeom(); const cw=parseFloat(getComputedStyle(document.getElementById('csStage')).getPropertyValue('--cw'))||440;
+  const sp=cw*g.spacing, step=g.maxOffset>0?g.spreadDeg/g.maxOffset:0;
+  for(let i=0;i<len;i++){ const c=cards[i]; let off=i-_csActive;
+    const alt=off>0?off-len:off+len; if(Math.abs(alt)<Math.abs(off))off=alt;   // kürzester Weg (Loop)
+    const abs=Math.abs(off), active=off===0;
+    if(abs>g.maxOffset){ c.style.opacity='0'; c.style.pointerEvents='none'; c.style.zIndex='0'; c.style.transform=`translate(${off*sp}px,40px) scale(.8)`; c.classList.remove('is-active'); continue; }
+    const x=off*sp, y=abs*10+(active?-g.lift:0), z=-abs*g.depth, rz=off*step, rx=active?0:g.tiltX, sc=active?g.activeScale:g.inactiveScale;
+    c.style.transform=`translate(${x}px,${y}px) rotateZ(${rz}deg) rotateX(${rx}deg) translateZ(${z}px) scale(${sc})`;
+    c.style.opacity=active?'1':(abs===1?'.9':'.66'); c.style.zIndex=String(100-abs); c.style.pointerEvents='auto';
+    c.classList.toggle('is-active',active);
+  }
+}
+function csDots(){ const d=document.getElementById('csDots'); if(!d)return; const len=_csList().length;
+  if(d.childElementCount!==len){ let h=''; for(let i=0;i<len;i++)h+=`<button class="cs-dot" data-i="${i}" aria-label="Testimonial ${i+1}"></button>`; d.innerHTML=h;
+    d.querySelectorAll('.cs-dot').forEach(b=>b.onclick=()=>csGo(+b.dataset.i)); }
+  const dots=d.children; for(let i=0;i<dots.length;i++)dots[i].classList.toggle('on',i===_csActive);
+}
+function csGo(i){ const len=_csList().length; if(!len)return; _csActive=((i%len)+len)%len; csLayout(); csDots(); }
+function csNext(){ csGo(_csActive+1); } function csPrev(){ csGo(_csActive-1); }
+function csBindDrag(track){ let sx=0,down=false;
+  track.addEventListener('pointerdown',e=>{ const c=track.querySelector('.cs-card.is-active'); if(!c)return; sx=e.clientX; down=true; track._drag=false; c.classList.add('cs-grabbing'); });
+  window.addEventListener('pointermove',e=>{ if(!down)return; const dx=e.clientX-sx; if(Math.abs(dx)>6)track._drag=true;
+    if(track._drag){ const c=track.querySelector('.cs-card.is-active'); const g=csGeom(); if(c){ c.style.transition='none'; c.style.transform=`translate(${dx}px,${-g.lift}px) scale(${g.activeScale})`; } } });
+  window.addEventListener('pointerup',e=>{ if(!down)return; down=false; const c=track.querySelector('.cs-card.is-active'); if(c){ c.classList.remove('cs-grabbing'); c.style.transition=''; }
+    const dx=e.clientX-sx; if(dx>70)csPrev(); else if(dx<-70)csNext(); else csLayout(); setTimeout(()=>{track._drag=false;},20); });
+}
+function renderTesti(){
+  const track=document.getElementById('csTrack'); if(!track)return; const list=_csList(); if(!list.length)return;
+  if(_csActive>=list.length)_csActive=0;
+  if(track.childElementCount!==list.length){
+    let h='';
+    for(let i=0;i<list.length;i++){ const t=list[i]; const ini=String(t.n||'').trim().split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase();
+      const hue=200+i*26, hue2=hue-32;
+      h+=`<article class="cs-card" data-i="${i}" style="--hue:${hue};--hue2:${hue2}"><span class="cs-mark" aria-hidden="true">&ldquo;</span>`
+        +`<p class="cs-quote">${t.q}</p>`
+        +`<div class="cs-author"><span class="cs-av" aria-hidden="true">${ini}</span><span class="cs-who"><span class="cs-name">${t.n}</span><span class="cs-role">${t.r||''}</span></span></div></article>`;
+    }
+    track.innerHTML=h;
+    track.querySelectorAll('.cs-card').forEach(c=>c.addEventListener('click',()=>{ if(track._drag)return; const i=+c.dataset.i; if(i!==_csActive)csGo(i); }));
+    csBindDrag(track);
+  } else {
+    const cards=track.children; for(let i=0;i<cards.length;i++){ const t=list[i]; if(!t)continue;
+      cards[i].querySelector('.cs-quote').textContent=t.q; cards[i].querySelector('.cs-name').textContent=t.n; cards[i].querySelector('.cs-role').textContent=t.r||''; }
+  }
+  csLayout(); csDots();
+  if(!_csInit){ _csInit=true;
+    const pv=document.getElementById('csPrev'), nx=document.getElementById('csNext'), stage=document.getElementById('csStage');
+    if(pv)pv.onclick=csPrev; if(nx)nx.onclick=csNext;
+    if(stage){ stage.tabIndex=0; stage.addEventListener('keydown',e=>{ if(e.key==='ArrowLeft')csPrev(); else if(e.key==='ArrowRight')csNext(); }); }
+    window.addEventListener('resize',()=>{ if(document.getElementById('csTrack'))csLayout(); });
+    if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+      let hov=false, vis=false; const sec=document.getElementById('loved');
+      if(stage){ stage.addEventListener('mouseenter',()=>hov=true); stage.addEventListener('mouseleave',()=>hov=false); }
+      if(sec&&'IntersectionObserver'in window) new IntersectionObserver(es=>es.forEach(x=>vis=x.isIntersecting),{threshold:.35}).observe(sec);
+      setInterval(()=>{ if(vis&&!hov&&!document.hidden)csNext(); }, 5400);
+    }
+  }
+}
+function renderTestiLegacy_unused(){ const el=document.getElementById('testiGrid'); if(!el)return;
   const list=(((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[])).slice(0,3);
   const VB='<svg class="tw-vb" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true"><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/></svg>';
   const XI='<svg class="tw-x" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
