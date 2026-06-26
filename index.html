@@ -1812,7 +1812,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const cap1Op=clamp((p1-0.4)/0.15);   // „Scan once" erscheint im Scan und scrollt dann mit der Szene hoch raus (KEIN Fade)
     cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(-pan).toFixed(0)}px)`;
     // „Remembered forever" — Apple-Style: blurt + fadet + steigt rein; landet höher (Abstand zum großen MacBook); reagiert auf die einströmenden Ordner
-    const cap2Land=-innerHeight*0.03;                        // Landeposition näher ans MacBook (vorher -0.15 → zu großer Abstand)
+    const cap2Land=-innerHeight*0.09;                        // Atemraum/Clear-Space zwischen Titel-Block (Titel+Sub) und MacBook: ~8-9% vh. -0.15 war zu weit, -0.03 zu nah (klebte am Lid) → ~-0.09 ist die komfortable Mitte
     const rev=ease(clamp((p2-0.10)/0.40));                   // Apple-Reveal-Fortschritt
     const cap2TY=cap2Land + (GAP-pan);                       // steigt von unten hoch und landet bei cap2Land
     cap2.style.opacity=rev.toFixed(3);
