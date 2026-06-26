@@ -8,10 +8,10 @@
 <link rel="icon" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <!-- LCP: First-Paint-Hero-Platten sofort laden (vor dem HTML-Parse-Ende) -->
-<link rel="preload" as="image" href="assets/drives/lacie-rugged.webp" fetchpriority="high">
-<link rel="preload" as="image" href="assets/drives/gdrive.webp" fetchpriority="high">
-<link rel="preload" as="image" href="assets/drives/t5.webp">
-<link rel="preload" as="image" href="assets/drives/lacie-silver.webp">
+<link rel="preload" as="image" href="assets/drives/lacie-rugged.webp?v=2" fetchpriority="high">
+<link rel="preload" as="image" href="assets/drives/gdrive.webp?v=2" fetchpriority="high">
+<link rel="preload" as="image" href="assets/drives/t5.webp?v=2">
+<link rel="preload" as="image" href="assets/drives/lacie-silver.webp?v=2">
 <link rel="canonical" href="https://disky.app/">
 <meta property="og:title" content="Disky — Find anything. Connect nothing.">
 <meta property="og:description" content="Index every drive once, then search them all on your Mac — by name, project, or what's inside the footage, even unplugged in the drawer. 100% local, read-only. Free beta out now.">
@@ -833,17 +833,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <p class="hf-tl" data-t="trustline">Free to start · macOS, Apple Silicon · 100% local · Read-only</p>
       </div>
       <div class="hf-stage" id="hf-stage"><div class="hf-fan" id="hf-fan">
-        <div class="hf-fcard" data-i="-2"><img class="hf-drv" src="assets/drives/lacie-rugged.webp" alt="LaCie Rugged" decoding="async" fetchpriority="high"></div>
-        <div class="hf-fcard" data-i="-1"><img class="hf-drv" src="assets/drives/gdrive.webp" alt="G-Drive ArmorATD" decoding="async" fetchpriority="high"></div>
-        <div class="hf-fcard" data-i="1"><img class="hf-drv" src="assets/drives/t5.webp" alt="Samsung T5" decoding="async" fetchpriority="high"></div>
-        <div class="hf-fcard" data-i="2"><img class="hf-drv" src="assets/drives/lacie-silver.webp" alt="LaCie Mobile" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="-2"><img class="hf-drv" src="assets/drives/lacie-rugged.webp?v=2" alt="Rugged drive" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="-1"><img class="hf-drv" src="assets/drives/gdrive.webp?v=2" alt="Rugged drive" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="1"><img class="hf-drv" src="assets/drives/t5.webp?v=2" alt="Portable SSD" decoding="async" fetchpriority="high"></div>
+        <div class="hf-fcard" data-i="2"><img class="hf-drv" src="assets/drives/lacie-silver.webp?v=2" alt="Portable drive" decoding="async" fetchpriority="high"></div>
       </div></div>
       <div class="hf-bloom" id="hf-bloom"></div>
       <div class="hf-shock" id="hf-shock"></div>
       <div class="hf-t9" id="hf-t9">
         <div class="hf-t9glow" aria-hidden="true"></div>
-        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp?v=3" alt="Samsung T9" decoding="async" fetchpriority="high">
-        <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp?v=3" alt="" decoding="async">
+        <img class="hf-dimg hf-front" src="assets/drives/t9-land.webp?v=4" alt="Disky SSD" decoding="async" fetchpriority="high">
+        <img class="hf-dimg hf-xray" data-src="assets/drives/t9xray-land.webp?v=4" alt="" decoding="async">
         <div class="hf-scanline" id="hf-scanline"><i class="hf-bm"></i><div class="hf-warp"></div></div>
       </div>
       <div class="hf-mac" id="hf-mac">
@@ -869,7 +869,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 <!-- HOW IT WORKS — direkt unter dem Hero: der Unplugged-Katalog-Mechanismus mit der Kabel-Animation -->
 <section class="sec bord how" id="how">
   <div class="how-wire" id="howWire" aria-hidden="true">
-    <div class="how-drive" id="howDrive"><img src="assets/drives/lacie-rugged.webp" alt="" decoding="async" loading="lazy"><span class="how-led" id="howLed"></span></div>
+    <div class="how-drive" id="howDrive"><img src="assets/drives/lacie-rugged.webp?v=2" alt="" decoding="async" loading="lazy"><span class="how-led" id="howLed"></span></div>
   </div>
   <div class="wrap">
   <div class="feat2-intro">
@@ -1706,7 +1706,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
   startStars();
 
   /* Fächer-Layout */
-  const DRV={'-2':{h:300,ar:0.631},'-1':{h:424,ar:0.666},'0':{h:318,ar:0.683},'1':{h:238,ar:0.766},'2':{h:378,ar:0.710}};
+  const DRV={'-2':{h:300,ar:0.621},'-1':{h:424,ar:0.723},'0':{h:318,ar:0.683},'1':{h:238,ar:0.523},'2':{h:378,ar:0.653}};
   const REFW=1120, HEROW=520, REST_VIS=318, FAN_BOTTOM=-118;
   let fanScale=1, heroTyRest=0, heroScRest=0.5, heroScLift=1;
   function fanParts(i){ return {tx:i*126, ty:Math.abs(i)*-12, rot:i*8.5}; }
