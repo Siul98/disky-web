@@ -789,35 +789,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .a-world .p2{animation-delay:.4s}.a-world .p3{animation-delay:.8s}
 @keyframes pinpop{0%,8%{opacity:0;transform:translateY(7px) scale(.3)}24%{opacity:1;transform:translateY(0) scale(1)}82%{opacity:1}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){html:not(.fm) .fc-anim *{animation:none!important;opacity:1!important}}
-@font-face{font-family:'Caveat';src:url('fonts/Caveat-600.woff2') format('woff2');font-weight:600;font-display:swap}
-/* ───────── Guided tour: annotierter App-Screenshot mit Hand-drawn-Arrows, die beim Scrollen einfaden ───────── */
-.tour-intro{text-align:center;margin:0 auto clamp(26px,4vw,54px);max-width:720px}
-.tour-stage{position:relative;width:100%;max-width:1180px;margin:0 auto;aspect-ratio:1500/1040}
-.tour-img{position:absolute;left:10%;top:14.5%;width:80%;height:auto;border-radius:14px;border:1px solid rgba(150,180,230,.16);box-shadow:0 32px 80px -28px rgba(0,0,0,.85),0 0 0 1px rgba(0,0,0,.4);background:#06080d}
-.tour-arrows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:3}
-.tour-arrows g{filter:url(#tourRough)}   /* feiner Wobble → echter „hand-drawn"-Look */
-.tour-arrows path{fill:none;stroke:var(--tour-ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 5px rgba(255,196,120,.4))}
-.tour-arrows .shaft{transition:stroke-dashoffset .8s cubic-bezier(.62,0,.34,1)}
-.tour-arrows .head{opacity:0;transition:opacity .32s ease .5s}
-.tour-ann.on .shaft{stroke-dashoffset:0!important}
-.tour-ann.on .head{opacity:1}
-:root{--tour-ink:#ffd9a3}
-.tour-note{position:absolute;z-index:4;font-family:'Caveat',ui-rounded,'Segoe Print',cursive;color:var(--tour-ink);font-size:clamp(18px,1.65vw,27px);font-weight:600;line-height:1.08;letter-spacing:.005em;text-shadow:0 2px 16px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.6);max-width:clamp(140px,15vw,210px);opacity:0;transition:opacity .55s ease,transform .6s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
-.tour-note.al-l{transform:translateY(12px)}
-.tour-note.al-c{transform:translate(-50%,12px);text-align:center}
-.tour-note.al-r{transform:translate(-100%,12px);text-align:right}
-.tour-note.al-l.on{transform:translateY(0)}
-.tour-note.al-c.on{transform:translate(-50%,0)}
-.tour-note.al-r.on{transform:translate(-100%,0)}
-.tour-note.on{opacity:1}
-@media(max-width:760px){
-  .tour-stage{aspect-ratio:auto;display:block;max-width:560px}
-  .tour-img{position:static;left:auto;top:auto;width:100%}
-  .tour-arrows{display:none}
-  .tour-note{position:static;max-width:none;opacity:1;transform:none!important;text-align:left!important;margin:14px 0 0;padding-left:26px;font-size:20px;color:rgba(244,247,251,.92)}
-  .tour-note::before{content:"→";position:absolute;left:0;color:var(--tour-ink);font-family:inherit}
-  #tourNotes-m{position:relative}
-}
 </style>
 </head>
 <body>
@@ -886,21 +857,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     </div>
   </div>
 </header>
-
-<!-- GUIDED TOUR — annotierter App-Screenshot; Hand-drawn-Arrows + handgeschriebene Labels faden beim Scrollen ein (Reveal an Scroll-Position gekoppelt, reset/replay) -->
-<section class="sec bord tour" id="tour" aria-label="A quick look at Disky">
-  <div class="wrap">
-    <div class="tour-intro">
-      <span class="eyebrow rev" data-t="tour_eb">A quick look</span>
-      <h2 class="feats-h rev" data-t="tour_h">Everything, at a glance.</h2>
-      <p class="how-sub rev" data-t="tour_sub">This is the whole app — here's what you're looking at.</p>
-    </div>
-    <div class="tour-stage" id="tourStage">
-      <img class="tour-img" src="assets/tour-screen.webp" width="1320" height="812" alt="Disky Deep Search — sidebar with tools and drives, results across drives even when offline" loading="lazy" decoding="async">
-      <svg class="tour-arrows" id="tourArrows" viewBox="0 0 1500 1040" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><filter id="tourRough" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="6" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
-    </div>
-  </div>
-</section>
 
 <!-- HOW IT WORKS — direkt unter dem Hero: der Unplugged-Katalog-Mechanismus mit der Kabel-Animation -->
 <section class="sec bord how" id="how">
@@ -1129,7 +1085,6 @@ const I18N={
   t1:"100% local",t2:"Read-only",t3:"On-device AI",t4:"No subscription",t5:"Local-first",
   pa_eb:"For editors, photographers & creatives",pa_h:"A drawer full of drives.",pa_h2:"One clip you can't find.",pa_sub:"You own ten, twenty, more — black bricks with no labels, and the shot lives on exactly one of them. Right now the only way to find it is to plug them in, one cable at a time, until you get lucky.",pa_tag:"Drive 1 of 18 · still searching…",
   how_eb:"Plug in once. Search forever.",how_h:"How Disky works.",how_sub:"Three steps, then you never plug a drive in to search again.",
-  tour_eb:"A quick look",tour_h:"Everything, at a glance.",tour_sub:"This is the whole app — here's what you're looking at.",tour_n1:"More tools, one click",tour_n2:"Every drive you've scanned",tour_n3:"Search by name, content or project",tour_n4:"Found even when unplugged",
   how_c1_h:"Plug a drive in — once.",how_c1_p:"Connect an external drive a single time. Disky opens it strictly read-only: it looks, it never touches. Nothing is moved, renamed, copied off, or deleted.",how_c1_pr:"Read-only · your files are never altered",
   how_c2_h:"Disky builds the catalog — on your Mac.",how_c2_p:"Disky catalogs every file — names, folders, projects — and reads what's in your footage and photos, so you search by what you see. Everything stays on your Mac.",how_c2_pr:"On-device · 0 bytes uploaded",
   how_c3_h:"Unplug it. Search anytime.",how_c3_p:"Put the drive back in the drawer. The catalog lives in Disky, so every search after that finds the exact drive and path with nothing connected — across all of them at once.",how_c3_pr:"Nothing plugged in · the whole drawer, searchable",
@@ -1208,7 +1163,6 @@ const I18N={
   t1:"100% lokal",t2:"Nur-Lesen",t3:"KI on-device",t4:"Kein Abo",t5:"Local-first",
   pa_eb:"Für Editoren, Fotografen & Kreative",pa_h:"Eine Schublade voller Platten.",pa_h2:"Ein Clip, den du nicht findest.",pa_sub:"Du hast zehn, zwanzig, mehr — schwarze Klötze ohne Beschriftung, und die Aufnahme liegt auf genau einer davon. Im Moment hilft nur eins: anstecken, Kabel für Kabel, bis du Glück hast.",pa_tag:"Platte 1 von 18 · suche noch…",
   how_eb:"Einmal anstecken. Für immer suchen.",how_h:"So funktioniert Disky.",how_sub:"Drei Schritte — danach steckst du nie wieder eine Platte an, um zu suchen.",
-  tour_eb:"Kurz vorgestellt",tour_h:"Alles auf einen Blick.",tour_sub:"Das ist die ganze App — hier siehst du, was was ist.",tour_n1:"Mehr Funktionen, ein Klick",tour_n2:"Jede gescannte Platte",tour_n3:"Suche: Name, Inhalt, Projekt",tour_n4:"Gefunden — auch abgesteckt",
   how_c1_h:"Eine Platte anstecken — einmal.",how_c1_p:"Schließe eine externe Platte ein einziges Mal an. Disky öffnet sie strikt nur lesend: schaut hin, fasst nie an. Nichts wird verschoben, umbenannt, kopiert oder gelöscht.",how_c1_pr:"Nur-Lesen · deine Dateien bleiben unangetastet",
   how_c2_h:"Disky baut den Katalog — auf deinem Mac.",how_c2_p:"Disky erfasst jede Datei: Namen, Ordner, Projekte — und liest, was in deinem Material und deinen Fotos steckt, damit du findest, was du siehst. Alles bleibt auf deinem Mac.",how_c2_pr:"On-device · 0 Byte hochgeladen",
   how_c3_h:"Abziehen. Jederzeit suchen.",how_c3_p:"Leg die Platte zurück in die Schublade. Der Katalog lebt in Disky — jede Suche danach findet die exakte Platte und den Pfad, ohne dass etwas angesteckt ist. Über alle auf einmal.",how_c3_pr:"Nichts angesteckt · die ganze Schublade, durchsuchbar",
@@ -1553,56 +1507,6 @@ function countUp(el){ const t=parseFloat(el.dataset.count); if(isNaN(t))return; 
   requestAnimationFrame(step); }
 const countIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ countUp(e.target); countIO.unobserve(e.target); } }),{threshold:.6});
 document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
-
-/* ───────── Guided tour: Hand-drawn-Arrows + Labels, Reveal an Scroll-Position gekoppelt (reset/replay) ───────── */
-(function(){
-  const stage=document.getElementById('tourStage'), svg=document.getElementById('tourArrows');
-  if(!stage||!svg) return;
-  const cl=(v,a,b)=>Math.max(a===undefined?0:a,Math.min(b===undefined?1:b,v));
-  const NS='http://www.w3.org/2000/svg';
-  // Koordinaten im 1500×1040-Grid der SVG. Bild liegt bei x[150,1350] y[151,889]. start=Pfeil-Ansatz (am Label), end=Ziel im Screen, cv=Kurvenstärke.
-  const TOUR=[
-    {k:'tour_n1', nx:88, ny:120, al:'l', sx:250, sy:205, ex:300, ey:462, cv:50},   // Navigation „Mehr Funktionen" (Storage Map/Project Manager/Duplicate Finder)
-    {k:'tour_n2', nx:78, ny:840, al:'l', sx:250, sy:835, ex:300, ey:705, cv:-36},  // MY DRIVES — die Festplatten
-    {k:'tour_n3', nx:770,ny:42,  al:'c', sx:792, sy:150, ex:760, ey:452, cv:44},   // Suchleiste (Name/Inhalt/Projekt)
-    {k:'tour_n4', nx:1432,ny:840,al:'r', sx:1120,sy:835, ex:735, ey:640, cv:-50},  // „offline"-Badge am Treffer
-  ];
-  const rot=(vx,vy,a)=>[vx*Math.cos(a)-vy*Math.sin(a), vx*Math.sin(a)+vy*Math.cos(a)];
-  function build(t){
-    const {sx,sy,ex,ey,cv}=t, mx=(sx+ex)/2, my=(sy+ey)/2, dx=ex-sx, dy=ey-sy, L=Math.hypot(dx,dy)||1;
-    const cxp=mx+(-dy/L)*cv, cyp=my+(dx/L)*cv;                      // Kontrollpunkt seitlich versetzt → natürliche Kurve
-    const shaft=`M ${sx} ${sy} Q ${cxp.toFixed(1)} ${cyp.toFixed(1)} ${ex} ${ey}`;
-    const tdx=ex-cxp, tdy=ey-cyp, tl=Math.hypot(tdx,tdy)||1, ux=tdx/tl, uy=tdy/tl;  // Tangente am Ende → Pfeilspitze ausrichten
-    const hl=32, a=0.46, [b1x,b1y]=rot(-ux,-uy,a), [b2x,b2y]=rot(-ux,-uy,-a);
-    const head=`M ${(ex+b1x*hl).toFixed(1)} ${(ey+b1y*hl).toFixed(1)} L ${ex} ${ey} L ${(ex+b2x*hl).toFixed(1)} ${(ey+b2y*hl).toFixed(1)}`;
-    return {shaft,head};
-  }
-  const LANGN=(typeof LANG!=='undefined'?LANG:'en');
-  const anns=TOUR.map((t,i)=>{
-    const {shaft,head}=build(t);
-    const g=document.createElementNS(NS,'g'); g.setAttribute('class','tour-ann');
-    const ps=document.createElementNS(NS,'path'); ps.setAttribute('class','shaft'); ps.setAttribute('d',shaft);
-    const ph=document.createElementNS(NS,'path'); ph.setAttribute('class','head'); ph.setAttribute('d',head);
-    g.appendChild(ps); g.appendChild(ph); svg.appendChild(g);
-    let len=300; try{ len=ps.getTotalLength()||300; }catch(_){ }
-    ps.style.strokeDasharray=len; ps.style.strokeDashoffset=len;
-    const note=document.createElement('div'); note.className='tour-note al-'+t.al; note.setAttribute('data-t',t.k);
-    note.style.left=(t.nx/1500*100).toFixed(2)+'%'; note.style.top=(t.ny/1040*100).toFixed(2)+'%';
-    note.textContent=((typeof I18N!=='undefined'&&I18N[LANGN]&&I18N[LANGN][t.k])||'');
-    stage.appendChild(note);
-    return {g,note};
-  });
-  const setOn=(i,on)=>{ anns[i].g.classList.toggle('on',on); anns[i].note.classList.toggle('on',on); };
-  const THR=[0.06,0.30,0.54,0.78];   // gestaffelt → die Pfeile kommen einzeln, während man durchscrollt
-  let active=false, raf=0;
-  function upd(){ raf=0; const r=stage.getBoundingClientRect();
-    const p=cl((innerHeight*0.88 - r.top)/Math.max(1,r.height*0.82));
-    for(let i=0;i<anns.length;i++) setOn(i, p>THR[i]);
-  }
-  new IntersectionObserver(es=>es.forEach(e=>{ active=e.isIntersecting; if(active) upd(); }),{threshold:0,rootMargin:'0px 0px -4% 0px'}).observe(stage);
-  addEventListener('scroll',()=>{ if(active&&!raf) raf=requestAnimationFrame(upd); },{passive:true});
-  addEventListener('resize',()=>{ if(active) upd(); },{passive:true});
-})();
 
 /* pause the hero X-ray loop once it's scrolled out of view (saves continuous paint) */
 (function(){const xr=document.querySelector('.xray');if(!xr)return;
