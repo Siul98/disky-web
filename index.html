@@ -587,6 +587,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .sm-legend .lname svg{width:14px;height:14px;flex:0 0 auto;color:var(--mut);opacity:.75}
 .sm-legend .lpct{color:var(--mut2);font-size:11.5px;width:30px;text-align:right;font-variant-numeric:tabular-nums;flex:0 0 auto}
 .sm-legend .lsize{color:var(--ink);font-size:13px;font-weight:600;min-width:54px;text-align:right;font-variant-numeric:tabular-nums;flex:0 0 auto}
+/* Space-Hog (Cache): rote Wedges + Legende leuchten pulsierend auf → „das frisst deinen Platz" */
+@keyframes hogPulse{0%,100%{filter:drop-shadow(0 0 2px rgba(255,95,60,.5))}50%{filter:drop-shadow(0 0 11px rgba(255,115,65,.95))}}
+@keyframes hogDot{0%,100%{box-shadow:0 0 5px rgba(255,100,60,.6)}50%{box-shadow:0 0 14px rgba(255,120,70,1)}}
+.sc-row.in .sun .hog{animation:hogPulse 2.3s ease-in-out 1.25s infinite}
+.sm-legend .lg-hog .lname{color:#ff8c6e;font-weight:600;text-shadow:0 0 10px rgba(255,110,70,.45)}
+.sm-legend .lg-hog .lsize{color:#ff8c6e}
+.sm-legend .lg-hog .ldot{box-shadow:0 0 9px rgba(255,100,60,.85);animation:hogDot 2.3s ease-in-out 1.25s infinite}
+.sc-row.in .sm-legend .lg:nth-child(3){transition-delay:1.14s}
 /* Duplicate Finder — Karten (staffeln nacheinander rein) */
 .dup-stat{font-size:14px;color:var(--mut);margin-bottom:18px}
 .dup-stat b{color:var(--ink);font-weight:700;font-size:16.5px;font-variant-numeric:tabular-nums}
@@ -909,52 +917,53 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
           <div class="sm-wheel">
             <svg class="sun" viewBox="0 0 520 520" aria-hidden="true">
               <g class="sring" style="--ri:0">
-                <path d="M260.00 154.00 A106 106 0 1 1 159.37 293.32 L197.34 280.74 A66 66 0 1 0 260.00 194.00 Z" fill="hsl(210 63% 53%)"/>
-                <path d="M159.37 293.32 A106 106 0 0 1 261.96 154.02 L261.22 194.01 A66 66 0 0 0 197.34 280.74 Z" fill="hsl(172 63% 53%)"/>
+                <path class="hog" d="M 260.74 154.0 A 106 106 0 1 1 234.36 362.85 L 244.03 324.04 A 66 66 0 1 0 260.46 194.0 Z" fill="hsl(8 82% 54%)"/>
+                <path d="M 232.92 362.48 A 106 106 0 0 1 170.11 203.83 L 204.03 225.03 A 66 66 0 0 0 243.14 323.81 Z" fill="hsl(210 60% 54%)"/>
+                <path d="M 170.9 202.58 A 106 106 0 0 1 259.26 154.0 L 259.54 194.0 A 66 66 0 0 0 204.52 224.25 Z" fill="hsl(172 58% 54%)"/>
               </g>
               <g class="sring" style="--ri:1">
-                <path d="M260.00 114.00 A146 146 0 0 1 400.58 220.58 L362.06 231.38 A106 106 0 0 0 260.00 154.00 Z" fill="hsl(210 60% 58%)"/>
-                <path d="M400.58 220.58 A146 146 0 0 1 347.12 377.15 L323.26 345.06 A106 106 0 0 0 362.06 231.38 Z" fill="hsl(210 60% 58%)"/>
-                <path d="M347.12 377.15 A146 146 0 0 1 239.77 404.59 L245.31 364.98 A106 106 0 0 0 323.26 345.06 Z" fill="hsl(210 60% 58%)"/>
-                <path d="M239.77 404.59 A146 146 0 0 1 156.52 363.00 L184.87 334.78 A106 106 0 0 0 245.31 364.98 Z" fill="hsl(210 60% 58%)"/>
-                <path d="M156.52 363.00 A146 146 0 0 1 121.40 305.89 L159.37 293.32 A106 106 0 0 0 184.87 334.78 Z" fill="hsl(210 60% 58%)"/>
-                <path d="M121.40 305.89 A146 146 0 0 1 122.73 210.28 L160.34 223.90 A106 106 0 0 0 159.37 293.32 Z" fill="hsl(172 60% 58%)"/>
-                <path d="M122.73 210.28 A146 146 0 0 1 173.96 142.04 L197.54 174.36 A106 106 0 0 0 160.34 223.90 Z" fill="hsl(172 60% 58%)"/>
-                <path d="M173.96 142.04 A146 146 0 0 1 222.54 118.89 L232.80 157.55 A106 106 0 0 0 197.54 174.36 Z" fill="hsl(172 60% 58%)"/>
-                <path d="M222.54 118.89 A146 146 0 0 1 262.71 114.03 L261.96 154.02 A106 106 0 0 0 232.80 157.55 Z" fill="hsl(172 60% 58%)"/>
+                <path class="hog" d="M 261.02 114.0 A 146 146 0 0 1 402.72 229.25 L 363.62 237.67 A 106 106 0 0 0 260.74 154.0 Z" fill="hsl(8 82% 59%)"/>
+                <path class="hog" d="M 402.72 229.25 A 146 146 0 0 1 374.77 350.24 L 343.33 325.52 A 106 106 0 0 0 363.62 237.67 Z" fill="hsl(8 82% 59%)"/>
+                <path class="hog" d="M 374.77 350.24 A 146 146 0 0 1 293.1 402.2 L 284.03 363.24 A 106 106 0 0 0 343.33 325.52 Z" fill="hsl(8 82% 59%)"/>
+                <path class="hog" d="M 293.1 402.2 A 146 146 0 0 1 224.68 401.66 L 234.36 362.85 A 106 106 0 0 0 284.03 363.24 Z" fill="hsl(8 82% 59%)"/>
+                <path d="M 222.7 401.16 A 146 146 0 0 1 119.09 298.2 L 157.69 287.74 A 106 106 0 0 0 232.92 362.48 Z" fill="hsl(210 60% 59%)"/>
+                <path d="M 119.09 298.2 A 146 146 0 0 1 136.18 182.63 L 170.11 203.83 A 106 106 0 0 0 157.69 287.74 Z" fill="hsl(210 60% 59%)"/>
+                <path d="M 137.28 180.91 A 146 146 0 0 1 202.67 125.73 L 218.38 162.51 A 106 106 0 0 0 170.9 202.58 Z" fill="hsl(172 58% 59%)"/>
+                <path d="M 202.67 125.73 A 146 146 0 0 1 258.98 114.0 L 259.26 154.0 A 106 106 0 0 0 218.38 162.51 Z" fill="hsl(172 58% 59%)"/>
               </g>
               <g class="sring" style="--ri:2">
-                <path d="M260.00 74.00 A186 186 0 0 1 358.17 102.02 L337.06 135.99 A146 146 0 0 0 260.00 114.00 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M358.17 102.02 A186 186 0 0 1 418.43 162.56 L384.36 183.51 A146 146 0 0 0 337.06 135.99 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M418.43 162.56 A186 186 0 0 1 439.09 209.78 L400.58 220.58 A146 146 0 0 0 384.36 183.51 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M439.09 209.78 A186 186 0 0 1 433.05 328.18 L395.84 313.52 A146 146 0 0 0 400.58 220.58 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M433.05 328.18 A186 186 0 0 1 370.99 409.25 L347.12 377.15 A146 146 0 0 0 395.84 313.52 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M370.99 409.25 A186 186 0 0 1 302.71 441.03 L293.52 402.10 A146 146 0 0 0 347.12 377.15 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M302.71 441.03 A186 186 0 0 1 234.23 444.21 L239.77 404.59 A146 146 0 0 0 293.52 402.10 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M234.23 444.21 A186 186 0 0 1 154.61 413.26 L177.28 380.30 A146 146 0 0 0 239.77 404.59 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M154.61 413.26 A186 186 0 0 1 128.17 391.22 L156.52 363.00 A146 146 0 0 0 177.28 380.30 Z" fill="hsl(210 57% 63%)"/>
-                <path d="M83.43 318.46 A186 186 0 0 1 74.24 250.52 L114.19 252.56 A146 146 0 0 0 121.40 305.89 Z" fill="hsl(172 57% 63%)"/>
-                <path d="M74.24 250.52 A186 186 0 0 1 85.12 196.65 L122.73 210.28 A146 146 0 0 0 114.19 252.56 Z" fill="hsl(172 57% 63%)"/>
-                <path d="M85.12 196.65 A186 186 0 0 1 150.39 109.73 L173.96 142.04 A146 146 0 0 0 122.73 210.28 Z" fill="hsl(172 57% 63%)"/>
+                <path d="M 261.3 74.0 A 186 186 0 0 1 377.36 115.7 L 352.12 146.73 A 146 146 0 0 0 261.02 114.0 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 377.36 115.7 A 186 186 0 0 1 441.83 220.82 L 402.72 229.25 A 146 146 0 0 0 352.12 146.73 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 441.83 220.82 A 186 186 0 0 1 441.23 301.87 L 402.25 292.86 A 146 146 0 0 0 402.72 229.25 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 441.23 301.87 A 186 186 0 0 1 406.22 374.96 L 374.77 350.24 A 146 146 0 0 0 402.25 292.86 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 406.22 374.96 A 186 186 0 0 1 359.84 416.93 L 338.37 383.18 A 146 146 0 0 0 374.77 350.24 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 359.84 416.93 A 186 186 0 0 1 302.17 441.16 L 293.1 402.2 A 146 146 0 0 0 338.37 383.18 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 302.17 441.16 A 186 186 0 0 1 258.55 445.99 L 258.86 406.0 A 146 146 0 0 0 293.1 402.2 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 258.55 445.99 A 186 186 0 0 1 215.01 440.48 L 224.68 401.66 A 146 146 0 0 0 258.86 406.0 Z" fill="hsl(8 82% 63%)"/>
+                <path d="M 212.48 439.83 A 186 186 0 0 1 128.9 391.94 L 157.09 363.57 A 146 146 0 0 0 222.7 401.16 Z" fill="hsl(210 60% 63%)"/>
+                <path d="M 128.9 391.94 A 186 186 0 0 1 80.48 308.67 L 119.09 298.2 A 146 146 0 0 0 157.09 363.57 Z" fill="hsl(210 60% 63%)"/>
+                <path d="M 80.48 308.67 A 186 186 0 0 1 76.0 232.78 L 115.57 238.63 A 146 146 0 0 0 119.09 298.2 Z" fill="hsl(210 60% 63%)"/>
+                <path d="M 76.0 232.78 A 186 186 0 0 1 102.26 161.44 L 136.18 182.63 A 146 146 0 0 0 115.57 238.63 Z" fill="hsl(210 60% 63%)"/>
+                <path d="M 103.66 159.24 A 186 186 0 0 1 140.05 117.85 L 165.84 148.42 A 146 146 0 0 0 137.28 180.91 Z" fill="hsl(172 58% 63%)"/>
+                <path d="M 140.05 117.85 A 186 186 0 0 1 186.96 88.94 L 202.67 125.73 A 146 146 0 0 0 165.84 148.42 Z" fill="hsl(172 58% 63%)"/>
+                <path d="M 186.96 88.94 A 186 186 0 0 1 222.09 77.9 L 230.24 117.06 A 146 146 0 0 0 202.67 125.73 Z" fill="hsl(172 58% 63%)"/>
+                <path d="M 222.09 77.9 A 186 186 0 0 1 258.7 74.0 L 258.98 114.0 A 146 146 0 0 0 230.24 117.06 Z" fill="hsl(172 58% 63%)"/>
               </g>
               <g class="sring" style="--ri:3">
-                <path d="M260.00 34.00 A226 226 0 0 1 326.04 43.86 L314.35 82.12 A186 186 0 0 0 260.00 74.00 Z" fill="hsl(210 54% 67%)"/>
-                <path d="M326.04 43.86 A226 226 0 0 1 379.29 68.05 L358.17 102.02 A186 186 0 0 0 314.35 82.12 Z" fill="hsl(210 54% 67%)"/>
-                <path d="M379.29 68.05 A226 226 0 0 1 452.50 141.60 L418.43 162.56 A186 186 0 0 0 358.17 102.02 Z" fill="hsl(210 54% 67%)"/>
-                <path d="M477.61 198.98 A226 226 0 0 1 485.59 273.61 L445.66 271.20 A186 186 0 0 0 439.09 209.78 Z" fill="hsl(210 54% 67%)"/>
-                <path d="M485.59 273.61 A226 226 0 0 1 470.27 342.85 L433.05 328.18 A186 186 0 0 0 445.66 271.20 Z" fill="hsl(210 54% 67%)"/>
-                <path d="M45.45 331.03 A226 226 0 0 1 34.29 248.49 L74.24 250.52 A186 186 0 0 0 83.43 318.46 Z" fill="hsl(172 54% 67%)"/>
-                <path d="M47.51 183.03 A226 226 0 0 1 81.82 120.97 L113.36 145.58 A186 186 0 0 0 85.12 196.65 Z" fill="hsl(172 54% 67%)"/>
-                <path d="M81.82 120.97 A226 226 0 0 1 126.82 77.41 L150.39 109.73 A186 186 0 0 0 113.36 145.58 Z" fill="hsl(172 54% 67%)"/>
+                <path d="M 261.58 34.01 A 226 226 0 0 1 402.6 84.66 L 377.36 115.7 A 186 186 0 0 0 261.3 74.0 Z" fill="hsl(8 82% 67%)"/>
+                <path d="M 480.93 212.4 A 226 226 0 0 1 480.2 310.87 L 441.23 301.87 A 186 186 0 0 0 441.83 220.82 Z" fill="hsl(8 82% 67%)"/>
+                <path d="M 437.66 399.68 A 226 226 0 0 1 381.31 450.68 L 359.84 416.93 A 186 186 0 0 0 406.22 374.96 Z" fill="hsl(8 82% 67%)"/>
+                <path d="M 202.27 478.5 A 226 226 0 0 1 100.71 420.32 L 128.9 391.94 A 186 186 0 0 0 212.48 439.83 Z" fill="hsl(210 60% 67%)"/>
               </g>
               <circle cx="260" cy="260" r="62" fill="#0a0e16"></circle>
             </svg>
             <div class="sm-glow" aria-hidden="true"></div>
-            <div class="sm-center"><span class="sc-name">T9</span><b data-count="33.9" data-dec="1" data-suf=" GB">33.9 GB</b><span class="sc-sub" data-t="sm_total">total</span></div>
+            <div class="sm-center"><span class="sc-name">T9</span><b data-count="224" data-dec="0" data-suf=" GB">224 GB</b><span class="sc-sub" data-t="sm_total">total</span></div>
           </div>
           <div class="sm-legend">
-            <div class="lg"><span class="ldot" style="background:hsl(210 60% 56%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Wedding Mai 2026</span><span class="lpct">70%</span><span class="lsize">23.7 GB</span></div>
-            <div class="lg"><span class="ldot" style="background:hsl(172 60% 56%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Berlin Citytrip</span><span class="lpct">30%</span><span class="lsize">10.3 GB</span></div>
+            <div class="lg lg-hog"><span class="ldot" style="background:hsl(8 85% 58%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7c0-1.1 3.6-2 8-2s8 .9 8 2-3.6 2-8 2-8-.9-8-2Z"/><path d="M4 7v10c0 1.1 3.6 2 8 2s8-.9 8-2V7"/><path d="M4 12c0 1.1 3.6 2 8 2s8-.9 8-2"/></svg>Cache</span><span class="lpct">54%</span><span class="lsize">120 GB</span></div>
+            <div class="lg"><span class="ldot" style="background:hsl(210 60% 56%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Footage 2026</span><span class="lpct">30%</span><span class="lsize">68 GB</span></div>
+            <div class="lg"><span class="ldot" style="background:hsl(172 60% 56%)"></span><span class="lname"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Wedding Mai 2026</span><span class="lpct">16%</span><span class="lsize">36 GB</span></div>
           </div>
         </div>
       </div></div>
@@ -1798,7 +1807,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     const cap1Op=clamp((p1-0.4)/0.15);   // „Scan once" erscheint im Scan und scrollt dann mit der Szene hoch raus (KEIN Fade)
     cap1.style.opacity=cap1Op.toFixed(3); cap1.style.transform=`translateX(-50%) translateY(${(-pan).toFixed(0)}px)`;
     // „Remembered forever" — Apple-Style: blurt + fadet + steigt rein; landet höher (Abstand zum großen MacBook); reagiert auf die einströmenden Ordner
-    const cap2Land=-innerHeight*0.15;                        // Landeposition (Text-Oberkante hoch über das MacBook)
+    const cap2Land=-innerHeight*0.03;                        // Landeposition näher ans MacBook (vorher -0.15 → zu großer Abstand)
     const rev=ease(clamp((p2-0.10)/0.40));                   // Apple-Reveal-Fortschritt
     const cap2TY=cap2Land + (GAP-pan);                       // steigt von unten hoch und landet bei cap2Land
     cap2.style.opacity=rev.toFixed(3);
