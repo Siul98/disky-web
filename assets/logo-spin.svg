@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="dlx" width="160" height="160" viewBox="10 10 180 180">
+<svg xmlns="http://www.w3.org/2000/svg" class="dlx" width="160" height="160" viewBox="-35 -35 270 270">
   <style>.dlw-blue{animation:dlwBlue 2.6s ease-in-out infinite}.dlw-frost{animation:dlwFrost 2.6s ease-in-out infinite 1.3s;filter:brightness(1.55)}@keyframes dlwBlue{0%,100%{filter:drop-shadow(0 0 4px rgba(74,140,255,.25))}35%{filter:drop-shadow(0 0 14px rgba(90,160,255,.85))}}@keyframes dlwFrost{0%,100%{filter:brightness(1.55) drop-shadow(0 0 3px rgba(210,228,255,.18))}35%{filter:brightness(2.0) drop-shadow(0 0 11px rgba(220,235,255,.75))}}</style><defs>
     <radialGradient id="bgp" cx="50%" cy="45%" r="62%"><stop offset="0" stop-color="#10151f"/><stop offset="1" stop-color="#0a0d14"/></radialGradient>
     <linearGradient id="gSolidp" x1="120" y1="30" x2="150" y2="170" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7d9bff"/><stop offset="0.45" stop-color="#4a63f0"/><stop offset="1" stop-color="#2b3ee0"/></linearGradient>

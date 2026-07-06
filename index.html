@@ -823,7 +823,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .mfp-side{position:absolute;top:11px;bottom:11px;right:-1px;width:17px;border-radius:9px;background:linear-gradient(180deg,#6a81b2,#384868 42%,#2c3a58 60%,#516694);transform:rotateY(74deg);transform-origin:left center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
 .mfp-face{position:absolute;inset:0;border-radius:21px;background:linear-gradient(165deg,#334360,#141d2e 60%,#1b2436);border:1.5px solid #566a92;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 20px 55px -18px rgba(0,0,0,.85),0 0 28px -14px rgba(74,132,255,.4);transform:translateZ(9px)}
 .mfp-screen{position:absolute;inset:5px;border-radius:17px;overflow:hidden;background:linear-gradient(118deg,rgba(150,190,255,.05) 12%,transparent 34%),radial-gradient(130% 95% at 32% 10%,#16233c,#080d17 72%);display:grid;place-items:center}
-.mfp-logo{width:64px;height:64px;filter:drop-shadow(0 0 14px rgba(84,126,210,.5))}
+.mfp-logo{width:46px;height:46px}
 .mfp-island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:32px;height:9px;border-radius:5px;background:#04060b}
 .mfi-ui{flex:1;display:flex;flex-direction:column;gap:13px;padding:22px 24px 18px;min-width:0}
 .mfi-chips{display:flex;gap:8px}
@@ -839,11 +839,21 @@ html[lang="en"] .mfi-grid .ct.nw::before{content:"NEW"}
 .mfi-bar{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,rgba(18,26,42,.95),rgba(10,15,25,.98));border:1px solid rgba(126,166,255,.22);border-radius:14px;padding:11px 14px;box-shadow:0 -10px 30px -16px rgba(0,0,0,.8),0 0 26px -12px rgba(58,106,208,.5)}
 .mfi-bar .mfi-sel{font:500 12px/1.2 -apple-system,sans-serif;color:#93a5c2;flex:1}
 .mfi-bar .mfi-go{font:700 12px/1 -apple-system,sans-serif;color:#fff;background:linear-gradient(180deg,#4a9eff,#2e7ae8);border-radius:10px;padding:10px 16px;box-shadow:0 0 22px -6px rgba(74,158,255,.8)}
-/* Tile 2: Disk Speed Test */
-.mf-speed{background:radial-gradient(120% 140% at 50% -10%,#101a2e,#090e18 64%);display:grid;place-items:center}
-.mfs-wrap{text-align:center;transform:translateY(6px)}
-.mfs-wrap svg{width:min(300px,52%);display:block;margin:0 auto}
-.mfs-num{font:700 40px/1 -apple-system,system-ui,sans-serif;color:#f2f7ff;letter-spacing:-.02em;margin-top:12px;text-shadow:0 0 30px rgba(74,158,255,.45)}
+/* Tile 2: Disk Speed Test — Tacho links, Mess-Log rechts */
+.mf-speed{background:radial-gradient(120% 140% at 50% -10%,#101a2e,#090e18 64%);display:flex;align-items:center;justify-content:center;gap:4%;padding:0 5%}
+.mfs-wrap{text-align:center;flex:0 1 46%}
+.mfs-wrap svg{width:min(230px,92%);display:block;margin:0 auto}
+.mfs-log{flex:0 1 44%;min-width:0;border:1px solid rgba(126,166,255,.13);border-radius:14px;background:linear-gradient(170deg,rgba(21,30,48,.55),rgba(10,15,25,.65));padding:14px 16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.mfs-log .h{font:700 10.5px/1 -apple-system,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#7f93aa;margin-bottom:10px}
+.mfs-log .lr{display:flex;align-items:baseline;gap:8px;padding:7px 0;border-top:1px solid rgba(126,166,255,.07)}
+.mfs-log .lr.head{border-top:0;padding:0 0 4px;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5f7089}
+.mfs-log .lr.head .v{font:inherit;color:inherit}
+.mfs-log .d{flex:1;min-width:0;font:600 11.5px/1.2 -apple-system,sans-serif;color:#c8d4e6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mfs-log .d i{font-style:normal;font-size:9.5px;color:#5f7089;margin-left:5px}
+.mfs-log .v{flex:0 0 23%;text-align:right;font:650 12px/1 -apple-system,sans-serif;color:#eaf4ff;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mfs-log .v i{font-style:normal;font-size:9px;color:#5f7089;font-weight:600}
+.mfs-log .v.best{color:#37cfe0;text-shadow:0 0 12px rgba(55,207,224,.45)}
+.mfs-num{font:700 34px/1 -apple-system,system-ui,sans-serif;color:#f2f7ff;letter-spacing:-.02em;margin-top:10px;text-shadow:0 0 30px rgba(74,158,255,.45)}
 .mfs-num small{font-size:17px;font-weight:600;color:#7f95b8;letter-spacing:0}
 .mfs-lbl{font:600 12px/1 -apple-system,sans-serif;color:#7f95b8;letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
 .mfs-row{display:flex;justify-content:center;gap:8px;margin-top:14px;font:500 13px/1 -apple-system,sans-serif;color:#93a5c2}
@@ -878,7 +888,7 @@ html[lang="en"] .mfi-grid .ct.nw::before{content:"NEW"}
 .mfa-hits{display:flex;gap:12px}
 .mfa-hits img{flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:13px;box-shadow:0 10px 30px -12px rgba(0,0,0,.7)}
 .mfa-badge{position:absolute;top:18px;right:20px;font:600 10.5px/1 -apple-system,sans-serif;color:#cdb9f5;border:1px solid rgba(170,140,250,.34);background:rgba(34,26,58,.55);border-radius:999px;padding:6px 10px}
-@media (max-width:640px){ .mf-cap{font-size:15px} .mfp-stage{display:none} .mfi-grid{grid-template-columns:repeat(4,1fr)} .mfi-grid .ct:nth-child(n+13){display:none} }
+@media (max-width:640px){ .mf-cap{font-size:15px} .mfp-stage{display:none} .mfs-log{display:none} .mfi-grid{grid-template-columns:repeat(4,1fr)} .mfi-grid .ct:nth-child(n+13){display:none} }
 </style>
 </head>
 <body>
@@ -1140,7 +1150,14 @@ html[lang="en"] .mfi-grid .ct.nw::before{content:"NEW"}
           <div class="mfs-lbl" data-t="mf2_read">Read</div>
           <div class="mfs-row"><span data-t="mf2_write">Write</span><b data-t="mf2_writev">2.2 GB/s</b></div>
           <div class="mfs-chip">Samsung T9 · USB4</div>
-        </div></div>
+        </div><div class="mfs-log">
+            <div class="h" data-t="mfs_log">Test log</div>
+            <div class="lr head"><span class="d"></span><span class="v" data-t="mf2_read">Read</span><span class="v" data-t="mf2_write">Write</span></div>
+            <div class="lr"><span class="d">Samsung T9 <i>USB4</i></span><span class="v best"><span data-t="mfs_v1">6.4</span> <i>GB/s</i></span><span class="v"><span data-t="mfs_v2">2.2</span> <i>GB/s</i></span></div>
+            <div class="lr"><span class="d">Studio RAID <i>TB3</i></span><span class="v"><span data-t="mfs_v3">1.4</span> <i>GB/s</i></span><span class="v"><span data-t="mfs_v4">1.1</span> <i>GB/s</i></span></div>
+            <div class="lr"><span class="d">LaCie Rugged</span><span class="v">134 <i>MB/s</i></span><span class="v">128 <i>MB/s</i></span></div>
+            <div class="lr"><span class="d">Archive 2023 <i>HDD</i></span><span class="v">182 <i>MB/s</i></span><span class="v">96 <i>MB/s</i></span></div>
+          </div></div>
         <p class="mf-cap"><b data-t="mf2_b">Disk Speed Test. Know how fast a drive really is.</b> <span data-t="mf2_p">A native benchmark measures true read and write speed in seconds — no caches, no guesswork. So the big copy job lands on the right drive.</span></p>
       </article>
       <article class="mf-card">
@@ -1264,7 +1281,7 @@ const I18N={
   mf_eb:"Fresh from the workbench",mf_h:"And it keeps getting better.",
   mf1_all:"All",mf1_ph:"Photos",mf1_vid:"Videos",mf1_new:"new only",mf1_sel:"5,437 selected · 34.2 GB",mf1_go:"Export…",
   mf1_b:"iPhone Gallery Manager. Your camera roll, safely on your Mac.",mf1_p:"Plug in your iPhone, see every photo and video, and pick exactly what to export. Disky saves originals, skips what you already have — and can free up your iPhone afterwards.",
-  mf2_read:"Read",mf2_write:"Write",mf2_readv:"6.4",mf2_writev:"2.2 GB/s",mf2_b:"Disk Speed Test. Know how fast a drive really is.",mf2_p:"A native benchmark measures true read and write speed in seconds — no caches, no guesswork. So the big copy job lands on the right drive.",
+  mfs_log:"Test log",mfs_v1:"6.4",mfs_v2:"2.2",mfs_v3:"1.4",mfs_v4:"1.1",mf2_read:"Read",mf2_write:"Write",mf2_readv:"6.4",mf2_writev:"2.2 GB/s",mf2_b:"Disk Speed Test. Know how fast a drive really is.",mf2_p:"A native benchmark measures true read and write speed in seconds — no caches, no guesswork. So the big copy job lands on the right drive.",
   mf3_off:"0 drives plugged in",mf3_b:"Deep Search. Every drive, one search box.",mf3_p:"Type a name — or what's in the shot — and see every match across your whole archive, with the exact drive it lives on. Nothing needs to be plugged in.",
   mf4_b:"WorldMap. Your archive as a map.",mf4_p:"Disky reads the location hidden in your photos and footage and pins every shoot where it happened. Zoom from the whole world down to a single clip on a single drive.",
   mf5_q:"sunset at the sea",mf5_b:"AI search. Find photos by what's in them.",mf5_p:"The optional AI index describes your images right on your Mac — so “sunset at the sea” finds the shot even when the file is called DSC_4021. Nothing ever leaves your machine.",
@@ -1349,7 +1366,7 @@ const I18N={
   mf_eb:"Frisch von der Werkbank",mf_h:"Und es wird immer besser.",
   mf1_all:"Alle",mf1_ph:"Fotos",mf1_vid:"Videos",mf1_new:"nur Neue",mf1_sel:"5.437 ausgewählt · 34,2 GB",mf1_go:"Exportieren…",
   mf1_b:"iPhone Gallery Manager. Deine Aufnahmen, sicher auf dem Mac.",mf1_p:"iPhone anstecken, jedes Foto und Video sehen, genau auswählen, was exportiert wird. Disky sichert Originale, überspringt bereits Gesichertes — und räumt dein iPhone danach auf Wunsch frei.",
-  mf2_read:"Lesen",mf2_write:"Schreiben",mf2_readv:"6,4",mf2_writev:"2,2 GB/s",mf2_b:"Disk Speed Test. Wie schnell die Platte wirklich ist.",mf2_p:"Der native Benchmark misst echtes Lesen und Schreiben in Sekunden — ohne Cache, ohne Raten. Damit der große Copy-Job auf der richtigen Platte landet.",
+  mfs_log:"Mess-Log",mfs_v1:"6,4",mfs_v2:"2,2",mfs_v3:"1,4",mfs_v4:"1,1",mf2_read:"Lesen",mf2_write:"Schreiben",mf2_readv:"6,4",mf2_writev:"2,2 GB/s",mf2_b:"Disk Speed Test. Wie schnell die Platte wirklich ist.",mf2_p:"Der native Benchmark misst echtes Lesen und Schreiben in Sekunden — ohne Cache, ohne Raten. Damit der große Copy-Job auf der richtigen Platte landet.",
   mf3_off:"0 Platten angesteckt",mf3_b:"Deep Search. Alle Platten, ein Suchfeld.",mf3_p:"Tipp einen Namen — oder was im Bild ist — und sieh jeden Treffer im ganzen Archiv, samt der Platte, auf der er liegt. Ohne dass irgendetwas angesteckt ist.",
   mf4_b:"WorldMap. Dein Archiv als Landkarte.",mf4_p:"Disky liest die Orte aus Fotos und Footage und pinnt jeden Dreh dorthin, wo er entstand. Zoome von der ganzen Welt bis zum einzelnen Clip auf einer bestimmten Platte.",
   mf5_q:"Sonnenuntergang am Meer",mf5_b:"KI-Suche. Finde Fotos nach dem, was drauf ist.",mf5_p:"Der optionale KI-Index beschreibt deine Bilder direkt auf dem Mac — so findet „Sonnenuntergang am Meer“ den Shot, auch wenn die Datei DSC_4021 heißt. Nichts verlässt deinen Rechner.",
