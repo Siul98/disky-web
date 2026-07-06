@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dlx" width="160" height="160" viewBox="10 10 180 180">
+  <style>.dlw-blue{animation:dlwBlue 2.6s ease-in-out infinite}.dlw-frost{animation:dlwFrost 2.6s ease-in-out infinite 1.3s;filter:brightness(1.55)}@keyframes dlwBlue{0%,100%{filter:drop-shadow(0 0 4px rgba(74,140,255,.25))}35%{filter:drop-shadow(0 0 14px rgba(90,160,255,.85))}}@keyframes dlwFrost{0%,100%{filter:brightness(1.55) drop-shadow(0 0 3px rgba(210,228,255,.18))}35%{filter:brightness(2.0) drop-shadow(0 0 11px rgba(220,235,255,.75))}}</style><defs>
+    <radialGradient id="bgp" cx="50%" cy="45%" r="62%"><stop offset="0" stop-color="#10151f"/><stop offset="1" stop-color="#0a0d14"/></radialGradient>
+    <linearGradient id="gSolidp" x1="120" y1="30" x2="150" y2="170" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7d9bff"/><stop offset="0.45" stop-color="#4a63f0"/><stop offset="1" stop-color="#2b3ee0"/></linearGradient>
+    <linearGradient id="gLightp" x1="80" y1="16" x2="150" y2="70" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#dbe7ff"/><stop offset="1" stop-color="#84a3f2"/></linearGradient>
+    <linearGradient id="sheenp" x1="100" y1="20" x2="100" y2="110" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="smokep" x1="50" y1="50" x2="140" y2="155" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6d2e4" stop-opacity="0.30"/><stop offset="0.45" stop-color="#5c6880" stop-opacity="0.20"/><stop offset="1" stop-color="#2c3446" stop-opacity="0.34"/></linearGradient>
+    <radialGradient id="streakRp" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffffff" stop-opacity="0.40"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.22"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="holep" cx="50%" cy="46%" r="60%"><stop offset="0" stop-color="#0c111c"/><stop offset="78%" stop-color="#090d15"/><stop offset="1" stop-color="#05070c"/></radialGradient>
+
+    <!-- ===== edge-light gradients (light from top-left) ===== -->
+    <linearGradient id="eLitTLp" x1="60" y1="15" x2="150" y2="175" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.50"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="eDrkBRp" x1="155" y1="175" x2="55" y2="25" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#01030a" stop-opacity="0.45"/><stop offset="0.55" stop-color="#01030a" stop-opacity="0.08"/><stop offset="1" stop-color="#01030a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="eLitBRp" x1="160" y1="170" x2="50" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/><stop offset="0.6" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="eDrkTLp" x1="45" y1="25" x2="150" y2="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#01030a" stop-opacity="0.38"/><stop offset="0.55" stop-color="#01030a" stop-opacity="0.08"/><stop offset="1" stop-color="#01030a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="cutSpecp" x1="152.64" y1="85.89" x2="176.79" y2="79.42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.45" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="glassblurp" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="4.2"/></filter>
+    <filter id="softp" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#04060d" flood-opacity="0.5"/></filter>
+    <filter id="cshp" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+    <filter id="cshWp" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="6.5"/></filter>
+    <filter id="stkp" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.4"/></filter>
+    <filter id="shsoftp" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.3"/></filter>
+    <!-- fine film grain: bipolar white+black speckle (means cancel -> no tint),
+         normal blend so it dithers even near-black gradients -->
+    <filter id="grainp" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1 1 1 0 -1.2" result="w"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 -1 -1 0 1.8" result="bk"/>
+      <feMerge><feMergeItem in="w"/><feMergeItem in="bk"/></feMerge>
+    </filter>
+    <clipPath id="fclipp"><path d="M 105.86 166.94 A 2.8 2.8 0 0 1 103.31 169.92 A 70 70 0 1 1 97.20 30.06 A 2.8 2.8 0 0 1 100.00 32.80 L 100.00 57.20 A 2.8 2.8 0 0 1 97.20 60.10 A 40 40 0 0 0 100.69 139.99 A 2.8 2.8 0 0 1 103.73 142.64 Z"/></clipPath>
+    <clipPath id="sclipp"><path d="M169.57 65.62 A77.6 77.6 0 0 1 65.62 169.57 L80.33 139.80 A44.4 44.4 0 0 0 139.80 80.33 Z"/></clipPath>
+    <clipPath id="lclipp"><path d="M56.57 28.57 A83.6 83.6 0 0 1 181.22 80.20 L148.97 88.06 A50.4 50.4 0 0 0 73.82 56.94 Z"/></clipPath>
+    <!-- Szene hinter dem Glas: bg + Loch + EBENE 1 + EBENE 2 (alles scharf) -->
+    <!-- Szene = Solid- + Licht-Teil, jedes Teil dreht als eigene Gruppe (SMIL: laeuft auch
+         bei reduce-motion und umgeht den CSS-rotate-Bug dieses Chromiums).
+         Kontakt-Schatten entfaellt beim Spinner (koppelt die Teile aneinander). -->
+    <g id="scenep">
+      <g class="pcS">
+        <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="4.2s" repeatCount="indefinite"/>
+        <g filter="url(#softp)">
+          <path d="M168.88 67.88 A76 76 0 0 1 67.88 168.88 L80.56 141.69 A46 46 0 0 0 141.69 80.56 Z" fill="url(#gSolidp)" stroke="url(#gSolidp)" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+        <g clip-path="url(#sclipp)">
+          <path d="M171.15 66.82 A78.5 78.5 0 0 1 66.82 171.15 L73.80 156.19 A62 62 0 0 0 156.19 73.80 Z" fill="url(#sheenp)" filter="url(#shsoftp)"/>
+          <path d="M169.70 67.50 A76.9 76.9 0 0 1 67.50 169.70" fill="none" stroke="url(#eLitTLp)" stroke-width="1.1" stroke-linecap="round"/>
+          <path d="M169.70 67.50 A76.9 76.9 0 0 1 67.50 169.70" fill="none" stroke="url(#eDrkBRp)" stroke-width="1.1" stroke-linecap="round"/>
+          <path d="M140.87 80.94 A45.1 45.1 0 0 1 80.94 140.87" fill="none" stroke="url(#eLitBRp)" stroke-width="1.0" stroke-linecap="round"/>
+          <path d="M140.87 80.94 A45.1 45.1 0 0 1 80.94 140.87" fill="none" stroke="url(#eDrkTLp)" stroke-width="1.0" stroke-linecap="round"/>
+        </g>
+      </g>
+      <g class="pcL">
+        <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="5.6s" repeatCount="indefinite"/>
+        <g filter="url(#softp)">
+          <path d="M59.00 28.99 A82 82 0 0 1 179.21 78.78 L150.23 86.54 A52 52 0 0 0 74.00 54.97 Z" fill="url(#gLightp)" stroke="url(#gLightp)" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+        <g clip-path="url(#lclipp)">
+          <path d="M58.55 28.21 A82.9 82.9 0 0 1 180.08 78.54" fill="none" stroke="url(#eLitTLp)" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M74.45 55.75 A51.1 51.1 0 0 1 149.36 86.77" fill="none" stroke="url(#eDrkTLp)" stroke-width="1.0" stroke-linecap="round"/>
+          <path d="M74.45 55.75 A51.1 51.1 0 0 1 149.36 86.77" fill="none" stroke="url(#eLitBRp)" stroke-width="1.0" stroke-linecap="round"/>
+          <line x1="152.64" y1="85.89" x2="176.79" y2="79.42" stroke="url(#cutSpecp)" stroke-width="0.9" stroke-linecap="round"/>
+        </g>
+      </g>
+    </g>
+  </defs>
+
+  <!-- Ebenen 1+2, scharf (Teile drehen einzeln in #scenep) -->
+  <g class="dlw dlw-blue"><use href="#scenep"/></g>
+
+  <!-- EBENE 3 (VORNE): Rauch-Milchglas, dreht als drittes Teil. Die Gegenrotation innen
+       neutralisiert die Frost-Drehung fuer den Blick DURCH die Scheibe (Szene dahinter
+       behaelt ihre eigene Drehung). -->
+  <g class="dlw dlw-frost"><g class="pcF">
+    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="7s" repeatCount="indefinite"/>
+    <g clip-path="url(#fclipp)">
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="7s" repeatCount="indefinite"/>
+        <use href="#scenep" filter="url(#glassblurp)"/>
+      </g>
+      <path d="M 105.86 166.94 A 2.8 2.8 0 0 1 103.31 169.92 A 70 70 0 1 1 97.20 30.06 A 2.8 2.8 0 0 1 100.00 32.80 L 100.00 57.20 A 2.8 2.8 0 0 1 97.20 60.10 A 40 40 0 0 0 100.69 139.99 A 2.8 2.8 0 0 1 103.73 142.64 Z" fill="url(#smokep)"/>
+      <g filter="url(#stkp)"><ellipse cx="73" cy="41" rx="59" ry="15" transform="rotate(-33 100 100)" fill="url(#streakRp)"/></g>
+    </g>
+    <!-- frost rim: light-aware (bright TL, near-invisible BR) + faint base so the silhouette stays readable -->
+    <path d="M 105.86 166.94 A 2.8 2.8 0 0 1 103.31 169.92 A 70 70 0 1 1 97.20 30.06 A 2.8 2.8 0 0 1 100.00 32.80 L 100.00 57.20 A 2.8 2.8 0 0 1 97.20 60.10 A 40 40 0 0 0 100.69 139.99 A 2.8 2.8 0 0 1 103.73 142.64 Z" fill="none" stroke="#ffffff" stroke-opacity="0.13" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M 105.86 166.94 A 2.8 2.8 0 0 1 103.31 169.92 A 70 70 0 1 1 97.20 30.06 A 2.8 2.8 0 0 1 100.00 32.80 L 100.00 57.20 A 2.8 2.8 0 0 1 97.20 60.10 A 40 40 0 0 0 100.69 139.99 A 2.8 2.8 0 0 1 103.73 142.64 Z" fill="none" stroke="url(#eLitTLp)" stroke-width="1.1" stroke-linejoin="round"/>
+  </g></g>
+  <!-- film grain overlay: dithers bg/solid/light/hole gradients, ~invisible as texture -->
+  
+</svg>

@@ -812,18 +812,30 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .mf-arrow svg{width:16px;height:16px}
 .mf-arrow:hover:not(:disabled){background:rgba(255,255,255,.18)}
 .mf-arrow:disabled{opacity:.32;cursor:default}
-/* Tile 1: iPhone Gallery Manager */
-.mf-iphone{background:radial-gradient(120% 130% at 18% 0%,#14203a,#0a101d 62%);display:flex;flex-direction:column;padding:26px 28px 22px;gap:16px}
+/* Tile 1: iPhone Gallery Manager — 3D-Phone links, echte Fotos rechts */
+.mf-iphone{background:radial-gradient(120% 130% at 18% 0%,#14203a,#0a101d 62%);display:flex;flex-direction:row;padding:0;gap:0}
+.mfp-stage{position:relative;flex:0 0 36%;min-width:0}
+.mfp-float{position:absolute;inset:0;display:grid;place-items:center;animation:mfpFloat 5.5s ease-in-out infinite}
+@keyframes mfpFloat{0%,100%{transform:translateY(-7px)}50%{transform:translateY(7px)}}
+.mfp-shadow{position:absolute;left:50%;bottom:9%;width:120px;height:18px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(50% 50% at 50% 50%,rgba(58,106,208,.35),transparent 70%);filter:blur(5px)}
+.mfp-phone{position:relative;width:118px;height:236px;transform-style:preserve-3d;transform:rotateY(-30deg) rotateX(4deg);perspective:900px}
+.mfp-back{position:absolute;inset:0;border-radius:21px;background:linear-gradient(165deg,#233046,#0d1420);transform:translateZ(-9px)}
+.mfp-side{position:absolute;top:11px;bottom:11px;right:-1px;width:17px;border-radius:9px;background:linear-gradient(180deg,#6a81b2,#384868 42%,#2c3a58 60%,#516694);transform:rotateY(74deg);transform-origin:left center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.mfp-face{position:absolute;inset:0;border-radius:21px;background:linear-gradient(165deg,#334360,#141d2e 60%,#1b2436);border:1.5px solid #566a92;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 20px 55px -18px rgba(0,0,0,.85),0 0 28px -14px rgba(74,132,255,.4);transform:translateZ(9px)}
+.mfp-screen{position:absolute;inset:5px;border-radius:17px;overflow:hidden;background:linear-gradient(118deg,rgba(150,190,255,.05) 12%,transparent 34%),radial-gradient(130% 95% at 32% 10%,#16233c,#080d17 72%);display:grid;place-items:center}
+.mfp-logo{width:64px;height:64px;filter:drop-shadow(0 0 14px rgba(84,126,210,.5))}
+.mfp-island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:32px;height:9px;border-radius:5px;background:#04060b}
+.mfi-ui{flex:1;display:flex;flex-direction:column;gap:13px;padding:22px 24px 18px;min-width:0}
 .mfi-chips{display:flex;gap:8px}
 .mfi-chips span{font:600 11.5px/1 -apple-system,system-ui,sans-serif;color:#93a5c2;border:1px solid rgba(126,166,255,.18);border-radius:999px;padding:7px 12px}
 .mfi-chips span.on{color:#fff;border-color:rgba(74,158,255,.6);background:rgba(43,72,124,.45);box-shadow:0 0 14px -6px rgba(74,158,255,.7)}
-.mfi-grid{flex:1;display:grid;grid-template-columns:repeat(8,1fr);gap:8px;min-height:0}
-.mfi-grid i{position:relative;border-radius:9px;min-height:0}
-.mfi-grid i.sel{box-shadow:0 0 0 1.6px rgba(90,160,255,.9),0 0 12px -3px rgba(74,158,255,.7)}
-.mfi-grid i.sel::after{content:"✓";position:absolute;top:4px;left:4px;width:13px;height:13px;border-radius:50%;background:linear-gradient(180deg,#5aa6ff,#3d84f0);color:#04122e;font:800 8px/13px -apple-system,sans-serif;text-align:center}
-.mfi-grid i.nw::before{content:"NEU";position:absolute;top:4px;right:4px;font:800 6.5px/1 -apple-system,sans-serif;letter-spacing:.05em;color:#03231a;background:rgba(52,211,153,.95);border-radius:4px;padding:2px 3.5px}
-html[lang="en"] .mfi-grid i.nw::before{content:"NEW"}
-.mfi-grid .g1{background:linear-gradient(140deg,#2c5a8f,#183756)}.mfi-grid .g2{background:linear-gradient(140deg,#7a4a8f,#3c2456)}.mfi-grid .g3{background:linear-gradient(140deg,#2f8f7a,#174a3f)}.mfi-grid .g4{background:linear-gradient(140deg,#8f6a2c,#54390f)}.mfi-grid .g5{background:linear-gradient(140deg,#4a5a9f,#232f5e)}.mfi-grid .g6{background:linear-gradient(140deg,#8f2c4a,#4d1226)}.mfi-grid .g7{background:linear-gradient(140deg,#3a7ab0,#1a3c5e)}.mfi-grid .g8{background:linear-gradient(140deg,#5a8f2c,#2c4a12)}
+.mfi-grid{flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;min-height:0}
+.mfi-grid .ct{position:relative;border-radius:10px;overflow:hidden;min-height:0;aspect-ratio:1}
+.mfi-grid .ct img{width:100%;height:100%;object-fit:cover;display:block}
+.mfi-grid .ct.sel{box-shadow:0 0 0 1.6px rgba(90,160,255,.95),0 0 14px -3px rgba(74,158,255,.8)}
+.mfi-grid .ct.sel::after{content:"✓";position:absolute;top:4px;left:4px;width:14px;height:14px;border-radius:50%;background:linear-gradient(180deg,#5aa6ff,#3d84f0);color:#04122e;font:800 8.5px/14px -apple-system,sans-serif;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.mfi-grid .ct.nw::before{content:"NEU";position:absolute;top:4px;right:4px;z-index:1;font:800 6.5px/1 -apple-system,sans-serif;letter-spacing:.05em;color:#03231a;background:rgba(52,211,153,.95);border-radius:4px;padding:2px 3.5px}
+html[lang="en"] .mfi-grid .ct.nw::before{content:"NEW"}
 .mfi-bar{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,rgba(18,26,42,.95),rgba(10,15,25,.98));border:1px solid rgba(126,166,255,.22);border-radius:14px;padding:11px 14px;box-shadow:0 -10px 30px -16px rgba(0,0,0,.8),0 0 26px -12px rgba(58,106,208,.5)}
 .mfi-bar .mfi-sel{font:500 12px/1.2 -apple-system,sans-serif;color:#93a5c2;flex:1}
 .mfi-bar .mfi-go{font:700 12px/1 -apple-system,sans-serif;color:#fff;background:linear-gradient(180deg,#4a9eff,#2e7ae8);border-radius:10px;padding:10px 16px;box-shadow:0 0 22px -6px rgba(74,158,255,.8)}
@@ -850,24 +862,23 @@ html[lang="en"] .mfi-grid i.nw::before{content:"NEW"}
 .mfr .rn{font:500 13px/1 -apple-system,sans-serif;color:#d5e1f2;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mfr .rb{font:600 10.5px/1 -apple-system,sans-serif;color:#9fc0ef;border:1px solid rgba(126,166,255,.24);border-radius:7px;padding:4.5px 8px;flex:none}
 .mf-offchip{position:absolute;top:18px;right:20px;font:600 10.5px/1 -apple-system,sans-serif;color:#8ee6c2;border:1px solid rgba(52,211,153,.3);background:rgba(20,44,36,.5);border-radius:999px;padding:6px 10px}
-/* Tile 4: WorldMap */
-.mf-world{background:radial-gradient(130% 140% at 30% -10%,#0f1b30,#080d17 62%)}
-.mf-world svg.wlines{position:absolute;inset:0;width:100%;height:100%}
-.mfw-pin{position:absolute;display:flex;align-items:center;gap:7px}
-.mfw-pin .ph{width:44px;height:44px;border-radius:12px;border:1.6px solid rgba(190,215,250,.85);box-shadow:0 8px 26px -8px rgba(0,0,0,.8),0 0 22px -6px rgba(74,158,255,.55)}
-.mfw-pin b{font:700 11px/1 -apple-system,sans-serif;color:#052038;background:linear-gradient(180deg,#bfe0ff,#7db8f5);border-radius:999px;padding:4.5px 7px}
-.mfw-pin .g1{background:linear-gradient(140deg,#e8b16a,#a05c1e)}.mfw-pin .g2{background:linear-gradient(140deg,#6ac3e8,#1e6aa0)}.mfw-pin .g3{background:linear-gradient(140deg,#9a6ae8,#4a1ea0)}.mfw-pin .g4{background:linear-gradient(140deg,#6ae89a,#1ea05c)}
+/* Tile 4: WorldMap — die echte Punkt-Welt der App (WM_DOTS) + Ping-Marker im App-Stil */
+.mf-world{background:radial-gradient(120% 120% at 60% 30%,rgba(28,44,70,.5),#080d17 75%)}
+.mf-world .wm-img{position:absolute;left:50%;top:50%;width:94%;transform:translate(-50%,-50%);opacity:.9}
+.wm-pin{position:absolute;transform:translate(-50%,-50%)}
+.wm-pin .ring{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#4a9eff;border:1px solid #bfe0ff;box-shadow:0 0 8px rgba(74,158,255,.95),0 0 22px rgba(74,158,255,.5)}
+.wm-pin .ping{position:absolute;left:-13px;top:-13px;width:26px;height:26px;border-radius:50%;border:1.4px solid rgba(120,180,255,.75);animation:wmPing 2.8s cubic-bezier(.2,.6,.4,1) infinite}
+.wm-pin .ping.p2{animation-delay:1.4s}
+@keyframes wmPing{0%{transform:scale(.3);opacity:.9}75%{opacity:0}100%{transform:scale(2.1);opacity:0}}
+.wm-pin b{position:absolute;left:9px;top:-21px;font:700 10.5px/1 -apple-system,sans-serif;color:#052038;background:linear-gradient(180deg,#bfe0ff,#7db8f5);border-radius:999px;padding:4px 7px;white-space:nowrap;box-shadow:0 4px 12px -4px rgba(0,0,0,.6)}
 /* Tile 5: On-device AI search */
 .mf-ai{background:radial-gradient(130% 130% at 20% -10%,#1a1830,#0c0a18 64%);display:flex;flex-direction:column;justify-content:center;padding:34px clamp(20px,6%,56px);gap:16px}
 .mf-ai .mfq{border-color:rgba(190,160,255,.3);box-shadow:0 14px 44px -18px rgba(0,0,0,.7),0 0 34px -14px rgba(150,110,250,.4),inset 0 1px 0 rgba(255,255,255,.09)}
 .mf-ai .mfq svg{color:#b9a4ef}
 .mfa-hits{display:flex;gap:12px}
-.mfa-hits i{flex:1;aspect-ratio:4/3;border-radius:13px;box-shadow:0 10px 30px -12px rgba(0,0,0,.7)}
-.mfa-hits .h1{background:linear-gradient(160deg,#f0a05a 0%,#c65a2e 45%,#5a2a52 80%,#241a3e)}
-.mfa-hits .h2{background:linear-gradient(165deg,#f7c66e 0%,#d97a3a 40%,#7a3450 75%,#2a1c40)}
-.mfa-hits .h3{background:linear-gradient(155deg,#e88a4a 0%,#b04a3a 50%,#4a2a5e 85%,#1c1434)}
+.mfa-hits img{flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:13px;box-shadow:0 10px 30px -12px rgba(0,0,0,.7)}
 .mfa-badge{position:absolute;top:18px;right:20px;font:600 10.5px/1 -apple-system,sans-serif;color:#cdb9f5;border:1px solid rgba(170,140,250,.34);background:rgba(34,26,58,.55);border-radius:999px;padding:6px 10px}
-@media (max-width:640px){ .mf-cap{font-size:15px} .mfi-grid{grid-template-columns:repeat(6,1fr)} .mfi-grid i:nth-child(n+19){display:none} }
+@media (max-width:640px){ .mf-cap{font-size:15px} .mfp-stage{display:none} .mfi-grid{grid-template-columns:repeat(4,1fr)} .mfi-grid .ct:nth-child(n+13){display:none} }
 </style>
 </head>
 <body>
@@ -1101,9 +1112,18 @@ html[lang="en"] .mfi-grid i.nw::before{content:"NEW"}
     <div class="mf-rail" id="mfRail">
       <article class="mf-card">
         <div class="mf-tile mf-iphone">
-          <div class="mfi-chips"><span class="on" data-t="mf1_all">All</span><span data-t="mf1_ph">Photos</span><span data-t="mf1_vid">Videos</span><span data-t="mf1_new">new only</span></div>
-          <div class="mfi-grid"><i class="g1 sel nw"></i><i class="g3 sel nw"></i><i class="g2"></i><i class="g5 sel"></i><i class="g4 nw"></i><i class="g7 sel nw"></i><i class="g6"></i><i class="g8 sel"></i><i class="g5 sel nw"></i><i class="g2 sel"></i><i class="g7 nw"></i><i class="g1"></i><i class="g6 sel nw"></i><i class="g3"></i><i class="g4 sel"></i><i class="g8 nw"></i><i class="g7 sel"></i><i class="g4"></i><i class="g1 sel nw"></i><i class="g6 nw"></i><i class="g3 sel"></i><i class="g8"></i><i class="g2 sel nw"></i><i class="g5"></i></div>
-          <div class="mfi-bar"><span class="mfi-sel" data-t="mf1_sel">5,437 selected · 34.2 GB</span><span class="mfi-go" data-t="mf1_go">Export…</span></div>
+          <div class="mfp-stage" aria-hidden="true">
+            <div class="mfp-shadow"></div>
+            <div class="mfp-float"><div class="mfp-phone">
+              <div class="mfp-back"></div><div class="mfp-side"></div>
+              <div class="mfp-face"><div class="mfp-screen"><img class="mfp-logo" src="assets/logo-spin.svg" alt=""></div><div class="mfp-island"></div></div>
+            </div></div>
+          </div>
+          <div class="mfi-ui">
+            <div class="mfi-chips"><span class="on" data-t="mf1_all">All</span><span data-t="mf1_ph">Photos</span><span data-t="mf1_vid">Videos</span><span data-t="mf1_new">new only</span></div>
+            <div class="mfi-grid"><span class="ct sel nw"><img src="assets/ipg/g1.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel nw"><img src="assets/ipg/g2.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct"><img src="assets/ipg/g3.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel nw"><img src="assets/ipg/g4.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct"><img src="assets/ipg/g5.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel nw"><img src="assets/ipg/g6.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel"><img src="assets/ipg/g7.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct"><img src="assets/ipg/g8.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel nw"><img src="assets/ipg/g9.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct"><img src="assets/ipg/g10.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel"><img src="assets/ipg/g11.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct"><img src="assets/ipg/g12.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel nw"><img src="assets/ipg/g13.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct"><img src="assets/ipg/g14.jpg" alt="" loading="lazy" decoding="async"></span><span class="ct sel"><img src="assets/ipg/g15.jpg" alt="" loading="lazy" decoding="async"></span></div>
+            <div class="mfi-bar"><span class="mfi-sel" data-t="mf1_sel">5,437 selected · 34.2 GB</span><span class="mfi-go" data-t="mf1_go">Export…</span></div>
+          </div>
         </div>
         <p class="mf-cap"><b data-t="mf1_b">iPhone Gallery Manager. Your camera roll, safely on your Mac.</b> <span data-t="mf1_p">Plug in your iPhone, see every photo and video, and pick exactly what to export. Disky saves originals, skips what you already have — and can free up your iPhone afterwards.</span></p>
       </article>
@@ -1137,15 +1157,11 @@ html[lang="en"] .mfi-grid i.nw::before{content:"NEW"}
       </article>
       <article class="mf-card">
         <div class="mf-tile mf-world">
-          <svg class="wlines" viewBox="0 0 660 412" fill="none" aria-hidden="true">
-            <path d="M120 150 C 220 60, 420 70, 520 120" stroke="rgba(120,170,255,.34)" stroke-width="1.6" stroke-dasharray="3 7" stroke-linecap="round"/>
-            <path d="M150 300 C 260 220, 430 260, 545 235" stroke="rgba(120,170,255,.26)" stroke-width="1.6" stroke-dasharray="3 7" stroke-linecap="round"/>
-            <path d="M520 124 C 545 160, 550 195, 545 231" stroke="rgba(120,170,255,.2)" stroke-width="1.6" stroke-dasharray="3 7" stroke-linecap="round"/>
-          </svg>
-          <span class="mfw-pin" style="left:14%;top:29%"><i class="ph g2"></i><b>×214</b></span>
-          <span class="mfw-pin" style="left:74%;top:22%"><i class="ph g1"></i><b>×48</b></span>
-          <span class="mfw-pin" style="left:18%;top:64%"><i class="ph g4"></i><b>×131</b></span>
-          <span class="mfw-pin" style="left:76%;top:52%"><i class="ph g3"></i><b>×67</b></span>
+          <img class="wm-img" src="assets/worldmap-dots.svg" alt="" loading="lazy" decoding="async">
+          <span class="wm-pin" style="left:53.2%;top:23.3%"><i class="ping"></i><i class="ping p2"></i><i class="ring"></i><b>×214</b></span>
+          <span class="wm-pin" style="left:29.4%;top:27.4%"><i class="ping"></i><i class="ping p2"></i><i class="ring"></i><b>×48</b></span>
+          <span class="wm-pin" style="left:81.9%;top:54.8%"><i class="ping"></i><i class="ping p2"></i><i class="ring"></i><b>×131</b></span>
+          <span class="wm-pin" style="left:55.1%;top:68.8%"><i class="ping"></i><i class="ping p2"></i><i class="ring"></i><b>×67</b></span>
         </div>
         <p class="mf-cap"><b data-t="mf4_b">WorldMap. Your archive as a map.</b> <span data-t="mf4_p">Disky reads the location hidden in your photos and footage and pins every shoot where it happened. Zoom from the whole world down to a single clip on a single drive.</span></p>
       </article>
@@ -1153,7 +1169,7 @@ html[lang="en"] .mfi-grid i.nw::before{content:"NEW"}
         <div class="mf-tile mf-ai">
           <span class="mfa-badge">On-device AI</span>
           <div class="mfq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.4-3.4"/></svg><span class="mfq-t" data-t="mf5_q">sunset at the sea</span><i class="mfq-caret"></i></div>
-          <div class="mfa-hits"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+          <div class="mfa-hits"><img src="assets/ipg/s1.jpg" alt="" loading="lazy"><img src="assets/ipg/s2.jpg" alt="" loading="lazy"><img src="assets/ipg/s3.jpg" alt="" loading="lazy"></div>
         </div>
         <p class="mf-cap"><b data-t="mf5_b">AI search. Find photos by what's in them.</b> <span data-t="mf5_p">The optional AI index describes your images right on your Mac — so “sunset at the sea” finds the shot even when the file is called DSC_4021. Nothing ever leaves your machine.</span></p>
       </article>
