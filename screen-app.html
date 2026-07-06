@@ -1914,10 +1914,15 @@ function openDB(){
     r.onerror=()=>rej(r.error);
   });
 }
+// Open SOFORT beim Parsen anstossen — gotoView()-Klicks der Eltern-Seite koennen VOR dem Boot-await
+// eintreffen; ein frueher Klick lief sonst via render()→getAll() in tx(), bevor DB gesetzt war.
+const DBP = openDB();
+DBP.then(d=>{ DB=d; }, ()=>{});
 function tx(stores,mode){ return DB.transaction(stores,mode); }
 function reqP(req){ return new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);}); }
-function getAll(store,index,key){
-  const s = tx([store],"readonly").objectStore(store);
+async function getAll(store,index,key){
+  const d = DB || await DBP;   // Startup-Race: Lesepfade warten auf die Open-Promise statt auf undefined zu laufen
+  const s = d.transaction([store],"readonly").objectStore(store);
   const src = index ? s.index(index) : s;
   return reqP(key!==undefined ? src.getAll(key) : src.getAll());
 }
@@ -4571,7 +4576,7 @@ function playBoot(stats){
 
 /* ───────────────────────── Start ───────────────────────── */
 (async function(){
-  DB = await openDB();
+  DB = await DBP;   // geteilte Open-Promise (startet schon beim Parsen) — NICHT erneut oeffnen
   applyStaticI18n();                                 // statische Shell-Texte (Nav, Buttons, Suchfeld) in aktueller Sprache
   startStarfield(document.getElementById("ovBg"));   // Sternen-Hintergrund global (alle Seiten), persistent
   render();
