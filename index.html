@@ -1479,7 +1479,7 @@ function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
 let _phDone=false, _phTimer=0;
 /* Testimonials-Sektion. ACHTUNG: aktuell PLATZHALTER-Zitate (für Layout/Aufbau) — VOR dem echten Launch durch echte ersetzen (DE: UWG!). Zum Verstecken READY:false. */
-const TESTI={READY:true};   // Card-Stack mit PLATZHALTER-Stimmen sichtbar. VOR Verkauf durch echte, konsentierte Zitate ersetzen (UWG §5) — sonst READY:false.
+const TESTI={READY:false};   // AUS bis echte, konsentierte Zitate da sind (UWG §5 — keine Fake-Stimmen live). Echte Zitate rein → READY:true.
 /* Testimonials als Fächer / Card-Stack (Vanilla-Port des 21st.dev card-stack). Nur transform/opacity animiert → Compositor-smooth. */
 let _csActive=0, _csInit=false;
 function _csList(){ return ((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[]); }
