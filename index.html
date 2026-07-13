@@ -1230,7 +1230,7 @@ html[lang="en"] .mfi-grid .ct.nw::before{content:"NEW"}
 </div></section>
 
 <!-- TESTIMONIALS — versteckt bis echte Zitate da sind: in TESTI.READY=true setzen (keine Fake-Stimmen live) -->
-<section class="sec bord testi" id="loved" hidden><div class="wrap">
+<section class="sec bord testi" id="loved"><div class="wrap">
   <span class="eyebrow rev" data-t="testi_eb">Loved by people with too many drives</span>
   <h2 class="testi-title rev" data-t="testi_h">People who finally stopped digging.</h2>
   <div class="cs" aria-label="Testimonials">
@@ -1494,7 +1494,7 @@ function restartReel(){ clearInterval(rlTimer); if(rlInView) rlTimer=setInterval
    Läuft nach jedem applyLang neu, weil data-t den textContent ersetzt. Einmalige WAAPI-Animation, kein Dauer-Render. */
 let _phDone=false, _phTimer=0;
 /* Testimonials-Sektion. ACHTUNG: aktuell PLATZHALTER-Zitate (für Layout/Aufbau) — VOR dem echten Launch durch echte ersetzen (DE: UWG!). Zum Verstecken READY:false. */
-const TESTI={READY:false};   // AUS bis echte, konsentierte Zitate da sind (UWG §5 — keine Fake-Stimmen live). Echte Zitate rein → READY:true.
+const TESTI={READY:true};   // Luis-Entscheidung 2026-07-13: Platzhalter-Zitate BEWUSST live (Risiko UWG §5 klar benannt + akzeptiert). Echte, konsentierte Zitate ersetzen die Platzhalter sobald vorhanden.
 /* Testimonials als Fächer / Card-Stack (Vanilla-Port des 21st.dev card-stack). Nur transform/opacity animiert → Compositor-smooth. */
 let _csActive=0, _csInit=false;
 function _csList(){ return ((I18N[LANG]&&I18N[LANG].testi)||I18N.en.testi||[]); }
