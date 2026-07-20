@@ -26,6 +26,7 @@
     });
   }
   window.addEventListener('message', function(e){
+    if(e.origin !== location.origin && e.origin !== 'https://disky.app' && e.origin !== 'https://www.disky.app') return;   // nur Nachrichten vom eigenen disky.app-Parent akzeptieren (diese Seite ist als same-origin iframe eingebettet)
     var d=e&&e.data; if(!d) return;
     if('diskyVis' in d){ window.__diskyPaused = !d.diskyVis; try{ document.documentElement.classList.toggle('disky-paused', !d.diskyVis); }catch(_){}; }   // Parent meldet Sichtbarkeit → Starfield UND alle CSS-Animationen pausieren, während der Parent scrollt (kein Cross-Process-Paint im kritischen Scroll-Fenster)
     if(d.diskyDemo==='search'){ demoSearch(d.q||'Nordsee', d.lens||'all'); return; }
