@@ -413,45 +413,41 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hf-tl{margin-top:18px;font-size:12.5px;color:var(--mut2);opacity:0;animation:hf-ebIn 1.2s 1.2s ease both}
 .hf-dlmeta{margin-top:11px;font-size:12px;color:var(--mut2);font-variant-numeric:tabular-nums}
 .hf-dlhint{color:var(--mut)}
-/* ── Shiny CTA (Download the beta): animierter Conic-Rand + Shimmer + Punkte + Atem-Glow beim Hover (portiert aus dem React-Component, ohne Google-Font, CSP-konform) ── */
+/* ── Shiny CTA (Download the beta): heller Blau-Button, animierter Conic-Rand, dezente Punkte/Shimmer, sauberer Glow-Up beim Hover (portiert, ohne Google-Font, CSP-konform) ── */
 @property --sh-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
 @property --sh-off{syntax:"<angle>";initial-value:0deg;inherits:false}
 @property --sh-pct{syntax:"<percentage>";initial-value:5%;inherits:false}
 @property --sh-shine{syntax:"<color>";initial-value:#fff;inherits:false}
 .shiny-cta{
-  --sh-bg:#080c14;--sh-bg2:#161d29;--sh-hi:#2f6bff;--sh-hi2:#8aa9ff;
-  --sh-dur:3s;--sh-tr:800ms cubic-bezier(.25,1,.5,1);--sh-anim:sh-angle linear infinite;
+  --sh-hi:#4d86ff;--sh-hi2:#bcd2ff;--sh-f1:#3f7dff;--sh-f2:#1b46c9;
+  --sh-dur:3s;--sh-tr:600ms cubic-bezier(.25,1,.5,1);--sh-anim:sh-angle linear infinite;
   isolation:isolate;position:relative;overflow:hidden;cursor:pointer;text-decoration:none;
   display:inline-flex;align-items:center;justify-content:center;
   padding:17px 40px;font:600 16.5px/1.2 inherit;letter-spacing:.01em;color:#fff;
   border:1px solid transparent;border-radius:360px;outline-offset:4px;
-  background:linear-gradient(var(--sh-bg),var(--sh-bg)) padding-box,
+  background:linear-gradient(180deg,var(--sh-f1),var(--sh-f2)) padding-box,
     conic-gradient(from calc(var(--sh-angle) - var(--sh-off)),transparent,
       var(--sh-hi) var(--sh-pct),var(--sh-shine) calc(var(--sh-pct)*2),
       var(--sh-hi) calc(var(--sh-pct)*3),transparent calc(var(--sh-pct)*4)) border-box;
-  box-shadow:inset 0 0 0 1px var(--sh-bg2);
-  transition:var(--sh-tr);transition-property:--sh-off,--sh-pct,--sh-shine}
-.shiny-cta::before,.shiny-cta::after,.shiny-cta span::before{content:"";pointer-events:none;position:absolute;inset-inline-start:50%;inset-block-start:50%;translate:-50% -50%;z-index:-1}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 10px 34px -10px rgba(70,125,255,.75);
+  transition:var(--sh-tr);transition-property:--sh-off,--sh-pct,--sh-shine,--sh-f1,--sh-f2,box-shadow}
+.shiny-cta::before,.shiny-cta::after{content:"";pointer-events:none;position:absolute;inset-inline-start:50%;inset-block-start:50%;translate:-50% -50%;z-index:0;border-radius:inherit}
 .shiny-cta:active{translate:0 1px}
 .shiny-cta::before{--sz:calc(100% - 6px);--p:2px;--sp:calc(var(--p)*2);width:var(--sz);height:var(--sz);
-  background:radial-gradient(circle at var(--p) var(--p),#fff calc(var(--p)/4),transparent 0) padding-box;
+  background:radial-gradient(circle at var(--p) var(--p),rgba(255,255,255,.85) calc(var(--p)/4),transparent 0) padding-box;
   background-size:var(--sp) var(--sp);background-repeat:space;
-  mask-image:conic-gradient(from calc(var(--sh-angle) + 45deg),#000,transparent 10% 90%,#000);border-radius:inherit;opacity:.4;z-index:-1}
-.shiny-cta::after{width:100%;aspect-ratio:1;--sh-anim:sh-shimmer linear infinite;
-  background:linear-gradient(-50deg,transparent,var(--sh-hi),transparent);
-  mask-image:radial-gradient(circle at bottom,transparent 40%,#000);opacity:.6}
+  mask-image:conic-gradient(from calc(var(--sh-angle) + 45deg),#000,transparent 12% 88%,#000);opacity:.22}
+.shiny-cta::after{width:130%;aspect-ratio:1;--sh-anim:sh-shimmer linear infinite;
+  background:linear-gradient(-50deg,transparent,rgba(255,255,255,.55),transparent);
+  mask-image:radial-gradient(circle at bottom,transparent 48%,#000);opacity:.35}
 .shiny-cta span{z-index:1;position:relative}
-.shiny-cta span::before{--sz:calc(100% + 1rem);width:var(--sz);height:var(--sz);
-  box-shadow:inset 0 -1ex 2rem 4px var(--sh-hi);opacity:0;transition:opacity var(--sh-tr);
-  animation:calc(var(--sh-dur)*1.5) sh-breathe linear infinite}
 .shiny-cta,.shiny-cta::before,.shiny-cta::after{animation:var(--sh-anim) var(--sh-dur),var(--sh-anim) calc(var(--sh-dur)/.4) reverse paused;animation-composition:add}
-.shiny-cta:is(:hover,:focus-visible){--sh-pct:20%;--sh-off:95deg;--sh-shine:var(--sh-hi2)}
+.shiny-cta:is(:hover,:focus-visible){--sh-pct:22%;--sh-off:95deg;--sh-shine:var(--sh-hi2);--sh-f1:#5f97ff;--sh-f2:#2f6bff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 16px 52px -6px rgba(80,135,255,.95)}
 .shiny-cta:is(:hover,:focus-visible),.shiny-cta:is(:hover,:focus-visible)::before,.shiny-cta:is(:hover,:focus-visible)::after{animation-play-state:running}
-.shiny-cta:is(:hover,:focus-visible) span::before{opacity:1}
 @keyframes sh-angle{to{--sh-angle:360deg}}
 @keyframes sh-shimmer{to{rotate:360deg}}
-@keyframes sh-breathe{from,to{scale:1}50%{scale:1.2}}
-@media (prefers-reduced-motion:reduce){.shiny-cta,.shiny-cta::before,.shiny-cta::after,.shiny-cta span::before{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.shiny-cta,.shiny-cta::before,.shiny-cta::after{animation:none!important}}
 @keyframes hf-ebIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes hf-txtReveal{from{opacity:0;transform:translateY(54px) scale(.86);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes hf-silverIn{from{opacity:0;transform:translateZ(0) translateY(.18em)}to{opacity:1;transform:translateZ(0)}}   /* Fade+Rise statt clip-path-Wipe → KEIN Clip mehr, kann unter keinem Browser (auch Safari) eine Unterlänge schneiden */
