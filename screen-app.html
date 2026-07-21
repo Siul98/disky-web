@@ -1756,7 +1756,7 @@ let _robotRAF=null, _robotMove=null;
 // Im Browser (Web/Test): vom CDN. Szene ist CC0 (NEXBOT, „aximoris") → Bündeln erlaubt.
 const _assetBase = (window.diskyNative && window.diskyNative.assetBase) || null;
 const _splineLocal = !!_assetBase;
-const SPLINE_SCENE   = _splineLocal ? _assetBase+"spline/scene.splinecode" : "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
+const SPLINE_SCENE   = _splineLocal ? _assetBase+"spline/scene.splinecode" : "https://prod.spline.design/bavYmpnDkDwW4QDH/scene.splinecode";   // GENKUB Greeting Robot (Community, remixed)
 // Spline RUNTIME-API (statt Web-Component): wir steuern Canvas + Laden selbst → erzwingt Fetch + Render.
 const SPLINE_RT = _splineLocal ? _assetBase+"spline/runtime.js" : "https://unpkg.com/@splinetool/runtime@1.9.82/build/runtime.js";
 let _splineMod=null, _splineApp=null;
