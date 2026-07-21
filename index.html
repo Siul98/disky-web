@@ -5,8 +5,8 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://esm.sh https://*.supabase.co https://api.lemonsqueezy.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Disky — Find anything. Connect nothing.</title>
-<meta name="description" content="Index every external drive once — then search them all on your Mac by name, project, or what's inside the footage, even while the disk sits unplugged in the drawer. Native Mac app, 100% local, read-only. Free beta out now.">
+<title>Disky — Find anything. Plug in nothing.</title>
+<meta name="description" content="Catalog every external drive once — then search them all on your Mac by name, project, or what's inside the footage, even while the drive sits unplugged in the drawer. Native Mac app, 100% local, read-only. Free beta out now.">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <link rel="preload" as="image" href="assets/drives/t5.webp?v=2">
 <link rel="preload" as="image" href="assets/drives/lacie-silver.webp?v=2">
 <link rel="canonical" href="https://disky.app/">
-<meta property="og:title" content="Disky — Find anything. Connect nothing.">
+<meta property="og:title" content="Disky — Find anything. Plug in nothing.">
 <meta property="og:description" content="Index every drive once, then search them all on your Mac — by name, project, or what's inside the footage, even unplugged in the drawer. 100% local, read-only. Free beta out now.">
 <meta property="og:image" content="https://disky.app/og.jpg?v=5">
 <meta property="og:image:width" content="1200">
@@ -26,7 +26,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image:alt" content="Disky — find anything across every drive, even unplugged in the drawer. Free Mac beta.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Disky — Find anything. Connect nothing.">
+<meta name="twitter:title" content="Disky — Find anything. Plug in nothing.">
 <meta name="twitter:description" content="Search every external drive at once — even unplugged in the drawer. Native Mac app, 100% local, read-only. Free beta out now.">
 <meta name="twitter:image" content="https://disky.app/og.jpg?v=5">
 <meta name="theme-color" content="#08090c">
@@ -969,7 +969,7 @@ html[lang="en"] .mfi-grid .ct.nw::before{content:"NEW"}
       <div class="hf-floor" id="hf-floor"></div>
       <div class="hf-head" id="hf-head">
         <span class="hf-eb" data-t="hero_eb">Command center for your drives</span>
-        <h1><span class="hf-t3d" data-t="hero_l1">Find anything.</span><span class="hf-silver" data-t="hero_l2">Connect nothing.</span></h1>
+        <h1><span class="hf-t3d" data-t="hero_l1">Find anything.</span><span class="hf-silver" data-t="hero_l2">Plug in nothing.</span></h1>
         <p class="hf-sub" data-t="hero_sub">Well — maybe not nothing. Plug each drive in once, then search it forever while it sits in the drawer.</p>
         <div class="hf-cta">
           <a class="shiny-cta hf-dl" href="https://github.com/Siul98/disky-web/releases/latest"><span data-t="cta_dl">Get early access →</span></a>
@@ -1392,7 +1392,7 @@ const I18N={
    ["Can I back up my catalog or move it to another Mac?","Yes. Disky auto-saves local snapshots of your catalog as a safety net, and you can export the whole catalog to a single file and import it on another Mac. No cloud sync — it's local-first by design, so your catalog moves only when you move it."],
    ["How much space does the catalog use?","Only metadata — names, paths, sizes, dates — never your actual files, so it stays small and scales with how many files you have, not how big they are. The optional AI search index adds a small thumbnail and fingerprint per photo or video; that's the larger part, and only if you turn it on. It all lives on your Mac, where you choose."],
    ["Is it safe to run on my drives?","Completely. Disky is strictly read-only — it catalogs and maps your drives but never moves, renames, or deletes a single file. It physically can't change your footage. The only thing it ever writes is its own catalog, on your Mac."],
-   ["When can I download it — and why not the App Store?","Disky is coming soon for Apple Silicon Macs as a direct download — start free the day it lands. It's not on the Mac App Store on purpose: the App Store sandbox would block it from seeing your external drives, and seeing every drive you own is the whole job. Direct download is the only way it works."]
+   ["When can I download it — and why not the App Store?","Right now — the free beta is live as a direct download for Apple Silicon Macs (grab it at the top of this page). It's not on the Mac App Store on purpose: the App Store sandbox would block it from seeing your external drives, and seeing every drive you own is the whole job. Direct download is the only way it works."]
   ]
  },
  de:{
@@ -1477,7 +1477,7 @@ const I18N={
    ["Kann ich meinen Katalog sichern oder auf einen anderen Mac übertragen?","Ja. Disky legt automatisch lokale Schnappschüsse deines Katalogs an (dein Sicherheitsnetz), und du kannst den ganzen Katalog in eine Datei exportieren und auf einem anderen Mac importieren. Keine Cloud-Sync — local-first by design: dein Katalog wandert nur, wenn du ihn bewegst."],
    ["Wie viel Speicher braucht der Katalog?","Nur Metadaten — Namen, Pfade, Größen, Datumsangaben — nie deine eigentlichen Dateien. Er bleibt klein und wächst mit der Anzahl der Dateien, nicht mit ihrer Größe. Der optionale KI-Suchindex legt pro Foto oder Video ein kleines Thumbnail plus Fingerprint an — das ist der größere Teil, und nur, wenn du ihn einschaltest. Alles liegt auf deinem Mac, wo du willst."],
    ["Ist es sicher auf meinen Platten?","Komplett. Disky ist strikt nur lesend — es katalogisiert und kartiert deine Platten, verschiebt, benennt oder löscht aber nie eine einzige Datei. Es kann dein Material gar nicht verändern. Das Einzige, was es je schreibt, ist sein eigener Katalog, auf deinem Mac."],
-   ["Wann kann ich es laden — und warum nicht im App Store?","Disky kommt bald für Apple-Silicon-Macs, als Direkt-Download — am Tag des Launches startest du kostenlos. Es ist bewusst nicht im Mac App Store: Die App-Store-Sandbox würde es daran hindern, deine externen Platten zu sehen — und jede Platte zu sehen, die du besitzt, ist seine ganze Aufgabe. Direkt-Download ist der einzige Weg, auf dem es funktioniert."]
+   ["Wann kann ich es laden — und warum nicht im App Store?","Jetzt — die Gratis-Beta ist live, als Direkt-Download für Apple-Silicon-Macs (oben auf dieser Seite). Es ist bewusst nicht im Mac App Store: Die App-Store-Sandbox würde es daran hindern, deine externen Platten zu sehen — und jede Platte zu sehen, die du besitzt, ist seine ganze Aufgabe. Direkt-Download ist der einzige Weg, auf dem es funktioniert."]
   ]
  }
 };
@@ -1695,6 +1695,8 @@ function applyLang(l){
   renderFAQ(); renderTesti(); if(window.__hfRefreshTour)window.__hfRefreshTour();   // renderCaps/renderReel/renderFeats raus: tote Sektionen (#caps/#rl-pills/#featGrid existieren nicht mehr) — liefen bei jedem Sprachwechsel ins Leere
   { const lv=document.getElementById('loved'); if(lv) lv.hidden=!TESTI.READY; }   // Sektion nur zeigen, wenn echte Zitate freigeschaltet
   applyDownloadState();   // CTA spiegelt den echten Zustand (Waitlist vs. echter Download)
+  // Sprachwechsel erreicht auch das eingebettete Live-Demo: iframe mit neuem lang-Param neu laden (liest Sprache nur beim Boot)
+  try{ const lf=document.getElementById('hf-liveapp'); if(lf && lf.dataset.loaded==='1'){ const scr=lf.closest('.hf-mscr'); if(scr) scr.classList.remove('live-ready'); lf.src='screen-app.html?v=12&lang='+LANG; } }catch(e){}
   document.querySelectorAll('.lang button').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
 }
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
@@ -1956,6 +1958,7 @@ function glideTo(target,offset){ // unified scroll that respects Lenis if active
     liveFrame.src='screen-app.html?v=12&lang='+(typeof LANG!=='undefined'?LANG:'en'); }   // ?v bumpen, wenn screen-app.html sich ändert → umgeht Browser-Cache
   // erst nach dem ersten Render / im Idle laden — der User scrollt erst durch den Scan, bis der MacBook-Screen prominent wird
   if('requestIdleCallback' in window) requestIdleCallback(()=>setTimeout(loadLive,400),{timeout:2500}); else addEventListener('load',()=>setTimeout(loadLive,1400));
+  try{ matchMedia('(max-width:768px)').addEventListener('change',e=>{ if(!e.matches && liveFrame && liveFrame.dataset.loaded==='skip'){ delete liveFrame.dataset.loaded; loadLive(); } }); }catch(e){}   // schmal geöffnet → später breit gezogen: Demo jetzt doch laden ('skip' war sonst permanent)
   sizeLive();
   startStars();
 

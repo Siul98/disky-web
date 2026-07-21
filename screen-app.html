@@ -151,10 +151,14 @@
 </script>
 
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://esm.sh https://*.supabase.co https://api.lemonsqueezy.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<!-- CSP: deckt ALLE Demo-Funktionen ab — KI-Suche (cdn.jsdelivr transformers.js + huggingface-Gewichte, WASM),
+     3D-Roboter (unpkg Spline-Runtime + prod.spline.design-Szene, Blob-Worker). Vorher blockte script-src beide
+     dynamic imports → KI + Roboter im Live-Demo kaputt. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://esm.sh https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://esm.sh https://cdn.jsdelivr.net https://unpkg.com https://*.supabase.co https://api.lemonsqueezy.com https://huggingface.co https://*.huggingface.co https://*.hf.co https://prod.spline.design; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disky — Festplatten-Katalog</title>
+<title>Disky — Live Demo</title>
+<meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 /* CI-Display-Schrift: General Sans (lokal, offline) — fürs Logo & Headlines. UI bleibt SF. */
@@ -3866,9 +3870,12 @@ async function deepAiBody(host){
     const st=document.getElementById("kistatus");
     if(!window.DiskyAI){ st.textContent=t("ki_module_loading"); return; }
     document.getElementById("kibtn").disabled=true;
-    if(!window.DiskyAI.ready){ st.textContent=t("scan_ai_loading"); await window.DiskyAI.load(m=>st.textContent=m); }
-    st.textContent=t("ki_searching");
-    const qe=await window.DiskyAI.embedText(ql);
+    let qe;
+    try{
+      if(!window.DiskyAI.ready){ st.textContent=t("scan_ai_loading"); await window.DiskyAI.load(m=>st.textContent=m); }
+      st.textContent=t("ki_searching");
+      qe=await window.DiskyAI.embedText(ql);
+    }catch(e){ st.textContent=t("scan_ai_err", (e&&e.message)||"error"); document.getElementById("kibtn").disabled=false; return; }   // Ladefehler (CDN/offline/CSP) → Meldung + Button wieder frei statt ewig disabled
     const scored=indexed.map(f=>{let s=0,e=f.embed;for(let i=0;i<e.length;i++)s+=qe[i]*e[i];return {f,s};})
       .sort((a,b)=>b.s-a.s).slice(0,60);
     document.getElementById("kiresults").innerHTML=scored.map(({f,s})=>`

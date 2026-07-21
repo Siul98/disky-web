@@ -11,6 +11,12 @@
 <meta name="theme-color" content="#08090c">
 <meta name="color-scheme" content="dark">
 <meta name="robots" content="index,follow">
+<link rel="canonical" href="https://disky.app/contact.html">
+<meta property="og:title" content="Disky — Contact & Feedback">
+<meta property="og:description" content="Questions, feedback, wishes or bugs? Write to the Disky team — we read every message and reply fast.">
+<meta property="og:image" content="https://disky.app/og.jpg?v=5">
+<meta property="og:url" content="https://disky.app/contact.html">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 :root{
   --bg:#08090c; --bg2:#0c0f15; --panel:#0f131a;
@@ -149,8 +155,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
   <div class="navlinks">
     <a class="hide-sm" href="index.html#features" data-t="nav_features">Features</a>
     <a class="hide-sm" href="index.html#privacy" data-t="nav_privacy">Privacy</a>
-    <a class="hide-sm" href="index.html#pricing" data-t="nav_pricing">Pricing</a>
-    <span class="soon"><i aria-hidden="true"></i><span data-t="soon_short">Coming soon</span></span>
+    <a class="hide-sm" href="index.html#faq" data-t="nav_faq">FAQ</a>
+    <a class="soon" href="https://github.com/Siul98/disky-web/releases/latest/download/Disky-mac-arm64.dmg"><i aria-hidden="true"></i><span data-t="soon_short">Download the beta ↓</span></a>
   </div>
 </div></nav>
 
@@ -230,7 +236,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 <script>
 const I18N={
  en:{
-  nav_features:"Features",nav_privacy:"Privacy",nav_pricing:"Pricing",soon_short:"Coming soon",foot_legal:"Legal",
+  nav_features:"Features",nav_privacy:"Privacy",nav_faq:"FAQ",soon_short:"Download the beta ↓",foot_legal:"Legal",
   eb:"Contact & Feedback",h1:"Tell us what you think.",
   sub:"Questions, feature wishes, or a bug to report? We read every message and reply fast — usually within a day.",
   i_h:"Talk to the people who built it.",i_lead:"No ticket queue, no bot. Your message reaches the small team behind Disky directly.",
@@ -244,7 +250,7 @@ const I18N={
   toast_copied:"Email copied to clipboard",toast_need:"Please write a short message first.",toast_open:"Opening your mail app…"
  },
  de:{
-  nav_features:"Features",nav_privacy:"Privatsphäre",nav_pricing:"Preise",soon_short:"Bald verfügbar",foot_legal:"Rechtliches",
+  nav_features:"Features",nav_privacy:"Privatsphäre",nav_faq:"FAQ",soon_short:"Beta laden ↓",foot_legal:"Rechtliches",
   eb:"Kontakt & Feedback",h1:"Sag uns, was du denkst.",
   sub:"Fragen, Feature-Wünsche oder ein Bug? Wir lesen jede Nachricht und antworten schnell — meist innerhalb eines Tages.",
   i_h:"Sprich mit denen, die's gebaut haben.",i_lead:"Keine Ticket-Schlange, kein Bot. Deine Nachricht erreicht direkt das kleine Team hinter Disky.",
@@ -280,7 +286,7 @@ let _tt=0;
 function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2600); }
 
 // copy email
-function copyMail(){ try{ navigator.clipboard.writeText('hallo@disky.app'); toast(tt('toast_copied')); }catch(e){ toast('hallo@disky.app'); } }
+function copyMail(){ try{ navigator.clipboard.writeText('hallo@disky.app').then(()=>toast(tt('toast_copied'))).catch(()=>toast('hallo@disky.app')); }catch(e){ toast('hallo@disky.app'); } }
 document.getElementById('copyMail').onclick=copyMail;
 document.addEventListener('click',e=>{ if(e.target&&e.target.id==='orMail') copyMail(); });
 
