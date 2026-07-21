@@ -34,7 +34,7 @@
   });
   // Handshake: dem Parent melden, sobald die geseedete App-Navigation gerendert ist (NICHT vor dem Seed-Reload)
   function pingReady(){ (function rdy(){ if(document.querySelector('.nav')){ try{ parent.postMessage({diskyReady:1},'*'); }catch(e){} } else setTimeout(rdy,150); })(); }
-  var SEED_VER='7';   // bei Änderung der Seed-Daten/-Logik hochzählen → erzwingt sauberen Re-Seed
+  var SEED_VER='8';   // bei Änderung der Seed-Daten/-Logik hochzählen → erzwingt sauberen Re-Seed
   var TB=1e12, GB=1e9;
   var drives=[
     {label:'T9', driveType:'t9', bytes:2.3*TB, capacityBytes:3.6*TB, fileCount:18000, volumeName:'T9'},
@@ -102,8 +102,13 @@
       try{
         var t=db.transaction(['drives','files'],'readwrite'); var ds=t.objectStore('drives'); var fs=t.objectStore('files');
         ds.clear(); fs.clear();   // alte Demo-Daten weg (gleiche Transaktion wie das Re-Add der Drives → atomar)
+        // FESTE IDs 1..6 (put mit explizitem Key) statt autoIncrement: clear() setzt den Zähler NICHT zurück,
+        // die IDs drifteten also mit jedem Re-Seed (7,8,… 13,14,…). Wenn zwei Kontexte (Tab + eingebettetes
+        // Hero-iframe teilen sich die DB!) gegeneinander seedeten, zeigte der offene Kontext Datei-Gruppen mit
+        // alten driveIds gegen neue Platten → Suche renderte „?" als Plattennamen. Feste IDs machen JEDE
+        // Seed-Generation zu jeder anderen konsistent — die Fehlerklasse ist damit weg.
         var ids=[];
-        drives.forEach(function(d,idx){ var req=ds.add(d); req.onsuccess=function(){ ids[idx]=req.result; }; });
+        drives.forEach(function(d,idx){ ids[idx]=idx+1; ds.put(Object.assign({id:idx+1},d)); });
         t.oncomplete=function(){
           try{
             var t2=db.transaction(['files'],'readwrite'); var fs2=t2.objectStore('files');
